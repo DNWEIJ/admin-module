@@ -9,7 +9,7 @@
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
-    <fieldset class="grid" role="presentation">
+    <fieldset role="presentation">
         <input id="id" name="id" th:value="${game.id}" type="hidden">
         <input id="version" name="version" th:value="${game.version}" type="hidden">
 
