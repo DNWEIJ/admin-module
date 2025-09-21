@@ -1,0 +1,40 @@
+<th:block th:insert="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<th:block th:insert="~{fragments/page/message}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Distributor','/distributor/list')}"></th:block>
+
+<form action="/user/preferences" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+
+    <input id="id" name="id" th:value="${distributor.id}" type="hidden">
+    <input id="version" name="version" th:value="${distributor.version}" type="hidden">
+
+    <fieldset class="grid" role="presentation">
+        <th:block th:insert="~{fragments/elements/input::inputHtml('distributorName','Distributor Name', 'distributor.distributorName','1')}"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('address1','Address Line 1', 'distributor.address1','2')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('address2','Address Line 2', 'distributor.address2','3')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('address3','Address Line 3', 'distributor.address3','4')}"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('zipCode', 'Zip Code', 'distributor.zipCode','5')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('city', 'City', 'distributor.city','6')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('state', 'State', 'distributor.state','7')}"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('phone1', 'Telephone Number', 'distributor.phone1','8')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('phone2', 'Alternative Number', 'distributor.phone2','9')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('fax', 'Fax Number', 'distributor.fax','10')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('email', 'E-mail Address', 'distributor.email','11')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlOptional('url', 'Website', 'distributor.url','12')}"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <label for="comments">General Comments:
+            <textarea id="comments" tabindex="13" name="comments" rows="6" cols="60" th:text="${comments}"></textarea>
+        </label>
+    </fieldset>
+</form>

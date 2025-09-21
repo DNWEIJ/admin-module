@@ -1,0 +1,42 @@
+<div th:fragment="head" th:remove="tag" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Admin Module</title>
+        <meta charset="utf-8">
+        <meta content="width=device-width" name="viewport"/>
+        <meta content="light dark" name="color-scheme">
+        <link href="/fontawesome/images/favicon.svg" rel="icon" type="image/x-icon"/>
+
+        <script src="/fontawesome/js/all.min.js" type="javascript"></script>
+        <link href="/fontawesome/css/all.min.css" rel="stylesheet"/>
+
+        <!--        &lt;!&ndash;action table&ndash;&gt;-->
+        <!--        <script type="module" src="/action-table/action-table.js"></script>-->
+        <!--        <script type="module" src="/action-table/action-table-switch.js"></script>-->
+        <!--        <link rel="stylesheet" href="/action-table/action-table.css"/>-->
+
+        <!--tabulator table-->
+        <link href="/tabulator/tabulator-materialize.css" rel="stylesheet">
+        <script src="/tabulator/tabulator.js" type="text/javascript"></script>
+
+        <link href="/pico/pico.blue.min.css" rel="stylesheet">
+        <link href="/ownstyle/style.css" rel="stylesheet">
+        <link href="/ownstyle/hamburger.css" rel="stylesheet">
+
+        <style>
+            :root {
+                --pico-border-radius: 0.3rem;
+                --pico-typography-spacing-vertical: .5rem;
+                --pico-form-element-spacing-vertical: .5rem;
+                --pico-form-element-spacing-horizontal: 0.25rem;
+                --pico-font-size: initial;
+            }
+            :root:not([data-theme=dark]), [data-theme=light] {
+                --pico-background-color: #f3f3f3;
+
+            }
+            button {
+                --pico-font-weight: 700;
+            }
+        </style>
+    </head>
+</div>

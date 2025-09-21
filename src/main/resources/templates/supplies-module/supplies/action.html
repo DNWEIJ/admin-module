@@ -1,0 +1,90 @@
+<th:block th:insert="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<th:block th:insert="~{fragments/page/message}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Supply','/supplies/list')}"></th:block>
+
+<form action="/supplies" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+
+    <fieldset class="grid" role="presentation">
+        <!-- hidden identifiers -->
+        <input id="id" name="id" th:value="${supply.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${supply.version}" type="hidden"/>
+
+        <!-- Description -->
+        <th:block th:insert="~{fragments/elements/input::inputHtml('nomenclature','Description','supply.nomenclature','1')}"></th:block>
+        <!-- Distributor dropdown -->
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('distributor','Distributor','supply.distributor.id',${distributorList},false,'2')}"></th:block>
+        <!-- Price & Quantities -->
+        <th:block th:insert="~{fragments/elements/input::inputHtml('price','Price [each]','supply.price','3')}"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <th:block th:insert="~{fragments/elements/input::inputHtml('quantityPerPackage','Individual Qty/Pkg','supply.quantityPerPackage','4')}" th:with="type='number'"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtml('minQuantity','Minimum Quantity','supply.minQuantity','5')}" th:with="type='number'"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtml('buyQuantity','Buy Quantity','supply.buyQuantity','6')}" th:with="type='number'"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <!-- Item Number -->
+        <th:block th:insert="~{fragments/elements/input::inputHtml('itemNumber','Item Number','supply.itemNumber','7')}"></th:block>
+        <!-- Barcode -->
+        <th:block th:insert="~{fragments/elements/input::inputHtml('barcode','Barcode Number','supply.barcode','8')}"></th:block>
+    </fieldset>
+    <fieldset class="grid" role="presentation">
+        <!-- Distributor Description (textarea, explicit since fragment is for inputs) -->
+        <label for="distDescription">Distributor Description
+        <textarea id="distDescription" name="supply.distDescription" tabindex="9" rows="3" cols="60" th:text="${distDescription}"></textarea>
+        </label>
+    </fieldset>
+
+    <!-- Tabs (optional, can be filled later) -->
+    <div id="tabs" style="display:none">
+        <ul>
+            <li><a href="#ui-tabs-6">Location Inventory</a></li>
+        </ul>
+        <div id="ui-tabs-6">
+            <!-- location inventory content -->
+        </div>
+    </div>
+</form>
+
+
+    <label for="euros">Amount (€)</label>
+    <div style="display:flex; gap:4px; align-items:center;">
+        <input id="euros" name="euros" type="number" min="0" step="1" placeholder="0" style="width:6em;">
+        <span>,</span>
+        <input id="cents" name="cents" type="number" min="0" max="99" step="1" placeholder="00" style="width:5em;">
+    </div>
+    <input type="hidden" id="amountCents" name="amountCents">
+
+<script>
+    const eurosInput = document.getElementById('euros');
+    const centsInput = document.getElementById('cents');
+    const hiddenCents = document.getElementById('amountCents');
+
+    // Move focus from euros to cents when comma is pressed
+    eurosInput.addEventListener('keydown', (e) => {
+        if (e.key === ',' || e.key === '.') { // comma or dot triggers jump
+            e.preventDefault();
+            centsInput.focus();
+            centsInput.select(); // select existing value if any
+        }
+    });
+
+    // Clamp cents input to 0-99
+    centsInput.addEventListener('input', () => {
+        let val = parseInt(centsInput.value, 10);
+        if (isNaN(val) || val < 0) val = 0;
+        if (val > 99) val = 99;
+        centsInput.value = String(val).padStart(2, '0');
+    });
+
+    // On submit, calculate total cents
+    document.getElementById('payForm').addEventListener('submit', (e) => {
+        const euros = parseInt(eurosInput.value, 10) || 0;
+        const cents = parseInt(centsInput.value, 10) || 0;
+        hiddenCents.value = euros * 100 + cents;
+    });
+</script>

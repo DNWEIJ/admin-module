@@ -1,0 +1,50 @@
+<th:block th:replace="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('User','/user')}"></th:block>
+
+<style>
+    .colgroup {
+        width: 100%
+
+    }
+</style>
+
+<table id="user-table">
+    <thead>
+    <tr>
+        <th>Account name</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Login enabled</th>
+        <th>Language</th>
+        <th>Personnel Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="user : ${users}" >
+        <tr>
+            <td><a th:href="@{'/user/'+ ${user.id}}">[[${user.account}]]</a></td>
+            <td>[[${user.name}]]</td>
+            <td>[[${user.email}]]</td>
+            <td>[[${user.loginEnabled}]]</td>
+            <td>[[${user.language}]]</td>
+            <td>[[${user.personnelStatus}]]</td>
+        </tr>
+    </th:block>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    var table = new Tabulator("#user-table",
+        {
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            columns: [ //set column definitions for imported table data
+                {title: "Account name", formatter: "html"}
+            ]
+        });
+</script>

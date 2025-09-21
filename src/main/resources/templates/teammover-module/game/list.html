@@ -1,0 +1,47 @@
+<th:block th:replace="~{fragments/page/header}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleListNL('Wedstrijden','/game')}"></th:block>
+
+<style>
+    .colgroup {
+        width: 100%
+
+    }
+</style>
+
+<table id="show-table">
+    <thead>
+    <tr>
+        <th>Waar</th>
+        <th>Wanneer</th>
+        <th>Nr spelers</th>
+        <th>Nr Spelers</th>
+        <th>Zitplaatsen</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="game : ${games}">
+        <tr>
+            <td><a th:href="@{'/driver/'+ ${game.id}}" class="fa fa-car"></a>&nbsp;|&nbsp;<a th:href="@{'/game/'+ ${game.id}}">[[${game.whereIsTheGame}]]</a></td>
+            <td>[[${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}]]</td>
+            <td>[[${game.totalPlayers}]]</td>
+            <td>[[${game.totalPlayersDriver}]]</td>
+            <td>[[${game.totalSeatsDriver}]]</td>
+        </tr>
+    </th:block>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    var table = new Tabulator("#show-table",
+        {
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            columns: [ //set column definitions for imported table data
+                {title: "Waar", formatter: "html"}
+            ]
+        });
+</script>

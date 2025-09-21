@@ -1,0 +1,124 @@
+:host,:root {
+    --pico-color-red: #c52f21;
+    --pico-color-pink: #d92662;
+    --pico-color-fuchsia: #c1208b;
+    --pico-color-purple: #9236a4;
+    --pico-color-violet: #7540bf;
+    --pico-color-indigo: #524ed2;
+    --pico-color-blue: #2060df;
+    --pico-color-azure: #0172ad;
+    --pico-color-cyan: #047878;
+    --pico-color-jade: #007a50;
+    --pico-color-green: #398712;
+    --pico-color-lime: #a5d601;
+    --pico-color-yellow: #f2df0d;
+    --pico-color-amber: #ffbf00;
+    --pico-color-pumpkin: #ff9500;
+    --pico-color-orange: #d24317;
+    --pico-color-sand: #ccc6b4;
+    --pico-color-grey: #ababab;
+    --pico-color-zinc: #646b79;
+    --pico-color-slate: #525f7a;
+    --pico-color-light: #fff;
+    --pico-color-dark: #000
+}
+
+.pico-background-red {
+    background-color: var(--pico-color-red);
+    color: var(--pico-color-light)
+}
+
+.pico-background-pink {
+    background-color: var(--pico-color-pink);
+    color: var(--pico-color-light)
+}
+
+.pico-background-fuchsia {
+    background-color: var(--pico-color-fuchsia);
+    color: var(--pico-color-light)
+}
+
+.pico-background-purple {
+    background-color: var(--pico-color-purple);
+    color: var(--pico-color-light)
+}
+
+.pico-background-violet {
+    background-color: var(--pico-color-violet);
+    color: var(--pico-color-light)
+}
+
+.pico-background-indigo {
+    background-color: var(--pico-color-indigo);
+    color: var(--pico-color-light)
+}
+
+.pico-background-blue {
+    background-color: var(--pico-color-blue);
+    color: var(--pico-color-light)
+}
+
+.pico-background-azure {
+    background-color: var(--pico-color-azure);
+    color: var(--pico-color-light)
+}
+
+.pico-background-cyan {
+    background-color: var(--pico-color-cyan);
+    color: var(--pico-color-light)
+}
+
+.pico-background-jade {
+    background-color: var(--pico-color-jade);
+    color: var(--pico-color-light)
+}
+
+.pico-background-green {
+    background-color: var(--pico-color-green);
+    color: var(--pico-color-light)
+}
+
+.pico-background-lime {
+    background-color: var(--pico-color-lime);
+    color: var(--pico-color-dark)
+}
+
+.pico-background-yellow {
+    background-color: var(--pico-color-yellow);
+    color: var(--pico-color-dark)
+}
+
+.pico-background-amber {
+    background-color: var(--pico-color-amber);
+    color: var(--pico-color-dark)
+}
+
+.pico-background-pumpkin {
+    background-color: var(--pico-color-pumpkin);
+    color: var(--pico-color-dark)
+}
+
+.pico-background-orange {
+    background-color: var(--pico-color-orange);
+    color: var(--pico-color-light)
+}
+
+.pico-background-sand {
+    background-color: var(--pico-color-sand);
+    color: var(--pico-color-dark)
+}
+
+.pico-background-grey {
+    background-color: var(--pico-color-grey);
+    color: var(--pico-color-dark)
+}
+
+.pico-background-zinc {
+    background-color: var(--pico-color-zinc);
+    color: var(--pico-color-light)
+}
+
+.pico-background-slate {
+    background-color: var(--pico-color-slate);
+    color: var(--pico-color-light)
+}

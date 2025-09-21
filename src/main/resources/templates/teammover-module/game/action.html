@@ -1,0 +1,21 @@
+<th:block th:insert="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<th:block th:insert="~{fragments/page/message}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNL(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
+
+<form action="/game" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+
+    <fieldset class="grid" role="presentation">
+        <input id="id" name="id" th:value="${game.id}" type="hidden">
+        <input id="version" name="version" th:value="${game.version}" type="hidden">
+
+        <th:block th:insert="~{fragments/elements/input::inputHtml('whereIsTheGame','Waar is de wedstrijd?', 'game.whereIsTheGame','1')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtml('whenIsTheGame','Wanneer is de wedstrijd?', 'game.whenIsTheGame','2')}" th:with="type='datetime-local'"></th:block>
+        <th:block th:insert="~{fragments/elements/select::selectCheckBox('doWeNeedToDrive','Uit?','game.doWeNeedToDrive','3')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlNumber('howManyPeople', 'Aantal teamleden', 'game.howManyPeople', '4')}" th:with="type='number'"></th:block>
+    </fieldset>
+</form>

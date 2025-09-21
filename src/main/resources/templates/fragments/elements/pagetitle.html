@@ -1,0 +1,28 @@
+<th:block th:fragment="pageTitle(id, entityName,link)">
+    <fieldset style="display: flex; align-items: center; gap: 1rem;">
+        <h1 th:if="${id == null}" th:text="${'Create '+ entityName}"></h1>
+        <h1 th:if="${id != null}" th:text="${'Update '+ entityName}"></h1>
+        <a th:if="${list != ''}" th:href="${link}" th:text="'Show list'"></a>
+    </fieldset>
+</th:block>
+<th:block th:fragment="pageTitleList(entityName,link)">
+    <fieldset style="display: flex; align-items: center; gap: 1rem;">
+        <h1 th:text="${'List '+ entityName}"></h1>
+        <a th:if="${link != ''}" th:href="${link}">Create</a>
+    </fieldset>
+</th:block>
+
+
+<th:block th:fragment="pageTitleNL(id, entityName,link)">
+    <fieldset style="display: flex; align-items: center; gap: 1rem;">
+        <h1 th:if="${id == null}" th:text="${'Creër '+ entityName}"></h1>
+        <h1 th:if="${id != null}" th:text="${'Bewerk '+ entityName}"></h1>
+        <a th:if="${list != ''}" th:href="${link}" th:text="'Toon lijst'"></a>
+    </fieldset>
+</th:block>
+<th:block th:fragment="pageTitleListNL(entityName,link)">
+    <fieldset style="display: flex; align-items: center; gap: 1rem;">
+        <h1 th:text="${'Lijst '+ entityName}"></h1>
+        <a th:if="${link != ''}" th:href="${link}">Creëren</a>
+    </fieldset>
+</th:block>

@@ -1,0 +1,36 @@
+<th:block th:insert="~{fragments/page/head}"></th:block>
+<body>
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<body>
+
+<main style="max-width:600px" class="container">
+    <article>
+        <header><h2>Please sign in</h2></header>
+            <div th:if="${param.error}">
+                <p style="color:red;">Invalid username, password or short code</p>
+            </div>
+        <div th:unless="${param.error}">
+            <div th:if="${param.notLoggedIn}">
+                <p style="color:red;">You are not logged in yet, please do so...</p>
+            </div>
+            <div th:unless="${param.notLoggedIn}">
+
+                <p>&nbsp;</p>
+            </div>
+        </div>
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <fieldset>
+                <input id="id" name="id" th:value="${userId}" type="hidden">
+                <th:block autofocus th:insert="~{fragments/elements/input::inputHtml('username','Username', 'account', '1')}" th:with="required=false">></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtml('password','Password', 'password', '2')}" th:with="type='password', required=false"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtml('shortCode','Company short code', 'shortCode','3ó')}" th:with="required=false"></th:block>
+            </fieldset>
+            <fieldset class="grid" role="group">
+                <button name="_save" type="submit">Sign in</button>
+            </fieldset>
+        </form>
+    </article>
+</main>
+</body>
+</html>

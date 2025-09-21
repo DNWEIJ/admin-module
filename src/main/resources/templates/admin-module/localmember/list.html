@@ -1,0 +1,52 @@
+<th:block th:replace="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Local Member','/localmember')}"></th:block>
+
+<style>
+    .colgroup {
+        width: 100%
+
+    }
+</style>
+
+<table id="localmember-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Located</th>
+        <th>Email</th>
+        <th>Clinic phone</th>
+        <th>Second phone</th>
+        <th>Fax</th>
+        <th>Address</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="localmember : ${localmembers}">
+        <tr>
+            <td><a th:href="@{'/localmember/'+ ${localmember.id}}">[[${localmember.fullNamePoc}]]</a></td>
+            <td>[[${localmember.clinic}]]</td>
+            <td>[[${localmember.email}]]</td>
+            <td>[[${localmember.phone}]]</td>
+            <td>[[${localmember.phone2}]]</td>
+            <td>[[${localmember.fax}]]</td>
+            <td>[[${localmember.Address1}]]<br/>[[${localmember.Address2}]]<br/>[[${localmember.Address3}]]</td>
+        </tr>
+    </th:block>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    var table = new Tabulator("#localmember-table",
+        {
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            columns: [ //set column definitions for imported table data
+                {title: "Address", formatter: "html"}
+            ]
+        });
+</script>

@@ -1,0 +1,18 @@
+<th:block th:insert="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<th:block th:insert="~{fragments/page/message}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${function.id}, 'Function','/function/list')}"></th:block>
+
+<form action="/function" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+
+    <fieldset class="grid" role="presentation">
+        <input id="id" name="id" th:value="${function.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${function.version}" type="hidden"/>
+
+        <th:block th:insert="~{fragments/elements/input::inputHtml('name','Function name', 'function.name','1')}" th:with="autofocus=true"></th:block>
+    </fieldset>
+</form>

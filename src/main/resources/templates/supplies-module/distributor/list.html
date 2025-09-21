@@ -1,0 +1,40 @@
+<th:block th:replace="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Distributor','/distributor')}"></th:block>
+
+<style>
+    .colgroup {
+        width: 100%
+
+    }
+</style>
+
+<table id="show-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="distributor : ${distributors}">
+        <tr>
+            <td><a th:href="@{'/distributor/'+ ${distributor.id}}">[[${distributor.distributorName}]]</a></td>
+        </tr>
+   </th:block>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    var table = new Tabulator("#show-table",
+        {
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            columns: [ //set column definitions for imported table data
+                {title: "Name", formatter: "html"}
+            ]
+        });
+</script>

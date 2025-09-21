@@ -1,0 +1,108 @@
+<th:block th:insert="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<th:block th:insert="~{fragments/page/message}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${userPref.id}, 'Preferences','')}"></th:block>
+
+<link href="/pico/admin-module/color-picker.css" rel="stylesheet">
+<link href="/pico/admin-module/color-picker-doc.css" rel="stylesheet">
+<link href="/pico/admin-module/color-picker-main.css" rel="stylesheet">
+
+<form action="/user/preferences" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+
+    <input id="id" name="id" th:value="${userPref.id}" type="hidden">
+    <input id="version" name="version" th:value="${userPref.version}" type="hidden">
+
+    <!-- Agenda Accordion -->
+    <details name="preferences" open>
+        <summary><b>Agenda Preferences</b></summary>
+        <fieldset class="grid" role="presentation">
+            <th:block th:insert="~{fragments/elements/input::inputHtml('pref_agenda_vet1','Agenda Vet 1', 'userPref.pref_agenda_vet1','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('pref_agenda_vet2','Agenda Vet 2', 'userPref.pref_agenda_vet2','2')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('pref_agenda_vet3','Agenda Vet 3', 'userPref.pref_agenda_vet3','3')}"></th:block>
+        </fieldset>
+    </details>
+
+    <hr/>
+
+    <!-- Search Accordion -->
+    <details name="preferences">
+        <summary><b>Customer Search Preferences</b></summary>
+        <fieldset class="grid" role="presentation">
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefSearchCustStart','Search by Start?', 'userPref.prefSearchCustStart', ${ynvaluesList}, true,'4')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefSearchCustStreet','Search by Street?', 'userPref.prefSearchCustStreet', ${ynvaluesList}, true,'5')}"></th:block>
+        </fieldset>
+    </details>
+
+    <hr/>
+
+    <!-- Visit Accordion -->
+    <details name="preferences">
+        <summary><b>Visit Preferences</b></summary>
+        <fieldset class="grid" role="presentation">
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitAppointmentList','Show Appointment List?', 'userPref.prefVisitAppointmentList', ${ynvaluesList}, true,'6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitTotalVisit','Show Total Visit?', 'userPref.prefVisitTotalVisit', ${ynvaluesList}, true,'7')}"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitAppointmentInfo','Show Appointment Info?', 'userPref.prefVisitAppointmentInfo', ${ynvaluesList}, true,'8')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitVisitInfo','Show Visit Info?', 'userPref.prefVisitVisitInfo', ${ynvaluesList}, true,'9')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitAnalyseInfo','Show Analyse Info?', 'userPref.prefVisitAnalyseInfo', ${ynvaluesList}, true,'10')}"></th:block>
+        </fieldset>
+        <fieldset class="grid" role="presentation">
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitComments','Show Comments?', 'userPref.prefVisitComments', ${ynvaluesList}, true,'11')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitProducts','Show Products?', 'userPref.prefVisitProducts', ${ynvaluesList}, true,'12')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitDiagnoses','Show Diagnoses?', 'userPref.prefVisitDiagnoses', ${ynvaluesList}, true,'13')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('prefVisitImages','Show Images?', 'userPref.prefVisitImages', ${ynvaluesList}, true,'14')}"></th:block>
+        </fieldset>
+    </details>
+    <!-- Color schema Accordion -->
+    <details name="color-scheme">
+        <div id="content" role="document">
+            <section>
+                <h2>Theme color</h2>
+                <article class="color-picker component" aria-label="Custom theme">
+                    <header>
+                        <a class="pico-background-red" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/red"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon-check"><style>
+                            path#check-icon {
+                                stroke-dasharray: 22px;
+                                stroke-dashoffset: 22px;
+                                animation: check 0.2s ease-out forwards;
+                            }
+
+                        </style><path id="check-icon" d="M5 12l5 5l10 -10"></path></svg></a>
+                        <a class="pico-background-pink" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/pink"></a>
+                        <a class="pico-background-fuchsia" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/fuchsia"></a>
+                        <a  class="pico-background-purple" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/purple"></a>
+                        <a class="pico-background-violet" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/violet"></a>
+                        <a class="pico-background-indigo" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/indigo"></a>
+                        <a class="pico-background-blue" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/blue"></a>
+                        <a class="pico-background-azure" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker"></a>
+                        <a class="pico-background-cyan" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/cyan"></a>
+                        <a class="pico-background-jade" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/jade"></a>
+                        <a class="pico-background-green" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/green"></a>
+                        <a class="pico-background-lime" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/lime"></a>
+                        <a class="pico-background-yellow" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/yellow"></a>
+                        <a class="pico-background-amber" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/amber"></a>
+                        <a class="pico-background-pumpkin" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/pumpkin"></a>
+                        <a class="pico-background-orange" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/orange"></a>
+                        <a class="pico-background-sand" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/sand"></a>
+                        <a class="pico-background-grey" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/grey"></a>
+                        <a class="pico-background-zinc" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/zinc"></a>
+                        <a class="pico-background-slate" aria-label="Purple" aria-busy="false" data-discover="true" href="/docs/version-picker/slate"></a>
+                    </header>
+                    <fieldset class="grid"><input placeholder="Login" aria-label="Login" autocomplete="username" type="text" name="login">
+                        <input placeholder="Password" aria-label="Password" autocomplete="current-password" type="password" name="password">
+                        <button type="submit">Log in</button>
+                    </fieldset>
+                    <fieldset>
+                        <label>
+                            <input role="switch" type="checkbox" checked="" name="switch"> I agree to the <a data-discover="true" href="/docs/version-picker/purple">Privacy Policy</a>
+                        </label>
+                    </fieldset>
+                </article>
+            </section>
+        </div>
+    </details>
+</form>

@@ -1,0 +1,29 @@
+<block th:if="${message != null}">
+    <div class="message_notify" id="message_popover" popover="manual"><span th:text="${message}"></span></div>
+    <style>
+        .message_notify {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            height: 50px;
+            box-sizing: border-box;
+            color: black;
+            text-align: center;
+            background: rgba(50, 50, 0, .6);
+            overflow: hidden;
+
+            opacity: .5;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            document.getElementById('message_popover').showPopover();
+
+            setTimeout(function () {
+                document.getElementById('message_popover').hidePopover();
+            }, 2000);
+        };
+    </script>
+</block>

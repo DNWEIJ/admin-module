@@ -1,0 +1,48 @@
+<th:block th:replace="~{fragments/page/header}"></th:block>
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Member','/member')}"></th:block>
+
+<style>
+    .colgroup {
+        width: 100%
+
+    }
+</style>
+
+<table id="member-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Active</th>
+        <th>Short code</th>
+        <th>Start</th>
+        <th>End</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="member : ${members}">
+        <tr>
+            <td><a th:href="@{'/member/'+ ${member.id}}">[[${member.name}]]</a></td>
+            <td>[[${member.active}]]</td>
+            <td>[[${member.shortCode}]]</td>
+            <td>[[${member.start}]]</td>
+            <td>[[${member.stop}]]</td>
+        </tr>
+   </th:block>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    var table = new Tabulator("#member-table",
+        {
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            columns: [ //set column definitions for imported table data
+                {title: "Name", formatter: "html"}
+            ]
+        });
+</script>
