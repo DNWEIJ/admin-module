@@ -6,58 +6,90 @@
 <th:block th:insert="~{fragments/elements/pageTitle::pageTitleNL(${game.id}, 'Driver','/game/list')}"></th:block>
 
 
-<article class="game-header" role="presentation" >
-    <header >
-        <h3 th:text="${game.whereIsTheGame}">Header</h3>
-        <span th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></span>
-    </header>
-
-    <th:block th:each="driver : ${driverList}">
-        <p th:text="${driver.accountName}">Content</p>
-        <p th:text="${driver.atSwimmingPool}">Content</p>
-        <p th:text="${driver.nrOfTeamMembers}">Content</p>
-        <p th:text="${driver.nrOfEmptySpots}">Content</p>
-    </th:block>
-
-    <footer>Footer</footer>
+<article>
+    <header class="game-header"><h3 th:text="${game.whereIsTheGame}">Header</h3><span th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></span></header>
+    <table class="table-tight">
+        <thead></thead>
+        <tbody>
+        <th:block th:each="driver : ${game.drivers}">
+            <tr>
+                <td th:text="${driver.accountName}">Content</td>
+                <td th:if="${driver.atSwimmingPool}">wasbeek</td>
+                <td th:if="${not driver.atSwimmingPool}">direct</td>
+                <td th:text="${driver.nrOfTeamMembers}">Content</td>
+                <td th:text="${driver.nrOfEmptySpots}">Content</td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
 </article>
-
-
-<form action="/driver" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+<hr/>
+<form th:action="'/game/'+${driver.game.id}+'/driver'" method="post">
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
     <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
 
-    <fieldset class="grid" role="presentation">
-        <input id="id" name="id" th:value="${driver.id}" type="hidden">
-        <input id="gameId" name="gameId" th:value="${game.id}" type="hidden">
-        <input id="version" name="version" th:value="${driver.version}" type="hidden">
-
-    <label>Auto geregeld door:
-        <input type="text" id="accountName" name="accountName" th:value="${driver.accountName}" readonly/>
-    </label>
-        <th:block th:insert="~{fragments/elements/select::selectCheckBox('atSwimmingPool','Ga je langs de wasbeek?', 'driver.atSwimmingPool','1')}"></th:block>
-    </fieldset>
-    <fieldset class="grid" role="presentation">
-        <th:block th:insert="~{fragments/elements/input::inputHtmlNumber('nrOfTeamMembers','Hoeveel teamleden gaan er al mee in de auto?', 'driver.nrOfTeamMembers', '3')}"></th:block>
-        <th:block th:insert="~{fragments/elements/input::inputHtmlNumber('nrOfEmptySpots','Hoeveel teamleden kunnen nog mee/ legen plekken?', 'driver.nrOfEmptySpots', '4')}"></th:block>
-    </fieldset>
+    <input id="id" name="id" th:value="${driver.id}" type="hidden">
+    <input id="version" name="version" th:value="${driver.version}" type="hidden">
+    <input id="game.id" name="game.id" th:value="${driver.game.id}" type="hidden"/>
+    <table>
+        <tr>
+            <td cospan="2"><nobr>Vervoer geregeld door: <b>[[${driver.accountName}]]</b></nobr></td>
+        </tr>
+        <tr>
+        <td colspan="2">
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox('atSwimmingPool','Ga je langs de wasbeek?', 'driver.atSwimmingPool','1')}"></th:block>
+        </td>
+        </tr>
+        <tr>
+            <td>Hoeveel teamleden gaan er al mee in de auto?</td>
+        <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" th:value="${driver.nrOfTeamMembers}" type="number" tabindex="1"/></td>
+        </tr>
+        <tr><td>Hoeveel teamleden kunnen nog mee/ legen plekken?</td>
+        <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" th:value="${driver.nrOfEmptySpots}" type="number" tabindex="2"/></td>
+        </tr>
+    </table>
 </form>
 
 <style>
+    .input {
+        width: 1em;
+    }
+
     .game-header {
         display: flex;
         justify-content: space-between; /* pushes h3 left and span right */
-        align-items: baseline;          /* aligns text nicely */
-        gap: 1rem;                      /* optional spacing */
-        width: 25em;
-    }
-
-    .game-header h3 {
-        margin: 0;
+        align-items: baseline; /* aligns text nicely */
     }
 
     .game-header span {
         font-size: 0.9rem;
         color: #666;
+    }
+
+    .table-tight {
+        width: 100%;
+        border-collapse: collapse; /* remove spacing between cells */
+        margin: 0; /* no margin around the table */
+        padding: 0; /* no padding inside the table */
+    }
+
+    .table-tight td,
+    .table-tight th {
+        padding: 0; /* no cell padding */
+        margin: 0;
+        border: none; /* optional: no borders */
+        line-height: 1; /* compact row height */
+    }
+
+    .table-tight tr {
+        margin: 0;
+        padding: 0;
+    }
+
+    hr {
+        border: none; /* remove default border */
+        height: 3px; /* thickness */
+        background-color: #777; /* color */
+        margin: 1rem 0; /* optional spacing */
     }
 </style>

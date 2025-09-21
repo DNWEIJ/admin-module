@@ -6,13 +6,13 @@
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${product.id}, 'Product','/product/list')}"></th:block>
 
 <form action="/product" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
     <fieldset class="grid" role="presentation">
         <input id="id" name="id" th:value="${product.id}" type="hidden"/>
         <input id="version" name="version" th:value="${product.version}" type="hidden"/>
-        <input id="delete" name="delete" type="hidden" th:value="${product.delete}"/>
+        <input id="delete" name="delete" th:value="${product.delete}" type="hidden"/>
 
         <!-- General Information -->
         <legend>General Information</legend>
@@ -53,18 +53,18 @@
 
         <details name="product-tabs">
             <summary>Instructions</summary>
-            <textarea id="instructions" name="instructions" th:text="${product.instructions}" rows="8" cols="80"></textarea>
+            <textarea cols="80" id="instructions" name="instructions" rows="8" th:text="${product.instructions}"></textarea>
         </details>
 
         <details name="product-tabs">
             <summary>Prescription Label</summary>
-            <textarea id="prescriptionLabel" name="prescriptionLabel" th:text="${product.prescriptionLabel}" rows="8" cols="80"></textarea>
+            <textarea cols="80" id="prescriptionLabel" name="prescriptionLabel" rows="8" th:text="${product.prescriptionLabel}"></textarea>
         </details>
 
         <details name="product-tabs">
             <summary>Additional Actions</summary>
             <label>
-                <input type="checkbox" id="deceasedPetPrompt" name="deceasedPetPrompt" th:checked="${product.deceasedPetPrompt}"/>
+                <input id="deceasedPetPrompt" name="deceasedPetPrompt" th:checked="${product.deceasedPetPrompt}" type="checkbox"/>
                 Prompt user to mark Pet as deceased when this line item is added.
             </label>
         </details>

@@ -1,6 +1,6 @@
 <th:block th:fragment="dbDropdown(name, label, dbField, list, required, tabindex)">
     <label th:for="${name}">[[${label}]]
-        <select th:required="${required}" th:id="${name}" th:name="${name}" th:tabindex="${tabindex}">
+        <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}">
 
             <th:block th:if="${list.size() == 1}">
                 <option selected th:text="${list[0].name}" th:value="${list[0].id}"></option>
@@ -20,7 +20,7 @@
 
 <th:block th:fragment="propDropdown(name, label, dbField, list, required, tabindex)">
     <label th:for="${name}">[[${label}]]
-        <select th:required="${required}" th:id="${name}" th:name="${name}" th:tabindex="${tabindex}">
+        <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}">
 
             <th:block th:if="${list.size() == 1}">
                 <option selected th:text="${list[0].name}" th:value="${list[0].id}"></option>

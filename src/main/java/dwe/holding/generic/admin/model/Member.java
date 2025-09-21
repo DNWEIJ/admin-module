@@ -44,6 +44,8 @@ public class Member extends BaseBO {
     @Column(nullable = false)
     @NotNull
     private YesNoEnum active;
+    @NotNull
+    private YesNoEnum localMemberSelectRequired;
     @Column(nullable = false)
     @NotNull
     private LocalDate start;

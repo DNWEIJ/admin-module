@@ -1,9 +1,10 @@
 package dwe.holding.generic;
 
+import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.migration.MigrationAdminService;
 import dwe.holding.generic.migration.MigrationSuppliesService;
 import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverAdminService;
-import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverService;
+import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class AdminApplication implements CommandLineRunner {
 
     @Autowired
-    MigrationTeamMoverService migrationTeamMoverService;
+    MigrationTeamMoverDataService migrationTeamMoverDataService;
     @Autowired
     MigrationTeamMoverAdminService migrationTeamMoverAdminService;
     @Autowired
@@ -43,13 +44,9 @@ public class AdminApplication implements CommandLineRunner {
         return () -> {
             if (SecurityContextHolder.getContext() == null || SecurityContextHolder.getContext().getAuthentication() == null) {
                 log.error("NO username for auditor aware");
-                return Optional.ofNullable("");
+                return Optional.ofNullable("startupData");
             } else {
-                return Optional.ofNullable(
-                        SecurityContextHolder.getContext()
-                                .getAuthentication()
-                                .getName()
-                );
+                return Optional.ofNullable(AutorisationUtils.getCurrentUserAccount());
             }
         };
     }
@@ -57,8 +54,8 @@ public class AdminApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         migrationAdminService.init();
-        migrationSuppliesService.init();
+        // todo fix    migrationSuppliesService.init();
         migrationTeamMoverAdminService.init();
-        migrationTeamMoverService.init();
+        migrationTeamMoverDataService.init();
     }
 }

@@ -1,6 +1,6 @@
 package dwe.holding.generic.suppliesandinventory.controller;
 
-import dwe.holding.generic.admin.autorisation.function_role.PresentationFunction;
+import dwe.holding.generic.admin.model.PresentationFunction;
 import dwe.holding.generic.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.suppliesandinventory.model.Supplies;
 import dwe.holding.generic.suppliesandinventory.repository.DistributorRepository;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.UUID;
 
 @Controller
 public class SuppliesController {
@@ -30,7 +32,7 @@ public class SuppliesController {
     }
 
     @GetMapping("/supplies/{id}")
-    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         Supplies supply = suppliesRepository.findById(id).orElseThrow();
         if (supply.getDistributor() == null) supply.setDistributor(new Distributor());

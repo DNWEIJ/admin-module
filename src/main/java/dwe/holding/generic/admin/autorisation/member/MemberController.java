@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.UUID;
+
 import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 
 @Controller
@@ -47,7 +49,7 @@ public class MemberController {
 
 
     @GetMapping("/member/{id}")
-    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         model.addAttribute("member", memberRepository.findById(id).orElseThrow());
         setModelData(model);

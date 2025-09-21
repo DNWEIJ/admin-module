@@ -16,11 +16,11 @@
     </tr>
     </thead>
     <tbody>
-    <th:block th:each="role : ${roles}" >
+    <th:block th:each="role : ${roles}">
         <tr>
             <td><a th:href="@{'/role/'+ ${role.id}}">[[${role.name}]]</a></td>
         </tr>
-   </th:block>
+    </th:block>
     </tbody>
     <tfoot>
     <tr>

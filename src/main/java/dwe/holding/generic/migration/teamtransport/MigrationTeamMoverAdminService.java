@@ -12,6 +12,7 @@ import dwe.holding.generic.admin.model.type.LanguagePrefEnum;
 import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.generic.admin.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MigrationTeamMoverAdminService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -43,12 +45,13 @@ public class MigrationTeamMoverAdminService {
 
     @Transactional
     public void init() {
-        if (memberRepository.findAll().isEmpty()) {
+        if (memberRepository.findAll().stream().filter(mem -> mem.getShortCode().equals("ZVS")).toList().isEmpty()) {
             String password = passwordEncoder.encode("ZVS!DeEerste!");
-
+            log.info("MigrationTeamMoverAdminService:: member");
             Member member = memberRepository.saveAndFlush(
                     Member.builder()
                             .name("ZVS Sassenheim")
+                            .localMemberSelectRequired(YesNoEnum.Yes)
                             .active(YesNoEnum.Yes)
                             .password(password)
                             .start(LocalDate.now())
@@ -57,10 +60,48 @@ public class MigrationTeamMoverAdminService {
                             .simultaneousUsers(40)
                             .build()
             );
-            LocalMember localMember = localMemberRepository.saveAndFlush(
-                    LocalMember.builder().localMemberName("ZVS Sassenheim").mid(member.getId()).member(member).build()
+            log.info("MigrationTeamMoverAdminService:: localMember");
+            List<LocalMember> localMembers = localMemberRepository.saveAllAndFlush(
+                    List.of(
+                            LocalMember.builder().localMemberName("ZVS GO12-2").mid(member.getId()).member(member).build(),
+                            LocalMember.builder().localMemberName("ZVS GO14-1").mid(member.getId()).member(member).build()
+                    )
             );
 
+            member.getLocalMembers().addAll(localMembers);
+            memberRepository.saveAndFlush(member);
+            log.info("MigrationTeamMoverAdminService:: function");
+            List<Function> listFunc = functionRepository.saveAllAndFlush(
+                    List.of(
+                            Function.builder().name("game_READ").build(),
+                            Function.builder().name("driver_READ").build(),
+                            Function.builder().name("game_CREATE").build(),
+                            Function.builder().name("driver_CREATE").build()
+                    )
+            );
+            log.info("MigrationTeamMoverAdminService:: role");
+            List<Role> listRole = roleRepository.saveAllAndFlush(
+                    List.of(
+                            Role.builder().name("team-mover").memberId(member.getId()).build(),
+                            Role.builder().name("planner").memberId(member.getId()).build()
+
+                    )
+            );
+            Role planner = listRole.stream().filter(r -> r.getName().equals("planner")).findFirst().get();
+            Role teammover = listRole.stream().filter(r -> r.getName().equals("team-mover")).findFirst().get();
+
+            log.info("MigrationTeamMoverAdminService:: function-role");
+            List<FunctionRole> funcRole = functionRoleRepository.saveAllAndFlush(
+                    listFunc.stream()
+                            .map(func -> {
+                                if (func.getName().toLowerCase().contains("game")) {
+                                    return FunctionRole.builder().function(func).role(planner).build();
+                                }
+                                return FunctionRole.builder().function(func).role(teammover).build();
+                            })
+                            .toList()
+            );
+            log.info("MigrationTeamMoverAdminService:: user");
             User jeroen = userRepository.saveAndFlush(
                     User.builder()
                             .name("Jeroen Peters")
@@ -74,42 +115,18 @@ public class MigrationTeamMoverAdminService {
                             .member(member)
                             .build()
             );
-
-
-            List<Function> functionForUser = functionRepository.saveAllAndFlush(
+            log.info("MigrationTeamMoverAdminService:: user-role");
+            userRoleRepository.saveAllAndFlush(
                     List.of(
-                            Function.builder().name("resetpassword_READ").build(),
-                            Function.builder().name("userpreferences_READ").build(),
-                            Function.builder().name("resetpassword_CREATE").build(),
-                            Function.builder().name("userpreferences_CREATE").build()
-
+                            UserRole.builder().role(planner).user(jeroen).build(),
+                            UserRole.builder().role(teammover).user(jeroen).build()
                     )
-            );
-
-            List<Role> listRole = roleRepository.saveAllAndFlush(
-                    List.of(
-                            Role.builder().name("super_admin").memberId(member.getId()).build(),
-                            Role.builder().name("planner").memberId(member.getId()).build()
-                    )
-            );
-            Role planner = listRole.stream().filter(r -> r.getName().equals("planner")).findFirst().get();
-
-            List<FunctionRole> funcRole = functionRoleRepository.saveAllAndFlush(
-                    functionForUser.stream()
-                            .map(func -> {
-                                return (FunctionRole) FunctionRole.builder().function(func).role(planner).build();
-                            })
-                            .toList()
-            );
-            userRoleRepository.saveAndFlush(
-                    UserRole.builder().role(planner).user(jeroen).build()
             );
 
 
             // *********** //
             // ADMIN STAFF //
             // *********** //
-            Role superAdminRole = listRole.stream().filter(r -> r.getName().equals("super_admin")).findFirst().get();
             User daniel = userRepository.saveAndFlush(
                     User.builder()
                             .name("daniel")
@@ -123,19 +140,10 @@ public class MigrationTeamMoverAdminService {
                             .member(member)
                             .build()
             );
-
-            List<Function> SuperAdmin = functionRepository.saveAllAndFlush(
+            userRoleRepository.saveAllAndFlush(
                     List.of(
-                            Function.builder().name("member_READ").build(),
-                            Function.builder().name("localmember_READ").build(),
-                            Function.builder().name("function_READ").build(),
-                            Function.builder().name("role_READ").build(),
-                            Function.builder().name("user_READ").build(),
-                            Function.builder().name("member_CREATE").build(),
-                            Function.builder().name("localmember_CREATE").build(),
-                            Function.builder().name("function_CREATE").build(),
-                            Function.builder().name("role_CREATE").build(),
-                            Function.builder().name("user_CREATE").build()
+                            UserRole.builder().role(planner).user(daniel).build(),
+                            UserRole.builder().role(teammover).user(daniel).build()
                     )
             );
         }

@@ -1,6 +1,8 @@
 package dwe.holding.generic.migration;
 
+import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;
+import dwe.holding.generic.admin.model.Function;
 import dwe.holding.generic.admin.model.LocalMember;
 import dwe.holding.generic.admin.model.Member;
 import dwe.holding.generic.suppliesandinventory.model.Distributor;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class MigrationSuppliesService {
@@ -19,21 +22,33 @@ public class MigrationSuppliesService {
     private final SuppliesRepository suppliesRepository;
     private final MemberRepository memberRepository;
     private final DistributorRepository distributorRepository;
+    private final FunctionRepository functionRepository;
 
-    public MigrationSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository) {
+    public MigrationSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository, FunctionRepository functionRepository) {
         this.suppliesRepository = suppliesRepository;
         this.memberRepository = memberRepository;
         this.distributorRepository = distributorRepository;
+        this.functionRepository = functionRepository;
     }
 
     @Transactional
     public void init() {
         if (suppliesRepository.findAll().isEmpty()) {
             Member member = memberRepository.findAll().getFirst();
-            Long memberId = member.getId();
+            UUID memberId = member.getId();
             Set<LocalMember> localMembers = member.getLocalMembers();
-            Long localMemberId = localMembers.stream().findFirst().get().getId();
+            UUID localMemberId = localMembers.stream().findFirst().get().getId();
 
+
+            List<Function> listFunc = functionRepository.saveAllAndFlush(
+                    List.of(
+                            Function.builder().name("distributor_READ").build(),
+                            Function.builder().name("supplies_READ").build(),
+
+                            Function.builder().name("distributor_CREATE").build(),
+                            Function.builder().name("supplies_READ").build()
+                    )
+            );
             List<Distributor> distributors = distributorRepository.saveAllAndFlush(
                     List.of(
                             Distributor.builder().distributorName("Distributor One").memberId(memberId).localMemberId(localMemberId).build(),

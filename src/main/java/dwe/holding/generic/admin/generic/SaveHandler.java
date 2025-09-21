@@ -8,6 +8,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -24,12 +25,12 @@ public class SaveHandler {
             Model model,
             RedirectAttributes redirect,
             HttpServletRequest request,
-            Function<F, Long> processor,
+            Function<F, UUID> processor,
             F form
     ) {
         SaveConfig config = resolveConfig(request);
 
-        Long entityId = 0L;
+        UUID entityId = null;
 
         if (isNew(request)) {
             if (bindingResult.hasErrors()) {
@@ -64,7 +65,7 @@ public class SaveHandler {
         }
     }
 
-    private String buildRedirect(Long id, String baseRedirect) {
-        return id != null && id > 0 ? baseRedirect + "/" + id : baseRedirect;
+    private String buildRedirect(UUID id, String baseRedirect) {
+        return id != null ? baseRedirect + "/" + id : baseRedirect;
     }
 }

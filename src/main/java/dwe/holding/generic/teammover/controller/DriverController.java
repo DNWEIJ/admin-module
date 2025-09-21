@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
-
+import java.util.UUID;
 
 @Controller
 @Validated
@@ -32,53 +31,65 @@ public class DriverController {
         this.driverRepository = driverRepository;
     }
 
-    @PostMapping("/driver")
-    String save(@Valid Driver driver, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    @PostMapping("/game/{id}/driver")
+    String save(@Valid Driver formDriver, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "teammover-module/driver/action";
         }
-        driver.setMemberId(AutorisationUtils.getCurrentUserMid());
-        Driver savedDriver = driverRepository.save(driver);
-        Game game = gameRepository.findById(Long.parseLong(request.getParameter("gameId"))).orElseThrow();
-        game.getDrivers().add(savedDriver);
-        gameRepository.save(game);
-
+        UUID driverId = processDriver(formDriver);
         redirect.addFlashAttribute("message", "Rit opgeslagen!");
-        return getRedirectFor(request, savedDriver.getId(), "redirect:/game/list");
+        return "redirect:/game/list";
     }
 
-    @GetMapping("/driver")
-    String newScreen(Model model) {
-        model.addAttribute("action", "Creer");
-        model.addAttribute("driver", newDriver());
-        return "teammover-module/driver/action";
 
-    }
-
-    @GetMapping("/driver/{id}")
-    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
+    @GetMapping("game/{id}/driver")
+    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Bewerk");
         Game game = gameRepository.findById(id).orElseThrow();
         model.addAttribute("game", game);
         model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
         model.addAttribute("driver",
-                game.getDrivers().isEmpty() ? newDriver() :
+                game.getDrivers().isEmpty() ?
+                        newDriver(game.getId()) :
                         game.getDrivers().stream()
-                                .filter(driver -> driver.getAccountName().equalsIgnoreCase(AutorisationUtils.getCurrentUserAccount())).findFirst().orElse(new Driver())
+                                .filter(driver -> driver.getAccountName().equalsIgnoreCase(AutorisationUtils.getCurrentUserAccount()))
+                                .findFirst()
+                                .orElse(newDriver(game.getId()))
         );
-        model.addAttribute("driverList", game.getDrivers() == null ? null : game.getDrivers().stream());
         return "teammover-module/driver/action";
     }
 
-    @GetMapping("/driver/list")
-    String listScreen(Model model) {
-        model.addAttribute("action", "List");
-        model.addAttribute("games", gameRepository.findAll());
-        return "teammover-module/driver/list";
+    Driver newDriver(UUID gameId) {
+        return Driver.builder().accountName(AutorisationUtils.getCurrentUserAccount()).game(Game.builder().id(gameId).build()).build();
     }
 
-    Driver newDriver() {
-        return Driver.builder().accountName(AutorisationUtils.getCurrentUserAccount()).build();
+    UUID processDriver(Driver formDriver) {
+        Game game = gameRepository.findById(formDriver.getGame().getId()).orElseThrow();
+        if (formDriver.isNew()) {
+            Driver.builder()
+                    .accountName(AutorisationUtils.getCurrentUserAccount())
+                    .nrOfTeamMembers(formDriver.getNrOfTeamMembers())
+                    .atSwimmingPool(formDriver.isAtSwimmingPool())
+                    .nrOfEmptySpots(formDriver.getNrOfEmptySpots())
+                    .localMemberId(AutorisationUtils.getCurrentUserMlid())
+                    .memberId(AutorisationUtils.getCurrentUserId())
+                    .game(game)
+                    .build();
+            game.getDrivers().add(formDriver);
+            Game savedGame = gameRepository.save(game);
+            return savedGame.getDrivers().stream()
+                    .filter(driver -> driver.getAccountName().equalsIgnoreCase(AutorisationUtils.getCurrentUserAccount()))
+                    .findFirst().orElseThrow().getId();
+
+        } else {
+            Driver dbDriver = game.getDrivers().stream().filter(driver -> driver.getId().equals(formDriver.getId())).findFirst().orElseThrow();
+            dbDriver.setAtSwimmingPool(formDriver.isAtSwimmingPool());
+            dbDriver.setNrOfEmptySpots(formDriver.getNrOfEmptySpots());
+            dbDriver.setNrOfTeamMembers(formDriver.getNrOfTeamMembers());
+            Driver savedDriver = driverRepository.save(dbDriver);
+            return savedDriver.getId();
+        }
+
     }
 }

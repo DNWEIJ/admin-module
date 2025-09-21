@@ -1,0 +1,21 @@
+<th:block th:insert="~{fragments/page/head}"></th:block>
+<body>
+<th:block th:insert="~{fragments/page/errors}"></th:block>
+<body>
+
+<main class="container" style="max-width:600px">
+    <article>
+        <header><h2>Select the Team</h2></header>
+        <form action="/setlocalmember" method="post">
+            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+            <fieldset>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Select het team', 'id', ${localMembersList}, true,'`1`')}"></th:block>
+            </fieldset>
+            <fieldset class="grid" role="group">
+                <button name="_save" type="submit">Use selected team</button>
+            </fieldset>
+        </form>
+    </article>
+</main>
+</body>
+</html>

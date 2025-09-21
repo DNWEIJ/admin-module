@@ -6,7 +6,7 @@
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Supply','/supplies/list')}"></th:block>
 
 <form action="/supplies" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
     <fieldset class="grid" role="presentation">
@@ -35,7 +35,7 @@
     <fieldset class="grid" role="presentation">
         <!-- Distributor Description (textarea, explicit since fragment is for inputs) -->
         <label for="distDescription">Distributor Description
-        <textarea id="distDescription" name="supply.distDescription" tabindex="9" rows="3" cols="60" th:text="${distDescription}"></textarea>
+            <textarea cols="60" id="distDescription" name="supply.distDescription" rows="3" tabindex="9" th:text="${distDescription}"></textarea>
         </label>
     </fieldset>
 
@@ -51,13 +51,13 @@
 </form>
 
 
-    <label for="euros">Amount (€)</label>
-    <div style="display:flex; gap:4px; align-items:center;">
-        <input id="euros" name="euros" type="number" min="0" step="1" placeholder="0" style="width:6em;">
-        <span>,</span>
-        <input id="cents" name="cents" type="number" min="0" max="99" step="1" placeholder="00" style="width:5em;">
-    </div>
-    <input type="hidden" id="amountCents" name="amountCents">
+<label for="euros">Amount (€)</label>
+<div style="display:flex; gap:4px; align-items:center;">
+    <input id="euros" min="0" name="euros" placeholder="0" step="1" style="width:6em;" type="number">
+    <span>,</span>
+    <input id="cents" max="99" min="0" name="cents" placeholder="00" step="1" style="width:5em;" type="number">
+</div>
+<input id="amountCents" name="amountCents" type="hidden">
 
 <script>
     const eurosInput = document.getElementById('euros');

@@ -4,6 +4,7 @@ package dwe.holding.generic.admin.security;
 import dwe.holding.generic.admin.model.LocalMember;
 import dwe.holding.generic.admin.model.Member;
 import dwe.holding.generic.admin.model.User;
+import dwe.holding.generic.admin.model.type.YesNoEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.
@@ -26,7 +28,7 @@ public final class AutorisationUtils {
         return getCurrentUser().getUser().getMember();
     }
 
-    public static Long getCurrentUserMid() {
+    public static UUID getCurrentUserMid() {
         return getCurrentUser().getUser().getMember().getId();
     }
 
@@ -34,7 +36,7 @@ public final class AutorisationUtils {
         return getCurrentUser().getUser().getMember().getPassword();
     }
 
-    public static Long getCurrentUserId() {
+    public static UUID getCurrentUserId() {
         return getCurrentUser().getUser().getId();
     }
 
@@ -44,6 +46,10 @@ public final class AutorisationUtils {
 
     public static List<LocalMember> getCurrentUserLocals() {
         return new ArrayList<LocalMember>(getCurrentMember().getLocalMembers());
+    }
+
+    public static UUID getCurrentUserMlid() {
+        return getCurrentUser().getUser().getMemberLocalId();
     }
 
     public static LocalMember getCurrentUserMlid(Long mlid) {
@@ -60,6 +66,10 @@ public final class AutorisationUtils {
 
     public static boolean isNewUser() {
         return getCurrentUser().getUser().isChangePassword();
+    }
+
+    public static boolean isLocalMemberRequired() {
+        return getCurrentUser().getUser().getMember().getLocalMemberSelectRequired().equals(YesNoEnum.Yes);
     }
 
     public static Collection<GrantedAuthority> getCurrentAuthorities() {

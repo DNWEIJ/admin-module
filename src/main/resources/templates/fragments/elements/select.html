@@ -2,27 +2,23 @@
     <th:block th:each="group : ${groups}">
         <fieldset class="grid" role="presentation">
             <label th:each="record : ${group}" th:for="${'rec-' + record.id}">[[${record.name}]]
-                <input th:id="${'rec-' + record.id}"
-                       th:name="${dbField}"
-                       th:value="${record}"
+                <input role="switch"
                        th:checked="${record.connected}"
+                       th:id="${'rec-' + record.id}"
+                       th:name="${dbField}"
                        th:tabindex="${tabindex}"
-                       type="checkbox"
-                       role="switch"/>
+                       th:value="${record}"
+                       type="checkbox"/>
             </label>
         </fieldset>
     </th:block>
 </th:block>
 
 <th:block th:fragment="selectCheckBox(name, label, dbField, tabindex)">
-    <fieldset>
-        <label>
-            <input th:id="${name}"
-                   th:name="${name}"
-                   th:checked="${dbField}"
-                   th:tabindex="${tabindex}"
-                   type="checkbox" role="switch"/>
-            [[${label}]]
-        </label>
-    </fieldset>
+    <input role="switch"
+           th:checked="${__${dbField}__}"
+           th:id="${name}"
+           th:name="${name}"
+           th:tabindex="${tabindex}" type="checkbox"/>
+    [[${label}]]
 </th:block>

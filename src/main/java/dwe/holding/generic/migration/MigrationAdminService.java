@@ -12,6 +12,7 @@ import dwe.holding.generic.admin.model.type.LanguagePrefEnum;
 import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.generic.admin.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MigrationAdminService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -43,12 +45,14 @@ public class MigrationAdminService {
 
     @Transactional
     public void init() {
+        log.info("MigrationAdminService:: member");
         if (memberRepository.findAll().isEmpty()) {
             String password = passwordEncoder.encode("pas");
 
             Member member = memberRepository.saveAndFlush(
                     Member.builder()
                             .name("DWE Holding")
+                            .localMemberSelectRequired(YesNoEnum.No)
                             .active(YesNoEnum.Yes)
                             .password(password)
                             .start(LocalDate.now())
@@ -60,7 +64,7 @@ public class MigrationAdminService {
             LocalMember localMember = localMemberRepository.saveAndFlush(
                     LocalMember.builder().localMemberName("Local member").mid(member.getId()).member(member).build()
             );
-
+            log.info("MigrationAdminService:: user");
             User user = userRepository.saveAndFlush(
                     User.builder()
                             .name("daniel")
@@ -74,7 +78,7 @@ public class MigrationAdminService {
                             .member(member)
                             .build()
             );
-
+            log.info("MigrationAdminService:: function");
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(
                             Function.builder().name("member_READ").build(),
@@ -91,10 +95,9 @@ public class MigrationAdminService {
                             Function.builder().name("user_CREATE").build(),
                             Function.builder().name("resetpassword_CREATE").build(),
                             Function.builder().name("userpreferences_CREATE").build()
-                            // distribution
-                            // suppliesandinventory
                     )
             );
+            log.info("MigrationAdminService:: role");
             List<Role> listRole = roleRepository.saveAllAndFlush(
                     List.of(
                             Role.builder().name("super_admin").memberId(member.getId()).build(),
@@ -102,7 +105,7 @@ public class MigrationAdminService {
                     )
             );
             Role role = listRole.getLast();
-
+            log.info("MigrationAdminService:: function-role");
             List<FunctionRole> funcRole = functionRoleRepository.saveAllAndFlush(
                     listFunc.stream()
                             .map(func -> {
@@ -110,6 +113,7 @@ public class MigrationAdminService {
                             })
                             .toList()
             );
+            log.info("MigrationAdminService:: user-role");
             userRoleRepository.saveAndFlush(
                     UserRole.builder().role(role).user(user).build()
             );

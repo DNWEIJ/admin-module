@@ -6,7 +6,7 @@
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Distributor','/distributor/list')}"></th:block>
 
 <form action="/user/preferences" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
     <input id="id" name="id" th:value="${distributor.id}" type="hidden">
@@ -34,7 +34,7 @@
     </fieldset>
     <fieldset class="grid" role="presentation">
         <label for="comments">General Comments:
-            <textarea id="comments" tabindex="13" name="comments" rows="6" cols="60" th:text="${comments}"></textarea>
+            <textarea cols="60" id="comments" name="comments" rows="6" tabindex="13" th:text="${comments}"></textarea>
         </label>
     </fieldset>
 </form>

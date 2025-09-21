@@ -21,7 +21,7 @@
     </tr>
     </thead>
     <tbody>
-    <th:block th:each="user : ${users}" >
+    <th:block th:each="user : ${users}">
         <tr>
             <td><a th:href="@{'/user/'+ ${user.id}}">[[${user.account}]]</a></td>
             <td>[[${user.name}]]</td>

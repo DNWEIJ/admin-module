@@ -1,7 +1,8 @@
-@charset "UTF-8";:host,:root {
-    --pico-font-family-emoji: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    --pico-font-family-sans-serif: system-ui,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,Helvetica,Arial,"Helvetica Neue",sans-serif,var(--pico-font-family-emoji);
-    --pico-font-family-monospace: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace,var(--pico-font-family-emoji);
+@charset "UTF-8";
+:host, :root {
+    --pico-font-family-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --pico-font-family-sans-serif: system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji);
+    --pico-font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace, var(--pico-font-family-emoji);
     --pico-font-family: var(--pico-font-family-sans-serif);
     --pico-line-height: 1.5;
     --pico-font-weight: 400;
@@ -39,101 +40,101 @@
 }
 
 @media (min-width: 576px) {
-    :host,:root {
-        --pico-font-size:106.25%
+    :host, :root {
+        --pico-font-size: 106.25%
     }
 }
 
 @media (min-width: 768px) {
-    :host,:root {
-        --pico-font-size:112.5%
+    :host, :root {
+        --pico-font-size: 112.5%
     }
 }
 
 @media (min-width: 1024px) {
-    :host,:root {
-        --pico-font-size:118.75%
+    :host, :root {
+        --pico-font-size: 118.75%
     }
 }
 
 @media (min-width: 1280px) {
-    :host,:root {
-        --pico-font-size:125%
+    :host, :root {
+        --pico-font-size: 125%
     }
 }
 
 @media (min-width: 1536px) {
-    :host,:root {
-        --pico-font-size:131.25%
+    :host, :root {
+        --pico-font-size: 131.25%
     }
 }
 
 @media (min-width: 576px) {
-    body>footer,body>header,body>main,section {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 1.25)
+    body > footer, body > header, body > main, section {
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.25)
     }
 }
 
 @media (min-width: 768px) {
-    body>footer,body>header,body>main,section {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 1.5)
+    body > footer, body > header, body > main, section {
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.5)
     }
 }
 
 @media (min-width: 1024px) {
-    body>footer,body>header,body>main,section {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 1.75)
+    body > footer, body > header, body > main, section {
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.75)
     }
 }
 
 @media (min-width: 1280px) {
-    body>footer,body>header,body>main,section {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 2)
+    body > footer, body > header, body > main, section {
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 2)
     }
 }
 
 @media (min-width: 1536px) {
-    body>footer,body>header,body>main,section {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 2.25)
+    body > footer, body > header, body > main, section {
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 2.25)
     }
 }
 
 @media (min-width: 576px) {
     article {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 1.25);
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.25);
         --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.25)
     }
 }
 
 @media (min-width: 768px) {
     article {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 1.5);
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.5);
         --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.5)
     }
 }
 
 @media (min-width: 1024px) {
     article {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 1.75);
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.75);
         --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.75)
     }
 }
 
 @media (min-width: 1280px) {
     article {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 2);
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 2);
         --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 2)
     }
 }
 
 @media (min-width: 1536px) {
     article {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 2.25);
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 2.25);
         --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 2.25)
     }
 }
 
-a,a.contrast,a.secondary {
+a, a.contrast, a.secondary {
     --pico-text-decoration: underline
 }
 
@@ -141,7 +142,7 @@ small {
     --pico-font-size: .875em
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
     --pico-font-weight: 700
 }
 
@@ -181,12 +182,12 @@ h6 {
     --pico-typography-spacing-top: 1.5rem
 }
 
-tfoot td,tfoot th,thead td,thead th {
+tfoot td, tfoot th, thead td, thead th {
     --pico-font-weight: 600;
     --pico-border-width: .1875rem
 }
 
-code,kbd,pre,samp {
+code, kbd, pre, samp {
     --pico-font-family: var(--pico-font-family-monospace)
 }
 
@@ -194,7 +195,7 @@ kbd {
     --pico-font-weight: bolder
 }
 
-:where(select,textarea),input:not([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]) {
+:where(select,textarea), input:not([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]) {
     --pico-outline-width: .0625rem
 }
 
@@ -202,7 +203,7 @@ kbd {
     --pico-border-radius: 5rem
 }
 
-[type=checkbox],[type=radio] {
+[type=checkbox], [type=radio] {
     --pico-border-width: .125rem
 }
 
@@ -222,15 +223,15 @@ nav details.dropdown summary:focus-visible {
     --pico-border-radius: 5rem
 }
 
-[role=group]:has(button.secondary:focus,[type=submit].secondary:focus,[type=button].secondary:focus,[role=button].secondary:focus),[role=search]:has(button.secondary:focus,[type=submit].secondary:focus,[type=button].secondary:focus,[role=button].secondary:focus) {
+[role=group]:has(button.secondary:focus,[type=submit].secondary:focus,[type=button].secondary:focus,[role=button].secondary:focus), [role=search]:has(button.secondary:focus,[type=submit].secondary:focus,[type=button].secondary:focus,[role=button].secondary:focus) {
     --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus)
 }
 
-[role=group]:has(button.contrast:focus,[type=submit].contrast:focus,[type=button].contrast:focus,[role=button].contrast:focus),[role=search]:has(button.contrast:focus,[type=submit].contrast:focus,[type=button].contrast:focus,[role=button].contrast:focus) {
+[role=group]:has(button.contrast:focus,[type=submit].contrast:focus,[type=button].contrast:focus,[role=button].contrast:focus), [role=search]:has(button.contrast:focus,[type=submit].contrast:focus,[type=button].contrast:focus,[role=button].contrast:focus) {
     --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-contrast-focus)
 }
 
-[role=group] [role=button],[role=group] [type=button],[role=group] [type=submit],[role=group] button,[role=search] [role=button],[role=search] [type=button],[role=search] [type=submit],[role=search] button {
+[role=group] [role=button], [role=group] [type=button], [role=group] [type=submit], [role=group] button, [role=search] [role=button], [role=search] [type=button], [role=search] [type=submit], [role=search] button {
     --pico-form-element-spacing-horizontal: 2rem
 }
 
@@ -242,7 +243,7 @@ details summary[role=button]:not(.outline):after {
     filter: brightness(0) invert(1)
 }
 
-:host(:not([data-theme=dark])),:root:not([data-theme=dark]),[data-theme=light] {
+:host(:not([data-theme=dark])), :root:not([data-theme=dark]), [data-theme=light] {
     color-scheme: light;
     --pico-background-color: #fff;
     --pico-color: #373c44;
@@ -279,7 +280,7 @@ details summary[role=button]:not(.outline):after {
     --pico-contrast-hover-underline: var(--pico-secondary-hover);
     --pico-contrast-focus: rgba(93, 107, 137, .25);
     --pico-contrast-inverse: #fff;
-    --pico-box-shadow: .0145rem .029rem .174rem rgba(129, 145, 181, .01698),.0335rem .067rem .402rem rgba(129, 145, 181, .024),.0625rem .125rem .75rem rgba(129, 145, 181, .03),.1125rem .225rem 1.35rem rgba(129, 145, 181, .036),.2085rem .417rem 2.502rem rgba(129, 145, 181, .04302),.5rem 1rem 6rem rgba(129, 145, 181, .06),0 0 0 .0625rem rgba(129, 145, 181, .015);
+    --pico-box-shadow: .0145rem .029rem .174rem rgba(129, 145, 181, .01698), .0335rem .067rem .402rem rgba(129, 145, 181, .024), .0625rem .125rem .75rem rgba(129, 145, 181, .03), .1125rem .225rem 1.35rem rgba(129, 145, 181, .036), .2085rem .417rem 2.502rem rgba(129, 145, 181, .04302), .5rem 1rem 6rem rgba(129, 145, 181, .06), 0 0 0 .0625rem rgba(129, 145, 181, .015);
     --pico-h1-color: #2d3138;
     --pico-h2-color: #373c44;
     --pico-h3-color: #424751;
@@ -347,13 +348,13 @@ details summary[role=button]:not(.outline):after {
     --pico-icon-invalid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(200.25, 79.25, 72.25)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E")
 }
 
-:host(:not([data-theme=dark])) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]),:root:not([data-theme=dark]) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]),[data-theme=light] input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]) {
+:host(:not([data-theme=dark])) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]), :root:not([data-theme=dark]) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]), [data-theme=light] input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]) {
     --pico-form-element-focus-color: var(--pico-primary-focus)
 }
 
 @media only screen and (prefers-color-scheme: dark) {
-    :host(:not([data-theme])),:root:not([data-theme]) {
-        color-scheme:dark;
+    :host(:not([data-theme])), :root:not([data-theme]) {
+        color-scheme: dark;
         --pico-background-color: rgb(19, 22.5, 30.5);
         --pico-color: #c2c7d0;
         --pico-text-selection-color: rgba(1, 170, 255, .1875);
@@ -389,7 +390,7 @@ details summary[role=button]:not(.outline):after {
         --pico-contrast-hover-underline: var(--pico-contrast-hover);
         --pico-contrast-focus: rgba(207, 213, 226, .25);
         --pico-contrast-inverse: #000;
-        --pico-box-shadow: .0145rem .029rem .174rem rgba(7, 8.5, 12, .01698),.0335rem .067rem .402rem rgba(7, 8.5, 12, .024),.0625rem .125rem .75rem rgba(7, 8.5, 12, .03),.1125rem .225rem 1.35rem rgba(7, 8.5, 12, .036),.2085rem .417rem 2.502rem rgba(7, 8.5, 12, .04302),.5rem 1rem 6rem rgba(7, 8.5, 12, .06),0 0 0 .0625rem rgba(7, 8.5, 12, .015);
+        --pico-box-shadow: .0145rem .029rem .174rem rgba(7, 8.5, 12, .01698), .0335rem .067rem .402rem rgba(7, 8.5, 12, .024), .0625rem .125rem .75rem rgba(7, 8.5, 12, .03), .1125rem .225rem 1.35rem rgba(7, 8.5, 12, .036), .2085rem .417rem 2.502rem rgba(7, 8.5, 12, .04302), .5rem 1rem 6rem rgba(7, 8.5, 12, .06), 0 0 0 .0625rem rgba(7, 8.5, 12, .015);
         --pico-h1-color: #f0f1f3;
         --pico-h2-color: #e0e3e7;
         --pico-h3-color: #c2c7d0;
@@ -457,15 +458,15 @@ details summary[role=button]:not(.outline):after {
         --pico-icon-invalid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(149.5, 74, 80)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E")
     }
 
-    :host(:not([data-theme])) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]),:root:not([data-theme]) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]) {
+    :host(:not([data-theme])) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]), :root:not([data-theme]) input:is([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[type=file]) {
         --pico-form-element-focus-color: var(--pico-primary-focus)
     }
 
-    :host(:not([data-theme])) details summary[role=button].contrast:not(.outline):after,:root:not([data-theme]) details summary[role=button].contrast:not(.outline):after {
+    :host(:not([data-theme])) details summary[role=button].contrast:not(.outline):after, :root:not([data-theme]) details summary[role=button].contrast:not(.outline):after {
         filter: brightness(0)
     }
 
-    :host(:not([data-theme])) [aria-busy=true]:not(input,select,textarea).contrast:is(button,[type=submit],[type=button],[type=reset],[role=button]):not(.outline):before,:root:not([data-theme]) [aria-busy=true]:not(input,select,textarea).contrast:is(button,[type=submit],[type=button],[type=reset],[role=button]):not(.outline):before {
+    :host(:not([data-theme])) [aria-busy=true]:not(input,select,textarea).contrast:is(button,[type=submit],[type=button],[type=reset],[role=button]):not(.outline):before, :root:not([data-theme]) [aria-busy=true]:not(input,select,textarea).contrast:is(button,[type=submit],[type=button],[type=reset],[role=button]):not(.outline):before {
         filter: brightness(0)
     }
 }
@@ -507,7 +508,7 @@ details summary[role=button]:not(.outline):after {
     --pico-contrast-hover-underline: var(--pico-contrast-hover);
     --pico-contrast-focus: rgba(207, 213, 226, .25);
     --pico-contrast-inverse: #000;
-    --pico-box-shadow: .0145rem .029rem .174rem rgba(7, 8.5, 12, .01698),.0335rem .067rem .402rem rgba(7, 8.5, 12, .024),.0625rem .125rem .75rem rgba(7, 8.5, 12, .03),.1125rem .225rem 1.35rem rgba(7, 8.5, 12, .036),.2085rem .417rem 2.502rem rgba(7, 8.5, 12, .04302),.5rem 1rem 6rem rgba(7, 8.5, 12, .06),0 0 0 .0625rem rgba(7, 8.5, 12, .015);
+    --pico-box-shadow: .0145rem .029rem .174rem rgba(7, 8.5, 12, .01698), .0335rem .067rem .402rem rgba(7, 8.5, 12, .024), .0625rem .125rem .75rem rgba(7, 8.5, 12, .03), .1125rem .225rem 1.35rem rgba(7, 8.5, 12, .036), .2085rem .417rem 2.502rem rgba(7, 8.5, 12, .04302), .5rem 1rem 6rem rgba(7, 8.5, 12, .06), 0 0 0 .0625rem rgba(7, 8.5, 12, .015);
     --pico-h1-color: #f0f1f3;
     --pico-h2-color: #e0e3e7;
     --pico-h3-color: #c2c7d0;
@@ -587,21 +588,21 @@ details summary[role=button]:not(.outline):after {
     filter: brightness(0)
 }
 
-[type=checkbox],[type=radio],[type=range],progress {
+[type=checkbox], [type=radio], [type=range], progress {
     accent-color: var(--pico-primary)
 }
 
-*,:after,:before {
+*, :after, :before {
     box-sizing: border-box;
     background-repeat: no-repeat
 }
 
-:after,:before {
+:after, :before {
     text-decoration: inherit;
     vertical-align: inherit
 }
 
-:where(:host),:where(:root) {
+:where(:host), :where(:root) {
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
@@ -629,14 +630,15 @@ main {
     display: block
 }
 
-body>footer,body>header,body>main {
-    padding-block:var(--pico-block-spacing-vertical)}
+body > footer, body > header, body > main {
+    padding-block: var(--pico-block-spacing-vertical)
+}
 
 section {
     margin-bottom: var(--pico-block-spacing-vertical)
 }
 
-.container,.container-fluid {
+.container, .container-fluid {
     width: 100%;
     margin-right: auto;
     margin-left: auto;
@@ -646,7 +648,7 @@ section {
 
 @media (min-width: 576px) {
     .container {
-        max-width:510px;
+        max-width: 510px;
         padding-right: 0;
         padding-left: 0
     }
@@ -654,25 +656,25 @@ section {
 
 @media (min-width: 768px) {
     .container {
-        max-width:700px
+        max-width: 700px
     }
 }
 
 @media (min-width: 1024px) {
     .container {
-        max-width:950px
+        max-width: 950px
     }
 }
 
 @media (min-width: 1280px) {
     .container {
-        max-width:1200px
+        max-width: 1200px
     }
 }
 
 @media (min-width: 1536px) {
     .container {
-        max-width:1450px
+        max-width: 1450px
     }
 }
 
@@ -685,11 +687,11 @@ section {
 
 @media (min-width: 768px) {
     .grid {
-        grid-template-columns:repeat(auto-fit,minmax(0%,1fr))
+        grid-template-columns:repeat(auto-fit, minmax(0%, 1fr))
     }
 }
 
-.grid>* {
+.grid > * {
     min-width: 0
 }
 
@@ -697,11 +699,11 @@ section {
     overflow: auto
 }
 
-b,strong {
+b, strong {
     font-weight: bolder
 }
 
-sub,sup {
+sub, sup {
     position: relative;
     font-size: .75em;
     line-height: 0;
@@ -716,7 +718,7 @@ sup {
     top: -.5em
 }
 
-address,blockquote,dl,ol,p,pre,table,ul {
+address, blockquote, dl, ol, p, pre, table, ul {
     margin-top: 0;
     margin-bottom: var(--pico-typography-spacing-vertical);
     color: var(--pico-color);
@@ -724,7 +726,7 @@ address,blockquote,dl,ol,p,pre,table,ul {
     font-weight: var(--pico-font-weight)
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
     margin-bottom: var(--pico-typography-spacing-vertical);
     color: var(--pico-color);
@@ -758,7 +760,7 @@ h6 {
     --pico-color: var(--pico-h6-color)
 }
 
-:where(article,address,blockquote,dl,figure,form,ol,p,pre,table,ul)~:is(h1,h2,h3,h4,h5,h6) {
+:where(article,address,blockquote,dl,figure,form,ol,p,pre,table,ul) ~ :is(h1,h2,h3,h4,h5,h6) {
     margin-top: var(--pico-typography-spacing-top)
 }
 
@@ -770,12 +772,12 @@ hgroup {
     margin-bottom: var(--pico-typography-spacing-vertical)
 }
 
-hgroup>* {
+hgroup > * {
     margin-top: 0;
     margin-bottom: 0
 }
 
-hgroup>:not(:first-child):last-child {
+hgroup > :not(:first-child):last-child {
     --pico-color: var(--pico-muted-color);
     --pico-font-weight: unset;
     font-size: 1rem
@@ -807,7 +809,8 @@ blockquote {
     padding: var(--pico-spacing);
     border-right: none;
     border-left: .25rem solid var(--pico-blockquote-border-color);
-    border-inline-start:.25rem solid var(--pico-blockquote-border-color);border-inline-end: none
+    border-inline-start: .25rem solid var(--pico-blockquote-border-color);
+    border-inline-end: none
 }
 
 blockquote footer {
@@ -838,7 +841,7 @@ del {
     background-color: var(--pico-text-selection-color)
 }
 
-:where(a:not([role=button])),[role=link] {
+:where(a:not([role=button])), [role=link] {
     --pico-color: var(--pico-primary);
     --pico-background-color: transparent;
     --pico-underline: var(--pico-primary-underline);
@@ -849,37 +852,37 @@ del {
     text-decoration: var(--pico-text-decoration);
     text-decoration-color: var(--pico-underline);
     text-underline-offset: .125em;
-    transition: background-color var(--pico-transition),color var(--pico-transition),box-shadow var(--pico-transition),-webkit-text-decoration var(--pico-transition);
-    transition: background-color var(--pico-transition),color var(--pico-transition),text-decoration var(--pico-transition),box-shadow var(--pico-transition);
-    transition: background-color var(--pico-transition),color var(--pico-transition),text-decoration var(--pico-transition),box-shadow var(--pico-transition),-webkit-text-decoration var(--pico-transition)
+    transition: background-color var(--pico-transition), color var(--pico-transition), box-shadow var(--pico-transition), -webkit-text-decoration var(--pico-transition);
+    transition: background-color var(--pico-transition), color var(--pico-transition), text-decoration var(--pico-transition), box-shadow var(--pico-transition);
+    transition: background-color var(--pico-transition), color var(--pico-transition), text-decoration var(--pico-transition), box-shadow var(--pico-transition), -webkit-text-decoration var(--pico-transition)
 }
 
-:where(a:not([role=button])):is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[role=link]:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+:where(a:not([role=button])):is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [role=link]:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     --pico-color: var(--pico-primary-hover);
     --pico-underline: var(--pico-primary-hover-underline);
     --pico-text-decoration: underline
 }
 
-:where(a:not([role=button])):focus-visible,[role=link]:focus-visible {
+:where(a:not([role=button])):focus-visible, [role=link]:focus-visible {
     box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus)
 }
 
-:where(a:not([role=button])).secondary,[role=link].secondary {
+:where(a:not([role=button])).secondary, [role=link].secondary {
     --pico-color: var(--pico-secondary);
     --pico-underline: var(--pico-secondary-underline)
 }
 
-:where(a:not([role=button])).secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[role=link].secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+:where(a:not([role=button])).secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [role=link].secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     --pico-color: var(--pico-secondary-hover);
     --pico-underline: var(--pico-secondary-hover-underline)
 }
 
-:where(a:not([role=button])).contrast,[role=link].contrast {
+:where(a:not([role=button])).contrast, [role=link].contrast {
     --pico-color: var(--pico-contrast);
     --pico-underline: var(--pico-contrast-underline)
 }
 
-:where(a:not([role=button])).contrast:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[role=link].contrast:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+:where(a:not([role=button])).contrast:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [role=link].contrast:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     --pico-color: var(--pico-contrast-hover);
     --pico-underline: var(--pico-contrast-hover-underline)
 }
@@ -895,11 +898,11 @@ button {
     text-transform: none
 }
 
-[type=button],[type=reset],[type=submit],button {
+[type=button], [type=reset], [type=submit], button {
     -webkit-appearance: button
 }
 
-[role=button],[type=button],[type=file]::file-selector-button,[type=reset],[type=submit],button {
+[role=button], [type=button], [type=file]::file-selector-button, [type=reset], [type=submit], button {
     --pico-background-color: var(--pico-primary-background);
     --pico-border-color: var(--pico-primary-border);
     --pico-color: var(--pico-primary-inverse);
@@ -920,39 +923,39 @@ button {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    transition: background-color var(--pico-transition),border-color var(--pico-transition),color var(--pico-transition),box-shadow var(--pico-transition)
+    transition: background-color var(--pico-transition), border-color var(--pico-transition), color var(--pico-transition), box-shadow var(--pico-transition)
 }
 
-[role=button]:is(:hover,:active,:focus),[role=button]:is([aria-current]:not([aria-current=false])),[type=button]:is(:hover,:active,:focus),[type=button]:is([aria-current]:not([aria-current=false])),[type=file]::file-selector-button:is(:hover,:active,:focus),[type=file]::file-selector-button:is([aria-current]:not([aria-current=false])),[type=reset]:is(:hover,:active,:focus),[type=reset]:is([aria-current]:not([aria-current=false])),[type=submit]:is(:hover,:active,:focus),[type=submit]:is([aria-current]:not([aria-current=false])),button:is(:hover,:active,:focus),button:is([aria-current]:not([aria-current=false])) {
+[role=button]:is(:hover,:active,:focus), [role=button]:is([aria-current]:not([aria-current=false])), [type=button]:is(:hover,:active,:focus), [type=button]:is([aria-current]:not([aria-current=false])), [type=file]::file-selector-button:is(:hover,:active,:focus), [type=file]::file-selector-button:is([aria-current]:not([aria-current=false])), [type=reset]:is(:hover,:active,:focus), [type=reset]:is([aria-current]:not([aria-current=false])), [type=submit]:is(:hover,:active,:focus), [type=submit]:is([aria-current]:not([aria-current=false])), button:is(:hover,:active,:focus), button:is([aria-current]:not([aria-current=false])) {
     --pico-background-color: var(--pico-primary-hover-background);
     --pico-border-color: var(--pico-primary-hover-border);
     --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0));
     --pico-color: var(--pico-primary-inverse)
 }
 
-[role=button]:focus,[role=button]:is([aria-current]:not([aria-current=false])):focus,[type=button]:focus,[type=button]:is([aria-current]:not([aria-current=false])):focus,[type=file]::file-selector-button:focus,[type=file]::file-selector-button:is([aria-current]:not([aria-current=false])):focus,[type=reset]:focus,[type=reset]:is([aria-current]:not([aria-current=false])):focus,[type=submit]:focus,[type=submit]:is([aria-current]:not([aria-current=false])):focus,button:focus,button:is([aria-current]:not([aria-current=false])):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)),0 0 0 var(--pico-outline-width) var(--pico-primary-focus)
+[role=button]:focus, [role=button]:is([aria-current]:not([aria-current=false])):focus, [type=button]:focus, [type=button]:is([aria-current]:not([aria-current=false])):focus, [type=file]::file-selector-button:focus, [type=file]::file-selector-button:is([aria-current]:not([aria-current=false])):focus, [type=reset]:focus, [type=reset]:is([aria-current]:not([aria-current=false])):focus, [type=submit]:focus, [type=submit]:is([aria-current]:not([aria-current=false])):focus, button:focus, button:is([aria-current]:not([aria-current=false])):focus {
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)), 0 0 0 var(--pico-outline-width) var(--pico-primary-focus)
 }
 
-[type=button],[type=reset],[type=submit] {
+[type=button], [type=reset], [type=submit] {
     margin-bottom: var(--pico-spacing)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).secondary,[type=file]::file-selector-button,[type=reset] {
+:is(button,[type=submit],[type=button],[role=button]).secondary, [type=file]::file-selector-button, [type=reset] {
     --pico-background-color: var(--pico-secondary-background);
     --pico-border-color: var(--pico-secondary-border);
     --pico-color: var(--pico-secondary-inverse);
     cursor: pointer
 }
 
-:is(button,[type=submit],[type=button],[role=button]).secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[type=file]::file-selector-button:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[type=reset]:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+:is(button,[type=submit],[type=button],[role=button]).secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [type=file]::file-selector-button:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [type=reset]:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     --pico-background-color: var(--pico-secondary-hover-background);
     --pico-border-color: var(--pico-secondary-hover-border);
     --pico-color: var(--pico-secondary-inverse)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).secondary:focus,:is(button,[type=submit],[type=button],[role=button]).secondary:is([aria-current]:not([aria-current=false])):focus,[type=file]::file-selector-button:focus,[type=file]::file-selector-button:is([aria-current]:not([aria-current=false])):focus,[type=reset]:focus,[type=reset]:is([aria-current]:not([aria-current=false])):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)),0 0 0 var(--pico-outline-width) var(--pico-secondary-focus)
+:is(button,[type=submit],[type=button],[role=button]).secondary:focus, :is(button,[type=submit],[type=button],[role=button]).secondary:is([aria-current]:not([aria-current=false])):focus, [type=file]::file-selector-button:focus, [type=file]::file-selector-button:is([aria-current]:not([aria-current=false])):focus, [type=reset]:focus, [type=reset]:is([aria-current]:not([aria-current=false])):focus {
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus)
 }
 
 :is(button,[type=submit],[type=button],[role=button]).contrast {
@@ -967,28 +970,28 @@ button {
     --pico-color: var(--pico-contrast-inverse)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).contrast:focus,:is(button,[type=submit],[type=button],[role=button]).contrast:is([aria-current]:not([aria-current=false])):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)),0 0 0 var(--pico-outline-width) var(--pico-contrast-focus)
+:is(button,[type=submit],[type=button],[role=button]).contrast:focus, :is(button,[type=submit],[type=button],[role=button]).contrast:is([aria-current]:not([aria-current=false])):focus {
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)), 0 0 0 var(--pico-outline-width) var(--pico-contrast-focus)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).outline,[type=reset].outline {
+:is(button,[type=submit],[type=button],[role=button]).outline, [type=reset].outline {
     --pico-background-color: transparent;
     --pico-color: var(--pico-primary);
     --pico-border-color: var(--pico-primary)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).outline:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[type=reset].outline:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+:is(button,[type=submit],[type=button],[role=button]).outline:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [type=reset].outline:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     --pico-background-color: transparent;
     --pico-color: var(--pico-primary-hover);
     --pico-border-color: var(--pico-primary-hover)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).outline.secondary,[type=reset].outline {
+:is(button,[type=submit],[type=button],[role=button]).outline.secondary, [type=reset].outline {
     --pico-color: var(--pico-secondary);
     --pico-border-color: var(--pico-secondary)
 }
 
-:is(button,[type=submit],[type=button],[role=button]).outline.secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),[type=reset].outline:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+:is(button,[type=submit],[type=button],[role=button]).outline.secondary:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), [type=reset].outline:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     --pico-color: var(--pico-secondary-hover);
     --pico-border-color: var(--pico-secondary-hover)
 }
@@ -1003,7 +1006,7 @@ button {
     --pico-border-color: var(--pico-contrast-hover)
 }
 
-:where(button,[type=submit],[type=reset],[type=button],[role=button])[disabled],:where(fieldset[disabled]) :is(button,[type=submit],[type=button],[type=reset],[role=button]) {
+:where(button,[type=submit],[type=reset],[type=button],[role=button])[disabled], :where(fieldset[disabled]) :is(button,[type=submit],[type=button],[type=reset],[role=button]) {
     opacity: .5;
     pointer-events: none
 }
@@ -1015,8 +1018,8 @@ button {
     text-indent: 0
 }
 
-td,th {
-    padding: calc(var(--pico-spacing)/ 2) var(--pico-spacing);
+td, th {
+    padding: calc(var(--pico-spacing) / 2) var(--pico-spacing);
     border-bottom: var(--pico-border-width) solid var(--pico-table-border-color);
     background-color: var(--pico-background-color);
     color: var(--pico-color);
@@ -1025,12 +1028,12 @@ td,th {
     text-align: start
 }
 
-tfoot td,tfoot th {
+tfoot td, tfoot th {
     border-top: var(--pico-border-width) solid var(--pico-table-border-color);
     border-bottom: 0
 }
 
-table.striped tbody tr:nth-child(odd) td,table.striped tbody tr:nth-child(odd) th {
+table.striped tbody tr:nth-child(odd) td, table.striped tbody tr:nth-child(odd) th {
     background-color: var(--pico-table-row-stripped-background-color)
 }
 
@@ -1038,7 +1041,7 @@ table.striped tbody tr:nth-child(odd) td,table.striped tbody tr:nth-child(odd) t
     vertical-align: middle
 }
 
-audio,video {
+audio, video {
     display: inline-block
 }
 
@@ -1061,16 +1064,16 @@ img {
     fill: currentColor
 }
 
-svg:not(:host),svg:not(:root) {
+svg:not(:host), svg:not(:root) {
     overflow: hidden
 }
 
-code,kbd,pre,samp {
+code, kbd, pre, samp {
     font-size: .875em;
     font-family: var(--pico-font-family)
 }
 
-pre code,pre samp {
+pre code, pre samp {
     font-size: inherit;
     font-family: inherit
 }
@@ -1080,7 +1083,7 @@ pre {
     overflow: auto
 }
 
-code,kbd,pre,samp {
+code, kbd, pre, samp {
     border-radius: var(--pico-border-radius);
     background: var(--pico-code-background-color);
     color: var(--pico-code-color);
@@ -1088,7 +1091,7 @@ code,kbd,pre,samp {
     line-height: initial
 }
 
-code,kbd,samp {
+code, kbd, samp {
     display: inline-block;
     padding: .375rem
 }
@@ -1099,7 +1102,7 @@ pre {
     overflow-x: auto
 }
 
-pre>code,pre>samp {
+pre > code, pre > samp {
     display: block;
     padding: var(--pico-spacing);
     background: 0 0;
@@ -1131,15 +1134,15 @@ hr {
     color: inherit
 }
 
-[hidden],template {
-    display: none!important
+[hidden], template {
+    display: none !important
 }
 
 canvas {
     display: inline-block
 }
 
-input,optgroup,select,textarea {
+input, optgroup, select, textarea {
     margin: 0;
     font-size: 1rem;
     line-height: var(--pico-line-height);
@@ -1166,11 +1169,11 @@ textarea {
     overflow: auto
 }
 
-[type=checkbox],[type=radio] {
+[type=checkbox], [type=radio] {
     padding: 0
 }
 
-::-webkit-inner-spin-button,::-webkit-outer-spin-button {
+::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
     height: auto
 }
 
@@ -1205,7 +1208,7 @@ textarea {
     display: none
 }
 
-[type=file],[type=range] {
+[type=file], [type=range] {
     padding: 0;
     border-width: 0
 }
@@ -1222,29 +1225,29 @@ fieldset {
     border: 0
 }
 
-fieldset legend,label {
+fieldset legend, label {
     display: block;
     margin-bottom: calc(var(--pico-spacing) * .375);
     color: var(--pico-color);
-    font-weight: var(--pico-form-label-font-weight,var(--pico-font-weight))
+    font-weight: var(--pico-form-label-font-weight, var(--pico-font-weight))
 }
 
 fieldset legend {
     margin-bottom: calc(var(--pico-spacing) * .5)
 }
 
-button[type=submit],input:not([type=checkbox],[type=radio]),select,textarea {
+button[type=submit], input:not([type=checkbox],[type=radio]), select, textarea {
     width: 100%
 }
 
-input:not([type=checkbox],[type=radio],[type=range],[type=file]),select,textarea {
+input:not([type=checkbox],[type=radio],[type=range],[type=file]), select, textarea {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal)
 }
 
-input,select,textarea {
+input, select, textarea {
     --pico-background-color: var(--pico-form-element-background-color);
     --pico-border-color: var(--pico-form-element-border-color);
     --pico-color: var(--pico-form-element-color);
@@ -1256,22 +1259,22 @@ input,select,textarea {
     box-shadow: var(--pico-box-shadow);
     color: var(--pico-color);
     font-weight: var(--pico-font-weight);
-    transition: background-color var(--pico-transition),border-color var(--pico-transition),color var(--pico-transition),box-shadow var(--pico-transition)
+    transition: background-color var(--pico-transition), border-color var(--pico-transition), color var(--pico-transition), box-shadow var(--pico-transition)
 }
 
-:where(select,textarea):not([readonly]):is(:active,:focus),input:not([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[readonly]):is(:active,:focus) {
+:where(select,textarea):not([readonly]):is(:active,:focus), input:not([type=submit],[type=button],[type=reset],[type=checkbox],[type=radio],[readonly]):is(:active,:focus) {
     --pico-background-color: var(--pico-form-element-active-background-color)
 }
 
-:where(select,textarea):not([readonly]):is(:active,:focus),input:not([type=submit],[type=button],[type=reset],[role=switch],[readonly]):is(:active,:focus) {
+:where(select,textarea):not([readonly]):is(:active,:focus), input:not([type=submit],[type=button],[type=reset],[role=switch],[readonly]):is(:active,:focus) {
     --pico-border-color: var(--pico-form-element-active-border-color)
 }
 
-:where(select,textarea):not([readonly]):focus,input:not([type=submit],[type=button],[type=reset],[type=range],[type=file],[readonly]):focus {
+:where(select,textarea):not([readonly]):focus, input:not([type=submit],[type=button],[type=reset],[type=range],[type=file],[readonly]):focus {
     --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color)
 }
 
-:where(fieldset[disabled]) :is(input:not([type=submit],[type=button],[type=reset]),select,textarea),input:not([type=submit],[type=button],[type=reset])[disabled],label[aria-disabled=true],select[disabled],textarea[disabled] {
+:where(fieldset[disabled]) :is(input:not([type=submit],[type=button],[type=reset]),select,textarea), input:not([type=submit],[type=button],[type=reset])[disabled], label[aria-disabled=true], select[disabled], textarea[disabled] {
     opacity: var(--pico-form-element-disabled-opacity);
     pointer-events: none
 }
@@ -1281,9 +1284,10 @@ label[aria-disabled=true] input[disabled] {
 }
 
 :where(input,select,textarea):not([type=checkbox],[type=radio],[type=date],[type=datetime-local],[type=month],[type=time],[type=week],[type=range])[aria-invalid] {
-    padding-right: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem)!important;
+    padding-right: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem) !important;
     padding-left: var(--pico-form-element-spacing-horizontal);
-    padding-inline-start:var(--pico-form-element-spacing-horizontal)!important;padding-inline-end: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem)!important;
+    padding-inline-start: var(--pico-form-element-spacing-horizontal) !important;
+    padding-inline-end: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem) !important;
     background-position: center right .75rem;
     background-size: 1rem auto;
     background-repeat: no-repeat
@@ -1302,11 +1306,11 @@ label[aria-disabled=true] input[disabled] {
 }
 
 :where(input,select,textarea)[aria-invalid=false]:is(:active,:focus) {
-    --pico-border-color: var(--pico-form-element-valid-active-border-color)!important
+    --pico-border-color: var(--pico-form-element-valid-active-border-color) !important
 }
 
 :where(input,select,textarea)[aria-invalid=false]:is(:active,:focus):not([type=checkbox],[type=radio]) {
-    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-valid-focus-color)!important
+    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-valid-focus-color) !important
 }
 
 :where(input,select,textarea)[aria-invalid=true] {
@@ -1314,23 +1318,23 @@ label[aria-disabled=true] input[disabled] {
 }
 
 :where(input,select,textarea)[aria-invalid=true]:is(:active,:focus) {
-    --pico-border-color: var(--pico-form-element-invalid-active-border-color)!important
+    --pico-border-color: var(--pico-form-element-invalid-active-border-color) !important
 }
 
 :where(input,select,textarea)[aria-invalid=true]:is(:active,:focus):not([type=checkbox],[type=radio]) {
-    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-invalid-focus-color)!important
+    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-invalid-focus-color) !important
 }
 
 [dir=rtl] :where(input,select,textarea):not([type=checkbox],[type=radio]):is([aria-invalid],[aria-invalid=true],[aria-invalid=false]) {
     background-position: center left .75rem
 }
 
-input::-webkit-input-placeholder,input::placeholder,select:invalid,textarea::-webkit-input-placeholder,textarea::placeholder {
+input::-webkit-input-placeholder, input::placeholder, select:invalid, textarea::-webkit-input-placeholder, textarea::placeholder {
     color: var(--pico-form-element-placeholder-color);
     opacity: 1
 }
 
-input:not([type=checkbox],[type=radio]),select,textarea {
+input:not([type=checkbox],[type=radio]), select, textarea {
     margin-bottom: var(--pico-spacing)
 }
 
@@ -1342,7 +1346,8 @@ select::-ms-expand {
 select:not([multiple],[size]) {
     padding-right: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem);
     padding-left: var(--pico-form-element-spacing-horizontal);
-    padding-inline-start:var(--pico-form-element-spacing-horizontal);padding-inline-end: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem);
+    padding-inline-start: var(--pico-form-element-spacing-horizontal);
+    padding-inline-end: calc(var(--pico-form-element-spacing-horizontal) + 1.5rem);
     background-image: var(--pico-icon-chevron);
     background-position: center right .75rem;
     background-size: 1rem auto;
@@ -1365,11 +1370,11 @@ textarea {
 
 textarea[aria-invalid] {
     --pico-icon-height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
-    background-position: top right .75rem!important;
-    background-size: 1rem var(--pico-icon-height)!important
+    background-position: top right .75rem !important;
+    background-size: 1rem var(--pico-icon-height) !important
 }
 
-:where(input,select,textarea,fieldset,.grid)+small {
+:where(input,select,textarea,fieldset,.grid) + small {
     display: block;
     width: 100%;
     margin-top: calc(var(--pico-spacing) * -.75);
@@ -1377,15 +1382,15 @@ textarea[aria-invalid] {
     color: var(--pico-muted-color)
 }
 
-:where(input,select,textarea,fieldset,.grid)[aria-invalid=false]+small {
+:where(input,select,textarea,fieldset,.grid)[aria-invalid=false] + small {
     color: var(--pico-ins-color)
 }
 
-:where(input,select,textarea,fieldset,.grid)[aria-invalid=true]+small {
+:where(input,select,textarea,fieldset,.grid)[aria-invalid=true] + small {
     color: var(--pico-del-color)
 }
 
-label>:where(input,select,textarea) {
+label > :where(input,select,textarea) {
     margin-top: calc(var(--pico-spacing) * .25)
 }
 
@@ -1395,23 +1400,24 @@ label:has([type=checkbox],[type=radio]) {
     cursor: pointer
 }
 
-[type=checkbox],[type=radio] {
+[type=checkbox], [type=radio] {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     width: 1.25em;
     height: 1.25em;
     margin-top: -.125em;
-    margin-inline-end:.5em;border-width: var(--pico-border-width);
+    margin-inline-end: .5em;
+    border-width: var(--pico-border-width);
     vertical-align: middle;
     cursor: pointer
 }
 
-[type=checkbox]::-ms-check,[type=radio]::-ms-check {
+[type=checkbox]::-ms-check, [type=radio]::-ms-check {
     display: none
 }
 
-[type=checkbox]:checked,[type=checkbox]:checked:active,[type=checkbox]:checked:focus,[type=radio]:checked,[type=radio]:checked:active,[type=radio]:checked:focus {
+[type=checkbox]:checked, [type=checkbox]:checked:active, [type=checkbox]:checked:focus, [type=radio]:checked, [type=radio]:checked:active, [type=radio]:checked:focus {
     --pico-background-color: var(--pico-primary-background);
     --pico-border-color: var(--pico-primary-border);
     background-image: var(--pico-icon-checkbox);
@@ -1420,14 +1426,15 @@ label:has([type=checkbox],[type=radio]) {
     background-repeat: no-repeat
 }
 
-[type=checkbox]~label,[type=radio]~label {
+[type=checkbox] ~ label, [type=radio] ~ label {
     display: inline-block;
     margin-bottom: 0;
     cursor: pointer
 }
 
-[type=checkbox]~label:not(:last-of-type),[type=radio]~label:not(:last-of-type) {
-    margin-inline-end:1em}
+[type=checkbox] ~ label:not(:last-of-type), [type=radio] ~ label:not(:last-of-type) {
+    margin-inline-end: 1em
+}
 
 [type=checkbox]:indeterminate {
     --pico-background-color: var(--pico-primary-background);
@@ -1442,7 +1449,7 @@ label:has([type=checkbox],[type=radio]) {
     border-radius: 50%
 }
 
-[type=radio]:checked,[type=radio]:checked:active,[type=radio]:checked:focus {
+[type=radio]:checked, [type=radio]:checked:active, [type=radio]:checked:focus {
     --pico-background-color: var(--pico-primary-inverse);
     border-width: .35em;
     background-image: none
@@ -1486,25 +1493,26 @@ label:has([type=checkbox],[type=radio]) {
 }
 
 [type=checkbox][role=switch]:checked:before {
-    margin-inline-start:1em}
+    margin-inline-start: 1em
+}
 
 [type=checkbox][role=switch][disabled] {
     --pico-background-color: var(--pico-border-color)
 }
 
-[type=checkbox][aria-invalid=false]:checked,[type=checkbox][aria-invalid=false]:checked:active,[type=checkbox][aria-invalid=false]:checked:focus,[type=checkbox][role=switch][aria-invalid=false]:checked,[type=checkbox][role=switch][aria-invalid=false]:checked:active,[type=checkbox][role=switch][aria-invalid=false]:checked:focus {
+[type=checkbox][aria-invalid=false]:checked, [type=checkbox][aria-invalid=false]:checked:active, [type=checkbox][aria-invalid=false]:checked:focus, [type=checkbox][role=switch][aria-invalid=false]:checked, [type=checkbox][role=switch][aria-invalid=false]:checked:active, [type=checkbox][role=switch][aria-invalid=false]:checked:focus {
     --pico-background-color: var(--pico-form-element-valid-border-color)
 }
 
-[type=checkbox]:checked:active[aria-invalid=true],[type=checkbox]:checked:focus[aria-invalid=true],[type=checkbox]:checked[aria-invalid=true],[type=checkbox][role=switch]:checked:active[aria-invalid=true],[type=checkbox][role=switch]:checked:focus[aria-invalid=true],[type=checkbox][role=switch]:checked[aria-invalid=true] {
+[type=checkbox]:checked:active[aria-invalid=true], [type=checkbox]:checked:focus[aria-invalid=true], [type=checkbox]:checked[aria-invalid=true], [type=checkbox][role=switch]:checked:active[aria-invalid=true], [type=checkbox][role=switch]:checked:focus[aria-invalid=true], [type=checkbox][role=switch]:checked[aria-invalid=true] {
     --pico-background-color: var(--pico-form-element-invalid-border-color)
 }
 
-[type=checkbox][aria-invalid=false]:checked,[type=checkbox][aria-invalid=false]:checked:active,[type=checkbox][aria-invalid=false]:checked:focus,[type=checkbox][role=switch][aria-invalid=false]:checked,[type=checkbox][role=switch][aria-invalid=false]:checked:active,[type=checkbox][role=switch][aria-invalid=false]:checked:focus,[type=radio][aria-invalid=false]:checked,[type=radio][aria-invalid=false]:checked:active,[type=radio][aria-invalid=false]:checked:focus {
+[type=checkbox][aria-invalid=false]:checked, [type=checkbox][aria-invalid=false]:checked:active, [type=checkbox][aria-invalid=false]:checked:focus, [type=checkbox][role=switch][aria-invalid=false]:checked, [type=checkbox][role=switch][aria-invalid=false]:checked:active, [type=checkbox][role=switch][aria-invalid=false]:checked:focus, [type=radio][aria-invalid=false]:checked, [type=radio][aria-invalid=false]:checked:active, [type=radio][aria-invalid=false]:checked:focus {
     --pico-border-color: var(--pico-form-element-valid-border-color)
 }
 
-[type=checkbox]:checked:active[aria-invalid=true],[type=checkbox]:checked:focus[aria-invalid=true],[type=checkbox]:checked[aria-invalid=true],[type=checkbox][role=switch]:checked:active[aria-invalid=true],[type=checkbox][role=switch]:checked:focus[aria-invalid=true],[type=checkbox][role=switch]:checked[aria-invalid=true],[type=radio]:checked:active[aria-invalid=true],[type=radio]:checked:focus[aria-invalid=true],[type=radio]:checked[aria-invalid=true] {
+[type=checkbox]:checked:active[aria-invalid=true], [type=checkbox]:checked:focus[aria-invalid=true], [type=checkbox]:checked[aria-invalid=true], [type=checkbox][role=switch]:checked:active[aria-invalid=true], [type=checkbox][role=switch]:checked:focus[aria-invalid=true], [type=checkbox][role=switch]:checked[aria-invalid=true], [type=radio]:checked:active[aria-invalid=true], [type=radio]:checked:focus[aria-invalid=true], [type=radio]:checked[aria-invalid=true] {
     --pico-border-color: var(--pico-form-element-invalid-border-color)
 }
 
@@ -1540,7 +1548,7 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     background-image: var(--pico-icon-time)
 }
 
-[type=date]::-webkit-calendar-picker-indicator,[type=datetime-local]::-webkit-calendar-picker-indicator,[type=month]::-webkit-calendar-picker-indicator,[type=time]::-webkit-calendar-picker-indicator,[type=week]::-webkit-calendar-picker-indicator {
+[type=date]::-webkit-calendar-picker-indicator, [type=datetime-local]::-webkit-calendar-picker-indicator, [type=month]::-webkit-calendar-picker-indicator, [type=time]::-webkit-calendar-picker-indicator, [type=week]::-webkit-calendar-picker-indicator {
     width: var(--pico-icon-width);
     margin-right: calc(var(--pico-icon-width) * -1);
     margin-left: var(--pico-icon-position);
@@ -1548,9 +1556,9 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
 }
 
 @-moz-document url-prefix() {
-    [type=date],[type=datetime-local],[type=month],[type=time],[type=week] {
-        padding-right: var(--pico-form-element-spacing-horizontal)!important;
-        background-image: none!important
+    [type=date], [type=datetime-local], [type=month], [type=time], [type=week] {
+        padding-right: var(--pico-form-element-spacing-horizontal) !important;
+        background-image: none !important
     }
 }
 
@@ -1569,7 +1577,7 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
 }
 
 [type=file]::file-selector-button {
-    margin-right: calc(var(--pico-spacing)/ 2);
+    margin-right: calc(var(--pico-spacing) / 2);
     padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal)
 }
 
@@ -1579,7 +1587,7 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
 }
 
 [type=file]:focus::file-selector-button {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)),0 0 0 var(--pico-outline-width) var(--pico-secondary-focus)
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0)), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus)
 }
 
 [type=range] {
@@ -1596,8 +1604,8 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     height: .375rem;
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-range-border-color);
-    -webkit-transition: background-color var(--pico-transition),box-shadow var(--pico-transition);
-    transition: background-color var(--pico-transition),box-shadow var(--pico-transition)
+    -webkit-transition: background-color var(--pico-transition), box-shadow var(--pico-transition);
+    transition: background-color var(--pico-transition), box-shadow var(--pico-transition)
 }
 
 [type=range]::-moz-range-track {
@@ -1605,8 +1613,8 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     height: .375rem;
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-range-border-color);
-    -moz-transition: background-color var(--pico-transition),box-shadow var(--pico-transition);
-    transition: background-color var(--pico-transition),box-shadow var(--pico-transition)
+    -moz-transition: background-color var(--pico-transition), box-shadow var(--pico-transition);
+    transition: background-color var(--pico-transition), box-shadow var(--pico-transition)
 }
 
 [type=range]::-ms-track {
@@ -1614,8 +1622,8 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     height: .375rem;
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-range-border-color);
-    -ms-transition: background-color var(--pico-transition),box-shadow var(--pico-transition);
-    transition: background-color var(--pico-transition),box-shadow var(--pico-transition)
+    -ms-transition: background-color var(--pico-transition), box-shadow var(--pico-transition);
+    transition: background-color var(--pico-transition), box-shadow var(--pico-transition)
 }
 
 [type=range]::-webkit-slider-thumb {
@@ -1627,8 +1635,8 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     border-radius: 50%;
     background-color: var(--pico-range-thumb-color);
     cursor: pointer;
-    -webkit-transition: background-color var(--pico-transition),transform var(--pico-transition);
-    transition: background-color var(--pico-transition),transform var(--pico-transition)
+    -webkit-transition: background-color var(--pico-transition), transform var(--pico-transition);
+    transition: background-color var(--pico-transition), transform var(--pico-transition)
 }
 
 [type=range]::-moz-range-thumb {
@@ -1640,8 +1648,8 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     border-radius: 50%;
     background-color: var(--pico-range-thumb-color);
     cursor: pointer;
-    -moz-transition: background-color var(--pico-transition),transform var(--pico-transition);
-    transition: background-color var(--pico-transition),transform var(--pico-transition)
+    -moz-transition: background-color var(--pico-transition), transform var(--pico-transition);
+    transition: background-color var(--pico-transition), transform var(--pico-transition)
 }
 
 [type=range]::-ms-thumb {
@@ -1653,11 +1661,11 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
     border-radius: 50%;
     background-color: var(--pico-range-thumb-color);
     cursor: pointer;
-    -ms-transition: background-color var(--pico-transition),transform var(--pico-transition);
-    transition: background-color var(--pico-transition),transform var(--pico-transition)
+    -ms-transition: background-color var(--pico-transition), transform var(--pico-transition);
+    transition: background-color var(--pico-transition), transform var(--pico-transition)
 }
 
-[type=range]:active,[type=range]:focus-within {
+[type=range]:active, [type=range]:focus-within {
     --pico-range-border-color: var(--pico-range-active-border-color);
     --pico-range-thumb-color: var(--pico-range-thumb-active-color)
 }
@@ -1675,22 +1683,24 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=time] {
 }
 
 input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=search] {
-    padding-inline-start:calc(var(--pico-form-element-spacing-horizontal) + 1.75rem);background-image: var(--pico-icon-search);
+    padding-inline-start: calc(var(--pico-form-element-spacing-horizontal) + 1.75rem);
+    background-image: var(--pico-icon-search);
     background-position: center left calc(var(--pico-form-element-spacing-horizontal) + .125rem);
     background-size: 1rem auto;
     background-repeat: no-repeat
 }
 
 input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=search][aria-invalid] {
-    padding-inline-start:calc(var(--pico-form-element-spacing-horizontal) + 1.75rem)!important;background-position: center left 1.125rem,center right .75rem
+    padding-inline-start: calc(var(--pico-form-element-spacing-horizontal) + 1.75rem) !important;
+    background-position: center left 1.125rem, center right .75rem
 }
 
 input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=search][aria-invalid=false] {
-    background-image: var(--pico-icon-search),var(--pico-icon-valid)
+    background-image: var(--pico-icon-search), var(--pico-icon-valid)
 }
 
 input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=search][aria-invalid=true] {
-    background-image: var(--pico-icon-search),var(--pico-icon-invalid)
+    background-image: var(--pico-icon-search), var(--pico-icon-invalid)
 }
 
 [dir=rtl] :where(input):not([type=checkbox],[type=radio],[type=range],[type=file])[type=search] {
@@ -1698,7 +1708,7 @@ input:not([type=checkbox],[type=radio],[type=range],[type=file])[type=search][ar
 }
 
 [dir=rtl] :where(input):not([type=checkbox],[type=radio],[type=range],[type=file])[type=search][aria-invalid] {
-    background-position: center right 1.125rem,center left .75rem
+    background-position: center right 1.125rem, center left .75rem
 }
 
 details {
@@ -1733,7 +1743,8 @@ details summary:after {
     display: block;
     width: 1rem;
     height: 1rem;
-    margin-inline-start:calc(var(--pico-spacing,1rem) * .5);float: right;
+    margin-inline-start: calc(var(--pico-spacing, 1rem) * .5);
+    float: right;
     transform: rotate(-90deg);
     background-image: var(--pico-icon-chevron);
     background-position: right center;
@@ -1753,7 +1764,7 @@ details summary:focus:not([role]) {
 
 details summary:focus-visible:not([role]) {
     outline: var(--pico-outline-width) solid var(--pico-primary-focus);
-    outline-offset: calc(var(--pico-spacing,1rem) * .5);
+    outline-offset: calc(var(--pico-spacing, 1rem) * .5);
     color: var(--pico-primary)
 }
 
@@ -1763,18 +1774,18 @@ details summary[role=button] {
 }
 
 details summary[role=button]:after {
-    height: calc(1rem * var(--pico-line-height,1.5))
+    height: calc(1rem * var(--pico-line-height, 1.5))
 }
 
-details[open]>summary {
+details[open] > summary {
     margin-bottom: var(--pico-spacing)
 }
 
-details[open]>summary:not([role]):not(:focus) {
+details[open] > summary:not([role]):not(:focus) {
     color: var(--pico-accordion-open-summary-color)
 }
 
-details[open]>summary:after {
+details[open] > summary:after {
     transform: rotate(0)
 }
 
@@ -1795,14 +1806,14 @@ article {
     box-shadow: var(--pico-card-box-shadow)
 }
 
-article>footer,article>header {
+article > footer, article > header {
     margin-right: calc(var(--pico-block-spacing-horizontal) * -1);
     margin-left: calc(var(--pico-block-spacing-horizontal) * -1);
     padding: calc(var(--pico-block-spacing-vertical) * .66) var(--pico-block-spacing-horizontal);
     background-color: var(--pico-card-sectioning-background-color)
 }
 
-article>header {
+article > header {
     margin-top: calc(var(--pico-block-spacing-vertical) * -1);
     margin-bottom: var(--pico-block-spacing-vertical);
     border-bottom: var(--pico-border-width) solid var(--pico-card-border-color);
@@ -1810,7 +1821,7 @@ article>header {
     border-top-left-radius: var(--pico-border-radius)
 }
 
-article>footer {
+article > footer {
     margin-top: var(--pico-block-spacing-vertical);
     margin-bottom: calc(var(--pico-block-spacing-vertical) * -1);
     border-top: var(--pico-border-width) solid var(--pico-card-border-color);
@@ -1823,11 +1834,12 @@ details.dropdown {
     border-bottom: none
 }
 
-details.dropdown>a:after,details.dropdown>button:after,details.dropdown>summary:after {
+details.dropdown > a:after, details.dropdown > button:after, details.dropdown > summary:after {
     display: block;
     width: 1rem;
-    height: calc(1rem * var(--pico-line-height,1.5));
-    margin-inline-start:.25rem;float: right;
+    height: calc(1rem * var(--pico-line-height, 1.5));
+    margin-inline-start: .25rem;
+    float: right;
     transform: rotate(0) translate(.2rem);
     background-image: var(--pico-icon-chevron);
     background-position: right center;
@@ -1840,7 +1852,7 @@ nav details.dropdown {
     margin-bottom: 0
 }
 
-details.dropdown>summary:not([role]) {
+details.dropdown > summary:not([role]) {
     height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
     padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
     border: var(--pico-border-width) solid var(--pico-form-element-border-color);
@@ -1852,29 +1864,29 @@ details.dropdown>summary:not([role]) {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    transition: background-color var(--pico-transition),border-color var(--pico-transition),color var(--pico-transition),box-shadow var(--pico-transition)
+    transition: background-color var(--pico-transition), border-color var(--pico-transition), color var(--pico-transition), box-shadow var(--pico-transition)
 }
 
-details.dropdown>summary:not([role]):active,details.dropdown>summary:not([role]):focus {
+details.dropdown > summary:not([role]):active, details.dropdown > summary:not([role]):focus {
     border-color: var(--pico-form-element-active-border-color);
     background-color: var(--pico-form-element-active-background-color)
 }
 
-details.dropdown>summary:not([role]):focus {
+details.dropdown > summary:not([role]):focus {
     box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color)
 }
 
-details.dropdown>summary:not([role]):focus-visible {
+details.dropdown > summary:not([role]):focus-visible {
     outline: 0
 }
 
-details.dropdown>summary:not([role])[aria-invalid=false] {
+details.dropdown > summary:not([role])[aria-invalid=false] {
     --pico-form-element-border-color: var(--pico-form-element-valid-border-color);
     --pico-form-element-active-border-color: var(--pico-form-element-valid-focus-color);
     --pico-form-element-focus-color: var(--pico-form-element-valid-focus-color)
 }
 
-details.dropdown>summary:not([role])[aria-invalid=true] {
+details.dropdown > summary:not([role])[aria-invalid=true] {
     --pico-form-element-border-color: var(--pico-form-element-invalid-border-color);
     --pico-form-element-active-border-color: var(--pico-form-element-invalid-focus-color);
     --pico-form-element-focus-color: var(--pico-form-element-invalid-focus-color)
@@ -1885,20 +1897,20 @@ nav details.dropdown {
     margin: calc(var(--pico-nav-element-spacing-vertical) * -1) 0
 }
 
-nav details.dropdown>summary:after {
+nav details.dropdown > summary:after {
     transform: rotate(0) translate(0)
 }
 
-nav details.dropdown>summary:not([role]) {
+nav details.dropdown > summary:not([role]) {
     height: calc(1rem * var(--pico-line-height) + var(--pico-nav-link-spacing-vertical) * 2);
     padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2) var(--pico-nav-link-spacing-horizontal)
 }
 
-nav details.dropdown>summary:not([role]):focus-visible {
+nav details.dropdown > summary:not([role]):focus-visible {
     box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus)
 }
 
-details.dropdown>summary+ul {
+details.dropdown > summary + ul {
     display: flex;
     z-index: 99;
     position: absolute;
@@ -1917,30 +1929,30 @@ details.dropdown>summary+ul {
     color: var(--pico-dropdown-color);
     white-space: nowrap;
     opacity: 0;
-    transition: opacity var(--pico-transition),transform 0s ease-in-out 1s
+    transition: opacity var(--pico-transition), transform 0s ease-in-out 1s
 }
 
-details.dropdown>summary+ul[dir=rtl] {
+details.dropdown > summary + ul[dir=rtl] {
     right: 0;
     left: auto
 }
 
-details.dropdown>summary+ul li {
+details.dropdown > summary + ul li {
     width: 100%;
     margin-bottom: 0;
     padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
     list-style: none
 }
 
-details.dropdown>summary+ul li:first-of-type {
+details.dropdown > summary + ul li:first-of-type {
     margin-top: calc(var(--pico-form-element-spacing-vertical) * .5)
 }
 
-details.dropdown>summary+ul li:last-of-type {
+details.dropdown > summary + ul li:last-of-type {
     margin-bottom: calc(var(--pico-form-element-spacing-vertical) * .5)
 }
 
-details.dropdown>summary+ul li a {
+details.dropdown > summary + ul li a {
     display: block;
     margin: calc(var(--pico-form-element-spacing-vertical) * -.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
     padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
@@ -1951,29 +1963,29 @@ details.dropdown>summary+ul li a {
     text-overflow: ellipsis
 }
 
-details.dropdown>summary+ul li a:active,details.dropdown>summary+ul li a:focus,details.dropdown>summary+ul li a:focus-visible,details.dropdown>summary+ul li a:hover,details.dropdown>summary+ul li a[aria-current]:not([aria-current=false]) {
+details.dropdown > summary + ul li a:active, details.dropdown > summary + ul li a:focus, details.dropdown > summary + ul li a:focus-visible, details.dropdown > summary + ul li a:hover, details.dropdown > summary + ul li a[aria-current]:not([aria-current=false]) {
     background-color: var(--pico-dropdown-hover-background-color)
 }
 
-details.dropdown>summary+ul li label {
+details.dropdown > summary + ul li label {
     width: 100%
 }
 
-details.dropdown>summary+ul li:has(label):hover {
+details.dropdown > summary + ul li:has(label):hover {
     background-color: var(--pico-dropdown-hover-background-color)
 }
 
-details.dropdown[open]>summary {
+details.dropdown[open] > summary {
     margin-bottom: 0
 }
 
-details.dropdown[open]>summary+ul {
+details.dropdown[open] > summary + ul {
     transform: scaleY(1);
     opacity: 1;
-    transition: opacity var(--pico-transition),transform 0s ease-in-out 0s
+    transition: opacity var(--pico-transition), transform 0s ease-in-out 0s
 }
 
-details.dropdown[open]>summary:before {
+details.dropdown[open] > summary:before {
     display: block;
     z-index: 1;
     position: fixed;
@@ -1985,79 +1997,79 @@ details.dropdown[open]>summary:before {
     cursor: default
 }
 
-label>details.dropdown {
+label > details.dropdown {
     margin-top: calc(var(--pico-spacing) * .25)
 }
 
-[role=group],[role=search] {
+[role=group], [role=search] {
     display: inline-flex;
     position: relative;
     width: 100%;
     margin-bottom: var(--pico-spacing);
     border-radius: var(--pico-border-radius);
-    box-shadow: var(--pico-group-box-shadow,0 0 0 transparent);
+    box-shadow: var(--pico-group-box-shadow, 0 0 0 transparent);
     vertical-align: middle;
     transition: box-shadow var(--pico-transition)
 }
 
-[role=group] input:not([type=checkbox],[type=radio]),[role=group] select,[role=group]>*,[role=search] input:not([type=checkbox],[type=radio]),[role=search] select,[role=search]>* {
+[role=group] input:not([type=checkbox],[type=radio]), [role=group] select, [role=group] > *, [role=search] input:not([type=checkbox],[type=radio]), [role=search] select, [role=search] > * {
     position: relative;
     flex: 1 1 auto;
     margin-bottom: 0
 }
 
-[role=group] input:not([type=checkbox],[type=radio]):not(:first-child),[role=group] select:not(:first-child),[role=group]>:not(:first-child),[role=search] input:not([type=checkbox],[type=radio]):not(:first-child),[role=search] select:not(:first-child),[role=search]>:not(:first-child) {
+[role=group] input:not([type=checkbox],[type=radio]):not(:first-child), [role=group] select:not(:first-child), [role=group] > :not(:first-child), [role=search] input:not([type=checkbox],[type=radio]):not(:first-child), [role=search] select:not(:first-child), [role=search] > :not(:first-child) {
     margin-left: 0;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0
 }
 
-[role=group] input:not([type=checkbox],[type=radio]):not(:last-child),[role=group] select:not(:last-child),[role=group]>:not(:last-child),[role=search] input:not([type=checkbox],[type=radio]):not(:last-child),[role=search] select:not(:last-child),[role=search]>:not(:last-child) {
+[role=group] input:not([type=checkbox],[type=radio]):not(:last-child), [role=group] select:not(:last-child), [role=group] > :not(:last-child), [role=search] input:not([type=checkbox],[type=radio]):not(:last-child), [role=search] select:not(:last-child), [role=search] > :not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0
 }
 
-[role=group] input:not([type=checkbox],[type=radio]):focus,[role=group] select:focus,[role=group]>:focus,[role=search] input:not([type=checkbox],[type=radio]):focus,[role=search] select:focus,[role=search]>:focus {
+[role=group] input:not([type=checkbox],[type=radio]):focus, [role=group] select:focus, [role=group] > :focus, [role=search] input:not([type=checkbox],[type=radio]):focus, [role=search] select:focus, [role=search] > :focus {
     z-index: 2
 }
 
-[role=group] [role=button]:not(:first-child),[role=group] [type=button]:not(:first-child),[role=group] [type=reset]:not(:first-child),[role=group] [type=submit]:not(:first-child),[role=group] button:not(:first-child),[role=group] input:not([type=checkbox],[type=radio]):not(:first-child),[role=group] select:not(:first-child),[role=search] [role=button]:not(:first-child),[role=search] [type=button]:not(:first-child),[role=search] [type=reset]:not(:first-child),[role=search] [type=submit]:not(:first-child),[role=search] button:not(:first-child),[role=search] input:not([type=checkbox],[type=radio]):not(:first-child),[role=search] select:not(:first-child) {
+[role=group] [role=button]:not(:first-child), [role=group] [type=button]:not(:first-child), [role=group] [type=reset]:not(:first-child), [role=group] [type=submit]:not(:first-child), [role=group] button:not(:first-child), [role=group] input:not([type=checkbox],[type=radio]):not(:first-child), [role=group] select:not(:first-child), [role=search] [role=button]:not(:first-child), [role=search] [type=button]:not(:first-child), [role=search] [type=reset]:not(:first-child), [role=search] [type=submit]:not(:first-child), [role=search] button:not(:first-child), [role=search] input:not([type=checkbox],[type=radio]):not(:first-child), [role=search] select:not(:first-child) {
     margin-left: calc(var(--pico-border-width) * -1)
 }
 
-[role=group] [role=button],[role=group] [type=button],[role=group] [type=reset],[role=group] [type=submit],[role=group] button,[role=search] [role=button],[role=search] [type=button],[role=search] [type=reset],[role=search] [type=submit],[role=search] button {
+[role=group] [role=button], [role=group] [type=button], [role=group] [type=reset], [role=group] [type=submit], [role=group] button, [role=search] [role=button], [role=search] [type=button], [role=search] [type=reset], [role=search] [type=submit], [role=search] button {
     width: auto
 }
 
 @supports selector(:has(*)) {
-    [role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus),[role=search]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) {
+    [role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus), [role=search]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) {
         --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-button)
     }
 
-    [role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) input:not([type=checkbox],[type=radio]),[role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) select,[role=search]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) input:not([type=checkbox],[type=radio]),[role=search]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) select {
+    [role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) input:not([type=checkbox],[type=radio]), [role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) select, [role=search]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) input:not([type=checkbox],[type=radio]), [role=search]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) select {
         border-color: transparent
     }
 
-    [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus),[role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) {
+    [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus), [role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) {
         --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-input)
     }
 
-    [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) [role=button],[role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=button],[role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=submit],[role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) button,[role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) [role=button],[role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=button],[role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=submit],[role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) button {
+    [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) [role=button], [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=button], [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=submit], [role=group]:has(input:not([type=submit],[type=button]):focus,select:focus) button, [role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) [role=button], [role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=button], [role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) [type=submit], [role=search]:has(input:not([type=submit],[type=button]):focus,select:focus) button {
         --pico-button-box-shadow: 0 0 0 var(--pico-border-width) var(--pico-primary-border);
         --pico-button-hover-box-shadow: 0 0 0 var(--pico-border-width) var(--pico-primary-hover-border)
     }
 
-    [role=group] [role=button]:focus,[role=group] [type=button]:focus,[role=group] [type=reset]:focus,[role=group] [type=submit]:focus,[role=group] button:focus,[role=search] [role=button]:focus,[role=search] [type=button]:focus,[role=search] [type=reset]:focus,[role=search] [type=submit]:focus,[role=search] button:focus {
+    [role=group] [role=button]:focus, [role=group] [type=button]:focus, [role=group] [type=reset]:focus, [role=group] [type=submit]:focus, [role=group] button:focus, [role=search] [role=button]:focus, [role=search] [type=button]:focus, [role=search] [type=reset]:focus, [role=search] [type=submit]:focus, [role=search] button:focus {
         box-shadow: none
     }
 }
 
-[role=search]>:first-child {
+[role=search] > :first-child {
     border-top-left-radius: 5rem;
     border-bottom-left-radius: 5rem
 }
 
-[role=search]>:last-child {
+[role=search] > :last-child {
     border-top-right-radius: 5rem;
     border-bottom-right-radius: 5rem
 }
@@ -2078,17 +2090,25 @@ label>details.dropdown {
 }
 
 [aria-busy=true]:not(input,select,textarea,html,form):not(:empty):before {
-    margin-inline-end:calc(var(--pico-spacing) * .5)}
-
-[aria-busy=true]: not(input,select,textarea,html,form):empty {
-    text-align:center
+    margin-inline-end: calc(var(--pico-spacing) * .5)
 }
 
-[role=button][aria-busy=true],[type=button][aria-busy=true],[type=reset][aria-busy=true],[type=submit][aria-busy=true],a[aria-busy=true],button[aria-busy=true] {
+[aria-busy=true]:
+
+not
+(
+input, select, textarea, html, form
+
+)
+:empty {
+    text-align: center
+}
+
+[role=button][aria-busy=true], [type=button][aria-busy=true], [type=reset][aria-busy=true], [type=submit][aria-busy=true], a[aria-busy=true], button[aria-busy=true] {
     pointer-events: none
 }
 
-:host,:root {
+:host, :root {
     --pico-scrollbar-width: 0px
 }
 
@@ -2111,7 +2131,7 @@ dialog {
     color: var(--pico-color)
 }
 
-dialog>article {
+dialog > article {
     width: 100%;
     max-height: calc(100vh - var(--pico-spacing) * 2);
     margin: var(--pico-spacing);
@@ -2119,41 +2139,41 @@ dialog>article {
 }
 
 @media (min-width: 576px) {
-    dialog>article {
-        max-width:510px
+    dialog > article {
+        max-width: 510px
     }
 }
 
 @media (min-width: 768px) {
-    dialog>article {
-        max-width:700px
+    dialog > article {
+        max-width: 700px
     }
 }
 
-dialog>article>header>* {
+dialog > article > header > * {
     margin-bottom: 0
 }
 
-dialog>article>header .close,dialog>article>header :is(a,button)[rel=prev] {
+dialog > article > header .close, dialog > article > header :is(a,button)[rel=prev] {
     margin: 0;
     margin-left: var(--pico-spacing);
     padding: 0;
     float: right
 }
 
-dialog>article>footer {
+dialog > article > footer {
     text-align: right
 }
 
-dialog>article>footer [role=button],dialog>article>footer button {
+dialog > article > footer [role=button], dialog > article > footer button {
     margin-bottom: 0
 }
 
-dialog>article>footer [role=button]:not(:first-of-type),dialog>article>footer button:not(:first-of-type) {
+dialog > article > footer [role=button]:not(:first-of-type), dialog > article > footer button:not(:first-of-type) {
     margin-left: calc(var(--pico-spacing) * .5)
 }
 
-dialog>article .close,dialog>article :is(a,button)[rel=prev] {
+dialog > article .close, dialog > article :is(a,button)[rel=prev] {
     display: block;
     width: 1rem;
     height: 1rem;
@@ -2170,16 +2190,16 @@ dialog>article .close,dialog>article :is(a,button)[rel=prev] {
     transition: opacity var(--pico-transition)
 }
 
-dialog>article .close:is([aria-current]:not([aria-current=false]),:hover,:active,:focus),dialog>article :is(a,button)[rel=prev]:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
+dialog > article .close:is([aria-current]:not([aria-current=false]),:hover,:active,:focus), dialog > article :is(a,button)[rel=prev]:is([aria-current]:not([aria-current=false]),:hover,:active,:focus) {
     opacity: 1
 }
 
-dialog:not([open]),dialog[open=false] {
+dialog:not([open]), dialog[open=false] {
     display: none
 }
 
 .modal-is-open {
-    padding-right: var(--pico-scrollbar-width,0);
+    padding-right: var(--pico-scrollbar-width, 0);
     overflow: hidden;
     pointer-events: none;
     touch-action: none
@@ -2190,7 +2210,7 @@ dialog:not([open]),dialog[open=false] {
     touch-action: auto
 }
 
-:where(.modal-is-opening,.modal-is-closing) dialog,:where(.modal-is-opening,.modal-is-closing) dialog>article {
+:where(.modal-is-opening,.modal-is-closing) dialog, :where(.modal-is-opening,.modal-is-closing) dialog > article {
     animation-duration: .2s;
     animation-timing-function: ease-in-out;
     animation-fill-mode: both
@@ -2201,12 +2221,12 @@ dialog:not([open]),dialog[open=false] {
     animation-name: modal-overlay
 }
 
-:where(.modal-is-opening,.modal-is-closing) dialog>article {
+:where(.modal-is-opening,.modal-is-closing) dialog > article {
     animation-delay: .2s;
     animation-name: modal
 }
 
-.modal-is-closing dialog,.modal-is-closing dialog>article {
+.modal-is-closing dialog, .modal-is-closing dialog > article {
     animation-delay: 0s;
     animation-direction: reverse
 }
@@ -2231,7 +2251,7 @@ dialog:not([open]),dialog[open=false] {
     content: "\200b"
 }
 
-nav,nav ul {
+nav, nav ul {
     display: flex
 }
 
@@ -2240,18 +2260,18 @@ nav {
     overflow: visible
 }
 
-nav ol,nav ul {
+nav ol, nav ul {
     align-items: center;
     margin-bottom: 0;
     padding: 0;
     list-style: none
 }
 
-nav ol:first-of-type,nav ul:first-of-type {
+nav ol:first-of-type, nav ul:first-of-type {
     margin-left: calc(var(--pico-nav-element-spacing-horizontal) * -1)
 }
 
-nav ol:last-of-type,nav ul:last-of-type {
+nav ol:last-of-type, nav ul:last-of-type {
     margin-right: calc(var(--pico-nav-element-spacing-horizontal) * -1)
 }
 
@@ -2272,7 +2292,7 @@ nav li :where(a,[role=link]):not(:hover) {
     text-decoration: none
 }
 
-nav li [role=button],nav li [type=button],nav li button,nav li input:not([type=checkbox],[type=radio],[type=range],[type=file]),nav li select {
+nav li [role=button], nav li [type=button], nav li button, nav li input:not([type=checkbox],[type=radio],[type=range],[type=file]), nav li select {
     height: auto;
     margin-right: inherit;
     margin-bottom: 0;
@@ -2286,14 +2306,23 @@ nav[aria-label=breadcrumb] {
 }
 
 nav[aria-label=breadcrumb] ul li:not(:first-child) {
-    margin-inline-start:var(--pico-nav-link-spacing-horizontal)}
+    margin-inline-start: var(--pico-nav-link-spacing-horizontal)
+}
 
 nav[aria-label=breadcrumb] ul li a {
     margin: calc(var(--pico-nav-link-spacing-vertical) * -1) 0;
-    margin-inline-start:calc(var(--pico-nav-link-spacing-horizontal) * -1)}
+    margin-inline-start: calc(var(--pico-nav-link-spacing-horizontal) * -1)
+}
 
-nav[aria-label=breadcrumb] ul li: not(:last-child):after {
-    display:inline-block;
+nav[aria-label=breadcrumb] ul li:
+
+not
+(
+:last-child
+
+)
+:after {
+    display: inline-block;
     position: absolute;
     width: calc(var(--pico-nav-link-spacing-horizontal) * 4);
     margin: 0 calc(var(--pico-nav-link-spacing-horizontal) * -1);
@@ -2311,7 +2340,7 @@ nav[aria-label=breadcrumb] a[aria-current]:not([aria-current=false]) {
     pointer-events: none
 }
 
-aside li,aside nav,aside ol,aside ul {
+aside li, aside nav, aside ol, aside ul {
     display: block
 }
 
@@ -2366,9 +2395,9 @@ progress::-moz-progress-bar {
     background-color: var(--pico-progress-color)
 }
 
-@media (prefers-reduced-motion:no-preference) {
+@media (prefers-reduced-motion: no-preference) {
     progress:indeterminate {
-        background: var(--pico-progress-background-color) linear-gradient(to right,var(--pico-progress-color) 30%,var(--pico-progress-background-color) 30%) top left/150% 150% no-repeat;
+        background: var(--pico-progress-background-color) linear-gradient(to right, var(--pico-progress-color) 30%, var(--pico-progress-background-color) 30%) top left/150% 150% no-repeat;
         animation: progress-indeterminate 1s linear infinite
     }
 
@@ -2381,7 +2410,7 @@ progress::-moz-progress-bar {
     }
 }
 
-@media (prefers-reduced-motion:no-preference) {
+@media (prefers-reduced-motion: no-preference) {
     [dir=rtl] progress:indeterminate {
         animation-direction: reverse
     }
@@ -2407,7 +2436,7 @@ progress::-moz-progress-bar {
     cursor: help
 }
 
-[data-tooltip]:after,[data-tooltip]:before,[data-tooltip][data-placement=top]:after,[data-tooltip][data-placement=top]:before {
+[data-tooltip]:after, [data-tooltip]:before, [data-tooltip][data-placement=top]:after, [data-tooltip][data-placement=top]:before {
     display: block;
     z-index: 99;
     position: absolute;
@@ -2415,7 +2444,7 @@ progress::-moz-progress-bar {
     left: 50%;
     padding: .25rem .5rem;
     overflow: hidden;
-    transform: translate(-50%,-.25rem);
+    transform: translate(-50%, -.25rem);
     border-radius: var(--pico-border-radius);
     background: var(--pico-tooltip-background-color);
     content: attr(data-tooltip);
@@ -2430,7 +2459,7 @@ progress::-moz-progress-bar {
     pointer-events: none
 }
 
-[data-tooltip]:after,[data-tooltip][data-placement=top]:after {
+[data-tooltip]:after, [data-tooltip][data-placement=top]:after {
     padding: 0;
     transform: translate(-50%);
     border-top: .3rem solid;
@@ -2442,93 +2471,93 @@ progress::-moz-progress-bar {
     color: var(--pico-tooltip-background-color)
 }
 
-[data-tooltip][data-placement=bottom]:after,[data-tooltip][data-placement=bottom]:before {
+[data-tooltip][data-placement=bottom]:after, [data-tooltip][data-placement=bottom]:before {
     top: 100%;
     bottom: auto;
-    transform: translate(-50%,.25rem)
+    transform: translate(-50%, .25rem)
 }
 
 [data-tooltip][data-placement=bottom]:after {
-    transform: translate(-50%,-.3rem);
+    transform: translate(-50%, -.3rem);
     border: .3rem solid transparent;
     border-bottom: .3rem solid
 }
 
-[data-tooltip][data-placement=left]:after,[data-tooltip][data-placement=left]:before {
+[data-tooltip][data-placement=left]:after, [data-tooltip][data-placement=left]:before {
     inset: 50% 100% auto auto;
-    transform: translate(-.25rem,-50%)
+    transform: translate(-.25rem, -50%)
 }
 
 [data-tooltip][data-placement=left]:after {
-    transform: translate(.3rem,-50%);
+    transform: translate(.3rem, -50%);
     border: .3rem solid transparent;
     border-left: .3rem solid
 }
 
-[data-tooltip][data-placement=right]:after,[data-tooltip][data-placement=right]:before {
+[data-tooltip][data-placement=right]:after, [data-tooltip][data-placement=right]:before {
     inset: 50% auto auto 100%;
-    transform: translate(.25rem,-50%)
+    transform: translate(.25rem, -50%)
 }
 
 [data-tooltip][data-placement=right]:after {
-    transform: translate(-.3rem,-50%);
+    transform: translate(-.3rem, -50%);
     border: .3rem solid transparent;
     border-right: .3rem solid
 }
 
-[data-tooltip]:focus:after,[data-tooltip]:focus:before,[data-tooltip]:hover:after,[data-tooltip]:hover:before {
+[data-tooltip]:focus:after, [data-tooltip]:focus:before, [data-tooltip]:hover:after, [data-tooltip]:hover:before {
     opacity: 1
 }
 
-@media (hover: hover) and (pointer:fine) {
-    [data-tooltip]:focus:after,[data-tooltip]:focus:before,[data-tooltip]:hover:after,[data-tooltip]:hover:before {
-        --pico-tooltip-slide-to:translate(-50%, -.25rem);
-        transform: translate(-50%,.75rem);
+@media (hover: hover) and (pointer: fine) {
+    [data-tooltip]:focus:after, [data-tooltip]:focus:before, [data-tooltip]:hover:after, [data-tooltip]:hover:before {
+        --pico-tooltip-slide-to: translate(-50%, -.25rem);
+        transform: translate(-50%, .75rem);
         animation-duration: .2s;
         animation-fill-mode: forwards;
         animation-name: tooltip-slide;
         opacity: 0
     }
 
-    [data-tooltip]:focus:after,[data-tooltip]:hover:after {
+    [data-tooltip]:focus:after, [data-tooltip]:hover:after {
         --pico-tooltip-caret-slide-to: translate(-50%, 0rem);
-        transform: translate(-50%,-.25rem);
+        transform: translate(-50%, -.25rem);
         animation-name: tooltip-caret-slide
     }
 
-    [data-tooltip][data-placement=bottom]:focus:after,[data-tooltip][data-placement=bottom]:focus:before,[data-tooltip][data-placement=bottom]:hover:after,[data-tooltip][data-placement=bottom]:hover:before {
+    [data-tooltip][data-placement=bottom]:focus:after, [data-tooltip][data-placement=bottom]:focus:before, [data-tooltip][data-placement=bottom]:hover:after, [data-tooltip][data-placement=bottom]:hover:before {
         --pico-tooltip-slide-to: translate(-50%, .25rem);
-        transform: translate(-50%,-.75rem);
+        transform: translate(-50%, -.75rem);
         animation-name: tooltip-slide
     }
 
-    [data-tooltip][data-placement=bottom]:focus:after,[data-tooltip][data-placement=bottom]:hover:after {
+    [data-tooltip][data-placement=bottom]:focus:after, [data-tooltip][data-placement=bottom]:hover:after {
         --pico-tooltip-caret-slide-to: translate(-50%, -.3rem);
-        transform: translate(-50%,-.5rem);
+        transform: translate(-50%, -.5rem);
         animation-name: tooltip-caret-slide
     }
 
-    [data-tooltip][data-placement=left]:focus:after,[data-tooltip][data-placement=left]:focus:before,[data-tooltip][data-placement=left]:hover:after,[data-tooltip][data-placement=left]:hover:before {
+    [data-tooltip][data-placement=left]:focus:after, [data-tooltip][data-placement=left]:focus:before, [data-tooltip][data-placement=left]:hover:after, [data-tooltip][data-placement=left]:hover:before {
         --pico-tooltip-slide-to: translate(-.25rem, -50%);
-        transform: translate(.75rem,-50%);
+        transform: translate(.75rem, -50%);
         animation-name: tooltip-slide
     }
 
-    [data-tooltip][data-placement=left]:focus:after,[data-tooltip][data-placement=left]:hover:after {
+    [data-tooltip][data-placement=left]:focus:after, [data-tooltip][data-placement=left]:hover:after {
         --pico-tooltip-caret-slide-to: translate(.3rem, -50%);
-        transform: translate(.05rem,-50%);
+        transform: translate(.05rem, -50%);
         animation-name: tooltip-caret-slide
     }
 
-    [data-tooltip][data-placement=right]:focus:after,[data-tooltip][data-placement=right]:focus:before,[data-tooltip][data-placement=right]:hover:after,[data-tooltip][data-placement=right]:hover:before {
+    [data-tooltip][data-placement=right]:focus:after, [data-tooltip][data-placement=right]:focus:before, [data-tooltip][data-placement=right]:hover:after, [data-tooltip][data-placement=right]:hover:before {
         --pico-tooltip-slide-to: translate(.25rem, -50%);
-        transform: translate(-.75rem,-50%);
+        transform: translate(-.75rem, -50%);
         animation-name: tooltip-slide
     }
 
-    [data-tooltip][data-placement=right]:focus:after,[data-tooltip][data-placement=right]:hover:after {
+    [data-tooltip][data-placement=right]:focus:after, [data-tooltip][data-placement=right]:hover:after {
         --pico-tooltip-caret-slide-to: translate(-.3rem, -50%);
-        transform: translate(-.05rem,-50%);
+        transform: translate(-.05rem, -50%);
         animation-name: tooltip-caret-slide
     }
 }
@@ -2555,7 +2584,7 @@ progress::-moz-progress-bar {
     cursor: pointer
 }
 
-[aria-disabled=true],[disabled] {
+[aria-disabled=true], [disabled] {
     cursor: not-allowed
 }
 
@@ -2564,11 +2593,11 @@ progress::-moz-progress-bar {
 }
 
 [aria-hidden=false][hidden]:not(:focus) {
-    clip: rect(0,0,0,0);
+    clip: rect(0, 0, 0, 0);
     position: absolute
 }
 
-[tabindex],a,area,button,input,label,select,summary,textarea {
+[tabindex], a, area, button, input, label, select, summary, textarea {
     -ms-touch-action: manipulation
 }
 
@@ -2576,25 +2605,25 @@ progress::-moz-progress-bar {
     direction: rtl
 }
 
-@media (prefers-reduced-motion:reduce) {
-    :not([aria-busy=true]),:not([aria-busy=true]):after,:not([aria-busy=true]):before {
-        background-attachment: initial!important;
-        animation-duration: 1ms!important;
-        animation-delay: -1ms!important;
-        animation-iteration-count: 1!important;
-        scroll-behavior: auto!important;
-        transition-delay: 0s!important;
-        transition-duration: 0s!important
+@media (prefers-reduced-motion: reduce) {
+    :not([aria-busy=true]), :not([aria-busy=true]):after, :not([aria-busy=true]):before {
+        background-attachment: initial !important;
+        animation-duration: 1ms !important;
+        animation-delay: -1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-delay: 0s !important;
+        transition-duration: 0s !important
     }
 }
 
 @media (min-width: 1536px) {
-    body>footer,body>header,body>main,section {
-        --pico-block-spacing-vertical:calc(var(--pico-spacing) * 4)
+    body > footer, body > header, body > main, section {
+        --pico-block-spacing-vertical: calc(var(--pico-spacing) * 4)
     }
 }
 
-:host:not([data-theme=dark]),:root:not([data-theme=dark]),[data-theme=light] {
+:host:not([data-theme=dark]), :root:not([data-theme=dark]), [data-theme=light] {
     --pico-header-background: rgba(255, 255, 255, .8);
     --pico-header-border-color: transparent;
     --pico-logo-wordmark: #2a3140;
@@ -2612,14 +2641,14 @@ progress::-moz-progress-bar {
     --pico-chapter-color: var(--pico-code-tag)
 }
 
-:host:not([data-theme=dark]) footer,:root:not([data-theme=dark]) footer,[data-theme=light] footer {
+:host:not([data-theme=dark]) footer, :root:not([data-theme=dark]) footer, [data-theme=light] footer {
     --pico-logo-small-sparkles: #cfd5e2;
     --pico-logo-big-sparkle: #b0b9d0
 }
 
 @media only screen and (prefers-color-scheme: dark) {
-    :host:not([data-theme]),:root:not([data-theme]) {
-        --pico-header-background:rgba(19, 22.5, 30.5, .9);
+    :host:not([data-theme]), :root:not([data-theme]) {
+        --pico-header-background: rgba(19, 22.5, 30.5, .9);
         --pico-header-border-color: rgba(32, 38, 50, .9);
         --pico-logo-wordmark: #fff;
         --pico-logo-small-sparkles: #ff9500;
@@ -2636,7 +2665,7 @@ progress::-moz-progress-bar {
         --pico-chapter-color: var(--pico-code-tag)
     }
 
-    :host:not([data-theme]) footer,:root:not([data-theme]) footer {
+    :host:not([data-theme]) footer, :root:not([data-theme]) footer {
         --pico-logo-small-sparkles: #5d6b89;
         --pico-logo-big-sparkle: #8191b5
     }
@@ -2670,8 +2699,8 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 400;
-    unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
-    src: url(/build/_assets/fira-code-cyrillic-400-normal-ZCA4MY3B.woff2) format("woff2"),url(/build/_assets/fira-code-cyrillic-400-normal-G3MO3WJY.woff) format("woff")
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    src: url(/build/_assets/fira-code-cyrillic-400-normal-ZCA4MY3B.woff2) format("woff2"), url(/build/_assets/fira-code-cyrillic-400-normal-G3MO3WJY.woff) format("woff")
 }
 
 @font-face {
@@ -2679,8 +2708,8 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 400;
-    unicode-range: U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;
-    src: url(/build/_assets/fira-code-cyrillic-ext-400-normal-4WUO6KVX.woff2) format("woff2"),url(/build/_assets/fira-code-cyrillic-ext-400-normal-YIMDOAAE.woff) format("woff")
+    unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+    src: url(/build/_assets/fira-code-cyrillic-ext-400-normal-4WUO6KVX.woff2) format("woff2"), url(/build/_assets/fira-code-cyrillic-ext-400-normal-YIMDOAAE.woff) format("woff")
 }
 
 @font-face {
@@ -2688,8 +2717,8 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 400;
-    unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;
-    src: url(/build/_assets/fira-code-greek-400-normal-J5VIPIPJ.woff2) format("woff2"),url(/build/_assets/fira-code-greek-400-normal-RNCZ2JHN.woff) format("woff")
+    unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+    src: url(/build/_assets/fira-code-greek-400-normal-J5VIPIPJ.woff2) format("woff2"), url(/build/_assets/fira-code-greek-400-normal-RNCZ2JHN.woff) format("woff")
 }
 
 @font-face {
@@ -2698,7 +2727,7 @@ progress::-moz-progress-bar {
     font-display: swap;
     font-weight: 400;
     unicode-range: U+1F00-1FFF;
-    src: url(/build/_assets/fira-code-greek-ext-400-normal-RZIVBWXA.woff2) format("woff2"),url(/build/_assets/fira-code-greek-ext-400-normal-FKTBLLA2.woff) format("woff")
+    src: url(/build/_assets/fira-code-greek-ext-400-normal-RZIVBWXA.woff2) format("woff2"), url(/build/_assets/fira-code-greek-ext-400-normal-FKTBLLA2.woff) format("woff")
 }
 
 @font-face {
@@ -2706,8 +2735,8 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 400;
-    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-    src: url(/build/_assets/fira-code-latin-400-normal-QEIMMOGQ.woff2) format("woff2"),url(/build/_assets/fira-code-latin-400-normal-VPQ43674.woff) format("woff")
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    src: url(/build/_assets/fira-code-latin-400-normal-QEIMMOGQ.woff2) format("woff2"), url(/build/_assets/fira-code-latin-400-normal-VPQ43674.woff) format("woff")
 }
 
 @font-face {
@@ -2715,8 +2744,8 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 400;
-    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-    src: url(/build/_assets/fira-code-latin-ext-400-normal-PKQCFOZZ.woff2) format("woff2"),url(/build/_assets/fira-code-latin-ext-400-normal-RFS3FUVU.woff) format("woff")
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    src: url(/build/_assets/fira-code-latin-ext-400-normal-PKQCFOZZ.woff2) format("woff2"), url(/build/_assets/fira-code-latin-ext-400-normal-RFS3FUVU.woff) format("woff")
 }
 
 @font-face {
@@ -2724,8 +2753,8 @@ progress::-moz-progress-bar {
     font-style: italic;
     font-display: swap;
     font-weight: 700;
-    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-    src: url(/build/_assets/figtree-latin-700-italic-FPKSBSHX.woff2) format("woff2"),url(/build/_assets/figtree-latin-700-italic-5BFV2N3R.woff) format("woff")
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    src: url(/build/_assets/figtree-latin-700-italic-FPKSBSHX.woff2) format("woff2"), url(/build/_assets/figtree-latin-700-italic-5BFV2N3R.woff) format("woff")
 }
 
 @font-face {
@@ -2733,8 +2762,8 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 700;
-    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-    src: url(/build/_assets/figtree-latin-700-normal-BVXY67S2.woff2) format("woff2"),url(/build/_assets/figtree-latin-700-normal-F2KBE7PY.woff) format("woff")
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    src: url(/build/_assets/figtree-latin-700-normal-BVXY67S2.woff2) format("woff2"), url(/build/_assets/figtree-latin-700-normal-F2KBE7PY.woff) format("woff")
 }
 
 @font-face {
@@ -2742,8 +2771,8 @@ progress::-moz-progress-bar {
     font-style: italic;
     font-display: swap;
     font-weight: 700;
-    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-    src: url(/build/_assets/figtree-latin-ext-700-italic-A7SQ62VN.woff2) format("woff2"),url(/build/_assets/figtree-latin-ext-700-italic-FQPHOZVN.woff) format("woff")
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    src: url(/build/_assets/figtree-latin-ext-700-italic-A7SQ62VN.woff2) format("woff2"), url(/build/_assets/figtree-latin-ext-700-italic-FQPHOZVN.woff) format("woff")
 }
 
 @font-face {
@@ -2751,108 +2780,109 @@ progress::-moz-progress-bar {
     font-style: normal;
     font-display: swap;
     font-weight: 700;
-    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-    src: url(/build/_assets/figtree-latin-ext-700-normal-7VBR7GEE.woff2) format("woff2"),url(/build/_assets/figtree-latin-ext-700-normal-VVUZSUEJ.woff) format("woff")
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    src: url(/build/_assets/figtree-latin-ext-700-normal-7VBR7GEE.woff2) format("woff2"), url(/build/_assets/figtree-latin-ext-700-normal-VVUZSUEJ.woff) format("woff")
 }
 
 html {
     --pico-header-height: calc(4.5rem + var(--pico-border-width))
 }
 
-body>header {
+body > header {
     z-index: 4;
     position: relative;
     padding: .5rem 0;
     border-bottom: var(--pico-border-width) solid transparent
 }
 
-body>header .container {
+body > header .container {
     display: flex;
     align-items: center;
     justify-content: space-between
 }
 
-body>header .container>a {
+body > header .container > a {
     margin: calc(var(--pico-spacing) * -.125) calc(var(--pico-spacing) * -.25);
     padding: calc(var(--pico-spacing) * .125) calc(var(--pico-spacing) * .25);
     border-radius: var(--pico-border-radius)
 }
 
-body>header .container>a svg.pico-logo {
+body > header .container > a svg.pico-logo {
     transform: translateY(-10%)
 }
 
-body>header .container nav svg {
+body > header .container nav svg {
     display: inline-block;
     width: auto;
     height: 1.125rem;
     transform: translateY(-.0625rem)
 }
 
-body>header .container nav svg.theme-toggle {
+body > header .container nav svg.theme-toggle {
     transform: scale(1.125) translateY(-.0625rem)
 }
 
 @media (max-width: 575px) {
-    body>header .container nav ul li.hide-before-sm {
-        display:none
+    body > header .container nav ul li.hide-before-sm {
+        display: none
     }
 }
 
 @media (min-width: 576px) {
-    body>header .container nav ul.icons:before {
-        display:block;
+    body > header .container nav ul.icons:before {
+        display: block;
         height: 1.125rem;
-        margin-inline:var(--pico-nav-element-spacing-horizontal);border-left: var(--pico-border-width) solid var(--pico-form-element-border-color);
+        margin-inline: var(--pico-nav-element-spacing-horizontal);
+        border-left: var(--pico-border-width) solid var(--pico-form-element-border-color);
         content: ""
     }
 }
 
-body>header .container nav details[class=dropdown] {
+body > header .container nav details[class=dropdown] {
     display: inline-block;
     margin: calc(var(--pico-nav-element-spacing-vertical) * -1) calc(var(--pico-nav-element-spacing-horizontal) * -1)
 }
 
-body>header .container nav details[class=dropdown] summary:not(:hover,:focus,:focus-visible),body>header .container nav details[class=dropdown]:not(:focus-within) summary {
+body > header .container nav details[class=dropdown] summary:not(:hover,:focus,:focus-visible), body > header .container nav details[class=dropdown]:not(:focus-within) summary {
     border-color: transparent;
     background-color: transparent
 }
 
-body>header .container nav details[class=dropdown] summary:focus,body>header .container nav details[class=dropdown] summary:focus-visible,body>header .container nav details[class=dropdown] summary:hover {
+body > header .container nav details[class=dropdown] summary:focus, body > header .container nav details[class=dropdown] summary:focus-visible, body > header .container nav details[class=dropdown] summary:hover {
     color: var(--pico-secondary-hover)
 }
 
-body>header .container nav details[class=dropdown] summary:focus {
+body > header .container nav details[class=dropdown] summary:focus {
     border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
     box-shadow: none
 }
 
-body>header .container nav details[class=dropdown] summary:focus-visible {
+body > header .container nav details[class=dropdown] summary:focus-visible {
     box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus)
 }
 
-body>header .container nav details[class=dropdown] summary:after {
+body > header .container nav details[class=dropdown] summary:after {
     transform: rotate(0) translate(.2rem) translateY(.0625rem)
 }
 
-body>header .container nav details[class=dropdown] ul li a svg {
+body > header .container nav details[class=dropdown] ul li a svg {
     stroke: var(--pico-current-version-checkmark);
     margin-left: .25rem;
     transform: scale(.75)
 }
 
 @media (min-width: 1024px) {
-    body>header.is-fixed-above-lg {
-        z-index:2;
+    body > header.is-fixed-above-lg {
+        z-index: 2;
         position: sticky;
         top: 0;
         -webkit-backdrop-filter: blur(1rem);
         backdrop-filter: blur(1rem);
         background-color: var(--pico-header-background);
-        transition: border-top-color .4s ease-in-out,box-shadow .4s ease-in-out
+        transition: border-top-color .4s ease-in-out, box-shadow .4s ease-in-out
     }
 
-    body>header.is-fixed-above-lg.is-fixed {
+    body > header.is-fixed-above-lg.is-fixed {
         border-bottom-color: var(--pico-header-border-color);
         box-shadow: var(--pico-card-box-shadow)
     }
@@ -2870,7 +2900,7 @@ html body {
     min-height: 100vh
 }
 
-body>footer .container section:first-of-type {
+body > footer .container section:first-of-type {
     display: grid;
     grid-template-areas: "logo" "links" "resources" "built";
     -moz-column-gap: calc(var(--pico-spacing) * 2);
@@ -2881,7 +2911,7 @@ body>footer .container section:first-of-type {
 }
 
 @media (min-width: 768px) {
-    body>footer .container section:first-of-type {
+    body > footer .container section:first-of-type {
         grid-template-columns:auto 1fr;
         grid-template-areas: "logo links" "built built" "resources resources";
         row-gap: calc(var(--pico-spacing) * 2);
@@ -2890,7 +2920,7 @@ body>footer .container section:first-of-type {
 }
 
 @media (min-width: 1024px) {
-    body>footer .container section:first-of-type {
+    body > footer .container section:first-of-type {
         grid-template-columns:1fr 2fr;
         grid-template-areas: "logo links" "built links" "resources links";
         row-gap: var(--pico-spacing)
@@ -2898,17 +2928,17 @@ body>footer .container section:first-of-type {
 }
 
 @media (min-width: 1280px) {
-    body>footer .container section:first-of-type {
-        -moz-column-gap:calc(var(--pico-spacing) * 4);
+    body > footer .container section:first-of-type {
+        -moz-column-gap: calc(var(--pico-spacing) * 4);
         column-gap: calc(var(--pico-spacing) * 4)
     }
 }
 
-body>footer .container section:first-of-type svg.pico-icon {
+body > footer .container section:first-of-type svg.pico-icon {
     grid-area: logo
 }
 
-body>footer .container section:first-of-type nav.links {
+body > footer .container section:first-of-type nav.links {
     --pico-nav-element-spacing-vertical: .125rem;
     --pico-nav-link-spacing-vertical: .125rem;
     display: grid;
@@ -2923,14 +2953,14 @@ body>footer .container section:first-of-type nav.links {
 }
 
 @media (min-width: 576px) {
-    body>footer .container section:first-of-type nav.links {
-        -moz-column-gap:calc(var(--pico-spacing) * 6);
+    body > footer .container section:first-of-type nav.links {
+        -moz-column-gap: calc(var(--pico-spacing) * 6);
         column-gap: calc(var(--pico-spacing) * 6)
     }
 }
 
 @media (min-width: 768px) {
-    body>footer .container section:first-of-type nav.links {
+    body > footer .container section:first-of-type nav.links {
         grid-template-columns:1fr 1fr 1fr 1fr;
         -moz-column-gap: calc(var(--pico-spacing) * 2);
         column-gap: calc(var(--pico-spacing) * 2);
@@ -2940,43 +2970,44 @@ body>footer .container section:first-of-type nav.links {
 }
 
 @media (min-width: 1024px) {
-    body>footer .container section:first-of-type nav.links {
-        margin-left:auto
+    body > footer .container section:first-of-type nav.links {
+        margin-left: auto
     }
 }
 
 @media (min-width: 1280px) {
-    body>footer .container section:first-of-type nav.links {
-        -moz-column-gap:calc(var(--pico-spacing) * 4);
+    body > footer .container section:first-of-type nav.links {
+        -moz-column-gap: calc(var(--pico-spacing) * 4);
         column-gap: calc(var(--pico-spacing) * 4);
         margin-left: auto
     }
 }
 
-body>footer .container section:first-of-type nav.links ul {
+body > footer .container section:first-of-type nav.links ul {
     display: grid;
-    margin-inline:calc(var(--pico-nav-element-spacing-horizontal) * -1)}
-
-body>footer .container section: first-of-type nav.links ul li {
-    display:block
+    margin-inline: calc(var(--pico-nav-element-spacing-horizontal) * -1)
 }
 
-body>footer .container section:first-of-type nav.links ul li strong a {
+body > footer .container section: first-of-type nav.links ul li {
+    display: block
+}
+
+body > footer .container section:first-of-type nav.links ul li strong a {
     color: currentColor
 }
 
-body>footer .container section:first-of-type p.build-info {
+body > footer .container section:first-of-type p.build-info {
     grid-area: built;
     margin-bottom: 0;
     color: var(--pico-muted-color);
     text-wrap: balance
 }
 
-body>footer .container section:first-of-type ul.resources {
+body > footer .container section:first-of-type ul.resources {
     display: grid;
-    grid-template-columns: repeat(4,1fr);
-    -moz-column-gap: calc(var(--pico-spacing)/ 2);
-    column-gap: calc(var(--pico-spacing)/ 2);
+    grid-template-columns: repeat(4, 1fr);
+    -moz-column-gap: calc(var(--pico-spacing) / 2);
+    column-gap: calc(var(--pico-spacing) / 2);
     grid-area: resources;
     width: -moz-fit-content;
     width: fit-content;
@@ -2984,50 +3015,52 @@ body>footer .container section:first-of-type ul.resources {
     padding: 0
 }
 
-body>footer .container section:first-of-type ul.resources li {
+body > footer .container section:first-of-type ul.resources li {
     margin: 0;
     list-style: none
 }
 
-body>footer .container section:first-of-type ul.resources li svg {
+body > footer .container section:first-of-type ul.resources li svg {
     display: inline-block;
     width: auto;
     height: 1rem
 }
 
-body>footer .container section:first-of-type ul.resources li svg.icon-npm {
+body > footer .container section:first-of-type ul.resources li svg.icon-npm {
     transform: scale(1.5);
     transform-origin: left
 }
 
-body>footer .container section:last-of-type {
-    margin-block:calc(var(--pico-spacing) * 2);padding-top: calc(var(--pico-spacing) * 2);
+body > footer .container section:last-of-type {
+    margin-block: calc(var(--pico-spacing) * 2);
+    padding-top: calc(var(--pico-spacing) * 2);
     border-top: var(--pico-border-width) solid var(--pico-muted-border-color);
     font-size: 12px
 }
 
-body>footer .container section:last-of-type p {
+body > footer .container section:last-of-type p {
     margin-bottom: 0;
     color: var(--pico-muted-color)
 }
 
 @media (min-width: 576px) {
-    body>footer .container section:last-of-type p {
-        display:inline
+    body > footer .container section:last-of-type p {
+        display: inline
     }
 
-    body>footer .container section:last-of-type p:not(:first-of-type) {
-        margin-inline-start:calc(var(--pico-spacing)/ 2)}
+    body > footer .container section:last-of-type p:not(:first-of-type) {
+        margin-inline-start: calc(var(--pico-spacing) / 2)
+    }
 }
 
-body>footer .container section: last-of-type p code {
-    padding:0;
+body > footer .container section: last-of-type p code {
+    padding: 0;
     background-color: transparent;
     font-size: 1em
 }
 
-code,pre {
-    font-family: "Fira Code",var(--pico-font-family-monospace)
+code, pre {
+    font-family: "Fira Code", var(--pico-font-family-monospace)
 }
 
 .code {
@@ -3048,11 +3081,11 @@ code,pre {
 
 @media (min-width: 1024px) {
     .code code {
-        font-size:16px
+        font-size: 16px
     }
 }
 
-.code>a.copy-to-clipboard {
+.code > a.copy-to-clipboard {
     z-index: 1;
     position: absolute;
     top: 1rem;
@@ -3063,7 +3096,7 @@ code,pre {
     transition: color var(--pico-transition)
 }
 
-.code>a.copy-to-clipboard>svg {
+.code > a.copy-to-clipboard > svg {
     display: block;
     width: 1.125rem;
     height: 1.125rem;
@@ -3072,20 +3105,20 @@ code,pre {
     transition: opacity var(--pico-transition)
 }
 
-.code>a.copy-to-clipboard:hover svg {
+.code > a.copy-to-clipboard:hover svg {
     opacity: 1
 }
 
-.code>a.copy-to-clipboard svg.check {
+.code > a.copy-to-clipboard svg.check {
     color: var(--pico-code-copied);
     opacity: 1
 }
 
-.code>a.copy-to-clipboard[data-tooltip]:after,.code>a.copy-to-clipboard[data-tooltip]:before {
+.code > a.copy-to-clipboard[data-tooltip]:after, .code > a.copy-to-clipboard[data-tooltip]:before {
     font-size: .75em
 }
 
-.code>a.copy-to-clipboard[data-tooltip]:has(svg.check):after {
+.code > a.copy-to-clipboard[data-tooltip]:has(svg.check):after {
     display: none
 }
 
@@ -3117,35 +3150,35 @@ article footer.code pre {
 
 @media (min-width: 576px) {
     .code:not(article footer.code) {
-        --pico-block-spacing-horizontal:calc(var(--pico-spacing) * 1.25);
+        --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.25);
         --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.25)
     }
 }
 
 @media (min-width: 768px) {
     .code:not(article footer.code) {
-        --pico-block-spacing-horizontal:calc(var(--pico-spacing) * 1.5);
+        --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.5);
         --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.5)
     }
 }
 
 @media (min-width: 1024px) {
     .code:not(article footer.code) {
-        --pico-block-spacing-horizontal:calc(var(--pico-spacing) * 1.75);
+        --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.75);
         --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.75)
     }
 }
 
 @media (min-width: 1280px) {
     .code:not(article footer.code) {
-        --pico-block-spacing-horizontal:calc(var(--pico-spacing) * 2);
+        --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 2);
         --pico-block-spacing-vertical: calc(var(--pico-spacing) * 2)
     }
 }
 
 @media (min-width: 1536px) {
     .code:not(article footer.code) {
-        --pico-block-spacing-horizontal:calc(var(--pico-spacing) * 2.5);
+        --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 2.5);
         --pico-block-spacing-vertical: calc(var(--pico-spacing) * 2.5)
     }
 }
@@ -3155,24 +3188,24 @@ article footer.code pre {
     background: 0 0
 }
 
-.code.small>a.copy-to-clipboard {
+.code.small > a.copy-to-clipboard {
     top: 50%;
     transform: translateY(-50%)
 }
 
-code .token.property,code .token.tag:not(.punctuation) {
+code .token.property, code .token.tag:not(.punctuation) {
     color: var(--pico-code-tag)
 }
 
-code .token.boolean,code .token.function,code .token.keyword,code .token.selector:not(.punctuation),code .token.tag.attr-name:not(.punctuation) {
+code .token.boolean, code .token.function, code .token.keyword, code .token.selector:not(.punctuation), code .token.tag.attr-name:not(.punctuation) {
     color: var(--pico-code-attr)
 }
 
-code .token.string,code .token.tag.attr-value:not(.attr-equals) {
+code .token.string, code .token.tag.attr-value:not(.attr-equals) {
     color: var(--pico-code-value)
 }
 
-code .token.comment:not(.punctuation),code .token.doctype {
+code .token.comment:not(.punctuation), code .token.doctype {
     color: var(--pico-code-comment)
 }
 
@@ -3191,12 +3224,12 @@ code .token.comment:not(.punctuation),code .token.doctype {
     opacity: 1
 }
 
-svg.pico-icon,svg.pico-logo {
+svg.pico-icon, svg.pico-logo {
     width: auto;
     height: 2.25rem
 }
 
-svg.pico-icon.animated path:first-of-type,svg.pico-icon.animated path:nth-of-type(2),svg.pico-icon.animated path:nth-of-type(3),svg.pico-logo.animated path:first-of-type,svg.pico-logo.animated path:nth-of-type(2),svg.pico-logo.animated path:nth-of-type(3) {
+svg.pico-icon.animated path:first-of-type, svg.pico-icon.animated path:nth-of-type(2), svg.pico-icon.animated path:nth-of-type(3), svg.pico-logo.animated path:first-of-type, svg.pico-logo.animated path:nth-of-type(2), svg.pico-logo.animated path:nth-of-type(3) {
     animation-duration: var(--animate-duration);
     animation-timing-function: ease-in-out;
     animation-delay: var(--animate-delay);
@@ -3204,19 +3237,19 @@ svg.pico-icon.animated path:first-of-type,svg.pico-icon.animated path:nth-of-typ
     animation-name: sparkle
 }
 
-svg.pico-icon.animated path:nth-of-type(3),svg.pico-logo.animated path:nth-of-type(3) {
+svg.pico-icon.animated path:nth-of-type(3), svg.pico-logo.animated path:nth-of-type(3) {
     --animate-duration: .5s;
     --animate-delay: 0s;
     transform-origin: 309px 78px
 }
 
-svg.pico-icon.animated path:first-of-type,svg.pico-logo.animated path:first-of-type {
+svg.pico-icon.animated path:first-of-type, svg.pico-logo.animated path:first-of-type {
     --animate-duration: .75s;
     --animate-delay: .125s;
     transform-origin: 345px 48px
 }
 
-svg.pico-icon.animated path:nth-of-type(2),svg.pico-logo.animated path:nth-of-type(2) {
+svg.pico-icon.animated path:nth-of-type(2), svg.pico-logo.animated path:nth-of-type(2) {
     --animate-duration: .5s;
     --animate-delay: .375s;
     transform-origin: 297px 18px
@@ -3257,13 +3290,13 @@ svg.icon-theme-toggle {
 
 svg.icon-theme-toggle :first-child path {
     transition-duration: calc(var(--theme-toggle-duration) * .6);
-    transition-property: transform,d;
-    transition-timing-function: cubic-bezier(0,0,.5,1)
+    transition-property: transform, d;
+    transition-timing-function: cubic-bezier(0, 0, .5, 1)
 }
 
-svg.icon-theme-toggle g circle,svg.icon-theme-toggle g path {
+svg.icon-theme-toggle g circle, svg.icon-theme-toggle g path {
     transform-origin: center;
-    transition: transform calc(var(--theme-toggle-duration) * .65) cubic-bezier(0,0,0,1.25) calc(var(--theme-toggle-duration) * .35)
+    transition: transform calc(var(--theme-toggle-duration) * .65) cubic-bezier(0, 0, 0, 1.25) calc(var(--theme-toggle-duration) * .35)
 }
 
 svg.icon-theme-toggle.moon g circle {
@@ -3279,12 +3312,12 @@ svg.icon-theme-toggle.moon g path {
 svg.icon-theme-toggle.moon :first-child path {
     d: path("M-9 3h25a1 1 0 0017 13v30H0Z");
     transition-delay: calc(var(--theme-toggle-duration) * .4);
-    transition-timing-function: cubic-bezier(0,0,0,1.25)
+    transition-timing-function: cubic-bezier(0, 0, 0, 1.25)
 }
 
 @supports not (d:path("")) {
     svg.icon-theme-toggle.moon :first-child path {
-        transform: translate3d(-9px,14px,0)
+        transform: translate3d(-9px, 14px, 0)
     }
 }
 

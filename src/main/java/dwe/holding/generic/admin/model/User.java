@@ -13,8 +13,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Table(name = "ADMIN_USER", uniqueConstraints = @UniqueConstraint(name = "uk_user_accountPassword", columnNames = {"ACCOUNT", "PASSWORD"}))
 @Entity
@@ -45,7 +44,7 @@ public class User extends BaseBO {
     private String email;
     @Column(nullable = false)
     @Builder.Default
-    private boolean changePassword = true;
+    private boolean changePassword = false;
     private LocalDate lastVisitDate;
     private Long numberOfVisits;
 
@@ -53,12 +52,15 @@ public class User extends BaseBO {
     @JoinColumn(nullable = false)
     @Builder.Default
     private Member member = new Member();
+
+    private UUID memberLocalId;
+
     @Builder.Default
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<UserRole> userRoles = new HashSet<UserRole>(0);
+    private Set<UserRole> userRoles = new HashSet<>(0);
     @Builder.Default
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "ipnumber")
-    private Set<IPSecurity> ipNumbers = new HashSet<IPSecurity>(0);
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "userId")
+    private List<IPSecurity> ipNumbers = new ArrayList<>(0);
 
     public User() {
         super();

@@ -7,18 +7,21 @@ import dwe.holding.generic.teammover.model.Game;
 import dwe.holding.generic.teammover.repository.DriverRepository;
 import dwe.holding.generic.teammover.repository.GameRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public class MigrationTeamMoverService {
+@Slf4j
+public class MigrationTeamMoverDataService {
 
     private final GameRepository gameRepository;
     private final MemberRepository memberRepository;
     private final DriverRepository driverRepository;
 
-    public MigrationTeamMoverService(GameRepository gameRepository, MemberRepository memberRepository, DriverRepository driverRepository) {
+    public MigrationTeamMoverDataService(GameRepository gameRepository, MemberRepository memberRepository, DriverRepository driverRepository) {
         this.gameRepository = gameRepository;
         this.memberRepository = memberRepository;
         this.driverRepository = driverRepository;
@@ -26,20 +29,21 @@ public class MigrationTeamMoverService {
 
     @Transactional
     public void init() {
+        log.info("MigrationTeamMoverDataService:: member");
         if (gameRepository.findAll().isEmpty()) {
             Member member = memberRepository.findAll().getFirst();
-            Long memberId = member.getId();
-
+            UUID memberId = member.getId();
+            log.info("MigrationTeamMoverDataService:: member");
             List<Game> games = gameRepository.saveAll(
                     List.of(
-                            Game.builder().memberId(memberId)
+                            Game.builder().memberId(memberId).localMemberId(member.getLocalMembers().stream().findFirst().get().getId())
                                     .howManyPeople(10)
                                     .doWeNeedToDrive(false)
                                     .whereIsTheGame("Sassenheim")
                                     .whenIsTheGame(java.time.LocalDateTime.now())
                                     //                                  .drivers(drivers)
                                     .build(),
-                            Game.builder().memberId(memberId)
+                            Game.builder().memberId(memberId).localMemberId(member.getLocalMembers().stream().findFirst().get().getId())
                                     .howManyPeople(10)
                                     .doWeNeedToDrive(true)
                                     .whereIsTheGame("Aalsmeer")
@@ -48,17 +52,17 @@ public class MigrationTeamMoverService {
                                     .build()
                     )
             );
-
+            log.info("MigrationTeamMoverDataService:: driver");
             List<Driver> drivers = driverRepository.saveAll(
                     List.of(
-                            Driver.builder().memberId(memberId)
+                            Driver.builder().memberId(memberId).localMemberId(member.getLocalMembers().stream().findFirst().get().getId())
                                     .accountName("jeroen")
                                     .atSwimmingPool(false)
                                     .nrOfEmptySpots(2)
                                     .nrOfTeamMembers(2)
                                     .game(games.get(0))
                                     .build(),
-                            Driver.builder().memberId(memberId)
+                            Driver.builder().memberId(memberId).localMemberId(member.getLocalMembers().stream().findFirst().get().getId())
                                     .accountName("daan")
                                     .atSwimmingPool(false)
                                     .nrOfEmptySpots(2)

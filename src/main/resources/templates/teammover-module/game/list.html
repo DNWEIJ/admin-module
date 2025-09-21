@@ -21,7 +21,7 @@
     <tbody>
     <th:block th:each="game : ${games}">
         <tr>
-            <td><a th:href="@{'/driver/'+ ${game.id}}" class="fa fa-car"></a>&nbsp;|&nbsp;<a th:href="@{'/game/'+ ${game.id}}">[[${game.whereIsTheGame}]]</a></td>
+            <td><a class="fa fa-car" th:href="@{'/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;<a th:href="@{'/game/'+ ${game.id}}">[[${game.whereIsTheGame}]]</a></td>
             <td>[[${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}]]</td>
             <td>[[${game.totalPlayers}]]</td>
             <td>[[${game.totalPlayersDriver}]]</td>

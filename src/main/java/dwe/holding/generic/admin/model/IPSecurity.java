@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.rmi.server.UID;
+import java.util.UUID;
+
 /**
  * Restricted IP Numbers. When no IP Numbers are available, then the user is granted access from all locations.
  */
@@ -23,10 +26,10 @@ import lombok.experimental.SuperBuilder;
 public class IPSecurity extends BaseBO {
 
     @Column(nullable = false)
-    private Long mid;
+    private UID mid;
 
     @Column(nullable = false)
-    private Long userId;
+    private UUID userId;
 
     @NotEmpty
     @Column(nullable = false)

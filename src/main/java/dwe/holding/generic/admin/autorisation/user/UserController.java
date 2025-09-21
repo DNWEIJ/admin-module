@@ -1,9 +1,9 @@
 package dwe.holding.generic.admin.autorisation.user;
 
-import dwe.holding.generic.admin.autorisation.function_role.PresentationFunction;
 import dwe.holding.generic.admin.autorisation.function_role.RoleRepository;
 import dwe.holding.generic.admin.autorisation.function_role.UserRoleRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;
+import dwe.holding.generic.admin.model.PresentationFunction;
 import dwe.holding.generic.admin.model.Role;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.UserRole;
@@ -59,7 +59,7 @@ public class UserController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/user/action";
         }
-        Long userId = processUser(form.checkedFunctions, form.user);
+        UUID userId = processUser(form.checkedFunctions, form.user);
         redirect.addFlashAttribute("message", "Role saved successfully!");
         return getRedirectFor(request, userId, "redirect:/user");
     }
@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, userRepository.findById(id).orElseThrow());
         return "admin-module/user/action";
@@ -88,7 +88,7 @@ public class UserController {
 
     private List<List<PresentationFunction>> getAllFunctionsAndCheckedIfActive(Set<UserRole> userRoles) {
         List<Role> roles = roleRepository.findAll();
-        Map<Long, String> roleIdsChecked = userRoles.stream().collect(
+        Map<UUID, String> roleIdsChecked = userRoles.stream().collect(
                 Collectors.toMap(s -> s.getRole().getId(), s -> s.getRole().getName())
         );
 
@@ -115,7 +115,7 @@ public class UserController {
         model.addAttribute("roles", getAllFunctionsAndCheckedIfActive(user.getUserRoles()));
     }
 
-    private Long processUser(List<PresentationFunction> checked, User formUser) {
+    private UUID processUser(List<PresentationFunction> checked, User formUser) {
         User user;
         if (formUser.isNew()) {
             formUser.setPassword(AutorisationUtils.getCurrentMemberPassword());
@@ -126,8 +126,8 @@ public class UserController {
         }
         user.getUserRoles(); // lazy loading
 
-        List<Long> currentFunctionIdsDelete = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
-        List<Long> currentFunctionIdsAdd = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
+        List<UUID> currentFunctionIdsDelete = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
+        List<UUID> currentFunctionIdsAdd = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
 
         // initial so no data
         if (user.getUserRoles().isEmpty()) {

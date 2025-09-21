@@ -1,6 +1,6 @@
 package dwe.holding.generic.teammover.model;
 
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.generic.admin.model.base.TenantBaseBO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -24,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Game extends MemberBaseBO {
+public class Game extends TenantBaseBO {
     @NotEmpty
     String whereIsTheGame;
     @NotNull
@@ -33,5 +33,4 @@ public class Game extends MemberBaseBO {
     int howManyPeople;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Driver> drivers;
-
 }

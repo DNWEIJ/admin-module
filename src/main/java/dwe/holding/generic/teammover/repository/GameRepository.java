@@ -3,5 +3,7 @@ package dwe.holding.generic.teammover.repository;
 import dwe.holding.generic.teammover.model.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GameRepository extends JpaRepository<Game, Long> {
+import java.util.UUID;
+
+public interface GameRepository extends JpaRepository<Game, UUID> {
 }

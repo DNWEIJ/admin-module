@@ -56,14 +56,17 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        User user = userRepository.findByAccount(usernameAndShortCode[0]).orElseThrow(() ->
-                new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"))
-        );
-
-        if (!user.getMember().getShortCode().equals(usernameAndShortCode[1])) {
-            new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
+        List<User> users = userRepository.findByAccount(usernameAndShortCode[0]);
+        if (users.isEmpty()) {
+            throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
+        // reduce the list to matching on member.shortCode
+        List<User> users1 = users.stream().filter(user -> user.getMember().getShortCode().equals(usernameAndShortCode[1])).toList();
+        if (users1.size() != 1) {
+            throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
+        }
+        User user = users1.get(0);
         if (user.getMember().getPassword().equals(user.getPassword())) {
             user.setChangePassword(true);
         }
@@ -80,8 +83,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
                     messages.getMessage("TenantAuthenticationProvider.login_enabled", "Unfortunalty, you have been disabled. Please contact your internal administrator."));
         }
 
-        // TODO rewrite to stream maybe?
-        //  check the ipnumbers, if they are set.
+        // TODO rewrite to stream maybe?        //  check the ipnumbers, if they are set.
         if (!(user.getIpNumbers().isEmpty())) {
             IPSecurity[] array = user.getIpNumbers().toArray(new IPSecurity[user.getIpNumbers().size()]);
             WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
@@ -94,7 +96,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             }
             if (check_ip) {
                 throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipnumber",
-                        "You are using the application from an unautherised IPNumber location. Please contact your internal administrator."));
+                        "You are using the application from an unauthorized IPNumber location. Please contact your internal administrator."));
             }
 
         }

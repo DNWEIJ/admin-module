@@ -1,6 +1,6 @@
 package dwe.holding.generic.teammover.model;
 
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.generic.admin.model.base.TenantBaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Driver extends MemberBaseBO {
+public class Driver extends TenantBaseBO {
     String accountName;
     boolean atSwimmingPool;
     int nrOfTeamMembers;

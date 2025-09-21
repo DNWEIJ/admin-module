@@ -6,7 +6,7 @@
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/localmember/list')}"></th:block>
 
 <form action="/localmember" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
     <fieldset class="grid" role="presentation">
@@ -14,17 +14,17 @@
         <input id="version" name="version" th:value="${version}" type="hidden">
         <th:block th:insert="~{fragments/elements/input::inputHtml('name','Full name of clinic', 'localMemberName','1')}"></th:block>
     </fieldset>
-<!--    <fieldset class="grid" role="presentation">-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone1','Clinic phone', 'phone1','2')}" th:with="type='tel'"></th:block>-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone2','Second phone', 'phone2','3')}"></th:block>-->
-<!--    </fieldset>-->
-<!--    <fieldset role="presentation">-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address1','Addressline one', 'address1','4')}"></th:block>-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address2','Addressline two', 'address2','5')}"></th:block>-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address3','Addressline three', 'address3','6')}"></th:block>-->
-<!--    </fieldset>-->
-<!--    <fieldset class="grid" role="presentation">-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('city','City', 'city','7')}"></th:block>-->
-<!--        <th:block th:insert="~{fragments/elements/input::inputHtml('zipCode','Zipcode', 'zipCode','8')}"></th:block>-->
-<!--    </fieldset>-->
+    <!--    <fieldset class="grid" role="presentation">-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone1','Clinic phone', 'phone1','2')}" th:with="type='tel'"></th:block>-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone2','Second phone', 'phone2','3')}"></th:block>-->
+    <!--    </fieldset>-->
+    <!--    <fieldset role="presentation">-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address1','Addressline one', 'address1','4')}"></th:block>-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address2','Addressline two', 'address2','5')}"></th:block>-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address3','Addressline three', 'address3','6')}"></th:block>-->
+    <!--    </fieldset>-->
+    <!--    <fieldset class="grid" role="presentation">-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('city','City', 'city','7')}"></th:block>-->
+    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('zipCode','Zipcode', 'zipCode','8')}"></th:block>-->
+    <!--    </fieldset>-->
 </form>
