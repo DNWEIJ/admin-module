@@ -38,7 +38,7 @@ public class LoginController {
         if (AutorisationUtils.isNewUser()) {
             return "redirect:/resetpassword";
         }
-        return "/index";
+        return "admin-module/index";
     }
 
     @GetMapping("/resetpassword")
@@ -61,7 +61,7 @@ public class LoginController {
             if (AutorisationUtils.isLocalMemberRequired() && savedUser.getMemberLocalId() == null) {
                 return "redirect:/setlocalmember";
             }
-            return "/index";
+            return "admin-module/index";
         }
     }
 
@@ -83,7 +83,7 @@ public class LoginController {
         user.setMemberLocalId(UUID.fromString(form.id));
         User savedUser = userRepository.save(user);
         AutorisationUtils.setCurrentUser(savedUser);
-        return "/index";
+        return "admin-module/index";
     }
 
 
