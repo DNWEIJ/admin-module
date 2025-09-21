@@ -46,12 +46,12 @@ public class Supplies extends TenantBaseBO {
      * The description used by the distributor to identify the product.
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable=true)
+    @JoinColumn(nullable = true)
     private Distributor distributor = new Distributor();
 
     private Long barcode;
-    @OneToMany(fetch= FetchType.EAGER, mappedBy="supplies")
-    @Cascade( {CascadeType.ALL, CascadeType.DELETE_ORPHAN})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "supplies")
+    @Cascade({CascadeType.ALL, CascadeType.DELETE_ORPHAN})
     @Builder.Default
     private Set<SuppliesLocal> suppliesLocals = new HashSet<SuppliesLocal>(0);
 //     private Set<Supplies2localsupdated> updateRecords = new HashSet<Supplies2localsupdated>(0);

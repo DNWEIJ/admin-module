@@ -53,14 +53,6 @@ public class UserController {
         this.memberRepository = memberRepository;
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    class Form extends ToString {
-        User user = new User();
-        List<PresentationFunction> checkedFunctions = new ArrayList<>();
-    }
-
     @PostMapping("/user")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
@@ -169,6 +161,14 @@ public class UserController {
         userRoleRepository.saveAllAndFlush(user.getUserRoles());
         userRepository.save(user);
         return user.getId();
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    class Form extends ToString {
+        User user = new User();
+        List<PresentationFunction> checkedFunctions = new ArrayList<>();
     }
 
 }

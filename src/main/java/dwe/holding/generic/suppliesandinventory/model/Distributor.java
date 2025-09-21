@@ -6,10 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "DISTRIBUTOR", uniqueConstraints = @UniqueConstraint(columnNames={"DISRIBUTOR_NAME"}))
+@Table(name = "DISTRIBUTOR", uniqueConstraints = @UniqueConstraint(columnNames = {"DISRIBUTOR_NAME"}))
 @Entity
 @SuperBuilder
 @AllArgsConstructor

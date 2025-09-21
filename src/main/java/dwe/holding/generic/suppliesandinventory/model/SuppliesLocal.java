@@ -2,7 +2,10 @@ package dwe.holding.generic.suppliesandinventory.model;
 
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Table(name = "SUPPLIESLOCAL", uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLIES_ID", "MLID"}))

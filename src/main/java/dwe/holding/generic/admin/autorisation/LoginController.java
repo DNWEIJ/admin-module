@@ -4,23 +4,18 @@ import dwe.holding.generic.admin.autorisation.user.UserRepository;
 import dwe.holding.generic.admin.exception.ApplicationException;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.security.AutorisationUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.io.IOException;
 
 @Controller
 public class LoginController {
 
-    private final UserRepository userRepository;
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final UserRepository userRepository;
 
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -37,9 +32,6 @@ public class LoginController {
             return "redirect:/resetpassword";
         }
         return "/index";
-    }
-
-    record PasswordForm(String id, String password, String password2) {
     }
 
     @GetMapping("/resetpassword")
@@ -67,5 +59,8 @@ public class LoginController {
     String error() {
 
         return "admin-module/error";
+    }
+
+    record PasswordForm(String id, String password, String password2) {
     }
 }

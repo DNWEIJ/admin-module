@@ -55,11 +55,8 @@ public abstract class CodeAndDescription implements Comparable<CodeAndDescriptio
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof CodeAndDescription) {
-            CodeAndDescription cmo = (CodeAndDescription) obj;
-            if (cmo.getCode() == this.getCode() || (this.getCode() != null && this.getCode().equals(cmo.getCode()))) {
-                return true;
-            }
+        if (obj != null && obj instanceof CodeAndDescription cmo) {
+            return cmo.getCode() == this.getCode() || (this.getCode() != null && this.getCode().equals(cmo.getCode()));
         }
         return false;
     }

@@ -15,9 +15,9 @@ public class ApplicationException extends Exception implements ParameterizedExce
 
     private static final long serialVersionUID = 1L;
 
-    private String errorCode;
+    private final String errorCode;
 
-    private Object[] params;
+    private final Object[] params;
 
     public ApplicationException(String errorCode) {
         this(errorCode, null, null);

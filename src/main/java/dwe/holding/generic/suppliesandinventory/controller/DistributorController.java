@@ -40,7 +40,7 @@ public class DistributorController {
     @GetMapping("/distributor")
     String DistributorScreen(Model model) {
         model.addAttribute("action", "Create");
-        setModelData(model,  new Distributor());
+        setModelData(model, new Distributor());
         return "supplies-module/distributor/action";
     }
 

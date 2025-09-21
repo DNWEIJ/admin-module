@@ -16,7 +16,7 @@ public class IPNumber {
     }
 
     public final void fromString(String IPNumber) {
-        String splitted[] = IPNumber.split(".");
+        String[] splitted = IPNumber.split(".");
         if (splitted.length != 4) {
             throw new SystemException(this.getClass().getName() + ": Not a correct IPNumber!!");
         }
@@ -27,12 +27,9 @@ public class IPNumber {
     }
 
     public boolean validate() {
-        if ((number1 == null) || (number1 > 255) ||
-                (number2 == null) || (number2 > 255) ||
-                (number3 == null) || (number3 > 255) ||
-                (number4 == null) || (number4 > 255)) {
-            return false;
-        }
-        return true;
+        return (number1 != null) && (number1 <= 255) &&
+                (number2 != null) && (number2 <= 255) &&
+                (number3 != null) && (number3 <= 255) &&
+                (number4 != null) && (number4 <= 255);
     }
 }

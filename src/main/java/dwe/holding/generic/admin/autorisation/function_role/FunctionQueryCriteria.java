@@ -1,8 +1,9 @@
 package dwe.holding.generic.admin.autorisation.function_role;
 
-import dwe.holding.generic.admin.model.*;
+import dwe.holding.generic.admin.model.Function;
+import dwe.holding.generic.admin.model.User;
+import dwe.holding.generic.admin.model.UserRole;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;

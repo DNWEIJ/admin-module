@@ -41,14 +41,6 @@ public class RoleController {
         this.functionRepository = functionRepository;
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    class Form extends ToString {
-        Role role = new Role();
-        List<PresentationFunction> checkedFunctions = new ArrayList<>();
-    }
-
     @PostMapping("/role")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
@@ -150,5 +142,13 @@ public class RoleController {
         functionRoleRepository.saveAllAndFlush(role.getFunctionRoles());
         roleRepository.save(role);
         return role.getId();
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    class Form extends ToString {
+        Role role = new Role();
+        List<PresentationFunction> checkedFunctions = new ArrayList<>();
     }
 }

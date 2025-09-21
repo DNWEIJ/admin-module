@@ -7,7 +7,9 @@ import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.generic.admin.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -48,7 +50,7 @@ public class User extends BaseBO {
     private Long numberOfVisits;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable=false)
+    @JoinColumn(nullable = false)
     @Builder.Default
     private Member member = new Member();
     @Builder.Default

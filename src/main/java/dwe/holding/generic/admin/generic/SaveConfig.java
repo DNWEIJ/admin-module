@@ -8,6 +8,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface SaveConfig {
     String successMessage();
+
     String errorView();
+
     String redirectBase();
 }

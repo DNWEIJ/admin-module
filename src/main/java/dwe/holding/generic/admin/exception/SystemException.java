@@ -13,8 +13,8 @@ public class SystemException extends RuntimeException implements ParameterizedEx
 
     private static final long serialVersionUID = 1L;
     private static final String SYSTEM_SYSTEM_FAILURE = "SYS-00001";
-    private String errorCode;
-    private Object[] params;
+    private final String errorCode;
+    private final Object[] params;
 
     public SystemException() {
         this(SYSTEM_SYSTEM_FAILURE);

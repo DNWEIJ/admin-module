@@ -66,11 +66,6 @@ public final class AutorisationUtils {
         return getCurrentUser().getAuthorities();
     }
 
-    public static void setCurrentUser(User user) {
-        getCurrentUser().setUser(user);
-    }
-
-
     private static AdminUserDetails getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
@@ -83,6 +78,10 @@ public final class AutorisationUtils {
         } else {
             throw new RuntimeException(ERROR_CODE_NOT_LOGGED_IN);
         }
+    }
+
+    public static void setCurrentUser(User user) {
+        getCurrentUser().setUser(user);
     }
 
 }

@@ -12,7 +12,6 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 
 @Component
@@ -230,8 +229,8 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
         if (prefix.length() > 1) {
             tmp += " - " + prefix.substring(0, 1).toUpperCase() + prefix.substring(1).toLowerCase();
         }
-        log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTON:\n " + "INSERT INTO thau_function (VERSION ,NAME, START_DATE, MODIFICATION_DATE, SEQUENCE_NUMBER,TECHNICAL_NAME) SELECT 0, '" + tmp.toString() + "' , " + "'2009-01-01', '2009-01-01', (select max(sequence_number) + 10 from thau_function), '" + authorizationAttribute.toString() + "');");
-        log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTION_ROLE:\n " + "insert into thau_function_role (version,  function_id, role_id) SELECT 0, " + " (select function_id from thau_function where name = '" + tmp.toString() + "') as function_id, " + " (select role_id from thau_role where name = 'SuperUserAdmin') as role_id from dual;\n");
-        log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTON_ROLE:\n" + "insert into thau_function_role (version,  function_id, role_id) SELECT 0, " + " (select function_id from thau_function where name = '" + tmp.toString() + "') as function_id, " + " (select role_id from thau_role where name = 'SuperUser') as role_id  from dual;\n\n");
+        log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTON:\n " + "INSERT INTO thau_function (VERSION ,NAME, START_DATE, MODIFICATION_DATE, SEQUENCE_NUMBER,TECHNICAL_NAME) SELECT 0, '" + tmp + "' , " + "'2009-01-01', '2009-01-01', (select max(sequence_number) + 10 from thau_function), '" + authorizationAttribute + "');");
+        log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTION_ROLE:\n " + "insert into thau_function_role (version,  function_id, role_id) SELECT 0, " + " (select function_id from thau_function where name = '" + tmp + "') as function_id, " + " (select role_id from thau_role where name = 'SuperUserAdmin') as role_id from dual;\n");
+        log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTON_ROLE:\n" + "insert into thau_function_role (version,  function_id, role_id) SELECT 0, " + " (select function_id from thau_function where name = '" + tmp + "') as function_id, " + " (select role_id from thau_role where name = 'SuperUser') as role_id  from dual;\n\n");
     }
 }

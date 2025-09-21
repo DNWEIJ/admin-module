@@ -9,15 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public final class ButtonConstants {
 
-    private ButtonConstants() {
-        // no default constructor
-    }
-
     // generic buttons
     public static final String PARAM_SEARCH = "_search";
     public static final String PARAM_SAVE = "_save";
     public static final String PARAM_SAVE_NEW = "_saveandnew";
     public static final String PARAM_DELETE = "_delete";
+    private ButtonConstants() {
+        // no default constructor
+    }
 
     public static String getRedirectFor(HttpServletRequest request, Long id, String url) {
         if (request.getParameter(ButtonConstants.PARAM_SAVE) != null) {

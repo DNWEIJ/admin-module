@@ -3,8 +3,10 @@ package dwe.holding.generic.admin.model;
 
 import dwe.holding.generic.admin.model.base.BaseBO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -20,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 public class FunctionRole extends BaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( nullable = false)
+    @JoinColumn(nullable = false)
     private Function function;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -59,9 +59,6 @@ public class GameController {
         return "teammover-module/game/action";
     }
 
-    record GameSummary(Long id, String whereIsTheGame, LocalDateTime whenIsTheGame, int totalPlayers, int totalPlayersDriver, int totalSeatsDriver) {
-    }
-
     @GetMapping("/game/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
@@ -75,5 +72,8 @@ public class GameController {
                 .toList();
         model.addAttribute("games", summaries);
         return "teammover-module/game/list";
+    }
+
+    record GameSummary(Long id, String whereIsTheGame, LocalDateTime whenIsTheGame, int totalPlayers, int totalPlayersDriver, int totalSeatsDriver) {
     }
 }

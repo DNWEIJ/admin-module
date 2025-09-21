@@ -2,7 +2,9 @@ package dwe.holding.generic.admin.model;
 
 import dwe.holding.generic.admin.model.base.BaseBO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Table(name = "ADMIN_LOCALMEMBER", uniqueConstraints = @UniqueConstraint(name = "uk_memberLocal_name", columnNames = "NAME"))

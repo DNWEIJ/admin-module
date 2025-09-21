@@ -22,6 +22,7 @@ import java.util.List;
 @Service
 public class MigrationTeamMoverAdminService {
 
+    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
     private final LocalMemberRepository localMemberRepository;
     private final UserRepository userRepository;
@@ -29,8 +30,6 @@ public class MigrationTeamMoverAdminService {
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
-
-    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public MigrationTeamMoverAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
@@ -75,7 +74,6 @@ public class MigrationTeamMoverAdminService {
                             .member(member)
                             .build()
             );
-
 
 
             List<Function> functionForUser = functionRepository.saveAllAndFlush(

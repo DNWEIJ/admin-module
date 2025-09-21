@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "ADMIN_FUNCTION", uniqueConstraints = @UniqueConstraint(name="uk_function_name", columnNames = "NAME"))
+@Table(name = "ADMIN_FUNCTION", uniqueConstraints = @UniqueConstraint(name = "uk_function_name", columnNames = "NAME"))
 @Entity(name = "function")
 @SuperBuilder
 @NoArgsConstructor

@@ -1,7 +1,6 @@
 package dwe.holding.generic.admin.security.local;
 
 
-import dwe.holding.generic.admin.security.AdminAuthenticationFilter;
 import dwe.holding.generic.admin.security.TenantAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

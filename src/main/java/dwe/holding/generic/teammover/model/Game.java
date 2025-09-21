@@ -1,7 +1,10 @@
 package dwe.holding.generic.teammover.model;
 
 import dwe.holding.generic.admin.model.base.MemberBaseBO;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

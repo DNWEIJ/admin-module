@@ -49,7 +49,7 @@ public class FunctionController {
     @GetMapping("/function/{id}")
     String showEditScreen(@PathVariable @NotNull Long id, Model model) {
         model.addAttribute("action", "Edit");
-        model.addAttribute("function",  functionRepository.findById(id).orElseThrow());
+        model.addAttribute("function", functionRepository.findById(id).orElseThrow());
         return "admin-module/function/action";
     }
 

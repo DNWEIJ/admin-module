@@ -23,13 +23,13 @@ import java.util.Optional;
 public class AdminApplication implements CommandLineRunner {
 
     @Autowired
+    MigrationTeamMoverService migrationTeamMoverService;
+    @Autowired
+    MigrationTeamMoverAdminService migrationTeamMoverAdminService;
+    @Autowired
     private MigrationAdminService migrationAdminService;
     @Autowired
     private MigrationSuppliesService migrationSuppliesService;
-    @Autowired
-    MigrationTeamMoverService   migrationTeamMoverService;
-    @Autowired
-    MigrationTeamMoverAdminService migrationTeamMoverAdminService;
     @Autowired
     private Environment environment;
 

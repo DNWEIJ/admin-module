@@ -5,7 +5,10 @@ import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.base.BaseBO;
 import dwe.holding.generic.admin.model.type.YesNoEnum;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Table(name = "APP_USER_PREFERENCE")

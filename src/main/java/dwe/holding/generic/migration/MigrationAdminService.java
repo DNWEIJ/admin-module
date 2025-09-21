@@ -22,6 +22,7 @@ import java.util.List;
 @Service
 public class MigrationAdminService {
 
+    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
     private final LocalMemberRepository localMemberRepository;
     private final UserRepository userRepository;
@@ -29,8 +30,6 @@ public class MigrationAdminService {
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
-
-    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public MigrationAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
