@@ -108,7 +108,7 @@ public class UserController {
         model.addAttribute("languagePrefList", LanguagePrefEnum.getWebList());
         model.addAttribute("personnelStatusList", PersonnelStatusEnum.getWebList());
         model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
-        model.addAttribute("isSuperAdmin", (AutorisationUtils.getCurrentAuthorities().contains(SUPER_ADMIN)));
+        model.addAttribute("isSuperAdmin", (AutorisationUtils.isSuperAdmin()));
         if (AutorisationUtils.getCurrentAuthorities().contains(SUPER_ADMIN)) {
             model.addAttribute("membersList", memberRepository.findAllProjectedBy());
         }

@@ -94,4 +94,8 @@ public final class AutorisationUtils {
         getCurrentUser().setUser(user);
     }
 
+    public static Object isSuperAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+    }
 }
