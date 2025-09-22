@@ -58,6 +58,12 @@
         <!--            <artifactId>mysql-connector-j</artifactId>-->
         <!--            <scope>runtime</scope>-->
         <!--        </dependency>-->
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+            <scope>3.4.0</scope>
+        </dependency>
+
 
         <!-- test -->
         <dependency>

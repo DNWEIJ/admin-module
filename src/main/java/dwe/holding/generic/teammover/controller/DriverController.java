@@ -67,18 +67,19 @@ public class DriverController {
     UUID processDriver(Driver formDriver) {
         Game game = gameRepository.findById(formDriver.getGame().getId()).orElseThrow();
         if (formDriver.isNew()) {
-            Driver.builder()
-                    .accountName(AutorisationUtils.getCurrentUserAccount())
-                    .nrOfTeamMembers(formDriver.getNrOfTeamMembers())
-                    .atSwimmingPool(formDriver.isAtSwimmingPool())
-                    .nrOfEmptySpots(formDriver.getNrOfEmptySpots())
-                    .localMemberId(AutorisationUtils.getCurrentUserMlid())
-                    .memberId(AutorisationUtils.getCurrentUserId())
-                    .game(game)
-                    .build();
-            game.getDrivers().add(formDriver);
-            Game savedGame = gameRepository.save(game);
-            return savedGame.getDrivers().stream()
+            Driver savedGame = driverRepository.save(
+                    Driver.builder()
+                            .accountName(AutorisationUtils.getCurrentUserAccount())
+                            .nrOfTeamMembers(formDriver.getNrOfTeamMembers())
+                            .atSwimmingPool(formDriver.isAtSwimmingPool())
+                            .nrOfEmptySpots(formDriver.getNrOfEmptySpots())
+                            .localMemberId(AutorisationUtils.getCurrentUserMlid())
+                            .memberId(AutorisationUtils.getCurrentUserId())
+                            .game(game)
+                            .build()
+            );
+            game.getDrivers().add(savedGame);
+            return game.getDrivers().stream()
                     .filter(driver -> driver.getAccountName().equalsIgnoreCase(AutorisationUtils.getCurrentUserAccount()))
                     .findFirst().orElseThrow().getId();
 

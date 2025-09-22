@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, UUID> {
     List<MemberIdNameProjection> findAllProjectedBy();
+
+    Member findByShortCode(String zvs);
 }

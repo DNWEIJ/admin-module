@@ -1,5 +1,5 @@
 <th:block th:replace="~{fragments/page/header}"></th:block>
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleListNL('Wedstrijden','/game')}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleListNL('vd Wedstrijden','/game')}"></th:block>
 
 <style>
     .colgroup {
@@ -13,9 +13,7 @@
     <tr>
         <th>Waar</th>
         <th>Wanneer</th>
-        <th>Nr spelers</th>
-        <th>Nr Spelers</th>
-        <th>Zitplaatsen</th>
+        <th>&Sigma;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-user-check"></i>&nbsp;&nbsp;<i class="fa-solid fa-car"></i></th>
     </tr>
     </thead>
     <tbody>
@@ -23,9 +21,7 @@
         <tr>
             <td><a class="fa fa-car" th:href="@{'/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;<a th:href="@{'/game/'+ ${game.id}}">[[${game.whereIsTheGame}]]</a></td>
             <td>[[${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}]]</td>
-            <td>[[${game.totalPlayers}]]</td>
-            <td>[[${game.totalPlayersDriver}]]</td>
-            <td>[[${game.totalSeatsDriver}]]</td>
+            <td>[[${game.totalPlayers}]]&nbsp;&nbsp;&nbsp;[[${game.totalPlayersDriver}]]&nbsp;&nbsp;&nbsp;[[${game.totalSeatsDriver}]]</td>
         </tr>
     </th:block>
     </tbody>
@@ -35,13 +31,14 @@
     </tr>
     </tfoot>
 </table>
-<script>
-    var table = new Tabulator("#show-table",
-        {
-            layout: "fitColumns",
-            responsiveLayout: "collapse",
-            columns: [ //set column definitions for imported table data
-                {title: "Waar", formatter: "html"}
-            ]
-        });
-</script>
+<th:block th:insert="~{fragments/page/footer}"></th:block>
+<!--<script>-->
+<!--    var table = new Tabulator("#show-table",-->
+<!--        {-->
+<!--            layout: "fitColumns",-->
+<!--            responsiveLayout: "collapse",-->
+<!--            columns: [ //set column definitions for imported table data-->
+<!--                {title: "Waar", formatter: "html"}-->
+<!--            ]-->
+<!--        });-->
+<!--</script>-->

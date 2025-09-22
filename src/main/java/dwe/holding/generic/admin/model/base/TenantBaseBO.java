@@ -15,7 +15,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 public class TenantBaseBO extends BaseBO {
     @Column(nullable = false)

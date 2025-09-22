@@ -19,16 +19,18 @@ import java.util.List;
 
 @Table(name = "TEAMMOVER_GAME")
 @Entity
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class Game extends TenantBaseBO {
+    // https://waterpolo.knzb.nl/waterpolo/verenigingen/poule/11200/8507/DHS138S/
     @NotEmpty
     String whereIsTheGame;
     @NotNull
     LocalDateTime whenIsTheGame;
+    String nameOfTheTeam;
     boolean doWeNeedToDrive;
     int howManyPeople;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)

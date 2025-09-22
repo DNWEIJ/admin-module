@@ -17,7 +17,7 @@ import java.util.*;
 
 @Table(name = "ADMIN_USER", uniqueConstraints = @UniqueConstraint(name = "uk_user_accountPassword", columnNames = {"ACCOUNT", "PASSWORD"}))
 @Entity
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Getter
 @Setter
 public class User extends BaseBO {

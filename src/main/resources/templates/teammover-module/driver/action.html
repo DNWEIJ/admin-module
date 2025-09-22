@@ -1,7 +1,6 @@
-<th:block th:insert="~{fragments/page/header}"></th:block>
+<html layout:decorate="~{task/layout}">
 
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
+
 
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNL(${game.id}, 'Driver','/game/list')}"></th:block>
 
@@ -41,15 +40,15 @@
         </td>
         </tr>
         <tr>
-            <td>Hoeveel teamleden gaan er al mee in de auto?</td>
+            <td>Hoeveel (eigen) leden zijn al in de auto?</td>
         <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" th:value="${driver.nrOfTeamMembers}" type="number" tabindex="1"/></td>
         </tr>
-        <tr><td>Hoeveel teamleden kunnen nog mee/ legen plekken?</td>
+        <tr><td>Hoeveel legen plekken zijn er (teamleden)?</td>
         <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" th:value="${driver.nrOfEmptySpots}" type="number" tabindex="2"/></td>
         </tr>
     </table>
 </form>
-
+<th:block th:insert="~{fragments/page/footer}"></th:block>
 <style>
     .input {
         width: 1em;

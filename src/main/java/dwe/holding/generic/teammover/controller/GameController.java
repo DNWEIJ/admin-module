@@ -7,6 +7,7 @@ import dwe.holding.generic.teammover.repository.GameRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,12 +38,9 @@ public class GameController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "teammover-module/game/action";
         }
-        game.setMemberId(AutorisationUtils.getCurrentUserMid());
-        game.setLocalMemberId(AutorisationUtils.getCurrentUserMlid());
-        Game savedGame = gameRepository.save(game);
 
         redirect.addFlashAttribute("message", "Wedstrijd opgeslagen!");
-        return getRedirectFor(request, savedGame.getId(), "redirect:/game");
+        return getRedirectFor(request, processGame(game), "redirect:/game");
     }
 
     @GetMapping("/game")
@@ -63,12 +61,19 @@ public class GameController {
     @GetMapping("/game/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
-        List<Game> games = gameRepository.findAll();
+
+        List<Game> games = gameRepository.findAll(Sort.by(Sort.Direction.ASC, "whenIsTheGame"));
         List<GameSummary> summaries = games.stream()
                 .map(game -> {
-                    int players = game.getDrivers().stream().mapToInt(Driver::getNrOfTeamMembers).sum();
-                    int seats = game.getDrivers().stream().mapToInt(Driver::getNrOfEmptySpots).sum();
-                    return new GameSummary(game.getId(), game.getWhereIsTheGame(), game.getWhenIsTheGame(), game.getHowManyPeople(), players, seats);
+                    return new GameSummary(
+                            game.getId(),
+                            game.getWhereIsTheGame(),
+                            game.getWhenIsTheGame(),
+                            game.getHowManyPeople(),
+                            game.getDrivers().stream().mapToInt(Driver::getNrOfTeamMembers).sum(),
+                            game.getDrivers().stream().filter(Driver::isAtSwimmingPool).mapToInt(Driver::getNrOfEmptySpots).sum()
+                    );
+
                 })
                 .toList();
         model.addAttribute("games", summaries);
@@ -76,5 +81,26 @@ public class GameController {
     }
 
     record GameSummary(UUID id, String whereIsTheGame, LocalDateTime whenIsTheGame, int totalPlayers, int totalPlayersDriver, int totalSeatsDriver) {
+    }
+
+    UUID processGame(Game formGame) {
+
+        if (formGame.isNew()) {
+            return gameRepository.save(
+                    Game.builder()
+                            .localMemberId(AutorisationUtils.getCurrentUserMlid())
+                            .memberId(AutorisationUtils.getCurrentUserId())
+                            .whenIsTheGame(formGame.getWhenIsTheGame())
+                            .whereIsTheGame(formGame.getWhereIsTheGame())
+                            .howManyPeople(formGame.getHowManyPeople())
+                            .build()
+            ).getId();
+        } else {
+            Game game = gameRepository.findById(formGame.getId()).orElseThrow();
+            game.setWhenIsTheGame(formGame.getWhenIsTheGame());
+            game.setWhereIsTheGame(formGame.getWhereIsTheGame());
+            game.setHowManyPeople(formGame.getHowManyPeople());
+            return gameRepository.save(game).getId();
+        }
     }
 }

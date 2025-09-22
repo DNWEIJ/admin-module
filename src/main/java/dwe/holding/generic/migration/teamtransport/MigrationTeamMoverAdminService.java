@@ -64,7 +64,7 @@ public class MigrationTeamMoverAdminService {
             List<LocalMember> localMembers = localMemberRepository.saveAllAndFlush(
                     List.of(
                             LocalMember.builder().localMemberName("ZVS GO12-2").mid(member.getId()).member(member).build(),
-                            LocalMember.builder().localMemberName("ZVS GO14-1").mid(member.getId()).member(member).build()
+                            LocalMember.builder().localMemberName("ZVS GO12-1").mid(member.getId()).member(member).build()
                     )
             );
 
@@ -94,33 +94,60 @@ public class MigrationTeamMoverAdminService {
             List<FunctionRole> funcRole = functionRoleRepository.saveAllAndFlush(
                     listFunc.stream()
                             .map(func -> {
-                                if (func.getName().toLowerCase().contains("game")) {
+                                if (func.getName().equalsIgnoreCase("game_CREATE")) {
                                     return FunctionRole.builder().function(func).role(planner).build();
                                 }
                                 return FunctionRole.builder().function(func).role(teammover).build();
                             })
                             .toList()
             );
+
+
             log.info("MigrationTeamMoverAdminService:: user");
-            User jeroen = userRepository.saveAndFlush(
-                    User.builder()
-                            .name("Jeroen Peters")
-                            .email("JeroenPeters@zvs.nl")
-                            .account("jeroen")
-                            .changePassword(true)
-                            .password(password)
-                            .language(LanguagePrefEnum.Dutch)
-                            .personnelStatus(PersonnelStatusEnum.Vet)
-                            .loginEnabled(YesNoEnum.Yes)
-                            .member(member)
-                            .build()
+            record UserInfo(String name, String account, String email) {
+            }
+
+            List<UserInfo> userData = List.of(
+                    new UserInfo("Jeroen Peters", "jeroen", "donotreply@zvs.nl"),
+                    new UserInfo("Arjan Buijsse", "arjan", "donotreply@zvs.nl"),
+                    new UserInfo("Paul Geurds", "Paul", "donotreply@zvs.nl"),
+                    new UserInfo("Kim Broeders", "Kim", "donotreply@zvs.nl"),
+                    new UserInfo("Arnaud", "Arnoud", "donotreply@zvs.nl"),
+                    new UserInfo("Joesephine", "Josephine", "donotreply@zvs.nl"),
+                    new UserInfo("Roosmarijn Roelevink", "Roosmarijn", "donotreply@zvs.nl"),
+                    new UserInfo("Vera Kortekaas", "Vera", "donotreply@zvs.nl")
+
             );
+
+            User baseUser = User.builder()
+                    .changePassword(true)
+                    .password(password)
+                    .language(LanguagePrefEnum.Dutch)
+                    .personnelStatus(PersonnelStatusEnum.Vet)
+                    .loginEnabled(YesNoEnum.Yes)
+                    .member(member)
+                    .build();
+
+            List<User> userSavedList =
+                    userRepository.saveAllAndFlush(
+                            userData.stream()
+                                    .map(info -> (User) baseUser.toBuilder()
+                                            .name(info.name())
+                                            .account(info.account())
+                                            .email(info.email())
+                                            .build()
+                                    ).toList()
+                    );
+
+
             log.info("MigrationTeamMoverAdminService:: user-role");
             userRoleRepository.saveAllAndFlush(
-                    List.of(
-                            UserRole.builder().role(planner).user(jeroen).build(),
-                            UserRole.builder().role(teammover).user(jeroen).build()
-                    )
+                    userSavedList.stream().map(user ->
+                            UserRole.builder().role(teammover).user(user).build()).toList()
+            );
+            userRoleRepository.saveAllAndFlush(
+                    userSavedList.stream().filter(user -> !user.getAccount().equalsIgnoreCase("jeroen")).map(user ->
+                            UserRole.builder().role(planner).user(user).build()).toList()
             );
 
 

@@ -47,6 +47,7 @@ public class Supplies extends TenantBaseBO {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
+    @Builder.Default
     private Distributor distributor = new Distributor();
 
     private Long barcode;

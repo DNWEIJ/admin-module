@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface LocalMemberRepository extends JpaRepository<LocalMember, UUID> {
 
     List<LocalMember> findByMember_Id(UUID memberId);
+
+    LocalMember findByLocalMemberName(String go12);
 }

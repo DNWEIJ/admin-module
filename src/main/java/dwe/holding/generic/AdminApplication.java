@@ -6,6 +6,7 @@ import dwe.holding.generic.migration.MigrationSuppliesService;
 import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverAdminService;
 import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -49,6 +50,11 @@ public class AdminApplication implements CommandLineRunner {
                 return Optional.ofNullable(AutorisationUtils.getCurrentUserAccount());
             }
         };
+    }
+
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
 
     @Override
