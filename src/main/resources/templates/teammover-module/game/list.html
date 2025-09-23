@@ -14,12 +14,12 @@
     }
 </style>
 
-<table id="show-table">
+<table id="show-table" class="table-tight">
     <thead>
     <tr>
         <th>Waar</th>
         <th>Wanneer</th>
-        <th>&Sigma;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-user-check"></i>&nbsp;&nbsp;<i class="fa-solid fa-car"></i></th>
+        <th>&Sigma;&nbsp;<i class="fa-solid fa-user-check"></i>&nbsp;<i class="fa-solid fa-car"></i></th>
     </tr>
     </thead>
     <tbody>
@@ -44,13 +44,44 @@
     </tfoot>
 </table>
 <th:block th:insert="~{fragments/page/footer}"></th:block>
+<style>
+
+    .table-tight .right {
+        text-align: right;
+    }
+    .table-tight  .left {
+        text-align: left;
+    }
+    .table-tight {
+        width: 100%;
+        font-size: 100%;
+        /*   border-collapse: collapse; /* remove spacing between cells */
+        margin: 0; /* no margin around the table */
+        padding: 0; /* no padding inside the table */
+    }
+
+    .table-tight td,
+    .table-tight th {
+        padding: 0; /* no cell padding */
+        margin: ;
+
+        line-height: 2; /* compact row height */
+    }
+
+    .table-tight tr {
+        margin: 0;
+        padding: 0;
+        border: 1px black;
+    }
+</style>
 <!--<script>-->
 <!--    var table = new Tabulator("#show-table",-->
 <!--        {-->
 <!--            layout: "fitColumns",-->
-<!--            responsiveLayout: "collapse",-->
+<!--            -->
 <!--            columns: [ //set column definitions for imported table data-->
-<!--                {title: "Waar", formatter: "html"}-->
+<!--                {title: "Waar", formatter: "html"},-->
+<!--                {title: "", formatter: "html"}-->
 <!--            ]-->
 <!--        });-->
 <!--</script>-->
