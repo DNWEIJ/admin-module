@@ -6,6 +6,12 @@
         width: 100%
 
     }
+
+    .twocolumn-spread {
+        display: flex;
+        justify-content: space-between; /* pushes h3 left and span right */
+        align-items: baseline; /* aligns text nicely */
+    }
 </style>
 
 <table id="show-table">
@@ -19,7 +25,13 @@
     <tbody>
     <th:block th:each="game : ${games}">
         <tr>
-            <td><a class="fa fa-car" th:href="@{'/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;<a th:href="@{'/game/'+ ${game.id}}">[[${game.whereIsTheGame}]]</a></td>
+            <td><a class="fa fa-car" th:href="@{'/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;
+                <!-- if user has ROLE_PLANNER, show as link -->
+                <a th:if="${#authorization.expression('hasRole(''ROLE_PLANNER'')')}" th:href="@{'/game/' + ${game.id}}">[[${game.whereIsTheGame}]]</a>
+                <span th:unless="${#authorization.expression('hasRole(''ROLE_PLANNER'')')}">[[${game.whereIsTheGame}]]</span>
+
+
+            </td>
             <td>[[${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}]]</td>
             <td>[[${game.totalPlayers}]]&nbsp;&nbsp;&nbsp;[[${game.totalPlayersDriver}]]&nbsp;&nbsp;&nbsp;[[${game.totalSeatsDriver}]]</td>
         </tr>

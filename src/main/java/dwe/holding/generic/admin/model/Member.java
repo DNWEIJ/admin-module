@@ -26,6 +26,7 @@ public class Member extends BaseBO {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     @Builder.Default
     private Set<LocalMember> localMembers = new HashSet<LocalMember>(0);
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     @Builder.Default
     private Set<User> users = new HashSet<User>(0);

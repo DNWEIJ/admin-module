@@ -18,7 +18,6 @@ public class AdminAuthorizationManager implements AuthorizationManager {
 
     public AdminAuthorizationManager(TenantAccessDecisionVoter tenantAccessDecisionVoter) {
         this.tenantAccessDecisionVoter = tenantAccessDecisionVoter;
-
     }
 
     @Override

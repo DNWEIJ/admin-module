@@ -3,7 +3,7 @@
 <th:block th:insert="~{fragments/page/errors}"></th:block>
 <th:block th:insert="~{fragments/page/message}"></th:block>
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNL(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
 
 <form action="/game" method="post">
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
@@ -36,3 +36,10 @@
     </fieldset>
 </form>
 <th:block th:insert="~{fragments/page/footer}"></th:block>
+<style>
+    .twocolumn-spread {
+        display: flex;
+        justify-content: space-between; /* pushes h3 left and span right */
+        align-items: baseline; /* aligns text nicely */
+    }
+</style>

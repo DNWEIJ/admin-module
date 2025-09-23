@@ -35,13 +35,13 @@ public class SecurityConfig {
     private TenantAuthenticationProvider customAuthenticationProvider;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, AdminAuthorizationManager adminAuthorizationManager) throws Exception {
 
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
         authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/login"));
-        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/index"));
+        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/game"));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"));
 
         http
@@ -55,8 +55,7 @@ public class SecurityConfig {
                                         "/images/**",
                                         "/action-table/**", "/fontawesome/**", "/pico/**", "/tabulator/**", "/ownstyle/**"
                                 ).permitAll()
-                                .anyRequest()
-                                .authenticated()
+                                .anyRequest().access(adminAuthorizationManager)
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login")) // ⬅️ custom!

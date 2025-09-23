@@ -6,6 +6,7 @@ import dwe.holding.generic.admin.model.Function;
 import dwe.holding.generic.admin.model.IPSecurity;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.type.YesNoEnum;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -24,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
+@Transactional
 public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -56,7 +58,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        List<User> users = userRepository.findByAccount(usernameAndShortCode[0]);
+        List<User> users = userRepository.findByAccountWithMemberAndLocals(usernameAndShortCode[0]);
         if (users.isEmpty()) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
@@ -67,6 +69,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
         User user = users1.get(0);
+
         if (user.getMember().getPassword().equals(user.getPassword())) {
             user.setChangePassword(true);
         }
@@ -77,7 +80,6 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         }
 
         // determine if the user is enabled or not
-
         if (YesNoEnum.No.equals(user.getLoginEnabled())) {
             throw new BadCredentialsException(
                     messages.getMessage("TenantAuthenticationProvider.login_enabled", "Unfortunalty, you have been disabled. Please contact your internal administrator."));

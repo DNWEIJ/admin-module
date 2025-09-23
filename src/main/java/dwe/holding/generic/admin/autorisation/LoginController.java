@@ -23,6 +23,8 @@ public class LoginController {
     private final UserRepository userRepository;
     private final LocalMemberRepository localMemberRepository;
 
+    private final String start ="redirect:/game/list";
+
     public LoginController(UserRepository userRepository, LocalMemberRepository localMemberRepository) {
         this.userRepository = userRepository;
         this.localMemberRepository = localMemberRepository;
@@ -38,7 +40,7 @@ public class LoginController {
         if (AutorisationUtils.isNewUser()) {
             return "redirect:/resetpassword";
         }
-        return "admin-module/index";
+        return start;
     }
 
     @GetMapping("/resetpassword")
@@ -61,7 +63,7 @@ public class LoginController {
             if (AutorisationUtils.isLocalMemberRequired() && savedUser.getMemberLocalId() == null) {
                 return "redirect:/setlocalmember";
             }
-            return "admin-module/index";
+            return start;
         }
     }
 

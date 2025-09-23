@@ -61,7 +61,7 @@ public class GameController {
     @GetMapping("/game/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
-
+        model.addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid());
         List<Game> games = gameRepository.findAll(Sort.by(Sort.Direction.ASC, "whenIsTheGame"));
         List<GameSummary> summaries = games.stream()
                 .map(game -> {

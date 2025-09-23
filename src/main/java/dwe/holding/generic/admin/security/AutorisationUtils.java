@@ -24,6 +24,9 @@ public final class AutorisationUtils {
         // Utility class. Do not create an instance.
     }
 
+    public static String getCurrentLocalMemberName() {
+      return  getCurrentMember().getLocalMembers().stream().filter(a -> !a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getLocalMemberName();
+    }
     public static Member getCurrentMember() {
         return getCurrentUser().getUser().getMember();
     }

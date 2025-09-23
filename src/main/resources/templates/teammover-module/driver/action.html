@@ -3,14 +3,17 @@
 <th:block th:insert="~{fragments/page/errors}"></th:block>
 <th:block th:insert="~{fragments/page/message}"></th:block>
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNL(${game.id}, 'Driver','/game/list')}"></th:block>
-
-
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
 <article>
-    <header class="game-header"><h3 th:text="${game.whereIsTheGame}">Header</h3><span th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></span></header>
     <table class="table-tight">
-        <thead></thead>
+        <thead>
+        <tr>
+            <th><h4 th:text="${game.whereIsTheGame}"></h4></th>
+            <th colspan="3" class="right"><small th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></small></th>
+        </tr>
+        </thead>
         <tbody>
+        <tr><td>&nbsp;</td></tr>
         <th:block th:each="driver : ${game.drivers}">
             <tr>
                 <td th:text="${driver.accountName}">Content</td>
@@ -33,42 +36,41 @@
     <input id="game.id" name="game.id" th:value="${driver.game.id}" type="hidden"/>
     <table>
         <tr>
-            <td cospan="2"><nobr>Vervoer geregeld door: <b>[[${driver.accountName}]]</b></nobr></td>
+            <td cospan="2">
+                <nobr>Vervoer geregeld door: <b>[[${driver.accountName}]]</b></nobr>
+            </td>
         </tr>
         <tr>
-        <td colspan="2">
-            <th:block th:insert="~{fragments/elements/select::selectCheckBox('atSwimmingPool','Ga je langs de wasbeek?', 'driver.atSwimmingPool','1')}"></th:block>
-        </td>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('atSwimmingPool','Ga je langs de wasbeek?', 'driver.atSwimmingPool','1')}"></th:block>
+            </td>
         </tr>
         <tr>
             <td>Hoeveel (eigen) leden zijn al in de auto?</td>
-        <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" th:value="${driver.nrOfTeamMembers}" type="number" tabindex="1"/></td>
+            <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" th:value="${driver.nrOfTeamMembers}" type="number" tabindex="1"/></td>
         </tr>
-        <tr><td>Hoeveel legen plekken zijn er (teamleden)?</td>
-        <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" th:value="${driver.nrOfEmptySpots}" type="number" tabindex="2"/></td>
+        <tr>
+            <td>Hoeveel legen plekken zijn er (teamleden)?</td>
+            <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" th:value="${driver.nrOfEmptySpots}" type="number" tabindex="2"/></td>
         </tr>
     </table>
 </form>
 <th:block th:insert="~{fragments/page/footer}"></th:block>
 <style>
-    .input {
-        width: 1em;
-    }
-
-    .game-header {
+    .twocolumn-spread {
         display: flex;
         justify-content: space-between; /* pushes h3 left and span right */
         align-items: baseline; /* aligns text nicely */
     }
-
-    .game-header span {
-        font-size: 0.9rem;
-        color: #666;
+    .table-tight .right {
+        text-align: right;
     }
-
+    .table-tight  .left {
+        text-align: left;
+    }
     .table-tight {
         width: 100%;
-        border-collapse: collapse; /* remove spacing between cells */
+     /*   border-collapse: collapse; /* remove spacing between cells */
         margin: 0; /* no margin around the table */
         padding: 0; /* no padding inside the table */
     }
@@ -77,19 +79,20 @@
     .table-tight th {
         padding: 0; /* no cell padding */
         margin: 0;
-        border: none; /* optional: no borders */
+        border: 1px black; /* optional: no borders */
         line-height: 1; /* compact row height */
     }
 
     .table-tight tr {
         margin: 0;
         padding: 0;
+        border: 1px black;
     }
 
     hr {
         border: none; /* remove default border */
         height: 3px; /* thickness */
-        background-color: #777; /* color */
+        background-color: #111; /* color */
         margin: 1rem 0; /* optional spacing */
     }
 </style>
