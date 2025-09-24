@@ -1,43 +1,175 @@
 <div th:fragment="head" th:remove="tag" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Admin Module</title>
+        <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
         <meta charset="utf-8">
-        <meta content="width=device-width" name="viewport"/>
-        <meta content="light dark" name="color-scheme">
-        <link href="/fontawesome/images/favicon.svg" rel="icon" type="image/x-icon"/>
 
-        <script src="/fontawesome/js/all.min.js" type="javascript"></script>
-        <link href="/fontawesome/css/all.min.css" rel="stylesheet"/>
+        <meta name="viewport" content="width=device-width"/>
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="/pico/pico.blue.min.css">
+        <title>Admin Module</title>
 
-        <!--        &lt;!&ndash;action table&ndash;&gt;-->
-        <!--        <script type="module" src="/action-table/action-table.js"></script>-->
-        <!--        <script type="module" src="/action-table/action-table-switch.js"></script>-->
-        <!--        <link rel="stylesheet" href="/action-table/action-table.css"/>-->
+                <script src="/fontawesome/js/all.min.js" type="javascript"></script>
+                <link href="/fontawesome/css/all.min.css" rel="stylesheet"/>
 
-        <!--tabulator table-->
-        <link href="/tabulator/tabulator-materialize.css" rel="stylesheet">
-        <script src="/tabulator/tabulator.js" type="text/javascript"></script>
+<!--                &lt;!&ndash;action table&ndash;&gt;-->
+<!--                <script type="module" src="/action-table/action-table.js"></script>-->
+<!--                <script type="module" src="/action-table/action-table-switch.js"></script>-->
+<!--                <link rel="stylesheet" href="/action-table/action-table.css"/>-->
 
-        <link href="/pico/pico.blue.min.css" rel="stylesheet">
-        <link href="/ownstyle/style.css" rel="stylesheet">
-        <link href="/ownstyle/hamburger.css" rel="stylesheet">
+<!--        tabulator table-->
+<!--                <link href="/tabulator/tabulator-materialize.css" rel="stylesheet">-->
+<!--                <script src="/tabulator/tabulator.js" type="text/javascript"></script>-->
+
+<!--                <link href="/ownstyle/style.css" rel="stylesheet">-->
+<!--                <link href="/ownstyle/hamburger.css" rel="stylesheet">-->
 
         <style>
             :root {
-                --pico-border-radius: 0.3rem;
+                --pico-border-radius: 1rem;
                 --pico-typography-spacing-vertical: .5rem;
                 --pico-form-element-spacing-vertical: .5rem;
-                --pico-form-element-spacing-horizontal: 0.25rem;
-                --pico-font-size: initial;
-            }
-
-            :root:not([data-theme=dark]), [data-theme=light] {
-                --pico-background-color: #f3f3f3;
+                --pico-form-element-spacing-horizontal: 1.25rem;
 
             }
 
             button {
                 --pico-font-weight: 700;
+            }
+
+            /*this is menu hamburger stuff...*/
+
+            /*******************************************************************************
+          * Pico CSS  - responsive nav
+          * Grows vertically (mobile-first). Changes back to horizontal growth on higher
+          * resolutions.
+          *****************************************************************************/
+
+            :where(menu, [role="menu"]),
+            :where(menu, [role="menu"]) > [role="menuitem"] {
+                flex-direction: column;
+                position: relative;
+            }
+
+            @media (min-width: 576px) {
+                :where(menu, [role="menu"]),
+                :where(menu, [role="menu"]) > [role="menuitem"] {
+                    flex-direction: row;
+                }
+            }
+
+            /*******************************************************************************
+                * Pure CSS burger menu
+                * Styles a parent + checkbox to look like 3 stacked lines when unchecked and
+                * as a cross when checked. Includes animations.
+                *****************************************************************************/
+
+            [data-role="burger"] {
+                opacity: 0.8;
+                cursor: pointer;
+                border-radius: 10%;
+                box-sizing: border-box;
+                background-color: transparent;
+                height: 24px;
+                width: 28px;
+                padding: 0;
+                margin: 0;
+                border: 0 solid #e7edf2;
+            }
+
+            [data-role="burger"] > input[type="checkbox"] {
+                height: 4px;
+                width: 28px;
+                border: none;
+                background-color: #e7edf2;
+                transition: all 0.2s ease-in-out;
+                box-shadow: 0 0 4px 0 #161724;
+                position: relative;
+                margin-inline: 0;
+            }
+
+            [data-role="burger"] > input[type="checkbox"]:checked {
+                background-image: none;
+                background-color: transparent;
+            }
+
+            [data-role="burger"] > input[type="checkbox"]::before, [data-role="burger"] > input[type="checkbox"]::after {
+                height: 4px;
+                width: 28px;
+                border-radius: 2px;
+                background-color: #e7edf2;
+                position: absolute;
+                content: "";
+                transition: all 0.2s ease-in-out;
+                box-shadow: 0 0 4px 0 #161724;
+            }
+
+            [data-role="burger"] > input[type="checkbox"]::before {
+                top: -10px;
+            }
+
+            [data-role="burger"] > input[type="checkbox"]::after {
+                top: 10px;
+            }
+
+            [data-role="burger"] > input[type="checkbox"]:checked::before {
+                box-shadow: none;
+                transform: rotate(45deg) translate(7px, 7px);
+            }
+
+            [data-role="burger"] > input[type="checkbox"]:checked::after {
+                box-shadow: none;
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+
+            /*******************************************************************************
+              * Pure CSS toggle
+              * Uses a checkbox to trigger rules and show/hide related elements.
+              *****************************************************************************/
+
+            /* adjust menu for toggling */
+            :where(menu, [role="menu"]) {
+                position: relative; /* anchor for children */
+                /* needed otherwise it grows to fit all its children */
+                max-height: calc(var(--pico-line-height) * 1em + var(--pico-nav-element-spacing-vertical) * 2);
+            }
+
+            /* hide entries within menu */
+            :where(menu, [role="menu"]) > [role="menuitem"] {
+                visibility: hidden;
+                opacity: 0;
+                transition: all 0.2s ease-in-out;
+                position: relative;
+                background-color: var(--pico-card-background-color);
+            }
+
+            /* show hidden items when burger is checked :D */
+            :where(menu, [role="menu"]):has(> label > input[type="checkbox"]:checked) > [role="menuitem"] {
+                visibility: visible;
+                opacity: 1;
+                z-index: 9999;
+            }
+
+            /* position the menu button */
+            :where(menu, [role="menu"]) > label {
+                position: absolute;
+                right: 0;
+                top: var(--pico-nav-element-spacing-vertical);
+                padding: var(--pico-nav-element-spacing-vertical) var(--pico-nav-element-spacing-horizontal);
+            }
+
+            @media (min-width: 576px) {
+                /* hide menu button */
+                :where(menu, nav[role="menu"]) > label {
+                    display: none;
+                }
+
+                /* show all elements */
+                :where(menu, [role="menu"]) > [role="menuitem"] {
+                    visibility: visible;
+                    opacity: 1;
+                    display: flex;
+                    top: unset;
+                }
             }
         </style>
     </head>

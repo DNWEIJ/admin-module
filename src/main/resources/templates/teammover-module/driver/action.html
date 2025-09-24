@@ -4,7 +4,7 @@
 <th:block th:insert="~{fragments/page/message}"></th:block>
 
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
-<article>
+<fieldset>
     <table class="table-tight">
         <thead>
         <tr>
@@ -25,7 +25,7 @@
         </th:block>
         </tbody>
     </table>
-</article>
+</fieldset>
 <hr/>
 <form th:action="'/game/'+${driver.game.id}+'/driver'" method="post">
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>

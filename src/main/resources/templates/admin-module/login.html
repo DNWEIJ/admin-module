@@ -24,7 +24,7 @@
                 <input id="id" name="id" th:value="${userId}" type="hidden">
                 <th:block autofocus th:insert="~{fragments/elements/input::inputHtml('username','Username', 'account', '1')}" th:with="required=false">></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtml('password','Password', 'password', '2')}" th:with="type='password', required=false"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('shortCode','Company short code', 'shortCode','3ó')}" th:with="required=false"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtml('shortCode','Short code', 'shortCode','3ó')}" th:with="required=false"></th:block>
             </fieldset>
             <fieldset class="grid" role="group">
                 <button name="_save" type="submit">Sign in</button>
