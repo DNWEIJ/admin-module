@@ -43,6 +43,35 @@
     </tfoot>
 </table>
 <th:block th:insert="~{fragments/page/footer}"></th:block>
+<!-- Modal example -->
+<dialog id="modal-example">
+    <article>
+        <header>
+            <button
+                    aria-label="Close"
+                    rel="prev"
+                    data-target="modal-example"
+                    onclick="toggleModal(event)"
+            ></button>
+            <h3>Confirm your action!</h3>
+        </header>
+        <p>
+            Cras sit amet maximus risus. Pellentesque sodales odio sit amet augue finibus
+        </p>
+        <footer>
+            <button
+                    role="button"
+                    class="secondary"
+                    data-target="modal-example"
+                    onclick="toggleModal(event)"
+            >
+                Cancel</button
+            ><button autofocus data-target="modal-example" onclick="toggleModal(event)">
+            Confirm
+        </button>
+        </footer>
+    </article>
+</dialog>
 <style>
     table .right {
         text-align: right;

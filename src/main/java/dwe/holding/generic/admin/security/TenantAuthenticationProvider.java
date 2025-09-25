@@ -51,9 +51,9 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
     }
 
     @Override
-    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) {
+    protected UserDetails retrieveUser(String concatUsernameShortCode, UsernamePasswordAuthenticationToken authentication) {
 
-        String[] usernameAndShortCode = StringUtils.split(username, String.valueOf(Character.LINE_SEPARATOR));
+        String[] usernameAndShortCode = StringUtils.split(concatUsernameShortCode, String.valueOf(Character.LINE_SEPARATOR));
         if (usernameAndShortCode == null || usernameAndShortCode.length != 2) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
@@ -106,7 +106,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         Collection<? extends GrantedAuthority> authorities = getGrantedAuthoritiesFromRolAndFuncties(user);
 
         // create details
-        AdminUserDetails adminUserDetails = new AdminUserDetails(username, user.getPassword(), true, true, true, true, authorities);
+        AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(), true, true, true, true, authorities);
         adminUserDetails.setUser(user);
 
         // update status
@@ -123,19 +123,11 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         return adminUserDetails;
     }
 
-    /**
-     * retrieve the authorities from the database.
-     *
-     * @param user
-     * @return
-     * @return
-     */
-    @SuppressWarnings("deprecation")
-    Collection getGrantedAuthoritiesFromRolAndFuncties(User user) {
+     Collection getGrantedAuthoritiesFromRolAndFuncties(User user) {
 
         if (user.getUserRoles() != null) {
             List<Function> functionList = functionQueryCriteria.process(user.getId());
-            GrantedAuthority[] grantedAuthorities = new GrantedAuthority[functionList.size() + 1];
+            GrantedAuthority[] grantedAuthorities = new GrantedAuthority[functionList.size()];
 
             int grantedAuthorityIndex = 0;
 
@@ -144,10 +136,8 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
                 grantedAuthorities[grantedAuthorityIndex] = grantedAuthority;
                 grantedAuthorityIndex++;
             }
-            grantedAuthorities[grantedAuthorityIndex] = new SimpleGrantedAuthority("DEFAULT");
             return Arrays.asList(grantedAuthorities);
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"));
         }
+        return List.of();
     }
 }

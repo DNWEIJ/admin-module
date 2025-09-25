@@ -22,6 +22,12 @@ public class Role extends MemberBaseBO {
     @Column(nullable = false)
     private String name;
 
+// TODO:"Add app name to member, so we can have functions per app and only show them
+//    @NotEmpty
+//    @Column(nullable = false)
+//    private String appName;
+
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "role")
     @Builder.Default
     private Set<FunctionRole> functionRoles = new HashSet<FunctionRole>(1);

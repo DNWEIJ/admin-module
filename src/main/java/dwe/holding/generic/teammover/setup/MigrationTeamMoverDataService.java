@@ -1,9 +1,8 @@
-package dwe.holding.generic.migration.teamtransport;
+package dwe.holding.generic.teammover.setup;
 
 import dwe.holding.generic.admin.autorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;
 import dwe.holding.generic.teammover.model.Game;
-import dwe.holding.generic.teammover.repository.DriverRepository;
 import dwe.holding.generic.teammover.repository.GameRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class MigrationTeamMoverDataService {
         log.info("MigrationTeamMoverDataService:: member");
         if (gameRepository.findAll().isEmpty()) {
             UUID memberId = memberRepository.findByShortCode("ZVS").getId();
-            UUID localMemberId = localmemberRepository.findByLocalMemberName("ZVS GO12-2").getId();
+            UUID localMemberId = localmemberRepository.findByLocalMemberName("GO12-2").getId();
 
             log.info("MigrationTeamMoverAdminService:: user");
             List<GameInfo> sassenheimGames = List.of(

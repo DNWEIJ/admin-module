@@ -22,6 +22,11 @@ public class Function extends BaseBO {
     @Column(nullable = false)
     private String name;
 
+// TODO:"Add app name to member, so we can have functions per app and only show them
+//    @NotEmpty
+//    @Column(nullable = false)
+//    private String appName;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "function")
     @Builder.Default
     private Set<FunctionRole> functionRoles = new HashSet<FunctionRole>(0);

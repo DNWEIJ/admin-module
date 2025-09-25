@@ -7,7 +7,7 @@
             </th:block>
 
             <th:block th:unless="${list.size() == 1}">
-                <option disabled readonly th:selected="${__${dbField}__} == null" value="select">select</option>
+                <option disabled readonly th:selected="${__${dbField}__} == null" value="">select</option>
                 <th:block th:each="element : ${list}">
                     <option th:selected="${__${dbField}__} != null and ${__${dbField}__} == ${element.id}"
                             th:text="${element.name}" th:value="${element.id}">

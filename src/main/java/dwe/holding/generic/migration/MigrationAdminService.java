@@ -78,44 +78,85 @@ public class MigrationAdminService {
                             .member(member)
                             .build()
             );
-            log.info("MigrationAdminService:: function");
-            List<Function> listFunc = functionRepository.saveAllAndFlush(
+
+            log.info("MigrationAdminService:: function for SUPER_ADMIN Role");
+            List<Function> listFuncSuperAdmin = functionRepository.saveAllAndFlush(
                     List.of(
-                            Function.builder().name("member_READ").build(),
-                            Function.builder().name("localmember_READ").build(),
-                            Function.builder().name("function_READ").build(),
-                            Function.builder().name("role_READ").build(),
-                            Function.builder().name("user_READ").build(),
-                            Function.builder().name("resetpassword_READ").build(),
-                            Function.builder().name("userpreferences_READ").build(),
-                            Function.builder().name("member_CREATE").build(),
-                            Function.builder().name("localmember_CREATE").build(),
-                            Function.builder().name("function_CREATE").build(),
-                            Function.builder().name("role_CREATE").build(),
-                            Function.builder().name("user_CREATE").build(),
-                            Function.builder().name("resetpassword_CREATE").build(),
-                            Function.builder().name("userpreferences_CREATE").build()
+                            Function.builder().name("MEMBER_READ").build(),
+                            Function.builder().name("MEMBER_CREATE").build()
                     )
             );
+
+            log.info("MigrationAdminService:: function for ADMIN Role");
+            List<Function> listFuncAdmin = functionRepository.saveAllAndFlush(
+                    List.of(
+                            Function.builder().name("LOCALMEMBER_READ").build(),
+                            Function.builder().name("FUNCTION_READ").build(),
+                            Function.builder().name("ROLE_READ").build(),
+                            Function.builder().name("USER_READ").build(),
+                            Function.builder().name("LOCALMEMBER_CREATE").build(),
+                            Function.builder().name("FUNCTION_CREATE").build(),
+                            Function.builder().name("ROLE_CREATE").build(),
+                            Function.builder().name("USER_CREATE").build()
+
+                    )
+            );
+            log.info("MigrationAdminService:: general functions for DEFAULT role");
+            List<Function> listFuncDefault = functionRepository.saveAllAndFlush(
+                    List.of(
+                            Function.builder().name("RESETPASSWORD_READ").build(),
+                            Function.builder().name("USERPREFERENCES_READ").build(),
+                            Function.builder().name("USERPREFERENCES_CREATE").build(),
+                            Function.builder().name("RESETPASSWORD_CREATE").build(),
+                            Function.builder().name("INDEX_READ").build(),
+                            Function.builder().name("SETLOCALMEMBER_READ").build(),
+                            Function.builder().name("SETLOCALMEMBER_CREATE").build()
+
+
+                    ));
+
+
             log.info("MigrationAdminService:: role");
             List<Role> listRole = roleRepository.saveAllAndFlush(
                     List.of(
-                            Role.builder().name("super_admin").memberId(member.getId()).build(),
-                            Role.builder().name("admin").memberId(member.getId()).build()
+                            Role.builder().name("SUPER_ADMIN").memberId(member.getId()).build(),
+                            Role.builder().name("ADMIN").memberId(member.getId()).build(),
+                            Role.builder().name("DEFAULT").memberId(member.getId()).build()
                     )
             );
-            Role role = listRole.getLast();
-            log.info("MigrationAdminService:: function-role");
-            List<FunctionRole> funcRole = functionRoleRepository.saveAllAndFlush(
-                    listFunc.stream()
+            log.info("MigrationAdminService:: start creating the connection between function and role..");
+            Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SUPER_ADMIN")).findFirst().get();
+            functionRoleRepository.saveAllAndFlush(
+                    listFuncSuperAdmin.stream()
                             .map(func -> {
-                                return (FunctionRole) FunctionRole.builder().function(func).role(role).build();
+                                return (FunctionRole) FunctionRole.builder().function(func).role(roleSuperAdmin).build();
                             })
                             .toList()
             );
-            log.info("MigrationAdminService:: user-role");
-            userRoleRepository.saveAndFlush(
-                    UserRole.builder().role(role).user(user).build()
+            Role roleAdmin = listRole.stream().filter(r -> r.getName().equals("ADMIN")).findFirst().get();
+            functionRoleRepository.saveAllAndFlush(
+                    listFuncSuperAdmin.stream()
+                            .map(func -> {
+                                return (FunctionRole) FunctionRole.builder().function(func).role(roleAdmin).build();
+                            })
+                            .toList()
+            );
+            Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
+            functionRoleRepository.saveAllAndFlush(
+                    listFuncDefault.stream()
+                            .map(func -> {
+                                return (FunctionRole) FunctionRole.builder().function(func).role(roleDefault).build();
+                            })
+                            .toList()
+            );
+
+            log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
+            userRoleRepository.saveAllAndFlush(
+                    List.of(
+                    UserRole.builder().role(roleSuperAdmin).user(user).build(),
+                            UserRole.builder().role(roleAdmin).user(user).build(),
+                            UserRole.builder().role(roleDefault).user(user).build()
+                    )
             );
         }
     }

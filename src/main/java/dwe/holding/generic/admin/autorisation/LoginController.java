@@ -23,7 +23,7 @@ public class LoginController {
     private final UserRepository userRepository;
     private final LocalMemberRepository localMemberRepository;
 
-    private final String start ="redirect:/game/list";
+    private final String start = "redirect:/game/list";
 
     public LoginController(UserRepository userRepository, LocalMemberRepository localMemberRepository) {
         this.userRepository = userRepository;
@@ -39,6 +39,10 @@ public class LoginController {
     String indexScreen() throws ApplicationException {
         if (AutorisationUtils.isNewUser()) {
             return "redirect:/resetpassword";
+        }
+
+        if (AutorisationUtils.getCurrentMember().getShortCode().equals("ZVS")) {
+            return "redirect:/game/list";
         }
         return start;
     }
@@ -85,7 +89,7 @@ public class LoginController {
         user.setMemberLocalId(UUID.fromString(form.id));
         User savedUser = userRepository.save(user);
         AutorisationUtils.setCurrentUser(savedUser);
-        return "admin-module/index";
+        return "redirect:/index";
     }
 
 

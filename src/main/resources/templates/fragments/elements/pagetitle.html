@@ -19,7 +19,7 @@
             <h3 th:if="${id == null}" th:utext="${'Creër '+ entityName }"></h3>
             <h3 th:if="${id != null}" th:utext="${'Bewerk '+ entityName }"></h3>
             <a th:href="${link}" th:if="${list != ''}" th:utext="'Toon lijst'"></a>
-            <span><strong>ZVS</strong><small>([[${localMemberName}]])</small></span>
+            <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
         </div>
     </fieldset>
 </th:block>
@@ -28,8 +28,8 @@
     <fieldset>
         <div class="twocolumn-spread">
             <h3 th:text="${'Lijst '+ entityName}"></h3>
-            <a th:href="${link}" th:if="${link != ''}">Creër</a>
-            <span><strong>ZVS</strong><small>([[${localMemberName}]])</small></span>
+            <a  th:if="${link != '' and #authorization.expression('hasRole(''ROLE_PLANNER'')')}" th:href="${link}">Creër</a>
+            <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
         </div>
     </fieldset>
 </th:block>

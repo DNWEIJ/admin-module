@@ -1,4 +1,4 @@
-package dwe.holding.generic.migration.teamtransport;
+package dwe.holding.generic.teammover.setup;
 
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRoleRepository;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Service
 @Slf4j
@@ -60,11 +61,11 @@ public class MigrationTeamMoverAdminService {
                             .simultaneousUsers(40)
                             .build()
             );
-            log.info("MigrationTeamMoverAdminService:: localMember");
+            log.info("MigrationTeamMoverAdminService:: localMember: the teams");
             List<LocalMember> localMembers = localMemberRepository.saveAllAndFlush(
                     List.of(
-                            LocalMember.builder().localMemberName("ZVS GO12-2").mid(member.getId()).member(member).build(),
-                            LocalMember.builder().localMemberName("ZVS GO12-1").mid(member.getId()).member(member).build()
+                            LocalMember.builder().localMemberName("GO12-2").mid(member.getId()).member(member).build(),
+                            LocalMember.builder().localMemberName("GO12-1").mid(member.getId()).member(member).build()
                     )
             );
 
@@ -73,35 +74,35 @@ public class MigrationTeamMoverAdminService {
             log.info("MigrationTeamMoverAdminService:: function");
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(
-                            Function.builder().name("game_READ").build(),
-                            Function.builder().name("driver_READ").build(),
-                            Function.builder().name("game_CREATE").build(),
-                            Function.builder().name("driver_CREATE").build()
+                            Function.builder().name("GAME_READ").build(),
+                            Function.builder().name("DRIVER_READ").build(),
+                            Function.builder().name("GAME_CREATE").build(),
+                            Function.builder().name("DRIVER_CREATE").build()
                     )
             );
+
             log.info("MigrationTeamMoverAdminService:: role");
             List<Role> listRole = roleRepository.saveAllAndFlush(
                     List.of(
-                            Role.builder().name("team-mover").memberId(member.getId()).build(),
-                            Role.builder().name("planner").memberId(member.getId()).build()
+                            Role.builder().name("TEAM_MOVER").memberId(member.getId()).build(),
+                            Role.builder().name("PLANNER").memberId(member.getId()).build()
 
                     )
             );
-            Role planner = listRole.stream().filter(r -> r.getName().equals("planner")).findFirst().get();
-            Role teammover = listRole.stream().filter(r -> r.getName().equals("team-mover")).findFirst().get();
+            Role plannerRole = listRole.stream().filter(r -> r.getName().equals("PLANNER")).findFirst().get();
+            Role teammoverRole = listRole.stream().filter(r -> r.getName().equals("TEAM_MOVER")).findFirst().get();
 
             log.info("MigrationTeamMoverAdminService:: function-role");
-            List<FunctionRole> funcRole = functionRoleRepository.saveAllAndFlush(
+            functionRoleRepository.saveAllAndFlush(
                     listFunc.stream()
                             .map(func -> {
-                                if (func.getName().equalsIgnoreCase("game_CREATE")) {
-                                    return FunctionRole.builder().function(func).role(planner).build();
+                                if (func.getName().equalsIgnoreCase("GAME_CREATE")) {
+                                    return FunctionRole.builder().function(func).role(plannerRole).build();
                                 }
-                                return FunctionRole.builder().function(func).role(teammover).build();
+                                return FunctionRole.builder().function(func).role(teammoverRole).build();
                             })
                             .toList()
             );
-
 
             log.info("MigrationTeamMoverAdminService:: user");
             record UserInfo(String name, String account, String email) {
@@ -143,13 +144,18 @@ public class MigrationTeamMoverAdminService {
             log.info("MigrationTeamMoverAdminService:: user-role");
             userRoleRepository.saveAllAndFlush(
                     userSavedList.stream().map(user ->
-                            UserRole.builder().role(teammover).user(user).build()).toList()
+                            UserRole.builder().role(teammoverRole).user(user).build()).toList()
             );
             userRoleRepository.saveAllAndFlush(
-                    userSavedList.stream().filter(user -> !user.getAccount().equalsIgnoreCase("jeroen")).map(user ->
-                            UserRole.builder().role(planner).user(user).build()).toList()
+                    userSavedList.stream().filter(user -> user.getAccount().equalsIgnoreCase("jeroen")).map(user ->
+                            UserRole.builder().role(plannerRole).user(user).build()).toList()
             );
 
+            Role defaultRole = roleRepository.getRoleByName("DEFAULT");
+            userRoleRepository.saveAllAndFlush(
+                    userSavedList.stream().map(user ->
+                            UserRole.builder().role(defaultRole).user(user).build()).toList()
+            );
 
             // *********** //
             // ADMIN STAFF //
@@ -169,8 +175,9 @@ public class MigrationTeamMoverAdminService {
             );
             userRoleRepository.saveAllAndFlush(
                     List.of(
-                            UserRole.builder().role(planner).user(daniel).build(),
-                            UserRole.builder().role(teammover).user(daniel).build()
+                            UserRole.builder().role(plannerRole).user(daniel).build(),
+                            UserRole.builder().role(teammoverRole).user(daniel).build(),
+                            UserRole.builder().role(defaultRole).user(daniel).build()
                     )
             );
         }

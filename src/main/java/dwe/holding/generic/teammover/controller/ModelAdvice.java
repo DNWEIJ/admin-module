@@ -10,7 +10,7 @@ public class ModelAdvice {
 
     @ModelAttribute
     void modelAdvice(Model model) {
-
         model.addAttribute("localMemberName", AutorisationUtils.getCurrentLocalMemberName());
+        model.addAttribute("memberShortCode", AutorisationUtils.getCurrentMember().getShortCode());
     }
 }

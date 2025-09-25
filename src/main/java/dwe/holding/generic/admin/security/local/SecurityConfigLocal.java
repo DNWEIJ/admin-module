@@ -1,6 +1,9 @@
 package dwe.holding.generic.admin.security.local;
 
 
+import dwe.holding.generic.admin.security.AdminAuthenticationFilter;
+import dwe.holding.generic.admin.security.AdminAuthorizationManager;
+import dwe.holding.generic.admin.security.RedirectToLoginEntryPoint;
 import dwe.holding.generic.admin.security.TenantAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +35,7 @@ public class SecurityConfigLocal {
     private TenantAuthenticationProvider customAuthenticationProvider;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, AdminAuthorizationManager adminAuthorizationManager) throws Exception {
 
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilterLocal());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
@@ -52,21 +55,29 @@ public class SecurityConfigLocal {
                                         "/images/**",
                                         "/action-table/**", "/fontawesome/**", "/pico/**", "/tabulator/**", "/ownstyle/**"
                                 ).permitAll()
-                                .anyRequest()
-                                .authenticated()
+                                .anyRequest().access(adminAuthorizationManager)
                 )
-
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login")) // ⬅️ custom!
+                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/login")) // authenticated but forbidden
+                )
+                // required to persist the security context between requests
                 .securityContext(securityContext ->
                         securityContext
                                 .requireExplicitSave(false) // ensures context is stored automatically
                 )
-
                 // Session management
                 .sessionManagement(session ->
                         session
                                 .sessionCreationPolicy(IF_REQUIRED)
                                 .maximumSessions(1) // limit concurrent sessions
                                 .maxSessionsPreventsLogin(false)
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 

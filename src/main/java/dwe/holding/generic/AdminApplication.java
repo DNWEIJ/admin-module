@@ -2,9 +2,9 @@ package dwe.holding.generic;
 
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.migration.MigrationAdminService;
-import dwe.holding.generic.migration.MigrationSuppliesService;
-import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverAdminService;
-import dwe.holding.generic.migration.teamtransport.MigrationTeamMoverDataService;
+import dwe.holding.generic.migration.supplies.MigrationSuppliesService;
+import dwe.holding.generic.teammover.setup.MigrationTeamMoverAdminService;
+import dwe.holding.generic.teammover.setup.MigrationTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;

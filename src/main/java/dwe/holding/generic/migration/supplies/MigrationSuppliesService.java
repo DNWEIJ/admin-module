@@ -1,4 +1,4 @@
-package dwe.holding.generic.migration;
+package dwe.holding.generic.migration.supplies;
 
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;
@@ -42,11 +42,11 @@ public class MigrationSuppliesService {
 
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(
-                            Function.builder().name("distributor_READ").build(),
-                            Function.builder().name("supplies_READ").build(),
+                            Function.builder().name("DISTRIBUTOR_READ").build(),
+                            Function.builder().name("SUPPLIES_READ").build(),
 
-                            Function.builder().name("distributor_CREATE").build(),
-                            Function.builder().name("supplies_READ").build()
+                            Function.builder().name("DISTRIBUTOR_CREATE").build(),
+                            Function.builder().name("SUPPLIES_READ").build()
                     )
             );
             List<Distributor> distributors = distributorRepository.saveAllAndFlush(

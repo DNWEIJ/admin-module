@@ -22,7 +22,7 @@ import java.util.Set;
 @Setter
 @Getter
 public class Member extends BaseBO {
-
+    // TODO Add application reference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     @Builder.Default
     private Set<LocalMember> localMembers = new HashSet<LocalMember>(0);

@@ -9,10 +9,10 @@
         <form action="/setlocalmember" method="post">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <fieldset>
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Select het team', 'id', ${localMembersList}, true,'`1`')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', 'id', ${localMembersList}, true,'1')}"></th:block>
             </fieldset>
             <fieldset class="grid" role="group">
-                <button name="_save" type="submit">Use selected team</button>
+                <button name="_save" type="submit">Selecteer</button>
             </fieldset>
         </form>
     </article>

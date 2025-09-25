@@ -7,6 +7,7 @@ import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.type.YesNoEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
@@ -17,10 +18,10 @@ import java.util.UUID;
 /**
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.
  */
-public final class AutorisationUtils {
+public class AutorisationUtils {
     private static final String ERROR_CODE_NOT_LOGGED_IN = "SYS-10008";
 
-    private AutorisationUtils() {
+    protected AutorisationUtils() {
         // Utility class. Do not create an instance.
     }
 
@@ -97,8 +98,7 @@ public final class AutorisationUtils {
         getCurrentUser().setUser(user);
     }
 
-    public static Object isSuperAdmin() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+    public static boolean isRole(String role) {
+        return AutorisationUtils.getCurrentAuthorities().contains(new SimpleGrantedAuthority(role));
     }
 }

@@ -185,11 +185,13 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
         }
 
         private int checkAuthorizationAttribute (String authorizationAttribute, Collection < ? extends GrantedAuthority > collection){
+        String authorizationAttributeName = authorizationAttribute.toUpperCase();
             for (GrantedAuthority grantedAuthority : collection) {
-                if (authorizationAttribute.equalsIgnoreCase(grantedAuthority.getAuthority())) {
+                if (authorizationAttributeName.equals(grantedAuthority.getAuthority())) {
                     return ACCESS_GRANTED;
                 }
             }
+            log.info("TenantAccesDecisionVoter:: ACCESS_DENIED for authorizationAttribute=" + authorizationAttributeName);
             return ACCESS_DENIED;
         }
 

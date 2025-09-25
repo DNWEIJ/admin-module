@@ -1,8 +1,6 @@
 package dwe.holding.generic.admin.security;
 
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -41,7 +37,7 @@ public class SecurityConfig {
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
         authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/login"));
-        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/game"));
+        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/index"));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"));
 
         http
@@ -73,14 +69,15 @@ public class SecurityConfig {
                                 .maximumSessions(1) // limit concurrent sessions
                                 .maxSessionsPreventsLogin(false)
                 )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    private AuthenticationEntryPoint redirectToLoginEntryPoint() {
-        return (HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) ->
-                response.sendRedirect("/login");
     }
 
     @Bean
