@@ -28,7 +28,7 @@
     <fieldset>
         <div class="twocolumn-spread">
             <h3 th:text="${'Lijst '+ entityName}"></h3>
-            <a  th:if="${link != '' and #authorization.expression('hasRole(''ROLE_PLANNER'')')}" th:href="${link}">Creër</a>
+            <a  th:if="${link != '' and #authorization.expression('hasAuthority(''ROLE_GAME_CREATE'')')}" th:href="${link}">Creër</a>
             <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
         </div>
     </fieldset>

@@ -17,7 +17,7 @@ public class AdminAuthenticationFilterLocal implements AuthenticationConverter {
 
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) {
         if (request.getMethod().equals("POST")) {
-            String username = "Vera";
+            String username = "jeroen";
             String password = "ZVS!DeEerste!";
             String domain = "ZVS";
 

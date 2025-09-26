@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -91,7 +92,7 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
         String authorizationAttribute = "";
         if (method.equals(HttpUtil.RequestMethod.GET)) {
             if (last.equalsIgnoreCase(LIST)) {
-                authorizationAttribute = getNextToLastPart(uri, "/list") + "_" + ATTRIBUTE_READ;
+                authorizationAttribute = getPreviousBeforeLastPart(uri, "/list") + "_" + ATTRIBUTE_READ;
             } else {
                 authorizationAttribute = last + "_" + ATTRIBUTE_READ;
             }
@@ -130,14 +131,14 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
     }
 
 
-        private String getNextToLastPart (String uri, String endPart){
+        private String getPreviousBeforeLastPart(String uri, String endPart){
             return getLastPart(uri.replace(endPart, ""));
         }
 
         private String getLastPart (String uri){
             String lastPart = uri.substring(uri.lastIndexOf(FILE_NAME_DELIMITER) + 1);
-            if (isInteger(lastPart)) {
-                return getNextToLastPart(uri, lastPart);
+            if (isUUID(lastPart)) {
+                return getPreviousBeforeLastPart(uri, lastPart);
             }
             return lastPart;
         }
@@ -195,14 +196,14 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
             return ACCESS_DENIED;
         }
 
-        boolean isInteger (String str){
+        boolean isUUID(String str){
             if (str == null) {
                 return false;
             }
             try {
-                Integer.parseInt(str);
+                UUID.fromString(str);
                 return true;
-            } catch (NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
                 return false;
             }
         }
