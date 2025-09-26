@@ -69,7 +69,7 @@ public class MigrationAdminService {
                     User.builder()
                             .name("daniel")
                             .email("danielweijers@gmail.com")
-                            .account("daan")
+                            .account("daniel")
                             .changePassword(true)
                             .password(password)
                             .language(LanguagePrefEnum.English)

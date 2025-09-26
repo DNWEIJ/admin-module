@@ -111,13 +111,12 @@ public class MigrationTeamMoverAdminService {
             List<UserInfo> userData = List.of(
                     new UserInfo("Jeroen Peters", "jeroen", "donotreply@zvs.nl"),
                     new UserInfo("Arjan Buijsse", "arjan", "donotreply@zvs.nl"),
-                    new UserInfo("Paul Geurds", "Paul", "donotreply@zvs.nl"),
-                    new UserInfo("Kim Broeders", "Kim", "donotreply@zvs.nl"),
-                    new UserInfo("Arnaud", "Arnoud", "donotreply@zvs.nl"),
-                    new UserInfo("Joesephine", "Josephine", "donotreply@zvs.nl"),
-                    new UserInfo("Roosmarijn Roelevink", "Roosmarijn", "donotreply@zvs.nl"),
-                    new UserInfo("Vera Kortekaas", "Vera", "donotreply@zvs.nl")
-
+                    new UserInfo("Paul Geurds", "paul", "donotreply@zvs.nl"),
+                    new UserInfo("Kim Broeders", "kim", "donotreply@zvs.nl"),
+                    new UserInfo("Arnaud", "arnoud", "donotreply@zvs.nl"),
+                    new UserInfo("Joesephine", "josephine", "donotreply@zvs.nl"),
+                    new UserInfo("Roosmarijn Roelevink", "roosmarijn", "donotreply@zvs.nl"),
+                    new UserInfo("Vera Kortekaas", "vera", "donotreply@zvs.nl")
             );
 
             User baseUser = User.builder()
@@ -147,8 +146,10 @@ public class MigrationTeamMoverAdminService {
                             UserRole.builder().role(teammoverRole).user(user).build()).toList()
             );
             userRoleRepository.saveAllAndFlush(
-                    userSavedList.stream().filter(user -> user.getAccount().equalsIgnoreCase("jeroen")).map(user ->
-                            UserRole.builder().role(plannerRole).user(user).build()).toList()
+                    userSavedList.stream().filter(user -> user.getAccount().equalsIgnoreCase("jeroen") ||
+                            user.getAccount().equalsIgnoreCase("arjan") ||
+                            user.getAccount().equalsIgnoreCase("daniel")
+                    ).map(user ->UserRole.builder().role(plannerRole).user(user).build()).toList()
             );
 
             Role defaultRole = roleRepository.getRoleByName("DEFAULT");
@@ -164,7 +165,7 @@ public class MigrationTeamMoverAdminService {
                     User.builder()
                             .name("daniel")
                             .email("danielweijers@gmail.com")
-                            .account("daan")
+                            .account("daniel")
                             .changePassword(true)
                             .password(password)
                             .language(LanguagePrefEnum.English)
