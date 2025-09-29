@@ -3,57 +3,37 @@ package dwe.holding.generic.admin.security;
 import ch.qos.logback.core.joran.spi.HttpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDecisionVoter;
-import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
 
 import java.util.Collection;
 import java.util.UUID;
 
+
 @Component
 @Slf4j
-public class TenantAccessDecisionVoter implements AccessDecisionVoter {
+public class TenantAccessDecisionVoter {
+    static final int ACCESS_GRANTED = 1;
+    static final int ACCESS_DENIED = -1;
 
 
     protected static final String FILE_NAME_DELIMITER = "/";
 
-    private static final String TENANT_ATTRIBUTE = "TENANT_AUTHORIZATION";
-    private static final String NO_AUTHORIZATION_ATTRIBUTE = "NO_AUTHORIZATION_REQUIRED";
     private static final String FILE_NAME_CREATE = "create";
     private static final String FILE_NAME_READ = "search";
     private static final String FILE_NAME_EDIT = "edit";
     private static final String FILE_NAME_UPDATE = "update";
     private static final String FILE_NAME_DELETE = "delete";
     private static final String[] FILE_NAME_PREFIXES = new String[]{FILE_NAME_CREATE, FILE_NAME_READ, FILE_NAME_EDIT, FILE_NAME_UPDATE, FILE_NAME_DELETE};
-    private static final String PARAM_EDIT_ID = "id";
+
     private static final String ATTRIBUTE_CREATE = "CREATE";
     private static final String ATTRIBUTE_READ = "READ";
-    private static final String ATTRIBUTE_UPDATE = "UPDATE";
     private static final String ATTRIBUTE_DELETE = "DELETE";
 
     private static final String LIST = "list";
-    private String[] useSubmitAttribute;
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.acegisecurity.vote.AccessDecisionVoter#supports(org.acegisecurity
-     * .ConfigAttribute)
-     */
-    public boolean supports(ConfigAttribute attribute) {
-        return attribute.getAttribute().equals(TENANT_ATTRIBUTE) || attribute.getAttribute().equals(NO_AUTHORIZATION_ATTRIBUTE);
-    }
-
-    public boolean supports(Class clazz) {
-        return clazz.equals(FilterInvocation.class);
-    }
 
     /**
      * The vote determines if access is granted: using url and submit button. The
@@ -62,7 +42,7 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
      * autorisation is needed - Check if the url is valid - Check if it is a
      * report
      */
-    public int vote(Authentication authentication, Object object, Collection attributes) {
+    public int vote(Authentication authentication, Object object) {
         // check for no security needed
         HttpServletRequest request = ((RequestAuthorizationContext) object).getRequest();
         String uri = request.getRequestURI();
@@ -71,20 +51,20 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
             return ACCESS_GRANTED;
         }
 
-/******************************************
- *  Request methods mapping:
- *  GET   ->   /entity                  <- Retrieve the create screen for the entity
- *  GET   ->   /entity/{1}              <- Retrieve the create screen for the entity
- *  GET   ->   /entity/{id}/entity      <- Retrieve the create screen for the entity as child of a parent
- *  GET   ->   /entity/list             <- Retrieve the list screen filled with elements or empty
- *  GET   ->   /entity/{id}/entity/list <- Retrieve the list screen filled with elements or empty
- *
- *  POST  ->   /entity                  _save     <- Save the newly created entity
- *  POST  ->   /entity/{id}/entity      _save     <- Save the newly created entity as child of a parent
- *  POST  ->   /entity                  _delete   <- Delete the entity
- *  POST  ->   /entity/{id}/entity      _delete   <- Delete the entity as child of a parent
- *
- ******************************************/
+//******************************************
+// *  Request methods mapping:
+// *  GET   ->   /entity                  <- Retrieve the create screen for the entity
+// *  GET   ->   /entity/{1}              <- Retrieve the create screen for the entity
+// *  GET   ->   /entity/{id}/entity      <- Retrieve the create screen for the entity as child of a parent
+// *  GET   ->   /entity/list             <- Retrieve the list screen filled with elements or empty
+// *  GET   ->   /entity/{id}/entity/list <- Retrieve the list screen filled with elements or empty
+// *
+// *  POST  ->   /entity                  _save     <- Save the newly created entity
+// *  POST  ->   /entity/{id}/entity      _save     <- Save the newly created entity as child of a parent
+// *  POST  ->   /entity                  _delete   <- Delete the entity
+// *  POST  ->   /entity/{id}/entity      _delete   <- Delete the entity as child of a parent
+// *
+// ******************************************
 
         HttpUtil.RequestMethod method = HttpUtil.RequestMethod.valueOf(request.getMethod());
         String last = getLastPart(uri);
@@ -107,118 +87,63 @@ public class TenantAccessDecisionVoter implements AccessDecisionVoter {
 
 
         int returnvalue = checkAuthorizationAttribute(authorizationAttribute, authentication.getAuthorities());
-        String returnvaluestring = " ACCESS_ABSTAIN ";
+
         if (returnvalue == -1) {
-            returnvaluestring = " ACCESS_DENIED ";
-        }
-        if (returnvalue == 1) {
-            returnvaluestring = " ACCESS_GRANTED ";
-            WebAuthenticationDetails webdetails = null;
+            log.debug("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri + "  authorizationAttribute=" + authorizationAttribute);
+            return returnvalue;
+        } else {
             Object principal = authentication.getDetails();
             if (principal instanceof WebAuthenticationDetails) {
-                webdetails = (WebAuthenticationDetails) principal;
-                log.info("TenantAccesDecisionVoter:: Voting:" + returnvaluestring + " |user" +
+                log.debug("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
                         AutorisationUtils.getCurrentUserMid() + "|" +
-                        AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri.toString() + "|authAttrd=" + authorizationAttribute.toString());
+                        AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
 
                 return returnvalue;
             }
-            log.info("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri.toString() + "  authorizationAttribute=" + authorizationAttribute.toString());
-            //  OutputFunctionQuery(request, authorizationAttribute, " ACCESS_DENIED ", uri, fileNameStartIndex, fileNameEndIndex);
             return ACCESS_DENIED;
         }
-        return returnvalue;
     }
 
+    private String getPreviousBeforeLastPart(String uri, String endPart) {
+        return getLastPart(uri.replace(endPart, ""));
+    }
 
-        private String getPreviousBeforeLastPart(String uri, String endPart){
-            return getLastPart(uri.replace(endPart, ""));
+    private String getLastPart(String uri) {
+        String lastPart;
+        if (uri.charAt(uri.length() - 1) == '/') {
+            String uriStripped = (uri.substring(0, (uri.length() - 1)));
+            lastPart = uriStripped.substring(uriStripped.lastIndexOf(FILE_NAME_DELIMITER) + 1);
+        } else {
+            lastPart = uri.substring(uri.lastIndexOf(FILE_NAME_DELIMITER) + 1);
         }
 
-        private String getLastPart (String uri){
-            String lastPart = uri.substring(uri.lastIndexOf(FILE_NAME_DELIMITER) + 1);
-            if (isUUID(lastPart)) {
-                return getPreviousBeforeLastPart(uri, lastPart);
-            }
-            return lastPart;
+        if (isUUID(lastPart)) {
+            return getPreviousBeforeLastPart(uri, lastPart);
         }
+        return lastPart;
 
-        protected String getAuthorizationAttributePrefix (HttpServletRequest request, String fileName){
-            String submitButton = checkSubmitButtonSpecified(request);
-            if (submitButton != null) {
-                return submitButton;
-            } else if ((fileName.startsWith(FILE_NAME_EDIT) || fileName.startsWith(FILE_NAME_CREATE)) && request.getParameter(PARAM_EDIT_ID) == null) {
-                return ATTRIBUTE_CREATE;
-            } else if (fileName.startsWith(FILE_NAME_UPDATE) || (fileName.startsWith(FILE_NAME_EDIT) && request.getParameter(PARAM_EDIT_ID) != null)) {
-                return ATTRIBUTE_UPDATE;
-                // indien het een gecombineerd scherm is: zoekscherm met
-                // opslaan(save) button
-            } else if (fileName.startsWith(FILE_NAME_READ)) {
-                if (WebUtils.hasSubmitParameter(request, ButtonConstants.PARAM_SAVE) || WebUtils.hasSubmitParameter(request, ButtonConstants.PARAM_SAVE_NEW)) {
-                    return ATTRIBUTE_UPDATE;
-                } else {
-                    return ATTRIBUTE_READ;
-                }
-            } else {
-                return "";
-            }
-        }
+    }
 
-        protected String getFileNameWithoutPrefixes (String fileName){
-            for (String prefix : FILE_NAME_PREFIXES) {
-                if (fileName.startsWith(prefix)) {
-                    int startIndex = prefix.length();
-                    if (startIndex < fileName.length()) {
-                        return fileName.substring(prefix.length());
-                    }
-                }
-            }
-            return fileName;
-        }
-
-        private String checkSubmitButtonSpecified (HttpServletRequest request){
-            for (String submitAttribute : useSubmitAttribute) {
-                if (WebUtils.hasSubmitParameter(request, submitAttribute)) {
-                    return ""; //StringUtils.substring(submitAttribute, 1);
-                }
-            }
-            return null;
-        }
-
-        private int checkAuthorizationAttribute (String authorizationAttribute, Collection < ? extends GrantedAuthority > collection){
+    private int checkAuthorizationAttribute(String authorizationAttribute, Collection<? extends GrantedAuthority> collection) {
         String authorizationAttributeName = authorizationAttribute.toUpperCase();
-            for (GrantedAuthority grantedAuthority : collection) {
-                if (authorizationAttributeName.equals(grantedAuthority.getAuthority())) {
-                    return ACCESS_GRANTED;
-                }
-            }
-            log.info("TenantAccesDecisionVoter:: ACCESS_DENIED for authorizationAttribute=" + authorizationAttributeName);
-            return ACCESS_DENIED;
-        }
-
-        boolean isUUID(String str){
-            if (str == null) {
-                return false;
-            }
-            try {
-                UUID.fromString(str);
-                return true;
-            } catch (IllegalArgumentException e) {
-                return false;
+        for (GrantedAuthority grantedAuthority : collection) {
+            if (authorizationAttributeName.equals(grantedAuthority.getAuthority())) {
+                return ACCESS_GRANTED;
             }
         }
+        log.info("TenantAccesDecisionVoter:: ACCESS_DENIED for authorizationAttribute=" + authorizationAttributeName);
+        return ACCESS_DENIED;
+    }
 
-        protected void OutputFunctionQuery (HttpServletRequest request, String authorizationAttribute, String returnvaluestring, String uri,int fileNameStartIndex, int fileNameEndIndex){
-
-            String fileName = (fileNameEndIndex < 0) ? uri : uri.substring(fileNameStartIndex + 1, fileNameEndIndex);
-            String prefix = getAuthorizationAttributePrefix(request, fileName);
-            String withoutprefix = getFileNameWithoutPrefixes(fileName);
-            String tmp = (withoutprefix.equals("")) ? "" : withoutprefix.substring(0, 1).toUpperCase() + withoutprefix.substring(1).toLowerCase();
-            if (prefix.length() > 1) {
-                tmp += " - " + prefix.substring(0, 1).toUpperCase() + prefix.substring(1).toLowerCase();
-            }
-            log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTON:\n " + "INSERT INTO thau_function (VERSION ,NAME, START_DATE, MODIFICATION_DATE, SEQUENCE_NUMBER,TECHNICAL_NAME) SELECT 0, '" + tmp + "' , " + "'2009-01-01', '2009-01-01', (select max(sequence_number) + 10 from thau_function), '" + authorizationAttribute + "');");
-            log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTION_ROLE:\n " + "insert into thau_function_role (version,  function_id, role_id) SELECT 0, " + " (select function_id from thau_function where name = '" + tmp + "') as function_id, " + " (select role_id from thau_role where name = 'SuperUserAdmin') as role_id from dual;\n");
-            log.info("TenantAccesDecisionVoter:: SQL_STATEMENT INSERT THAU_FUNCTON_ROLE:\n" + "insert into thau_function_role (version,  function_id, role_id) SELECT 0, " + " (select function_id from thau_function where name = '" + tmp + "') as function_id, " + " (select role_id from thau_role where name = 'SuperUser') as role_id  from dual;\n\n");
+    boolean isUUID(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            UUID.fromString(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
+}

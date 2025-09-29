@@ -62,21 +62,17 @@ public class GameController {
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid());
-        model.addAttribute("isPlanner", AutorisationUtils.isRole("PLANNER"));
 
-        List<Game> games = gameRepository.findAll(Sort.by(Sort.Direction.ASC, "whenIsTheGame"));
+        List<Game> games = gameRepository.findGamesGreatherThenToday(Sort.by(org.springframework.data.domain.Sort.Direction.ASC, "whenIsTheGame"));
         List<GameSummary> summaries = games.stream()
-                .map(game -> {
-                    return new GameSummary(
-                            game.getId(),
-                            game.getWhereIsTheGame(),
-                            game.getWhenIsTheGame(),
-                            game.getHowManyPeople(),
-                            game.getDrivers().stream().mapToInt(Driver::getNrOfTeamMembers).sum(),
-                            game.getDrivers().stream().filter(Driver::isAtSwimmingPool).mapToInt(Driver::getNrOfEmptySpots).sum()
-                    );
-
-                })
+                .map(game -> new GameSummary(
+                        game.getId(),
+                        game.getWhereIsTheGame(),
+                        game.getWhenIsTheGame(),
+                        game.getHowManyPeople(),
+                        game.getDrivers().stream().mapToInt(Driver::getNrOfTeamMembers).sum(),
+                        game.getDrivers().stream().filter(Driver::isAtSwimmingPool).mapToInt(Driver::getNrOfEmptySpots).sum()
+                ))
                 .toList();
         model.addAttribute("games", summaries);
         return "teammover-module/game/list";

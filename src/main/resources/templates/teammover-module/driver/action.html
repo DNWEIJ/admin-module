@@ -5,22 +5,24 @@
 
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
 <fieldset>
+    <span class="twocolumn-spread">
+        <th><h4 th:text="${game.whereIsTheGame}"></h4></th>
+        <span><small><b th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></b></small></span>
+    </span>
     <table class="table-tight">
         <thead>
         <tr>
-            <th><h4 th:text="${game.whereIsTheGame}"></h4></th>
-            <th colspan="3" class="right"><small th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></small></th>
+            <th></th>
+            <th></th>
+            <th><span><i class="fa-solid fa-2xs fa-user-check"></i>&nbsp;<i class="fa-solid fa-2xs fa-car"></i></span></th>
         </tr>
         </thead>
         <tbody>
-        <tr><td>&nbsp;</td></tr>
         <th:block th:each="driver : ${game.drivers}">
             <tr>
                 <td th:text="${driver.accountName}">Content</td>
-                <td th:if="${driver.atSwimmingPool}">wasbeek</td>
-                <td th:if="${not driver.atSwimmingPool}">direct</td>
-                <td th:text="${driver.nrOfTeamMembers}">Content</td>
-                <td th:text="${driver.nrOfEmptySpots}">Content</td>
+                <td th:if="${driver.atSwimmingPool}">wasbeek</td><td th:if="${not driver.atSwimmingPool}">direct</td>
+                <td>[[${driver.nrOfTeamMembers}]]&nbsp;&nbsp;&nbsp;[[${driver.nrOfEmptySpots}]]</td>
             </tr>
         </th:block>
         </tbody>

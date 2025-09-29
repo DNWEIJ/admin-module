@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Comparator;
 import java.util.UUID;
@@ -55,7 +56,7 @@ public class LoginController {
 
     @PostMapping("/resetpassword")
     String resetPassword(PasswordForm form, Model model) {
-        if (form.password.equals(form.password2) && AutorisationUtils.getCurrentUserId().equals(form.id())) {
+        if (form.password.equals(form.password2) && AutorisationUtils.getCurrentUserId().toString().equals(form.id())) {
             model.addAttribute("error", "not correct");
             return "/admin-module/resetpassword";
         } else {
@@ -90,6 +91,11 @@ public class LoginController {
         User savedUser = userRepository.save(user);
         AutorisationUtils.setCurrentUser(savedUser);
         return "redirect:/index";
+    }
+
+    @GetMapping("/favicon.ico")
+    @ResponseBody
+    void returnNoFavicon() {
     }
 
 

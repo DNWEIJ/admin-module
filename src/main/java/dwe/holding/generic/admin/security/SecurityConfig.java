@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 .anyRequest().access(adminAuthorizationManager)
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login")) // ⬅️ custom!
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login"))
                         .accessDeniedHandler((req, res, e) -> res.sendRedirect("/login")) // authenticated but forbidden
                 )
                 // required to persist the security context between requests
