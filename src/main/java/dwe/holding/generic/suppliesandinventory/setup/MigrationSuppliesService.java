@@ -1,4 +1,4 @@
-package dwe.holding.generic.migration.supplies;
+package dwe.holding.generic.suppliesandinventory.setup;
 
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;

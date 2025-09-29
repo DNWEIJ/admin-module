@@ -1,3 +1,9 @@
-<div th:replace="~{fragments/page/header}"></div>
-<h1>Hello world!</h1>
-<div th:replace="~{fragments/page/footer}"></div>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin-module/layout.html}">
+<head>
+<title>Start page</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1>Hello world!</h1>
+</section>
+</body>

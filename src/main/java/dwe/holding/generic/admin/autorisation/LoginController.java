@@ -2,7 +2,6 @@ package dwe.holding.generic.admin.autorisation;
 
 import dwe.holding.generic.admin.autorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.autorisation.user.UserRepository;
-import dwe.holding.generic.admin.exception.ApplicationException;
 import dwe.holding.generic.admin.model.PresentationFunction;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.security.AutorisationUtils;
@@ -24,7 +23,7 @@ public class LoginController {
     private final UserRepository userRepository;
     private final LocalMemberRepository localMemberRepository;
 
-    private final String start = "redirect:/game/list";
+    private final String start = "/index";
 
     public LoginController(UserRepository userRepository, LocalMemberRepository localMemberRepository) {
         this.userRepository = userRepository;
@@ -37,7 +36,7 @@ public class LoginController {
     }
 
     @GetMapping("/index")
-    String indexScreen() throws ApplicationException {
+    String indexScreen() {
         if (AutorisationUtils.isNewUser()) {
             return "redirect:/resetpassword";
         }

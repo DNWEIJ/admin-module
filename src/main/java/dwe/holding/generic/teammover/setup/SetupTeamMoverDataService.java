@@ -14,13 +14,13 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class MigrationTeamMoverDataService {
+public class SetupTeamMoverDataService {
 
     private final GameRepository gameRepository;
     private final MemberRepository memberRepository;
     private final LocalMemberRepository localmemberRepository;
 
-    public MigrationTeamMoverDataService(GameRepository gameRepository, MemberRepository memberRepository, LocalMemberRepository localmemberRepository) {
+    public SetupTeamMoverDataService(GameRepository gameRepository, MemberRepository memberRepository, LocalMemberRepository localmemberRepository) {
         this.gameRepository = gameRepository;
         this.memberRepository = memberRepository;
         this.localmemberRepository = localmemberRepository;
@@ -56,7 +56,7 @@ public class MigrationTeamMoverDataService {
             );
             Game baseGame = Game.builder().localMemberId(localMemberId).memberId(memberId).build();
 
-            List<Game> gameSavedList = gameRepository.saveAllAndFlush(
+            gameRepository.saveAllAndFlush(
                     sassenheimGames.stream()
                             .map(info -> (Game) baseGame.toBuilder()
                                     .whereIsTheGame(info.locatie)

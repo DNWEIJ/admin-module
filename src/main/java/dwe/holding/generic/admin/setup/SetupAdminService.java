@@ -1,4 +1,4 @@
-package dwe.holding.generic.migration;
+package dwe.holding.generic.admin.setup;
 
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRoleRepository;
@@ -22,20 +22,18 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class MigrationAdminService {
+public class SetupAdminService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final LocalMemberRepository localMemberRepository;
     private final UserRepository userRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public MigrationAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupAdminService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
-        this.localMemberRepository = localMemberRepository;
         this.userRepository = userRepository;
         this.functionRepository = functionRepository;
         this.roleRepository = roleRepository;
@@ -59,10 +57,9 @@ public class MigrationAdminService {
                             .stop(LocalDate.now())
                             .shortCode("DWE")
                             .simultaneousUsers(4)
+                            .applicationName("admin")
+                            .applicationRedirect("admin-module")
                             .build()
-            );
-            LocalMember localMember = localMemberRepository.saveAndFlush(
-                    LocalMember.builder().localMemberName("Local member").mid(member.getId()).member(member).build()
             );
             log.info("MigrationAdminService:: user");
             User user = userRepository.saveAndFlush(
@@ -128,25 +125,19 @@ public class MigrationAdminService {
             Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SUPER_ADMIN")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncSuperAdmin.stream()
-                            .map(func -> {
-                                return (FunctionRole) FunctionRole.builder().function(func).role(roleSuperAdmin).build();
-                            })
+                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleSuperAdmin).build())
                             .toList()
             );
             Role roleAdmin = listRole.stream().filter(r -> r.getName().equals("ADMIN")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncSuperAdmin.stream()
-                            .map(func -> {
-                                return (FunctionRole) FunctionRole.builder().function(func).role(roleAdmin).build();
-                            })
+                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdmin).build())
                             .toList()
             );
             Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncDefault.stream()
-                            .map(func -> {
-                                return (FunctionRole) FunctionRole.builder().function(func).role(roleDefault).build();
-                            })
+                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleDefault).build())
                             .toList()
             );
 

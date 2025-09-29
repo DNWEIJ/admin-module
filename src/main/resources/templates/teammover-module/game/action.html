@@ -1,45 +1,38 @@
-<th:block th:insert="~{fragments/page/header}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Create/Update game</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
 
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
+    <form action="/game" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
-
-<form action="/game" method="post">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
-
-    <fieldset role="presentation">
-        <input id="id" name="id" th:value="${game.id}" type="hidden">
-        <input id="version" name="version" th:value="${game.version}" type="hidden">
-        <table>
-            <tr>
-                <td colspan="2">
-                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('doWeNeedToDrive','Spelen we uit?','game.doWeNeedToDrive','3')}"></th:block>
-                </td>
-            </tr>
-            <tr>
-                <td>Waar is de wedstrijd?</td>
-                <td><input id="whereIsTheGame" name="whereIsTheGame" th:value="${game.whereIsTheGame}" type="text" tabindex="1"/></td>
-            </tr>
-            <tr>
-                <td>Wanneer is de wedstrijd?</td>
-                <td><input id="whenIsTheGame" name="whenIsTheGame" th:value="${#temporals.format(game.whenIsTheGame, 'yyyy-MM-dd HH:mm')}" type="datetime-local" tabindex="1"/></td>
-            </tr>
-            <tr><td>Aantal teamleden die meegaan?</td>
-                <td><input id="howManyPeople" name="howManyPeople" th:value="${game.howManyPeople}" type="number" tabindex="2"/></td>
-            </tr>
-        </table>
-
-
-
-    </fieldset>
-</form>
-<th:block th:insert="~{fragments/page/footer}"></th:block>
-<style>
-    .twocolumn-spread {
-        display: flex;
-        justify-content: space-between; /* pushes h3 left and span right */
-        align-items: baseline; /* aligns text nicely */
-    }
-</style>
+        <fieldset role="presentation">
+            <input id="id" name="id" th:value="${game.id}" type="hidden">
+            <input id="version" name="version" th:value="${game.version}" type="hidden">
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('doWeNeedToDrive','Spelen we uit?','game.doWeNeedToDrive','3')}"></th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Waar is de wedstrijd?</td>
+                    <td><input id="whereIsTheGame" name="whereIsTheGame" th:value="${game.whereIsTheGame}" type="text" tabindex="1"/></td>
+                </tr>
+                <tr>
+                    <td>Wanneer is de wedstrijd?</td>
+                    <td><input id="whenIsTheGame" name="whenIsTheGame" th:value="${#temporals.format(game.whenIsTheGame, 'yyyy-MM-dd HH:mm')}" type="datetime-local" tabindex="1"/></td>
+                </tr>
+                <tr>
+                    <td>Aantal teamleden die meegaan?</td>
+                    <td><input id="howManyPeople" name="howManyPeople" th:value="${game.howManyPeople}" type="number" tabindex="2"/></td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</section>
+</body>

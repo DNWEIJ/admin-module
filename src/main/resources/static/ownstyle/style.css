@@ -1,4 +1,59 @@
+/* STYLING FOR SPECIFIC ELEMENTS OF THIS APP */
+
+.table-tight {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.table-tight td,
+.table-tight th {
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid lightgrey;
+    line-height: 1;
+}
+
+.table-tight tr {
+    margin: 0;
+    padding: 0;
+    border: 1px black;
+}
+
+.table-tight .right {
+    text-align: right;
+}
+
+.table-tight .left {
+    text-align: left;
+}
+
+/* two columns with alignment left and right */
+.twocolumn-spread {
+    display: flex;
+    justify-content: space-between; /* pushes h3 left and span right */
+    align-items: baseline; /* aligns text nicely */
+}
+
+/* PICO SPECIFIC FOR THIS APP */
 /* style all input elements with a required attribute */
+ :root {
+     --pico-border-radius: 0.3rem;
+     --pico-typography-spacing-vertical: .5rem;
+     --pico-form-element-spacing-vertical: .5rem;
+     --pico-form-element-spacing-horizontal: 0.25rem;
+     --pico-font-size: initial;
+ }
+
+:root:not([data-theme=dark]), [data-theme=light] {
+    --pico-background-color: #f3f3f3;
+
+}
+
+button {
+    --pico-font-weight: 700;
+}
+
 :required {
     box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
 }

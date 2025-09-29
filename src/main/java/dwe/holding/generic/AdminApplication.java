@@ -1,10 +1,10 @@
 package dwe.holding.generic;
 
 import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.migration.MigrationAdminService;
-import dwe.holding.generic.migration.supplies.MigrationSuppliesService;
-import dwe.holding.generic.teammover.setup.MigrationTeamMoverAdminService;
-import dwe.holding.generic.teammover.setup.MigrationTeamMoverDataService;
+import dwe.holding.generic.admin.setup.SetupAdminService;
+import dwe.holding.generic.suppliesandinventory.setup.MigrationSuppliesService;
+import dwe.holding.generic.teammover.setup.SetupTeamMoverAdminService;
+import dwe.holding.generic.teammover.setup.SetupTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ import java.util.Optional;
 public class AdminApplication implements CommandLineRunner {
 
     @Autowired
-    MigrationTeamMoverDataService migrationTeamMoverDataService;
+    SetupTeamMoverDataService setupTeamMoverDataService;
     @Autowired
-    MigrationTeamMoverAdminService migrationTeamMoverAdminService;
+    SetupTeamMoverAdminService setupTeamMoverAdminService;
     @Autowired
-    private MigrationAdminService migrationAdminService;
+    private SetupAdminService setupAdminService;
     @Autowired
     private MigrationSuppliesService migrationSuppliesService;
     @Autowired
@@ -59,9 +59,9 @@ public class AdminApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        migrationAdminService.init();
+        setupAdminService.init();
         // todo fix    migrationSuppliesService.init();
-        migrationTeamMoverAdminService.init();
-        migrationTeamMoverDataService.init();
+        setupTeamMoverAdminService.init();
+        setupTeamMoverDataService.init();
     }
 }

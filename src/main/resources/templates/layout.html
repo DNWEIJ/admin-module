@@ -7,7 +7,7 @@
     <meta content="width=device-width" name="viewport"/>
     <meta content="light dark" name="color-scheme">
 
-    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Task List</title>
+    <title>Template title</title>
 
     <link href="/fontawesome/images/favicon.svg" rel="icon" type="image/x-icon"/>
     <link href="/fontawesome/css/all.min.css" rel="stylesheet"/>
@@ -23,37 +23,22 @@
     <link href="/pico/pico.blue.min.css" rel="stylesheet">
     <link href="/ownstyle/style.css" rel="stylesheet">
     <link href="/ownstyle/hamburger.css" rel="stylesheet">
-    <style>
-        :root {
-            --pico-border-radius: 0.3rem;
-            --pico-typography-spacing-vertical: .5rem;
-            --pico-form-element-spacing-vertical: .5rem;
-            --pico-form-element-spacing-horizontal: 0.25rem;
-            --pico-font-size: initial;
-        }
 
-        :root:not([data-theme=dark]), [data-theme=light] {
-            --pico-background-color: #f3f3f3;
-
-        }
-
-        button {
-            --pico-font-weight: 700;
-        }
-    </style>
     <script src="/fontawesome/js/all.min.js" type="javascript"></script>
     <script src="/tabulator/tabulator.js" type="text/javascript"></script>
-
 </head>
 <body>
 <!--/* Standard layout can be mixed with Layout Dialect */-->
 <div class="container-fluid">
-    <fieldset>
-        <legend>Errors</legend>
-        <block th:each="error: ${errors}">
-            <span th:text="${error.field}"></span>&nbsp;<span th:text="${error.defaultMessage}"></span><br/>
-        </block>
-    </fieldset>
+
+    <block th:if="${errors != null and errors.size > 0}">
+        <fieldset>
+            <legend>Errors</legend>
+            <block th:each="error: ${errors}">
+                <span th:text="${error.field}"></span>&nbsp;<span th:text="${error.defaultMessage}"></span><br/>
+            </block>
+        </fieldset>
+    </block>
 
     <block th:if="${message != null}">
         <div class="message_notify" id="message_popover" popover="manual"><span th:text="${message}"></span></div>
@@ -84,9 +69,15 @@
         </script>
     </block>
 
-    <div th:replace="~{fragments/page/navigation}"></div>
+    <block th:if="${applicationName != null}">
+        <div th:replace="~{${applicationName}+'/page/navigation'}"></div>
+    </block>
+    <block th:if="${applicationName == null}">
+        <div th:replace="~{fragments/page/navigation}"></div>
+    </block>
     <div layout:fragment="content"></div>
-    <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
+
+    <th:block th:insert="~{fragments/page/footer}"></th:block>
 </div>
 </body>
 </html>

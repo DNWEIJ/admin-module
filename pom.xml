@@ -59,11 +59,11 @@
         <!--            <scope>runtime</scope>-->
         <!--        </dependency>-->
         <!-- TODO ADD layout -->
-        <!--        <dependency>-->
-        <!--            <groupId>nz.net.ultraq.thymeleaf</groupId>-->
-        <!--            <artifactId>thymeleaf-layout-dialect</artifactId>-->
-        <!--            <scope>3.4.0</scope>-->
-        <!--        </dependency>-->
+                <dependency>
+                    <groupId>nz.net.ultraq.thymeleaf</groupId>
+                    <artifactId>thymeleaf-layout-dialect</artifactId>
+                    <scope>3.4.0</scope>
+                </dependency>
 
 
         <!-- test -->

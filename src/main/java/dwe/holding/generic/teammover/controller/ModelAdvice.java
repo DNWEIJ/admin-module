@@ -12,5 +12,6 @@ public class ModelAdvice {
     void modelAdvice(Model model) {
         model.addAttribute("localMemberName", AutorisationUtils.getCurrentLocalMemberName());
         model.addAttribute("memberShortCode", AutorisationUtils.getCurrentMember().getShortCode());
+        model.addAttribute("applicationName", "teammover-module");
     }
 }

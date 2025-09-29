@@ -51,7 +51,10 @@ public class Member extends BaseBO {
     @NotNull
     private LocalDate start;
     private LocalDate stop;
-    private String comments;
+    @NotEmpty
+    private String applicationName;
+    @NotEmpty
+    private String applicationRedirect;
 
     // todo split out to external table functionalities
 //    @Column(name = "INVOICE_COUNTER", precision = 7)

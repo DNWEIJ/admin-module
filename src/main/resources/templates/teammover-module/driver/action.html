@@ -1,96 +1,69 @@
-<th:block th:insert="~{fragments/page/header}"></th:block>
-
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
-
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
-<fieldset>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Create/Update driver</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
+    <fieldset>
     <span class="twocolumn-spread">
         <th><h4 th:text="${game.whereIsTheGame}"></h4></th>
         <span><small><b th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></b></small></span>
     </span>
-    <table class="table-tight">
-        <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th><span><i class="fa-solid fa-2xs fa-user-check"></i>&nbsp;<i class="fa-solid fa-2xs fa-car"></i></span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="driver : ${game.drivers}">
-            <tr>
-                <td th:text="${driver.accountName}">Content</td>
-                <td th:if="${driver.atSwimmingPool}">wasbeek</td><td th:if="${not driver.atSwimmingPool}">direct</td>
-                <td>[[${driver.nrOfTeamMembers}]]&nbsp;&nbsp;&nbsp;[[${driver.nrOfEmptySpots}]]</td>
-            </tr>
+        <th:block th:if="${game.drivers != null and game.drivers.size() > 0}">
+            <table class="table-tight">
+                <thead>
+                <tr>
+                    <th>Rijder</th>
+                    <th>via wasbeek of direct</th>
+                    <th class="right"><span><i class="fa-solid fa-2xs fa-user-check"></i>&nbsp;<i class="fa-solid fa-2xs fa-car"></i></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="driver : ${game.drivers}">
+                    <tr>
+                        <td th:text="${driver.accountName}">Content</td>
+                        <td th:if="${driver.atSwimmingPool}">wasbeek</td>
+                        <td th:if="${not driver.atSwimmingPool}">direct</td>
+                        <td class="right">[[${driver.nrOfTeamMembers}]]&nbsp;&nbsp;&nbsp;[[${driver.nrOfEmptySpots}]]</td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
         </th:block>
-        </tbody>
-    </table>
-</fieldset>
-<hr/>
-<form th:action="'/game/'+${driver.game.id}+'/driver'" method="post">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-    <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
+    </fieldset>
+    <hr/>
+    <form th:action="'/game/'+${driver.game.id}+'/driver'" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
 
-    <input id="id" name="id" th:value="${driver.id}" type="hidden">
-    <input id="version" name="version" th:value="${driver.version}" type="hidden">
-    <input id="game.id" name="game.id" th:value="${driver.game.id}" type="hidden"/>
-    <table>
-        <tr>
-            <td cospan="2">
-                <nobr>Vervoer geregeld door: <b>[[${driver.accountName}]]</b></nobr>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <th:block th:insert="~{fragments/elements/select::selectCheckBox('atSwimmingPool','Ga je langs de wasbeek?', 'driver.atSwimmingPool','1')}"></th:block>
-            </td>
-        </tr>
-        <tr>
-            <td>Hoeveel (eigen) leden zijn al in de auto?</td>
-            <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" th:value="${driver.nrOfTeamMembers}" type="number" tabindex="1"/></td>
-        </tr>
-        <tr>
-            <td>Hoeveel legen plekken zijn er (teamleden)?</td>
-            <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" th:value="${driver.nrOfEmptySpots}" type="number" tabindex="2"/></td>
-        </tr>
-    </table>
-</form>
-<th:block th:insert="~{fragments/page/footer}"></th:block>
+        <input id="id" name="id" th:value="${driver.id}" type="hidden">
+        <input id="version" name="version" th:value="${driver.version}" type="hidden">
+        <input id="game.id" name="game.id" th:value="${driver.game.id}" type="hidden"/>
+        <table>
+            <tr>
+                <td cospan="2">
+                    <nobr>Vervoer geregeld door: <b>[[${driver.accountName}]]</b></nobr>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('atSwimmingPool','Ga je langs de wasbeek?', 'driver.atSwimmingPool','1')}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td>Hoeveel (eigen) leden zijn al in de auto?</td>
+                <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" th:value="${driver.nrOfTeamMembers}" type="number" tabindex="1"/></td>
+            </tr>
+            <tr>
+                <td>Hoeveel legen plekken zijn er (teamleden)?</td>
+                <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" th:value="${driver.nrOfEmptySpots}" type="number" tabindex="2"/></td>
+            </tr>
+        </table>
+    </form>
+</section>
+</body>
 <style>
-    .twocolumn-spread {
-        display: flex;
-        justify-content: space-between; /* pushes h3 left and span right */
-        align-items: baseline; /* aligns text nicely */
-    }
-    .table-tight .right {
-        text-align: right;
-    }
-    .table-tight  .left {
-        text-align: left;
-    }
-    .table-tight {
-        width: 100%;
-     /*   border-collapse: collapse; /* remove spacing between cells */
-        margin: 0; /* no margin around the table */
-        padding: 0; /* no padding inside the table */
-    }
-
-    .table-tight td,
-    .table-tight th {
-        padding: 0; /* no cell padding */
-        margin: 0;
-        border: 1px black; /* optional: no borders */
-        line-height: 1; /* compact row height */
-    }
-
-    .table-tight tr {
-        margin: 0;
-        padding: 0;
-        border: 1px black;
-    }
-
     hr {
         border: none; /* remove default border */
         height: 3px; /* thickness */

@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class MigrationTeamMoverAdminService {
+public class SetupTeamMoverAdminService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
@@ -34,7 +34,7 @@ public class MigrationTeamMoverAdminService {
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public MigrationTeamMoverAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupTeamMoverAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
         this.localMemberRepository = localMemberRepository;
         this.userRepository = userRepository;
@@ -59,6 +59,8 @@ public class MigrationTeamMoverAdminService {
                             .stop(LocalDate.now())
                             .shortCode("ZVS")
                             .simultaneousUsers(40)
+                            .applicationName("TeamMover")
+                            .applicationRedirect("teammover-module")
                             .build()
             );
             log.info("MigrationTeamMoverAdminService:: localMember: the teams");

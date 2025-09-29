@@ -1,18 +1,11 @@
-<th:block th:replace="~{fragments/page/header}" xmlns:sec="http://www.w3.org/1999/xhtml"></th:block>
+
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Show overview games</title>
+</head>
+<body>
+<section layout:fragment="content">
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListNL('vd Wedstrijden','/game')}"></th:block>
-
-<style>
-    .colgroup {
-        width: 100%
-
-    }
-    .twocolumn-spread {
-        display: flex;
-        justify-content: space-between; /* pushes h3 left and span right */
-        align-items: baseline; /* aligns text nicely */
-    }
-
-</style>
 <table id="show-table">
     <thead>
     <tr>
@@ -35,13 +28,8 @@
         </tr>
     </th:block>
     </tbody>
-    <tfoot>
-    <tr>
-        <td></td>
-    </tr>
-    </tfoot>
 </table>
-<th:block th:insert="~{fragments/page/footer}"></th:block>
+
 <!-- Modal example -->
 <dialog id="modal-example">
     <article>
@@ -97,3 +85,5 @@
         padding: 0;
     }
 </style>
+</section>
+</body>
