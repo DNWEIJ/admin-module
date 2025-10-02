@@ -7,7 +7,6 @@ import dwe.holding.generic.app.teammover.setup.SetupTeamMoverAdminService;
 import dwe.holding.generic.app.teammover.setup.SetupTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
 
-import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -53,10 +52,6 @@ public class AdminApplication implements CommandLineRunner {
         };
     }
 
-    @Bean
-    public LayoutDialect layoutDialect() {
-        return new LayoutDialect();
-    }
 
     @Override
     public void run(String... args) {
