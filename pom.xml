@@ -10,7 +10,7 @@
     </parent>
     <groupId>dwe.holding.generic</groupId>
     <artifactId>admin-module</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <name>admin-module</name>
     <description>Admin module for applications that require users with roles to access specific controllers
     </description>
