@@ -1,8 +1,0 @@
-<block th:if="${errors != null}">
-    <fieldset>
-        <legend>Errors</legend>
-        <block th:each="error: ${errors}">
-            <span th:text="${error.field}"></span>&nbsp;<span th:text="${error.defaultMessage}"></span><br/>
-        </block>
-    </fieldset>
-</block>

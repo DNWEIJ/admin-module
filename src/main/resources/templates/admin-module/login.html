@@ -1,8 +1,9 @@
-<th:block th:insert="~{fragments/page/head}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Login</title>
+</head>
 <body>
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<body>
-
+<section layout:fragment="content">
 <main class="container" style="max-width:600px">
     <article>
         <header><h2>Please sign in</h2></header>
@@ -32,5 +33,6 @@
         </form>
     </article>
 </main>
+</section>
 </body>
 </html>

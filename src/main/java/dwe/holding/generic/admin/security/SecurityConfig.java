@@ -8,9 +8,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED;
 import static org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults;
@@ -40,18 +44,31 @@ public class SecurityConfig {
         authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/index"));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"));
 
+
+        RequestMatcher publicEndpoints = request -> {
+            String req = request.getRequestURI();
+            return req.startsWith("/login") ||
+                    req.startsWith("/error") ||
+                    req.startsWith("/lib/") ||
+                    req.startsWith("/images/");
+        };
+
+        // Composite AuthorizationManager
+        AuthorizationManager<RequestAuthorizationContext> compositeAuthManager =
+                (authenticationSupplier, context) -> {
+                    if (publicEndpoints.matches(context.getRequest())) {
+                        return new AuthorizationDecision(true); // permitAll
+                    }
+                    return adminAuthorizationManager.check(authenticationSupplier, context);
+                };
+
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(new CookieCsrfTokenRepository())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-                .authorizeHttpRequests(
-                        (requests) -> requests
-                                .requestMatchers("/login", "/error",
-                                        "/templates/**",
-                                        "/images/**",
-                                        "/action-table/**", "/fontawesome/**", "/pico/**", "/tabulator/**", "/ownstyle/**"
-                                ).permitAll()
-                                .anyRequest().access(adminAuthorizationManager)
+
+                .authorizeHttpRequests(authz -> authz
+                        .anyRequest().access(compositeAuthManager)
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login"))

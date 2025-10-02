@@ -2,9 +2,9 @@ package dwe.holding.generic;
 
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.admin.setup.SetupAdminService;
-import dwe.holding.generic.suppliesandinventory.setup.MigrationSuppliesService;
-import dwe.holding.generic.teammover.setup.SetupTeamMoverAdminService;
-import dwe.holding.generic.teammover.setup.SetupTeamMoverDataService;
+import dwe.holding.generic.app.suppliesandinventory.setup.SetupSuppliesService;
+import dwe.holding.generic.app.teammover.setup.SetupTeamMoverAdminService;
+import dwe.holding.generic.app.teammover.setup.SetupTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class AdminApplication implements CommandLineRunner {
     @Autowired
     private SetupAdminService setupAdminService;
     @Autowired
-    private MigrationSuppliesService migrationSuppliesService;
+    private SetupSuppliesService setupSuppliesService;
     @Autowired
     private Environment environment;
 

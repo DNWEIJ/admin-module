@@ -1,8 +1,6 @@
 package dwe.holding.generic.admin.autorisation;
 
-import dwe.holding.generic.admin.autorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.autorisation.user.UserRepository;
-import dwe.holding.generic.admin.model.PresentationFunction;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,21 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Comparator;
-import java.util.UUID;
-
 @Controller
 public class LoginController {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
-    private final LocalMemberRepository localMemberRepository;
 
-    private final String start = "/index";
 
-    public LoginController(UserRepository userRepository, LocalMemberRepository localMemberRepository) {
+    private final String start =  "redirect:/index";
+
+    public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.localMemberRepository = localMemberRepository;
     }
 
     @GetMapping("/login")
@@ -41,8 +35,12 @@ public class LoginController {
             return "redirect:/resetpassword";
         }
 
+        if (AutorisationUtils.isLocalMemberRequired() && AutorisationUtils.getCurrentUserMlid() == null) {
+            return "redirect:/" + AutorisationUtils.getCurrentMember().getApplicationName().toLowerCase() + "/userpreferences";
+        }
+
         if (AutorisationUtils.getCurrentMember().getShortCode().equals("ZVS")) {
-            return "redirect:/game/list";
+            return AutorisationUtils.getCurrentMember().getApplicationRedirect();
         }
         return start;
     }
@@ -64,32 +62,8 @@ public class LoginController {
             user.setChangePassword(false);
             User savedUser = userRepository.save(user);
             AutorisationUtils.setCurrentUser(savedUser);
-            if (AutorisationUtils.isLocalMemberRequired() && savedUser.getMemberLocalId() == null) {
-                return "redirect:/setlocalmember";
-            }
             return start;
         }
-    }
-
-    @GetMapping("/setlocalmember")
-    String localMember(Model model) {
-        model.addAttribute("localMembersList",
-                localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentUserMid())
-                        .stream().map(
-                                f -> new PresentationFunction(f.getId(), f.getLocalMemberName(), true)
-                        )
-                        .sorted(Comparator.comparing(PresentationFunction::getName)).toList()
-        );
-        return "admin-module/setlocalmember";
-    }
-
-    @PostMapping("/setlocalmember")
-    String localMember(LocalMemberForm form, Model model) {
-        User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
-        user.setMemberLocalId(UUID.fromString(form.id));
-        User savedUser = userRepository.save(user);
-        AutorisationUtils.setCurrentUser(savedUser);
-        return "redirect:/index";
     }
 
     @GetMapping("/favicon.ico")
@@ -106,6 +80,4 @@ public class LoginController {
     record PasswordForm(String id, String password, String password2) {
     }
 
-    record LocalMemberForm(String id) {
-    }
 }

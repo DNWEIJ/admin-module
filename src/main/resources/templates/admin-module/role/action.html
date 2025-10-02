@@ -16,5 +16,5 @@
         <th:block th:insert="~{fragments/elements/input::inputHtml('role.name','Role name', 'role.name', '1')}"></th:block>
     </fieldset>
     <hr/>
-    <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${functions},'Functions', 'checkedFunctions', '2')}"></th:block>
+    <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${functions}, 'checkedFunctions', '2')}"></th:block>
 </form>

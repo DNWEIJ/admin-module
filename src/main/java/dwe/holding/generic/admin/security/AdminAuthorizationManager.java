@@ -20,6 +20,7 @@ public class AdminAuthorizationManager implements AuthorizationManager {
 
     @Override
     public AuthorizationDecision check(Supplier authentication, Object object) {
+
         int decision = this.tenantAccessDecisionVoter.vote((Authentication) authentication.get(), object);
         switch (decision) {
             case TenantAccessDecisionVoter.ACCESS_GRANTED:

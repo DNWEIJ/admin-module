@@ -8,6 +8,7 @@ import java.util.Collection;
 public class AdminUserDetails extends org.springframework.security.core.userdetails.User {
 
     private User user;
+    private Object userPref; // casting to the actual preferences is needed to be done in the app itselv
 
     public AdminUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
@@ -19,5 +20,13 @@ public class AdminUserDetails extends org.springframework.security.core.userdeta
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Object getUserPref() {
+        return userPref;
+    }
+
+    public void setUserPref(Object userPref) {
+        this.userPref = userPref;
     }
 }

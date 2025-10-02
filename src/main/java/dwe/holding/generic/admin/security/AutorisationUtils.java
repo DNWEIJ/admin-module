@@ -26,8 +26,9 @@ public class AutorisationUtils {
     }
 
     public static String getCurrentLocalMemberName() {
-      return  getCurrentMember().getLocalMembers().stream().filter(a -> !a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getLocalMemberName();
+        return getCurrentMember().getLocalMembers().stream().filter(a -> !a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getLocalMemberName();
     }
+
     public static Member getCurrentMember() {
         return getCurrentUser().getUser().getMember();
     }
@@ -49,23 +50,11 @@ public class AutorisationUtils {
     }
 
     public static List<LocalMember> getCurrentUserLocals() {
-        return new ArrayList<LocalMember>(getCurrentMember().getLocalMembers());
+        return new ArrayList<>(getCurrentMember().getLocalMembers());
     }
 
     public static UUID getCurrentUserMlid() {
         return getCurrentUser().getUser().getMemberLocalId();
-    }
-
-    public static LocalMember getCurrentUserMlid(Long mlid) {
-
-        Object[] memlocals = getCurrentUser().getUser().getMember().getLocalMembers().toArray();
-        for (int i = 0; i <= memlocals.length; i++) {
-            LocalMember memlocal = (LocalMember) memlocals[i];
-            if (memlocal.getId().equals(mlid)) {
-                return memlocal;
-            }
-        }
-        return null;
     }
 
     public static boolean isNewUser() {
@@ -96,6 +85,14 @@ public class AutorisationUtils {
 
     public static void setCurrentUser(User user) {
         getCurrentUser().setUser(user);
+    }
+
+    public static void setCurrentUserPref(Object jsonPreferences) {
+        getCurrentUser().setUserPref(jsonPreferences);
+    }
+
+    public static Object getCurrentUserPref() {
+        return getCurrentUser().getUserPref();
     }
 
     public static boolean isRole(String role) {

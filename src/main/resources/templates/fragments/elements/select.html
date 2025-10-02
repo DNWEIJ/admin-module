@@ -1,4 +1,4 @@
-<th:block th:fragment="selectCheckBoxList(groups, label, dbField, tabindex)">
+<th:block th:fragment="selectCheckBoxList(groups, dbField, tabindex)">
     <th:block th:each="group : ${groups}">
         <fieldset class="grid" role="presentation">
             <label th:each="record : ${group}" th:for="${'rec-' + record.id}">[[${record.name}]]
@@ -21,4 +21,20 @@
            th:name="${name}"
            th:tabindex="${tabindex}" type="checkbox"/>
     [[${label}]]
+</th:block>
+
+
+<th:block th:fragment="multipleSwitch(records, dbField, tabindex)">
+    <div class="switch-toggle switch-candy">
+        <th:block th:each="record : ${records}">
+            <input th:checked="${#strings.equals(record.name, __${dbField}__)}"
+                   th:id="${dbField+'_'+record.name}"
+                   th:name="${#strings.arraySplit(dbField,'.')[1]}"
+                   th:tabindex="${tabindex}"
+                   th:value="${record}"
+                   type="radio"/>
+            <label  th:for="${dbField+'_'+record.name}" th:text="#{${record.label}}">standaard text</label>
+        </th:block>
+        <a href=""></a>
+    </div>
 </th:block>

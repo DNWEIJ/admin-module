@@ -31,7 +31,7 @@ public class FunctionQueryCriteria {
 
         // defining the JOIN clauses
         Join<UserRole, User> user = root.join("functionRoles").join("role").join("userRoles").join("user");
-        // what do we want to have in the selec
+        // what do we want to have in the select
         cq.select(root);
         // what is the where clause
         cq.where(

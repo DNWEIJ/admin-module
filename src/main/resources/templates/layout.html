@@ -9,29 +9,31 @@
 
     <title>Template title</title>
 
-    <link href="/fontawesome/images/favicon.svg" rel="icon" type="image/x-icon"/>
-    <link href="/fontawesome/css/all.min.css" rel="stylesheet"/>
-
+    <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
     <!--        &lt;!&ndash;action table&ndash;&gt;-->
     <!--        <script type="module" src="/action-table/action-table.js"></script>-->
     <!--        <script type="module" src="/action-table/action-table-switch.js"></script>-->
     <!--        <link rel="stylesheet" href="/action-table/action-table.css"/>-->
 
-    <!--tabulator table-->
-    <link href="/tabulator/tabulator-materialize.css" rel="stylesheet">
+    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet">
 
-    <link href="/pico/pico.blue.min.css" rel="stylesheet">
-    <link href="/ownstyle/style.css" rel="stylesheet">
-    <link href="/ownstyle/hamburger.css" rel="stylesheet">
+    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet"/>
+    <link href="/lib/tabulator/tabulator-materialize.css" rel="stylesheet">
 
-    <script src="/fontawesome/js/all.min.js" type="javascript"></script>
-    <script src="/tabulator/tabulator.js" type="text/javascript"></script>
+    <link href="/lib/toggle-switch/toggle-switch.css" rel="stylesheet">
+
+    <link href="/lib/ownstyle/style.css" rel="stylesheet">
+    <link href="/lib/ownstyle/hamburger.css" rel="stylesheet">
+
+    <!-- javascript-->
+    <script src="/lib/fontawesome/js/all.min.js" type="javascript"></script>
+    <script src="/lib/tabulator/tabulator.js" type="text/javascript"></script>
 </head>
 <body>
 <!--/* Standard layout can be mixed with Layout Dialect */-->
 <div class="container-fluid">
 
-    <block th:if="${errors != null and errors.size > 0}">
+    <block th:if="${errors != null and errors.size() > 0}">
         <fieldset>
             <legend>Errors</legend>
             <block th:each="error: ${errors}">
@@ -41,31 +43,46 @@
     </block>
 
     <block th:if="${message != null}">
-        <div class="message_notify" id="message_popover" popover="manual"><span th:text="${message}"></span></div>
+        <span id="fade-in" class="box" th:text="${message}"></span>
         <style>
-            .message_notify {
+            .box {
                 position: absolute;
-                top: 0;
-                width: 100%;
+                opacity: 1;
+                top: -1.5em;
+                height: 1.5em;
+                width: 99%;
                 margin: 0;
-                height: 50px;
+                padding: 0;
                 box-sizing: border-box;
-                color: black;
+                align-self: center;
+                color: dimgrey;
                 text-align: center;
-                background: rgba(50, 50, 0, .6);
-                overflow: hidden;
-                opacity: .8;
+                background: lightsteelblue;
+            }
+
+            #fade-in {
+                height: 1.5em;
+                opacity: 0;
+                top: -1.5em;
+                left: 0;
+                transition: all .3s ease;
+            }
+
+            #fade-in.show {
+                top: 0;
+                left: 0;
+                opacity: 1;
+                height: 1.7em;
             }
         </style>
 
         <script>
             window.onload = function () {
-                document.getElementById('message_popover').showPopover();
-
+                document.querySelector('#fade-in').classList.add('show');
                 setTimeout(function () {
-                    document.getElementById('message_popover').hidePopover();
-                }, 1500);
-            };
+                    document.querySelector('#fade-in').classList.remove('show');
+                }, 1000)
+            }
         </script>
     </block>
 
@@ -76,8 +93,9 @@
         <div th:replace="~{fragments/page/navigation}"></div>
     </block>
     <div layout:fragment="content"></div>
-
-    <th:block th:insert="~{fragments/page/footer}"></th:block>
+    <footer>
+        <p><a href="/teammover/userpreferences">preferences</a><br/>DWE Holding &copy;</p>
+    </footer>
 </div>
 </body>
 </html>

@@ -1,8 +1,7 @@
 <th:block th:fragment="inputHtml(name, label, dbField, tabindex)" th:with="type=${type}?:'text', required=${required}?:true">
-    <label th:for="${name}">
+    <label th:for="${name}" th:text="${label}"></label>
         <input th:id="${name}" th:name="${name}" th:placeholder="${label}" th:required="${required}"
                th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}">
-    </label>
 </th:block>
 
 

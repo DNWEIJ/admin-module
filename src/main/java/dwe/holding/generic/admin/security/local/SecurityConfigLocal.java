@@ -1,7 +1,6 @@
 package dwe.holding.generic.admin.security.local;
 
 
-import dwe.holding.generic.admin.security.AdminAuthenticationFilter;
 import dwe.holding.generic.admin.security.AdminAuthorizationManager;
 import dwe.holding.generic.admin.security.RedirectToLoginEntryPoint;
 import dwe.holding.generic.admin.security.TenantAuthenticationProvider;
@@ -51,9 +50,8 @@ public class SecurityConfigLocal {
                 .authorizeHttpRequests(
                         (requests) -> requests
                                 .requestMatchers("/login", "/error",
-                                        "/templates/**",
-                                        "/images/**",
-                                        "/action-table/**", "/fontawesome/**", "/pico/**", "/tabulator/**", "/ownstyle/**"
+                                        "/lib/**",
+                                        "/images/**"
                                 ).permitAll()
                                 .anyRequest().access(adminAuthorizationManager)
                 )

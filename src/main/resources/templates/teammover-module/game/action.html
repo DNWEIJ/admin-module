@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
 
-    <form action="/game" method="post">
+    <form action="/teammover/game" method="post">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
@@ -35,4 +35,3 @@
         </fieldset>
     </form>
 </section>
-</body>

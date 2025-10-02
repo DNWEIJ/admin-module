@@ -25,11 +25,11 @@ public class Member extends BaseBO {
     // TODO Add application reference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member")
     @Builder.Default
-    private Set<LocalMember> localMembers = new HashSet<LocalMember>(0);
+    private Set<LocalMember> localMembers = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     @Builder.Default
-    private Set<User> users = new HashSet<User>(0);
+    private Set<User> users = new HashSet<>(0);
     @Column(nullable = false)
     @NotEmpty
     private String name;
@@ -44,8 +44,10 @@ public class Member extends BaseBO {
     private String shortCode;
     @Column(nullable = false)
     @NotNull
+    @Enumerated(EnumType.STRING)
     private YesNoEnum active;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private YesNoEnum localMemberSelectRequired;
     @Column(nullable = false)
     @NotNull
@@ -53,6 +55,8 @@ public class Member extends BaseBO {
     private LocalDate stop;
     @NotEmpty
     private String applicationName;
+    @NotEmpty
+    private String applicationView;
     @NotEmpty
     private String applicationRedirect;
 

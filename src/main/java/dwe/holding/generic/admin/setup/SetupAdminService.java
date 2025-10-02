@@ -4,7 +4,6 @@ import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRoleRepository;
 import dwe.holding.generic.admin.autorisation.function_role.RoleRepository;
 import dwe.holding.generic.admin.autorisation.function_role.UserRoleRepository;
-import dwe.holding.generic.admin.autorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;
 import dwe.holding.generic.admin.autorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.*;
@@ -58,7 +57,8 @@ public class SetupAdminService {
                             .shortCode("DWE")
                             .simultaneousUsers(4)
                             .applicationName("admin")
-                            .applicationRedirect("admin-module")
+                            .applicationView("admin-module")
+                            .applicationRedirect("redirect:/admin/index")
                             .build()
             );
             log.info("MigrationAdminService:: user");
@@ -144,7 +144,7 @@ public class SetupAdminService {
             log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
             userRoleRepository.saveAllAndFlush(
                     List.of(
-                    UserRole.builder().role(roleSuperAdmin).user(user).build(),
+                            UserRole.builder().role(roleSuperAdmin).user(user).build(),
                             UserRole.builder().role(roleAdmin).user(user).build(),
                             UserRole.builder().role(roleDefault).user(user).build()
                     )

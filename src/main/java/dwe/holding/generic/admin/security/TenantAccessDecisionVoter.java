@@ -22,13 +22,6 @@ public class TenantAccessDecisionVoter {
 
     protected static final String FILE_NAME_DELIMITER = "/";
 
-    private static final String FILE_NAME_CREATE = "create";
-    private static final String FILE_NAME_READ = "search";
-    private static final String FILE_NAME_EDIT = "edit";
-    private static final String FILE_NAME_UPDATE = "update";
-    private static final String FILE_NAME_DELETE = "delete";
-    private static final String[] FILE_NAME_PREFIXES = new String[]{FILE_NAME_CREATE, FILE_NAME_READ, FILE_NAME_EDIT, FILE_NAME_UPDATE, FILE_NAME_DELETE};
-
     private static final String ATTRIBUTE_CREATE = "CREATE";
     private static final String ATTRIBUTE_READ = "READ";
     private static final String ATTRIBUTE_DELETE = "DELETE";
@@ -46,7 +39,7 @@ public class TenantAccessDecisionVoter {
         // check for no security needed
         HttpServletRequest request = ((RequestAuthorizationContext) object).getRequest();
         String uri = request.getRequestURI();
-
+    log.info("------------------>> vote called for uri=" + uri);
         if (uri.compareToIgnoreCase(request.getContextPath()) == 0) {
             return ACCESS_GRANTED;
         }

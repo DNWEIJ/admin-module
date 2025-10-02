@@ -1,0 +1,20 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Gebruiker settings</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <article>
+        <header><h2>Gebruiker settings</h2></header>
+        <form action="/teammover/userpreferences" method="post">
+            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+            <fieldset>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>
+            </fieldset>
+            <fieldset>
+                <th:block th:insert="~{fragments/elements/input::inputHtml('userPreferences.nrOfTeamMembers','Aantal team leden?', 'nrOfTeamMembers','1')}"></th:block>
+            </fieldset>
+            <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
+        </form>
+    </article>
+</section>

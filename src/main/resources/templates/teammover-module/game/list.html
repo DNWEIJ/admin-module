@@ -17,10 +17,10 @@
     <tbody>
     <th:block th:each="game : ${games}">
         <tr>
-            <td><a class="fa fa-car" th:href="@{'/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;
+            <td><a class="fa fa-car" th:href="@{'/teammover/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;
                 <!-- if user has ROLE_PLANNER, show as link -->
-                <a  th:if="${#authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="@{'/game/' + ${game.id}}">[[${game.whereIsTheGame}]]</a>
-                <span th:unless="${#authorization.expression('hasAuthority(''GAME_CREATE'')')}">[[${game.whereIsTheGame}]]</span>
+                <a  th:if="${#authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="@{'/teammover/game/' + ${game.id}}" th:text="${game.whereIsTheGame}"></a>
+                <span th:unless="${#authorization.expression('hasAuthority(''GAME_CREATE'')')}"  th:text="${game.whereIsTheGame}"></span>
             </td>
 
             <td>[[${#temporals.format(game.whenIsTheGame, 'dd-MM')}]]</td>
