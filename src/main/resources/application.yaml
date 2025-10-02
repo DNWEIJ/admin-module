@@ -27,7 +27,7 @@ spring:
         format_sql: false
         use_jdbc_metadata_defaults: false
   thymeleaf:
-    cache: false
+    cache: true
 
 logging:
   level:

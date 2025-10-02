@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-
     <meta charset="utf-8">
     <meta content="width=device-width" name="viewport"/>
     <meta content="light dark" name="color-scheme">
@@ -9,27 +8,23 @@
     <title>Template title</title>
 
     <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
-    <!--        &lt;!&ndash;action table&ndash;&gt;-->
-    <!--        <script type="module" src="/action-table/action-table.js"></script>-->
-    <!--        <script type="module" src="/action-table/action-table-switch.js"></script>-->
-    <!--        <link rel="stylesheet" href="/action-table/action-table.css"/>-->
 
-    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet">
+    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
 
     <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet"/>
-    <link href="/lib/tabulator/tabulator-materialize.css" rel="stylesheet">
+    <link href="/lib/tabulator/tabulator-materialize.css" rel="stylesheet"/>
 
-    <link href="/lib/toggle-switch/toggle-switch.css" rel="stylesheet">
+    <link href="/lib/toggle-switch/toggle-switch.css" rel="stylesheet"/>
 
-    <link href="/lib/ownstyle/style.css" rel="stylesheet">
-    <link href="/lib/ownstyle/hamburger.css" rel="stylesheet">
+    <link href="/lib/ownstyle/style.css" rel="stylesheet"/>
+    <link href="/lib/ownstyle/hamburger.css" rel="stylesheet"/>
 
     <!-- javascript-->
     <script src="/lib/fontawesome/js/all.min.js" type="javascript"></script>
     <script src="/lib/tabulator/tabulator.js" type="text/javascript"></script>
 </head>
 <body>
-<!--/* Standard layout can be mixed with Layout Dialect */-->
+
 <div class="container-fluid">
 
     <block th:if="${errors != null and errors.size() > 0}">
