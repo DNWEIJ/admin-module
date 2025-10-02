@@ -69,6 +69,7 @@ public class DriverController {
                 .accountName(AutorisationUtils.getCurrentUserAccount())
                 .game(Game.builder().id(gameId).build())
                 .nrOfTeamMembers(objectMapper.convertValue(AutorisationUtils.getCurrentUserPref(), TeamMoverUserPreferences.class).getNrOfTeamMembers())
+                .driveOption(DriveOptionEnum.Not)
                 .build();
     }
 

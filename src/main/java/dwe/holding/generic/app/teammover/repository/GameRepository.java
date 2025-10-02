@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public interface GameRepository extends JpaRepository<Game, UUID> {
 
-    @Query("SELECT g FROM Game g LEFT JOIN FETCH g.drivers WHERE g.whenIsTheGame > :now ORDER BY g.whenIsTheGame")
-    List<Game> findGamesByWhenIsTheGameGreaterThan(LocalDateTime now);
+    @Query("SELECT g FROM Game g LEFT JOIN FETCH g.drivers WHERE g.whenIsTheGame > :now AND g.localMemberId = :localMemberId ORDER BY g.whenIsTheGame")
+    List<Game> findGamesByWhenIsTheGameGreaterThanAndLocalMemberId(LocalDateTime now, UUID localMemberId);
 
 
-    default List<Game> findGamesGreatherThenToday() {
-        return findGamesByWhenIsTheGameGreaterThan(LocalDateTime.now().minusDays(1));
+    default List<Game> findGamesGreatherThenToday(UUID localMemberId) {
+        return findGamesByWhenIsTheGameGreaterThanAndLocalMemberId(LocalDateTime.now().minusDays(1), localMemberId);
     }
 }

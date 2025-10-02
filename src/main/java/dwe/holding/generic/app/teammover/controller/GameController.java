@@ -63,7 +63,7 @@ public class GameController {
         model.addAttribute("action", "List");
         model.addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid());
 
-        List<Game> games = gameRepository.findGamesGreatherThenToday();
+        List<Game> games = gameRepository.findGamesGreatherThenToday( AutorisationUtils.getCurrentUserMlid());
         List<GameSummary> summaries = games.stream()
                 .map(game -> new GameSummary(
                         game.getId(),

@@ -26,7 +26,7 @@ public class AutorisationUtils {
     }
 
     public static String getCurrentLocalMemberName() {
-        return getCurrentMember().getLocalMembers().stream().filter(a -> !a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getLocalMemberName();
+        return getCurrentMember().getLocalMembers().stream().filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getLocalMemberName();
     }
 
     public static Member getCurrentMember() {

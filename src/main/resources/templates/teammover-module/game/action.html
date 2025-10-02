@@ -8,7 +8,6 @@
 
     <form action="/teammover/game" method="post">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
         <fieldset role="presentation">
             <input id="id" name="id" th:value="${game.id}" type="hidden">
@@ -33,5 +32,6 @@
                 </tr>
             </table>
         </fieldset>
+        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
     </form>
 </section>
