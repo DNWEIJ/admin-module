@@ -6,7 +6,6 @@ import dwe.holding.generic.app.suppliesandinventory.setup.SetupSuppliesService;
 import dwe.holding.generic.app.teammover.setup.SetupTeamMoverAdminService;
 import dwe.holding.generic.app.teammover.setup.SetupTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -51,7 +50,6 @@ public class AdminApplication implements CommandLineRunner {
             }
         };
     }
-
 
     @Override
     public void run(String... args) {
