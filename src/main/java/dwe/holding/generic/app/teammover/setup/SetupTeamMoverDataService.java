@@ -31,8 +31,9 @@ public class SetupTeamMoverDataService {
 
     @Transactional
     public void init() {
-        log.info("MigrationTeamMoverDataService:: member");
+
         if (gameRepository.findAll().isEmpty()) {
+            log.info("MigrationTeamMoverDataService:: member");
             UUID memberId = memberRepository.findByShortCode("ZVS").getId();
             UUID localMemberId = localmemberRepository.findByLocalMemberName("GO12-2").getId();
 

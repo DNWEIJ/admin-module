@@ -42,8 +42,9 @@ public class SetupAdminService {
 
     @Transactional
     public void init() {
-        log.info("MigrationAdminService:: member");
+
         if (memberRepository.findAll().isEmpty()) {
+            log.info("MigrationAdminService:: member");
             String password = passwordEncoder.encode("pas");
 
             Member member = memberRepository.saveAndFlush(
