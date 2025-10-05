@@ -62,20 +62,11 @@ public class SetupTeamMoverDataService {
                             .map(info -> (Game) baseGame.toBuilder()
                                     .whereIsTheGame(info.locatie)
                                     .whenIsTheGame(info.DatumTijd)
-                                    .nameOfTheTeam(getName(info))
                                     .doWeNeedToDrive(!info.locatie.contains("Wasbeek"))
                                     .howManyPeople(0)
                                     .build()
                             ).toList()
             );
-        }
-    }
-
-    String getName(GameInfo info) {
-        if (info.locatie.contains("Wasbeek")) {
-            return info.wedstrijd.split("-")[1].trim();
-        } else {
-            return info.wedstrijd.split("-")[0].trim();
         }
     }
 }

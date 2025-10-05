@@ -20,7 +20,8 @@
            th:id="${name}"
            th:name="${name}"
            th:tabindex="${tabindex}" type="checkbox"/>
-    [[${label}]]
+    <label th:for="${name}" th:text="${label}"></label>
+    <br/><br/>
 </th:block>
 
 

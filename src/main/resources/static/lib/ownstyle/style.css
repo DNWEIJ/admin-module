@@ -22,6 +22,12 @@
     border: 1px black;
 }
 
+.table-tight footer {
+    margin: .5em;
+    padding: 0;
+    border: 2px black;
+}
+
 .table-tight .right {
     text-align: right;
 }

@@ -1,6 +1,7 @@
 package dwe.holding.generic.app.suppliesandinventory.controller;
 
 import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.app.suppliesandinventory.repository.DistributorRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,10 +34,14 @@ public class DistributorController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/distributor/action";
         }
-        Distributor savedFunction = distributorRepository.save(distributor);
+        distributor.setId(null);
+        distributor.setVersion(null);
+        distributor.setMemberId(AutorisationUtils.getCurrentUserMid());
+        distributor.setLocalMemberId(AutorisationUtils.getCurrentUserMlid());
+        Distributor savedDistributor = distributorRepository.save(distributor);
 
         redirect.addFlashAttribute("message", "Function saved successfully!");
-        return getRedirectFor(request, savedFunction.getId(), "redirect:/distributor");
+        return getRedirectFor(request, savedDistributor.getId(), "redirect:/distributor");
     }
 
     @GetMapping("/distributor")

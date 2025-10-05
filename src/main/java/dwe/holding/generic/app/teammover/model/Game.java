@@ -27,7 +27,6 @@ public class Game extends TenantBaseBO {
     String whereIsTheGame;
     @NotNull
     LocalDateTime whenIsTheGame;
-    String nameOfTheTeam;
     boolean doWeNeedToDrive;
     int howManyPeople;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

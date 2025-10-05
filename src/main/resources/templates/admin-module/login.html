@@ -14,10 +14,6 @@
             <div th:if="${param.notLoggedIn}">
                 <p style="color:red;">You are not logged in yet, please do so...</p>
             </div>
-            <div th:unless="${param.notLoggedIn}">
-
-                <p>&nbsp;</p>
-            </div>
         </div>
         <form method="post" th:action="@{/login}">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>

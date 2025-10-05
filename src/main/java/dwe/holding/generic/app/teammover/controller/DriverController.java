@@ -8,7 +8,6 @@ import dwe.holding.generic.app.teammover.model.Game;
 import dwe.holding.generic.app.teammover.model.TeamMoverUserPreferences;
 import dwe.holding.generic.app.teammover.repository.DriverRepository;
 import dwe.holding.generic.app.teammover.repository.GameRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Controller;
@@ -78,6 +77,8 @@ public class DriverController {
         if (formDriver.isNew()) {
             Driver savedGame = driverRepository.save(
                     Driver.builder()
+                            .id(null)
+                            .version(null)
                             .accountName(AutorisationUtils.getCurrentUserAccount())
                             .nrOfTeamMembers(formDriver.getNrOfTeamMembers())
                             .nrOfEmptySpots(formDriver.getNrOfEmptySpots())

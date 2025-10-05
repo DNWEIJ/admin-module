@@ -10,6 +10,7 @@
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <fieldset>
                 <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>
+<!--                <th:block th:insert="~{fragments/elements/dropdown::dbDropdownMultiSelect('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>-->
             </fieldset>
             <fieldset>
                 <th:block th:insert="~{fragments/elements/input::inputHtml('userPreferences.nrOfTeamMembers','Aantal team leden?', 'nrOfTeamMembers','1')}"></th:block>

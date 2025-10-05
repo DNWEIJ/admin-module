@@ -1,28 +1,25 @@
-<th:block th:fragment="inputHtml(name, label, dbField, tabindex)" th:with="type=${type}?:'text', required=${required}?:true">
+<th:block th:fragment="inputHtml(name, label, dbField, tabindex)" th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}">
     <label th:for="${name}" th:text="${label}"></label>
-        <input th:id="${name}" th:name="${name}" th:placeholder="${label}" th:required="${required}"
+        <input th:id="${name}" th:name="${name}" th:placeholder="${placeholder}" th:required="${required}"
                th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}">
 </th:block>
 
+<th:block th:fragment="inputHtmlDateTime(name, label, dbField, tabindex)" th:with="required=${required}?:true">
+    <label th:for="${name}" th:text="${label}"></label>
+    <input th:id="${name}" th:name="${name}" th:placeholder="${label}" th:required="${required}"
+           th:value="${#temporals.format(game.whenIsTheGame, 'yyyy-MM-dd HH:mm')}" th:tabindex="${tabindex}" type="datetime-local">
+</th:block>
 
-<th:block th:fragment="inputHtmlOptional(name, label, dbField, tabindex)" th:with="type=${type}?:'text'">
+ <th:block th:fragment="inputHtmlOptional(name, label, dbField, tabindex)" th:with="type=${type}?:'text'">
     <label th:for="${name}">[[${label}]]
         <input th:id="${name}" th:name="${name}" th:placeholder="${label}" th:tabindex="${tabindex}"
                th:type="${type}" th:value="${__${dbField}__}">
     </label>
 </th:block>
 
-
 <th:block th:fragment="inputHtmlNumber(name, label, dbField, tabindex)" th:with="required=${required}?:true">
     <label th:for="${name}">[[${label}]]
         <input th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}"
                th:type="${type}" th:value="${__${dbField}__}">
-    </label>
-</th:block>
-
-<th:block th:fragment="inputHtmlDateTime(name, label, dbField, tabindex)" th:with="required=${required}?:true">
-    <label th:for="${name}">[[${label}]]
-        <input th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}"
-               th:type="datetime-local" th:value="${#temporals.format(__${dbField}__, 'yyyy-MM-dd HH:mm')}">
     </label>
 </th:block>

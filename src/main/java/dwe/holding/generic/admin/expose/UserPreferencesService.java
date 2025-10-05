@@ -25,9 +25,9 @@ public class UserPreferencesService {
     }
 
 
-    public void storeAppPreferences(UUID memberId, Object userPref) throws JsonProcessingException {
+    public void storeAppPreferences(UUID localMemberId, Object userPref) throws JsonProcessingException {
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
-        user.setMemberLocalId(memberId);
+        user.setMemberLocalId(AutorisationUtils.validateAndreturnLocalMemberId(localMemberId));
         User savedUser = userRepository.save(user);
 
         String stringRepresentation = objectMapper.writeValueAsString(userPref);

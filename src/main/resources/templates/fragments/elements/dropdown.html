@@ -7,7 +7,7 @@
             </th:block>
 
             <th:block th:unless="${list.size() == 1}">
-                <option disabled readonly th:selected="${__${dbField}__} == null" value="">select</option>
+                <option th:if="${__${dbField}__} == null" disabled readonly selected="true" value="">select</option>
                 <th:block th:each="element : ${list}">
                     <option th:selected="${__${dbField}__} != null and ${__${dbField}__} == ${element.id}"
                             th:text="${element.name}" th:value="${element.id}">
@@ -16,6 +16,18 @@
             </th:block>
         </select>
     </label>
+</th:block>
+
+<th:block th:fragment="dbDropdownMultiSelect(name, label, dbField, list, required, tabindex)">
+    <!-- Checkboxes -->
+    <details class="dropdown">
+        <summary th:text="${label}"></summary>
+        <ul>
+            <th:block th:each="element : ${list}">
+                <li><label><input type="checkbox" th:name="${element.id}"/>[[${element.name}]]</label></li>
+            </th:block>
+        </ul>
+    </details>
 </th:block>
 
 <th:block th:fragment="propDropdown(name, label, dbField, list, required, tabindex)">

@@ -49,12 +49,16 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getAccount();
     }
 
-    public static List<LocalMember> getCurrentUserLocals() {
-        return new ArrayList<>(getCurrentMember().getLocalMembers());
-    }
-
     public static UUID getCurrentUserMlid() {
         return getCurrentUser().getUser().getMemberLocalId();
+    }
+
+    public static UUID validateAndreturnLocalMemberId(UUID localMemberId) {
+        return getCurrentMember().getLocalMembers().stream().
+                filter(f -> f.getId().equals(localMemberId))
+                .findFirst()
+                .orElseThrow()
+                .getId();
     }
 
     public static boolean isNewUser() {

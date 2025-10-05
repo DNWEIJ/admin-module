@@ -26,9 +26,13 @@ spring:
         use_sql_comments: false
         format_sql: false
         use_jdbc_metadata_defaults: false
-  thymeleaf:
-    cache: true
 
+  thymeleaf:
+    cache: false
+  devtools:
+    livereload:
+      enabled: true
+      port: 35729
 logging:
   level:
     root: INFO

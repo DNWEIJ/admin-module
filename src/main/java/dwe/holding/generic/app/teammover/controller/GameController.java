@@ -38,6 +38,11 @@ public class GameController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "teammover-module/game/action";
         }
+        game.setId(null);
+        game.setVersion(null);
+        game.setMemberId(AutorisationUtils.getCurrentUserMid());
+        game.setLocalMemberId(AutorisationUtils.getCurrentUserMlid());
+        gameRepository.save(game);
 
         redirect.addFlashAttribute("message", "Wedstrijd opgeslagen!");
         return getRedirectFor(request, processGame(game), "redirect:/teammover/game");

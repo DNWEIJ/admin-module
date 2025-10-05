@@ -34,6 +34,8 @@ public class FunctionController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/function/action";
         }
+        function.setId(null);
+        function.setVersion(null);
         Function savedFunction = functionRepository.save(function);
 
         redirect.addFlashAttribute("message", "Function saved successfully!");
