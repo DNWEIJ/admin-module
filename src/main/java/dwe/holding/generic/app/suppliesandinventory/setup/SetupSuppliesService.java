@@ -1,10 +1,12 @@
 package dwe.holding.generic.app.suppliesandinventory.setup;
 
 import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
+import dwe.holding.generic.admin.autorisation.function_role.FunctionRoleRepository;
+import dwe.holding.generic.admin.autorisation.function_role.RoleRepository;
+import dwe.holding.generic.admin.autorisation.function_role.UserRoleRepository;
 import dwe.holding.generic.admin.autorisation.member.MemberRepository;
-import dwe.holding.generic.admin.model.Function;
-import dwe.holding.generic.admin.model.LocalMember;
-import dwe.holding.generic.admin.model.Member;
+import dwe.holding.generic.admin.autorisation.user.UserRepository;
+import dwe.holding.generic.admin.model.*;
 import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.app.suppliesandinventory.model.Supplies;
 import dwe.holding.generic.app.suppliesandinventory.repository.DistributorRepository;
@@ -13,7 +15,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,22 +24,27 @@ public class SetupSuppliesService {
     private final MemberRepository memberRepository;
     private final DistributorRepository distributorRepository;
     private final FunctionRepository functionRepository;
+    private final RoleRepository roleRepository;
+    private final FunctionRoleRepository functionRoleRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final UserRepository userRepository;
 
-    public SetupSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository, FunctionRepository functionRepository) {
+    public SetupSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, UserRepository userRepository) {
         this.suppliesRepository = suppliesRepository;
         this.memberRepository = memberRepository;
         this.distributorRepository = distributorRepository;
         this.functionRepository = functionRepository;
+        this.roleRepository = roleRepository;
+        this.functionRoleRepository = functionRoleRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public void init() {
+    public void init(UUID adminMemberId) {
         if (suppliesRepository.findAll().isEmpty()) {
-            Member member = memberRepository.findAll().getFirst();
-            UUID memberId = member.getId();
-            Set<LocalMember> localMembers = member.getLocalMembers();
-            UUID localMemberId = localMembers.stream().findFirst().get().getId();
 
+            UUID memberId = adminMemberId;
 
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(
@@ -46,23 +52,52 @@ public class SetupSuppliesService {
                             Function.builder().name("SUPPLIES_READ").build(),
 
                             Function.builder().name("DISTRIBUTOR_CREATE").build(),
-                            Function.builder().name("SUPPLIES_READ").build()
+                            Function.builder().name("SUPPLIES_CREATE").build()
                     )
             );
-            List<Distributor> distributors = distributorRepository.saveAllAndFlush(
+
+            List<Role> listRoles = roleRepository.saveAllAndFlush(
                     List.of(
-                            Distributor.builder().distributorName("Distributor One").memberId(memberId).localMemberId(localMemberId).build(),
-                            Distributor.builder().distributorName("Distributor Two").memberId(memberId).localMemberId(localMemberId).build(),
-                            Distributor.builder().distributorName("Distributor Three").memberId(memberId).localMemberId(localMemberId).build()
+                            Role.builder().name("SUPPLIES").memberId(memberId).build(),
+                            Role.builder().name("PRICING").memberId(memberId).build(),
+                            Role.builder().name("INVENTORY").memberId(memberId).build()
+                    )
+            );
+
+            Role roleSupplies = listRoles.stream().filter(r -> r.getName().equals("SUPPLIES")).findFirst().get();
+            functionRoleRepository.saveAllAndFlush(
+                    listFunc.stream()
+                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleSupplies).build())
+                            .toList()
+            );
+
+            User user = userRepository.findByAccount("daniel").stream().filter(u -> u.getMember().getId().equals(memberId)).findFirst().orElseThrow();
+            userRoleRepository.saveAllAndFlush(
+                    List.of(
+                            UserRole.builder().role(roleSupplies).user(user).build()
+//                            UserRole.builder().role(roleAdmin).user(user).build(),
+//                            UserRole.builder().role(roleDefault).user(user).build()
+                    )
+            );
+
+
+            //***********//
+            // DATA PART //
+            //***********//
+            List<Distributor> savedDistributors = distributorRepository.saveAllAndFlush(
+                    List.of(
+                            Distributor.builder().distributorName("Distributor One").memberId(memberId).build(),
+                            Distributor.builder().distributorName("Distributor Two").memberId(memberId).build(),
+                            Distributor.builder().distributorName("Distributor Three").memberId(memberId).build()
                     )
             );
 
             suppliesRepository.saveAllAndFlush(
                     List.of(
-                            Supplies.builder().nomenclature("Supply One").memberId(memberId).localMemberId(localMemberId).distributor(distributors.get(0)).build(),
-                            Supplies.builder().nomenclature("Supply Two").memberId(memberId).localMemberId(localMemberId).build(),
-                            Supplies.builder().nomenclature("Supply Three").memberId(memberId).localMemberId(localMemberId).distributor(distributors.get(2)).build(),
-                            Supplies.builder().nomenclature("Supply Four").memberId(memberId).localMemberId(localMemberId).build()
+                            Supplies.builder().nomenclature("Supply One").memberId(memberId).distributor(savedDistributors.get(0)).build(),
+                            Supplies.builder().nomenclature("Supply Two").memberId(memberId).build(),
+                            Supplies.builder().nomenclature("Supply Three").memberId(memberId).distributor(savedDistributors.get(2)).build(),
+                            Supplies.builder().nomenclature("Supply Four").memberId(memberId).build()
                     )
             );
         }

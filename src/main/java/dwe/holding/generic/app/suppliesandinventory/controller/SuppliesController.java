@@ -23,7 +23,7 @@ public class SuppliesController {
         this.distributorRepository = distributorRepository;
     }
 
-    @GetMapping("/supplies")
+    @GetMapping("/supplies/supplies")
     String SuppliesScreen(Model model) {
         model.addAttribute("action", "Create");
         model.addAttribute("supply", new Supplies());
@@ -31,7 +31,7 @@ public class SuppliesController {
         return "supplies-module/supplies/action";
     }
 
-    @GetMapping("/supplies/{id}")
+    @GetMapping("/supplies/supplies/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         Supplies supply = suppliesRepository.findById(id).orElseThrow();
@@ -41,7 +41,7 @@ public class SuppliesController {
         return "supplies-module/supplies/action";
     }
 
-    @GetMapping("/supplies/list")
+    @GetMapping("/supplies/supplies/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("supplies", suppliesRepository.findAll());

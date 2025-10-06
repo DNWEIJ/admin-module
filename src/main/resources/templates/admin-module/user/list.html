@@ -1,6 +1,10 @@
-<th:block th:replace="~{fragments/page/header}"></th:block>
-
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('User','/user')}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Gebruikers lijst</title>
+</head>
+<body>
+<section layout:fragment="content">
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('User','/admin/user')}"></th:block>
 
 <style>
     .colgroup {
@@ -23,7 +27,7 @@
     <tbody>
     <th:block th:each="user : ${users}">
         <tr>
-            <td><a th:href="@{'/user/'+ ${user.id}}">[[${user.account}]]</a></td>
+            <td><a th:href="@{'/admin/user/'+ ${user.id}}">[[${user.account}]]</a></td>
             <td>[[${user.name}]]</td>
             <td>[[${user.email}]]</td>
             <td>[[${user.loginEnabled}]]</td>
@@ -48,3 +52,4 @@
             ]
         });
 </script>
+</section>

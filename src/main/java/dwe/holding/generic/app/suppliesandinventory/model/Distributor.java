@@ -1,6 +1,6 @@
 package dwe.holding.generic.app.suppliesandinventory.model;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Distributor extends TenantBaseBO {
+public class Distributor extends MemberBaseBO {
     @NotEmpty
     @Column(nullable = false)
     private String distributorName;

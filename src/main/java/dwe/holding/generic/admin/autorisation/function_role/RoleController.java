@@ -43,7 +43,7 @@ public class RoleController {
         this.functionRepository = functionRepository;
     }
 
-    @PostMapping("/role")
+    @PostMapping("/admin/role")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -56,7 +56,7 @@ public class RoleController {
         return getRedirectFor(request, roleId, "redirect:/role");
     }
 
-    @GetMapping("/role")
+    @GetMapping("/admin/role")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new Role());
@@ -64,14 +64,14 @@ public class RoleController {
 
     }
 
-    @GetMapping("/role/{id}")
+    @GetMapping("/admin/role/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, roleRepository.findById(id).orElseThrow());
         return "admin-module/role/action";
     }
 
-    @GetMapping("/role/list")
+    @GetMapping("/admin/role/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("roles", roleRepository.findAll());

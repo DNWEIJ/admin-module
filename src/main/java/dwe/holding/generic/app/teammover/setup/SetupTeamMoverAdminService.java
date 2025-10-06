@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -45,7 +46,7 @@ public class SetupTeamMoverAdminService {
     }
 
     @Transactional
-    public void init() {
+    public void init(UUID adminMemberId) {
         if (memberRepository.findAll().stream().filter(mem -> mem.getShortCode().equals("ZVS")).toList().isEmpty()) {
             String password = passwordEncoder.encode("ZVS!DeEerste!");
             log.info("MigrationTeamMoverAdminService:: member");

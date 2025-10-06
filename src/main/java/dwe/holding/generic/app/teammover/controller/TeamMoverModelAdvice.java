@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice(assignableTypes = {GameController.class, DriverController.class})
-public class ModelAdvice {
+public class TeamMoverModelAdvice {
 
     @ModelAttribute
     void modelAdvice(Model model) {

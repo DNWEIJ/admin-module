@@ -28,7 +28,7 @@ public class FunctionController {
         this.functionRepository = functionRepository;
     }
 
-    @PostMapping("/function")
+    @PostMapping("/admin/function")
     String save(@Valid Function function, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -42,7 +42,7 @@ public class FunctionController {
         return getRedirectFor(request, savedFunction.getId(), "redirect:/function");
     }
 
-    @GetMapping("/function")
+    @GetMapping("/admin/function")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         model.addAttribute("function", new Function());
@@ -50,14 +50,14 @@ public class FunctionController {
 
     }
 
-    @GetMapping("/function/{id}")
+    @GetMapping("/admin/function/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         model.addAttribute("function", functionRepository.findById(id).orElseThrow());
         return "admin-module/function/action";
     }
 
-    @GetMapping("/function/list")
+    @GetMapping("/admin/function/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("functions", functionRepository.findAll());

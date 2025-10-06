@@ -1,13 +1,15 @@
 package dwe.holding.generic.app.suppliesandinventory.model;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,7 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Supplies extends TenantBaseBO {
+public class Supplies extends MemberBaseBO {
     @Column(nullable = false, length = 40)
     private String nomenclature;
     /**
@@ -46,14 +48,13 @@ public class Supplies extends TenantBaseBO {
      * The description used by the distributor to identify the product.
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = true)
-    @Builder.Default
-    private Distributor distributor = new Distributor();
+    @JoinColumn(nullable = true, name = "DISTRIBUTOR_ID")
+    private Distributor distributor;
 
     private Long barcode;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "supplies")
     @Cascade({CascadeType.ALL, CascadeType.DELETE_ORPHAN})
-    @Builder.Default
-    private Set<SuppliesLocal> suppliesLocals = new HashSet<SuppliesLocal>(0);
-//     private Set<Supplies2localsupdated> updateRecords = new HashSet<Supplies2localsupdated>(0);
+    private Set<SuppliesLocal> suppliesLocals;
+
+    //     private Set<Supplies2localsupdated> updateRecords = new HashSet<Supplies2localsupdated>(0);
 }

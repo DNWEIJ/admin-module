@@ -53,7 +53,7 @@ public class UserController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/user")
+    @PostMapping("/admin/user")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -64,7 +64,7 @@ public class UserController {
         return getRedirectFor(request, userId, "redirect:/user");
     }
 
-    @GetMapping("/user")
+    @GetMapping("/admin/user")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new User());
@@ -72,14 +72,14 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/admin/user/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, userRepository.findById(id).orElseThrow());
         return "admin-module/user/action";
     }
 
-    @GetMapping("/user/list")
+    @GetMapping("/admin/user/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("users", userRepository.findAll());
@@ -87,6 +87,7 @@ public class UserController {
     }
 
     private List<List<PresentationFunction>> getAllFunctionsAndCheckedIfActive(Set<UserRole> userRoles) {
+        if (userRoles == null ) return new ArrayList<>();
         List<Role> roles = roleRepository.findAll();
         Map<UUID, String> roleIdsChecked = userRoles.stream().collect(
                 Collectors.toMap(s -> s.getRole().getId(), s -> s.getRole().getName())

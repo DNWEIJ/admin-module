@@ -1,9 +1,11 @@
-<th:block th:insert="~{fragments/page/header}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Distributor settings</title>
+</head>
+<body>
+<section layout:fragment="content">
 
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
-
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Distributor','/distributor/list')}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Distributor','/supplies/distributor/list')}"></th:block>
 
 <form action="/user/preferences" method="post">
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
@@ -38,3 +40,4 @@
         </label>
     </fieldset>
 </form>
+</section>

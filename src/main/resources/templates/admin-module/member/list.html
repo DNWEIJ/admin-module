@@ -1,48 +1,54 @@
-<th:block th:replace="~{fragments/page/header}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Member settings</title>
+</head>
+<body>
+<section layout:fragment="content">
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Member','/member')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Member','/admin/member')}"></th:block>
 
-<style>
-    .colgroup {
-        width: 100%
+    <style>
+        .colgroup {
+            width: 100%
 
-    }
-</style>
+        }
+    </style>
 
-<table id="member-table">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Active</th>
-        <th>Short code</th>
-        <th>Start</th>
-        <th>End</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:each="member : ${members}">
+    <table id="member-table">
+        <thead>
         <tr>
-            <td><a th:href="@{'/member/'+ ${member.id}}">[[${member.name}]]</a></td>
-            <td>[[${member.active}]]</td>
-            <td>[[${member.shortCode}]]</td>
-            <td>[[${member.start}]]</td>
-            <td>[[${member.stop}]]</td>
+            <th>Name</th>
+            <th>Active</th>
+            <th>Short code</th>
+            <th>Start</th>
+            <th>End</th>
         </tr>
-    </th:block>
-    </tbody>
-    <tfoot>
-    <tr>
-        <td></td>
-    </tr>
-    </tfoot>
-</table>
-<script>
-    var table = new Tabulator("#member-table",
-        {
-            layout: "fitColumns",
-            responsiveLayout: "collapse",
-            columns: [ //set column definitions for imported table data
-                {title: "Name", formatter: "html"}
-            ]
-        });
-</script>
+        </thead>
+        <tbody>
+        <th:block th:each="member : ${members}">
+            <tr>
+                <td><a th:href="@{'/admin/member/'+ ${member.id}}">[[${member.name}]]</a></td>
+                <td>[[${member.active}]]</td>
+                <td>[[${member.shortCode}]]</td>
+                <td>[[${member.start}]]</td>
+                <td>[[${member.stop}]]</td>
+            </tr>
+        </th:block>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+        </tr>
+        </tfoot>
+    </table>
+    <script>
+        var table = new Tabulator("#member-table",
+            {
+                layout: "fitColumns",
+                responsiveLayout: "collapse",
+                columns: [ //set column definitions for imported table data
+                    {title: "Name", formatter: "html"}
+                ]
+            });
+    </script>
+</section>

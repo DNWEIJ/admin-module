@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @EnableJpaAuditing
 @SpringBootApplication
@@ -53,9 +54,10 @@ public class AdminApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        setupAdminService.init();
+        UUID memberId = setupAdminService.init();
+        setupSuppliesService.init(memberId);
         // todo fix    migrationSuppliesService.init();
-        setupTeamMoverAdminService.init();
+        setupTeamMoverAdminService.init(memberId);
         setupTeamMoverDataService.init();
     }
 }

@@ -1,9 +1,10 @@
-<th:block th:insert="~{fragments/page/header}"></th:block>
-
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
-
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${function.id}, 'Function','/function/list')}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Functie settings</title>
+</head>
+<body>
+<section layout:fragment="content">
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${function.id}, 'Function','/admin/function/list')}"></th:block>
 
 <form action="/function" method="post">
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
@@ -16,4 +17,4 @@
         <th:block th:insert="~{fragments/elements/input::inputHtml('name','Function name', 'function.name','1')}" th:with="autofocus=true"></th:block>
     </fieldset>
 </form>
-<th:block th:insert="~{fragments/page/footer}"></th:block>
+</section>

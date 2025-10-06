@@ -18,7 +18,7 @@ public class LoginController {
     private final UserRepository userRepository;
 
 
-    private final String start =  "redirect:/index";
+    private final String start = "redirect:/index";
 
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -29,6 +29,13 @@ public class LoginController {
         return "admin-module/login";
     }
 
+    @GetMapping("/admin/index")
+    String indexAdminScreen(Model model) {
+        model.addAttribute("applicationName", "admin-module");
+        return "/admin-module/index";
+    }
+
+
     @GetMapping("/index")
     String indexScreen() {
         if (AutorisationUtils.isNewUser()) {
@@ -38,11 +45,8 @@ public class LoginController {
         if (AutorisationUtils.isLocalMemberRequired() && AutorisationUtils.getCurrentUserMlid() == null) {
             return "redirect:/" + AutorisationUtils.getCurrentMember().getApplicationName().toLowerCase() + "/userpreferences";
         }
+        return AutorisationUtils.getCurrentMember().getApplicationRedirect();
 
-        if (AutorisationUtils.getCurrentMember().getShortCode().equals("ZVS")) {
-            return AutorisationUtils.getCurrentMember().getApplicationRedirect();
-        }
-        return start;
     }
 
     @GetMapping("/resetpassword")

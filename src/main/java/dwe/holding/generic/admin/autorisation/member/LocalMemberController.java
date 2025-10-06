@@ -28,7 +28,7 @@ public class LocalMemberController {
         this.localMemberRepository = localMemberRepository;
     }
 
-    @PostMapping("/localmember")
+    @PostMapping("/admin/localmember")
     String save(@Valid LocalMember localMember, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -39,7 +39,7 @@ public class LocalMemberController {
         return getRedirectFor(request, memberLocalId, "redirect:/localmember");
     }
 
-    @GetMapping("/localmember")
+    @GetMapping("/admin/localmember")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new LocalMember());
@@ -47,14 +47,14 @@ public class LocalMemberController {
     }
 
 
-    @GetMapping("/localmember/{id}")
+    @GetMapping("/admin/localmember/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, localMemberRepository.findById(id).orElseThrow());
         return "admin-module/localmember/action";
     }
 
-    @GetMapping("/localmember/list")
+    @GetMapping("/admin/localmember/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("members", localMemberRepository.findAll());

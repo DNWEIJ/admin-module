@@ -69,11 +69,11 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         }
 
         // reduce the list to matching on member.shortCode
-        List<User> users1 = users.stream().filter(user -> user.getMember().getShortCode().equals(usernameAndShortCode[1])).toList();
-        if (users1.size() != 1) {
+        List<User> usersList = users.stream().filter(user -> user.getMember().getShortCode().equals(usernameAndShortCode[1])).toList();
+        if (usersList.size() != 1) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
-        User user = users1.get(0);
+        User user = usersList.getFirst();
 
         if (user.getMember().getPassword().equals(user.getPassword())) {
             user.setChangePassword(true);

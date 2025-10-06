@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -41,11 +42,11 @@ public class SetupAdminService {
     }
 
     @Transactional
-    public void init() {
+    public UUID init() {
 
         if (memberRepository.findAll().isEmpty()) {
             log.info("MigrationAdminService:: member");
-            String password = passwordEncoder.encode("pas");
+            String password = passwordEncoder.encode("pas!");
 
             Member member = memberRepository.saveAndFlush(
                     Member.builder()
@@ -92,6 +93,7 @@ public class SetupAdminService {
                             Function.builder().name("FUNCTION_READ").build(),
                             Function.builder().name("ROLE_READ").build(),
                             Function.builder().name("USER_READ").build(),
+
                             Function.builder().name("LOCALMEMBER_CREATE").build(),
                             Function.builder().name("FUNCTION_CREATE").build(),
                             Function.builder().name("ROLE_CREATE").build(),
@@ -109,8 +111,6 @@ public class SetupAdminService {
                             Function.builder().name("INDEX_READ").build(),
                             Function.builder().name("SETLOCALMEMBER_READ").build(),
                             Function.builder().name("SETLOCALMEMBER_CREATE").build()
-
-
                     ));
 
 
@@ -131,7 +131,7 @@ public class SetupAdminService {
             );
             Role roleAdmin = listRole.stream().filter(r -> r.getName().equals("ADMIN")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
-                    listFuncSuperAdmin.stream()
+                    listFuncAdmin.stream()
                             .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdmin).build())
                             .toList()
             );
@@ -150,6 +150,8 @@ public class SetupAdminService {
                             UserRole.builder().role(roleDefault).user(user).build()
                     )
             );
+            return member.getId();
         }
+        return null;
     }
 }

@@ -27,7 +27,7 @@ public class MemberController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/member")
+    @PostMapping("/admin/member")
     String save(@Valid Member member, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -38,7 +38,7 @@ public class MemberController {
         return getRedirectFor(request, savedMember.getId(), "redirect:/member");
     }
 
-    @GetMapping("/member")
+    @GetMapping("/admin/member")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         model.addAttribute("member", new Member());
@@ -48,7 +48,7 @@ public class MemberController {
     }
 
 
-    @GetMapping("/member/{id}")
+    @GetMapping("/admin/member/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         model.addAttribute("member", memberRepository.findById(id).orElseThrow());
@@ -56,7 +56,7 @@ public class MemberController {
         return "admin-module/member/action";
     }
 
-    @GetMapping("/member/list")
+    @GetMapping("/admin/member/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("members", memberRepository.findAll());

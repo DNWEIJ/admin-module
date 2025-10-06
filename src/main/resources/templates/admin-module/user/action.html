@@ -1,31 +1,33 @@
-<th:block th:insert="~{fragments/page/header}"></th:block>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Gebruiker bewerken/toevoegen</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/admin/user/list')}"></th:block>
 
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
+    <form action="/user" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/user/list')}"></th:block>
+        <fieldset class="grid" role="presentation">
+            <input id="id" name="id" th:value="${user.id}" type="hidden">
+            <input id="version" name="version" th:value="${user.version}" type="hidden">
 
-<form action="/user" method="post">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('account','Account name', 'user.account','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('name','Personal name', 'user.name','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('Email','email', 'user.email', '4')}" th:with="type='email'"></th:block>
+        </fieldset>
 
-    <fieldset class="grid" role="presentation">
-        <input id="id" name="id" th:value="${user.id}" type="hidden">
-        <input id="version" name="version" th:value="${user.version}" type="hidden">
-
-        <th:block th:insert="~{fragments/elements/input::inputHtml('account','Account name', 'user.account','1')}"></th:block>
-        <th:block th:insert="~{fragments/elements/input::inputHtml('name','Personal name', 'user.name','3')}"></th:block>
-        <th:block th:insert="~{fragments/elements/input::inputHtml('Email','email', 'user.email', '4')}" th:with="type='email'"></th:block>
-    </fieldset>
-
-    <fieldset class="grid" role="presentation">
-        <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','Login enabled?', 'user.loginEnabled', ${ynvaluesList}, true,'5')}"></th:block>
-        <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','Language Preference', 'user.language', ${languagePrefList}, true,'6')}"></th:block>
-        <th:block th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','Personnel Status', 'user.personnelStatus', ${personnelStatusList}, true,'7')}"></th:block>
-        <th:block th:if="${isSuperAdmin}" th:insert="~{fragments/elements/dropdown::dbDropdown('member','Member', 'user.member.id', ${membersList}, true,'8')}"></th:block>
-    </fieldset>
-    <hr/>
-    <fieldset class="grid" role="presentation">
-        <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${roles}, 'checkedRoles', '2')}"></th:block>
-    </fieldset>
-</form>
+        <fieldset class="grid" role="presentation">
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','Login enabled?', 'user.loginEnabled', ${ynvaluesList}, true,'5')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','Language Preference', 'user.language', ${languagePrefList}, true,'6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','Personnel Status', 'user.personnelStatus', ${personnelStatusList}, true,'7')}"></th:block>
+            <th:block th:if="${isSuperAdmin}" th:insert="~{fragments/elements/dropdown::dbDropdown('member','Member', 'user.member.id', ${membersList}, true,'8')}"></th:block>
+        </fieldset>
+        <hr/>
+        <fieldset class="grid" role="presentation">
+            <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${roles}, 'checkedRoles', '2')}"></th:block>
+        </fieldset>
+    </form>
+</section>

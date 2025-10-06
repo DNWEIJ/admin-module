@@ -1,9 +1,11 @@
-<div th:replace="~{fragments/page/header}"></div>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Sub Member settings</title>
+</head>
+<body>
+<section layout:fragment="content">
 
-<th:block th:insert="~{fragments/page/errors}"></th:block>
-<th:block th:insert="~{fragments/page/message}"></th:block>
-
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/localmember/list')}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmember/list')}"></th:block>
 
 <form action="/localmember" method="post">
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
@@ -28,4 +30,4 @@
     <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('zipCode','Zipcode', 'zipCode','8')}"></th:block>-->
     <!--    </fieldset>-->
 </form>
-<th:block th:insert="~{fragments/page/footer}"></th:block>
+</section>

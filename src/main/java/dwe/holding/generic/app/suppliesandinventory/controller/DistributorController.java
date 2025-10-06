@@ -28,7 +28,7 @@ public class DistributorController {
     }
 
 
-    @PostMapping("/distributor")
+    @PostMapping("/supplies/distributor")
     String save(@Valid Distributor distributor, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -37,14 +37,13 @@ public class DistributorController {
         distributor.setId(null);
         distributor.setVersion(null);
         distributor.setMemberId(AutorisationUtils.getCurrentUserMid());
-        distributor.setLocalMemberId(AutorisationUtils.getCurrentUserMlid());
         Distributor savedDistributor = distributorRepository.save(distributor);
 
         redirect.addFlashAttribute("message", "Function saved successfully!");
         return getRedirectFor(request, savedDistributor.getId(), "redirect:/distributor");
     }
 
-    @GetMapping("/distributor")
+    @GetMapping("/supplies/distributor")
     String DistributorScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new Distributor());
@@ -52,14 +51,14 @@ public class DistributorController {
     }
 
 
-    @GetMapping("/distributor/{id}")
+    @GetMapping("/supplies/distributor/{id}")
     String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, distributorRepository.findById(id).orElseThrow());
         return "supplies-module/distributor/action";
     }
 
-    @GetMapping("/distributor/list")
+    @GetMapping("/supplies/distributor/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("distributors", distributorRepository.findAll());

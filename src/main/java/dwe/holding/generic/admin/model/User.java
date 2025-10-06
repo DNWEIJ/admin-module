@@ -15,7 +15,10 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 import java.util.*;
 
-@Table(name = "ADMIN_USER", uniqueConstraints = @UniqueConstraint(name = "uk_user_accountPassword", columnNames = {"ACCOUNT", "PASSWORD"}))
+@Table(name = "ADMIN_USER", uniqueConstraints =
+        {
+                @UniqueConstraint(name = "uk_user_accountMemberId", columnNames = {"ACCOUNT", "MEMBER_ID"})
+        })
 @Entity
 @SuperBuilder(toBuilder = true)
 @Getter
