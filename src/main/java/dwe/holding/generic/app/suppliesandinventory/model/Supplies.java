@@ -24,6 +24,10 @@ import java.util.Set;
 @Getter
 @Setter
 public class Supplies extends MemberBaseBO {
+
+    /**
+     * Description of the product
+     */
     @Column(nullable = false, length = 40)
     private String nomenclature;
     /**
@@ -47,6 +51,8 @@ public class Supplies extends MemberBaseBO {
     /**
      * The description used by the distributor to identify the product.
      */
+    private String description;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true, name = "DISTRIBUTOR_ID")
     private Distributor distributor;
