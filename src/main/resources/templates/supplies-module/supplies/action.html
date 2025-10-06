@@ -10,33 +10,27 @@
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
-        <fieldset class="grid" role="presentation">
-            <!-- hidden identifiers -->
-            <input id="id" name="id" th:value="${supply.id}" type="hidden"/>
-            <input id="version" name="version" th:value="${supply.version}" type="hidden"/>
+        <!-- hidden identifiers -->
+        <input id="id" name="id" th:value="${id}" type="hidden"/>
+        <input id="version" name="version" th:value="${version}" type="hidden"/>
 
-            <!-- Description -->
-            <th:block th:insert="~{fragments/elements/input::inputHtml('nomenclature','Description','supply.nomenclature','1')}"></th:block>
-            <!-- Distributor dropdown -->
+        <fieldset class="grid" role="presentation">
+            <th:block th:insert="~{fragments/elements/input::inputHtml('nomenclature','Description','nomenclature','1')}"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('distributor','Distributor','supply.distributor.id',${distributorList},false,'2')}"></th:block>
-            <!-- Price & Quantities -->
-            <th:block th:insert="~{fragments/elements/input::inputHtml('price','Price [each]','supply.price','3')}"></th:block>
         </fieldset>
         <fieldset class="grid" role="presentation">
-            <th:block th:insert="~{fragments/elements/input::inputHtml('quantityPerPackage','Individual Qty/Pkg','supply.quantityPerPackage','4')}" th:with="type='number'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('minQuantity','Minimum Quantity','supply.minQuantity','5')}" th:with="type='number'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('buyQuantity','Buy Quantity','supply.buyQuantity','6')}" th:with="type='number'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('price','Price [each]','price','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('quantityPerPackage','Individual Qty/Pkg','quantityPerPackage','4')}" th:with="type='number'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('minQuantity','Minimum Quantity','minQuantity','5')}" th:with="type='number'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('buyQuantity','Buy Quantity','buyQuantity','6')}" th:with="type='number'"></th:block>
         </fieldset>
         <fieldset class="grid" role="presentation">
-            <!-- Item Number -->
-            <th:block th:insert="~{fragments/elements/input::inputHtml('itemNumber','Item Number','supply.itemNumber','7')}"></th:block>
-            <!-- Barcode -->
-            <th:block th:insert="~{fragments/elements/input::inputHtml('barcode','Barcode Number','supply.barcode','8')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('itemNumber','Item Number','itemNumber','7')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('barcode','Barcode Number','barcode','8')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid" role="presentation">
-            <!-- Distributor Description (textarea, explicit since fragment is for inputs) -->
             <label for="distDescription">Distributor Description
-                <textarea cols="60" id="distDescription" name="supply.distDescription" rows="3" tabindex="9" th:text="${distDescription}"></textarea>
+                <textarea cols="60" id="distDescription" name="distDescription" rows="3" tabindex="9" th:text="${distDescription}"></textarea>
             </label>
         </fieldset>
 

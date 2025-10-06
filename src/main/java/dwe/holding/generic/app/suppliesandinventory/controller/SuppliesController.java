@@ -1,6 +1,7 @@
 package dwe.holding.generic.app.suppliesandinventory.controller;
 
 import dwe.holding.generic.admin.model.PresentationFunction;
+import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.app.suppliesandinventory.model.Supplies;
 import dwe.holding.generic.app.suppliesandinventory.repository.DistributorRepository;
@@ -26,7 +27,7 @@ public class SuppliesController {
     @GetMapping("/supplies/supplies")
     String SuppliesScreen(Model model) {
         model.addAttribute("action", "Create");
-        model.addAttribute("supply", new Supplies());
+        model.addAttribute("supply", newSupplies());
         setModelData(model);
         return "supplies-module/supplies/action";
     }
@@ -49,8 +50,12 @@ public class SuppliesController {
     }
 
     private void setModelData(Model model) {
-        model.addAttribute("distributorList", distributorRepository.findAll().stream()
-                .map(s -> new PresentationFunction(s.getId(), s.getDistributorName(), true)).toList()
+        model.addAttribute("distributorList", distributorRepository.findByMemberId(AutorisationUtils.getCurrentMember().getId()).stream()
+                .map(distributor -> new PresentationFunction(distributor.getId(), distributor.getDistributorName(), true)).toList()
         );
+    }
+
+    private Supplies newSupplies() {
+        return Supplies.builder().distributor(Distributor.builder().id(null).build()).build();
     }
 }

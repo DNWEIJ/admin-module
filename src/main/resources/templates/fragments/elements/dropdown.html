@@ -1,21 +1,20 @@
 <th:block th:fragment="dbDropdown(name, label, dbField, list, required, tabindex)">
-    <label th:for="${name}">[[${label}]]
-        <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}">
+    <label th:for="${name}" th:value="${label}" th:text="${label}"/>
+    <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}">
 
-            <th:block th:if="${list.size() == 1}">
-                <option selected th:text="${list[0].name}" th:value="${list[0].id}"></option>
-            </th:block>
+        <th:block th:if="${list.size() == 1}">
+            <option selected th:text="${list[0].name}" th:value="${list[0].id}"></option>
+        </th:block>
 
-            <th:block th:unless="${list.size() == 1}">
-                <option th:if="${__${dbField}__} == null" disabled readonly selected="true" value="">select</option>
-                <th:block th:each="element : ${list}">
-                    <option th:selected="${__${dbField}__} != null and ${__${dbField}__} == ${element.id}"
-                            th:text="${element.name}" th:value="${element.id}">
-                    </option>
-                </th:block>
+        <th:block th:unless="${list.size() == 1}">
+            <option th:if="${__${dbField}__} == null" disabled readonly selected="true" value="">select</option>
+            <th:block th:each="element : ${list}">
+                <option th:selected="${__${dbField}__} != null and ${__${dbField}__} == ${element.id}"
+                        th:text="${element.name}" th:value="${element.id}">
+                </option>
             </th:block>
-        </select>
-    </label>
+        </th:block>
+    </select>
 </th:block>
 
 <th:block th:fragment="dbDropdownMultiSelect(name, label, dbField, list, required, tabindex)">
