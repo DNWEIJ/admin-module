@@ -1,0 +1,66 @@
+<html layout:decorate="~{layout.html}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Create/Update driver</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
+    <fieldset>
+    <span class="twocolumn-spread">
+        <th><h4 th:text="${game.whereIsTheGame}"></h4></th>
+        <span><small><b th:text="${#temporals.format(game.whenIsTheGame , 'dd-MM-yyyy HH:mm')}"></b></small></span>
+    </span>
+
+        <th:block th:if="${game.drivers != null and game.drivers.size() > 0}">
+            <table class="table-tight">
+                <thead>
+                <tr>
+                    <th>Rijder</th>
+                    <th>Rijden?</th>
+                    <th class="right"><span><i class="fa-solid fa-2xs fa-user-check"></i>&nbsp;<i class="fa-solid fa-2xs fa-car"></i></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="driver : ${game.drivers}">
+                    <tr>
+                        <td th:text="${driver.accountName}">Content</td>
+                        <td th:text="#{${driver.driveOption.label}}">wasbeek</td>
+                        <td class="right">[[${driver.nrOfTeamMembers}]]&nbsp;&nbsp;&nbsp;[[${driver.nrOfEmptySpots}]]</td>
+                    </tr>
+                </th:block>
+                </tbody>
+                <tfoot><tr><td>&nbsp;</td></tr></tfoot>
+            </table>
+        </th:block>
+    </fieldset>
+
+    <form method="post" th:action="'/teammover/game/'+${driver.game.id}+'/driver'">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <input id="id" name="id" th:value="${driver.id}" type="hidden">
+        <input id="version" name="version" th:value="${driver.version}" type="hidden">
+        <input id="game.id" name="game.id" th:value="${driver.game.id}" type="hidden"/>
+
+        <table>
+            <tr>
+                <td cospan="2">
+                    <nobr>Informatie bewerken voor: <b>[[${driver.accountName}]]</b></nobr>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Ga je rijden?
+                    <th:block th:insert="~{fragments/elements/select::multipleSwitch(${driveOptionList}, 'driver.driveOption', '1')}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td>Hoeveel team leden gaan mee?</td>
+                <td><input id="nrOfTeamMembers" name="nrOfTeamMembers" tabindex="'2" th:value="${driver.nrOfTeamMembers}" type="number"/></td>
+            </tr>
+            <tr>
+                <td>Hoeveel lege plekken zijn er in de auto?</td>
+                <td><input id="nrOfEmptySpots" name="nrOfEmptySpots" tabindex="3" th:value="${driver.nrOfEmptySpots}" type="number"/></td>
+            </tr>
+        </table>
+        <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
+    </form>
+</section>

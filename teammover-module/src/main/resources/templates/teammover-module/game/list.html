@@ -1,0 +1,89 @@
+
+<html layout:decorate="~{layout.html}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Show overview games</title>
+</head>
+<body>
+<section layout:fragment="content">
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitleListNL('vd Wedstrijden','/teammover/game')}"></th:block>
+<table id="show-table">
+    <thead>
+    <tr>
+        <th>Waar</th>
+        <th>Datum</th>
+        <th><span>&Sigma;&nbsp;&nbsp;<i class="fa-solid fa-xs fa-user-check"></i>&nbsp;&nbsp;<i class="fa-solid fa-xs fa-car"></i></span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="game : ${games}">
+        <tr>
+            <td><a class="fa fa-car" th:href="@{'/teammover/game/'+${game.id}+'/driver'}"></a>&nbsp;|&nbsp;
+                <!-- if user has ROLE_PLANNER, show as link -->
+                <a  th:href="@{'/teammover/game/' + ${game.id}}" th:if="${#authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:text="${game.whereIsTheGame}"></a>
+                <span th:text="${game.whereIsTheGame}"  th:unless="${#authorization.expression('hasAuthority(''GAME_CREATE'')')}"></span>
+            </td>
+
+            <td>[[${#temporals.format(game.whenIsTheGame, 'dd-MM')}]]</td>
+            <td>[[${game.totalPlayers}]]&nbsp;&nbsp;&nbsp;[[${game.totalPlayersDriver}]]&nbsp;&nbsp;&nbsp;[[${game.totalSeatsDriver}]]</td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+
+<!-- Modal example -->
+<dialog id="modal-example">
+    <article>
+        <header>
+            <button
+                    aria-label="Close"
+                    data-target="modal-example"
+                    onclick="toggleModal(event)"
+                    rel="prev"
+            ></button>
+            <h3>Confirm your action!</h3>
+        </header>
+        <p>
+            Cras sit amet maximus risus. Pellentesque sodales odio sit amet augue finibus
+        </p>
+        <footer>
+            <button
+                    class="secondary"
+                    data-target="modal-example"
+                    onclick="toggleModal(event)"
+                    role="button"
+            >
+                Cancel</button
+            ><button autofocus data-target="modal-example" onclick="toggleModal(event)">
+            Confirm
+        </button>
+        </footer>
+    </article>
+</dialog>
+<style>
+    table .right {
+        text-align: right;
+    }
+    table .left {
+        text-align: left;
+    }
+    table {
+        width: 100%;
+        font-size: 90%;
+        margin: 0; /* no margin around the table */
+        padding: 0; /* no padding inside the table */
+    }
+
+    table td,
+    table th {
+        padding: 0; /* no cell padding */
+        margin: 0;
+        line-height: 1; /* compact row height */
+    }
+
+    table tr {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+</section>
+</body>
