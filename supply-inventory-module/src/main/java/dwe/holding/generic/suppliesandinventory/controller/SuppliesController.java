@@ -1,11 +1,11 @@
-package dwe.holding.generic.app.suppliesandinventory.controller;
+package dwe.holding.generic.suppliesandinventory.controller;
 
 import dwe.holding.generic.admin.model.PresentationFunction;
 import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
-import dwe.holding.generic.app.suppliesandinventory.model.Supplies;
-import dwe.holding.generic.app.suppliesandinventory.repository.DistributorRepository;
-import dwe.holding.generic.app.suppliesandinventory.repository.SuppliesRepository;
+import dwe.holding.generic.suppliesandinventory.model.Distributor;
+import dwe.holding.generic.suppliesandinventory.model.Supplies;
+import dwe.holding.generic.suppliesandinventory.repository.DistributorRepository;
+import dwe.holding.generic.suppliesandinventory.repository.SuppliesRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

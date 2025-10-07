@@ -1,9 +1,9 @@
-package dwe.holding.generic.app.suppliesandinventory.controller;
+package dwe.holding.generic.suppliesandinventory.controller;
 
 import dwe.holding.generic.admin.model.type.YesNoEnum;
 import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
-import dwe.holding.generic.app.suppliesandinventory.repository.DistributorRepository;
+import dwe.holding.generic.suppliesandinventory.model.Distributor;
+import dwe.holding.generic.suppliesandinventory.repository.DistributorRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

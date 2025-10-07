@@ -1,8 +1,8 @@
-package dwe.holding.generic.app.preferences.controller;
+package dwe.holding.generic.preferences.controller;
 
 
 import dwe.holding.generic.admin.model.type.YesNoEnum;
-import dwe.holding.generic.app.preferences.model.VmasPreferences;
+import dwe.holding.generic.preferences.model.VmasPreferences;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 

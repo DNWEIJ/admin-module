@@ -1,6 +1,6 @@
-package dwe.holding.generic.app.suppliesandinventory.repository;
+package dwe.holding.generic.suppliesandinventory.repository;
 
-import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
+import dwe.holding.generic.suppliesandinventory.model.Distributor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

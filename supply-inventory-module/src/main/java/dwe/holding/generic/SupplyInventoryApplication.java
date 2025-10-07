@@ -1,42 +1,43 @@
-package dwe.holding.generic.admin;
+package dwe.holding.generic;
 
 import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.admin.setup.SetupAdminService;
 import dwe.holding.generic.suppliesandinventory.setup.SetupSuppliesService;
-import dwe.holding.generic.teammover.setup.SetupTeamMoverAdminService;
-import dwe.holding.generic.teammover.setup.SetupTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @EnableJpaAuditing
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.exception", "dwe.holding.generic.admin.expose",
+        "dwe.holding.generic.admin.security",
+        "dwe.holding.generic.suppliesandinventory"
+})
+@EnableJpaRepositories(basePackages = {
+        "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.preferences",
+        "dwe.holding.generic.suppliesandinventory.repository"
+})
+@EntityScan(basePackages = {
+        "dwe.holding.generic.admin.model",
+        "dwe.holding.generic.suppliesandinventory.model"
+})
 @Slf4j
-public class AdminApplication implements CommandLineRunner {
+public class SupplyInventoryApplication implements CommandLineRunner {
 
-    @Autowired
-    SetupTeamMoverDataService setupTeamMoverDataService;
-    @Autowired
-    SetupTeamMoverAdminService setupTeamMoverAdminService;
-    @Autowired
-    private SetupAdminService setupAdminService;
     @Autowired
     private SetupSuppliesService setupSuppliesService;
-    @Autowired
-    private Environment environment;
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminApplication.class, args);
+        SpringApplication.run(SupplyInventoryApplication.class, args);
     }
 
     @Bean
@@ -54,10 +55,6 @@ public class AdminApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        UUID memberId = setupAdminService.init();
-        setupSuppliesService.init(memberId);
-        // todo fix    migrationSuppliesService.init();
-        setupTeamMoverAdminService.init(memberId);
-        setupTeamMoverDataService.init();
+        setupSuppliesService.init();
     }
 }
