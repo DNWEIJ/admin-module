@@ -1,4 +1,4 @@
-package dwe.holding.generic.app.suppliesandinventory.model;
+package dwe.holding.generic.suppliesandinventory.model;
 
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
 import jakarta.persistence.*;

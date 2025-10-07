@@ -1,4 +1,4 @@
-package dwe.holding.generic.app.suppliesandinventory.setup;
+package dwe.holding.generic.suppliesandinventory.setup;
 
 import dwe.holding.generic.admin.authorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.authorisation.function_role.FunctionRoleRepository;
@@ -7,10 +7,10 @@ import dwe.holding.generic.admin.authorisation.function_role.UserRoleRepository;
 import dwe.holding.generic.admin.authorisation.member.MemberRepository;
 import dwe.holding.generic.admin.authorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.*;
-import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
-import dwe.holding.generic.app.suppliesandinventory.model.Supplies;
-import dwe.holding.generic.app.suppliesandinventory.repository.DistributorRepository;
-import dwe.holding.generic.app.suppliesandinventory.repository.SuppliesRepository;
+import dwe.holding.generic.suppliesandinventory.model.Distributor;
+import dwe.holding.generic.suppliesandinventory.model.Supplies;
+import dwe.holding.generic.suppliesandinventory.repository.DistributorRepository;
+import dwe.holding.generic.suppliesandinventory.repository.SuppliesRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +41,10 @@ public class SetupSuppliesService {
     }
 
     @Transactional
-    public void init(UUID adminMemberId) {
+    public void init() {
         if (suppliesRepository.findAll().isEmpty()) {
 
-            UUID memberId = adminMemberId;
+            UUID memberId = memberRepository.findByShortCode("DWE").getId();
 
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(

@@ -1,4 +1,4 @@
-package dwe.holding.generic.app.preferences.model;
+package dwe.holding.generic.preferences.model;
 
 
 import dwe.holding.generic.admin.model.User;
