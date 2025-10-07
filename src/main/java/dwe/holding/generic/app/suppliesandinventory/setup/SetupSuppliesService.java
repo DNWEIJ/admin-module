@@ -1,11 +1,11 @@
 package dwe.holding.generic.app.suppliesandinventory.setup;
 
-import dwe.holding.generic.admin.autorisation.function_role.FunctionRepository;
-import dwe.holding.generic.admin.autorisation.function_role.FunctionRoleRepository;
-import dwe.holding.generic.admin.autorisation.function_role.RoleRepository;
-import dwe.holding.generic.admin.autorisation.function_role.UserRoleRepository;
-import dwe.holding.generic.admin.autorisation.member.MemberRepository;
-import dwe.holding.generic.admin.autorisation.user.UserRepository;
+import dwe.holding.generic.admin.authorisation.function_role.FunctionRepository;
+import dwe.holding.generic.admin.authorisation.function_role.FunctionRoleRepository;
+import dwe.holding.generic.admin.authorisation.function_role.RoleRepository;
+import dwe.holding.generic.admin.authorisation.function_role.UserRoleRepository;
+import dwe.holding.generic.admin.authorisation.member.MemberRepository;
+import dwe.holding.generic.admin.authorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.*;
 import dwe.holding.generic.app.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.app.suppliesandinventory.model.Supplies;
