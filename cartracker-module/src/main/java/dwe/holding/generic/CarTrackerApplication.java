@@ -1,9 +1,8 @@
-package dwe.holding.generic.teammover;
+package dwe.holding.generic;
 
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.admin.setup.SetupAdminService;
-import dwe.holding.generic.teammover.setup.SetupTeamMoverAdminService;
-import dwe.holding.generic.teammover.setup.SetupTeamMoverDataService;
+import dwe.holding.generic.cartracker.setup.SetupCarTrackerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,29 +21,26 @@ import java.util.Optional;
 @SpringBootApplication(scanBasePackages = {
         "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.exception", "dwe.holding.generic.admin.expose",
         "dwe.holding.generic.admin.security", "dwe.holding.generic.admin.setup",
-        "dwe.holding.generic.teammover"
+        "dwe.holding.generic.cartracker"
 })
 @EnableJpaRepositories(basePackages = {
         "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.preferences",
-        "dwe.holding.generic.teammover.repository"
+        "dwe.holding.generic.cartracker.repository"
 })
 @EntityScan(basePackages = {
         "dwe.holding.generic.admin.model",
-        "dwe.holding.generic.teammover.model"
+        "dwe.holding.generic.cartracker.model"
 })
 @Slf4j
-public class TeamMoverApplication implements CommandLineRunner {
+public class CarTrackerApplication implements CommandLineRunner {
 
     @Autowired
-    SetupTeamMoverDataService setupTeamMoverDataService;
-    @Autowired
-    SetupTeamMoverAdminService setupTeamMoverAdminService;
+    SetupCarTrackerService setupCarTrackerService;
     @Autowired
     SetupAdminService setupAdminService;
 
-
     public static void main(String[] args) {
-        SpringApplication.run(TeamMoverApplication.class, args);
+        SpringApplication.run(CarTrackerApplication.class, args);
     }
 
     @Bean
@@ -63,7 +59,6 @@ public class TeamMoverApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         setupAdminService.init();
-        setupTeamMoverAdminService.init();
-        setupTeamMoverDataService.init();
+        setupCarTrackerService.init();
     }
 }

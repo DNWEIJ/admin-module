@@ -20,8 +20,8 @@ public class AdminAuthenticationFilterLocal implements AuthenticationConverter {
             // String username = "vera";
             // String username = "arjan";
             String username = "daniel";
-            String password = "ZVS!DeEerste!";
-            String domain = "ZVS";
+            String password = "Daniel0904!";
+            String domain = "CAR";
 
 //            String username = "daniel";
 //            String password = "pas!";

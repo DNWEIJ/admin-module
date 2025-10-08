@@ -1,0 +1,79 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Overview</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <style>
+        .table-tight {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            margin-bottom: 1em;
+        }
+
+        .table-tight td,
+        .table-tight th {
+            padding: 0;
+            margin: 0;
+            border-bottom: 1px solid lightgrey;
+            line-height: 1.2;
+        }
+
+        .table-tight td {
+            margin: 0;
+            padding-right: 2px;
+            padding-bottom: 2px;
+        }
+
+        .table-tight tr {
+            margin: 0;
+            padding: 0;
+        }
+
+        .table-tight .right {
+            text-align: right;
+        }
+
+        .table-tight .left {
+            text-align: left;
+        }
+
+        /* zebra striping */
+        .odd tbody td,
+        .odd tbody tr,
+        .odd thead td,
+        .odd thead tr {
+            background-color: lightcyan;
+        }
+
+        .even tbody td,
+        .even tbody tr,
+        .even thead td,
+        .even thead tr {
+            background-color: lightyellow;
+        }
+
+        .collapsable-table summary {
+            cursor: pointer;
+            font-weight: bold;
+            background: #eee;
+            padding: .5rem;
+        }
+
+    </style>
+    <fieldset>
+        [(${fueloverview})]
+    </fieldset>
+    <script>
+        const details = document.querySelectorAll('details');
+        if (details.length >= 2) {
+            details[details.length - 1].setAttribute('open', '');
+            details[details.length - 2].setAttribute('open', '');
+        } else if (details.length === 1) {
+            details[0].setAttribute('open', '');
+        }
+    </script>
+</section>
+>

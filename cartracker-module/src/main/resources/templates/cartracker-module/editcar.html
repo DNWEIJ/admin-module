@@ -1,0 +1,73 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Edit car</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <form action="/trip" method="post" name="car">
+        <fieldset>
+            <input
+                    name="Name"
+                    id="Name"
+                    type="text"
+                    placeholder="naam vd auto"
+                    required
+                    aria-label="Auto"
+                    aria-required="true"
+            />
+            <input
+                    name="km"
+                    id="km"
+                    type="number"
+                    placeholder="Gereden km"
+                    required
+                    pattern="[09]*"
+                    aria-label="Gereden km"
+                    aria-required="true"
+                    min="0"
+                    onchange="updateTotal(this.valueAsNumber)"
+            />
+            <input
+                    name="kmTotal"
+                    id="kmTotal"
+                    type="number"
+                    placeholder="Eind Totaal km"
+                    required
+                    pattern="[09]*"
+                    aria-label="eind totaal"
+                    aria-required="true"
+                    min="0"
+            />
+        </fieldset>
+        <fieldset>
+            <label>
+                <input name="petrol" type="checkbox" role="switch"/>
+                getankt?
+            </label>
+            <input
+                    name="litersStr"
+                    type="number"
+                    placeholder="Liters"
+                    pattern="[09]*"
+                    aria-label="liters"
+                    min="0"
+            />
+        </fieldset>
+        <input
+                type="submit"
+                value="Opslaan"
+        />
+    </form>
+    <th:block th:insert="~{fragments/footer}"></th:block>
+    <script>
+        // Insert date and time into HTML
+        document.getElementById("datum").valueAsNumber = Date.now() - (new Date()).getTimezoneOffset() * 60000;
+
+        function updateTotal(drivingKms) {
+            totalOfCar = parseInt(document.querySelector('input[name="carType"]:checked').nextElementSibling.innerHTML);
+            document.getElementById("kmTotal").setAttribute('value', (drivingKms + totalOfCar));
+        }
+
+    </script>
+</section>

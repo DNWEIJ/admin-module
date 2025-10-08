@@ -1,0 +1,158 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>All trips</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <fieldset role="group">
+        <input
+                type="search"
+                id="filterName"
+                placeholder="Naam">
+        <input
+                type="search"
+                id="filterCar"
+                placeholder=" Auto">
+
+        <button id="clearBtn">Clear</button>
+    </fieldset>
+
+    <fieldset>
+        <table class="table-tight" id="table">
+            <thead>
+            <tr>
+                <th scope="col">Datum</th>
+                <th scope="col">Persoon</th>
+                <th scope="col">Auto</th>
+                <th scope="col">km</th>
+                <th scope="col">km totaal</th>
+                <th scope="col">Liters</th>
+                <th scope="col">amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="trip: ${trips}">
+                <td scope="col" th:text="${#temporals.format(trip.driveDateLocalDate, 'dd-MMM')}"/>
+                <td scope="col" th:text="${trip.person}"/>
+                <td scope="col" th:text="${trip.carType}"/>
+                <td scope="col" th:text="${trip.km}"/>
+                <td scope="col" th:text="${trip.kmTotal}"/>
+                <td scope="col" th:text="${trip.liters}"/>
+                <td scope="col" th:text="'€ '+ ${trip.amount * 1.0 / 100}"/>
+            </tr>
+            <tfoot>
+            <tr>
+                <td scope="col"></td>
+                <td scope="col"/>
+                </td>
+                <td scope="col">Total:</td>
+                <td scope="col" th:text="${kmTotal}"/>
+                <td scope="col"></td>
+                <td scope="col" th:text="${litersTotal}"/>
+            </tr>
+            </tfoot>
+        </table>
+    </fieldset>
+
+    <th:block th:insert="~{fragments/footer}"></th:block>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .table-tight {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .table-tight td,
+        .table-tight th {
+            padding: 0;
+            margin: 0;
+            border-bottom: 1px solid lightgrey;
+            line-height: 1.2;
+        }
+
+        .table-tight td {
+            margin: 0;
+            padding-right: 2px;
+            padding-bottom: 2px;
+        }
+
+        .table-tight tr {
+            margin: 0;
+            padding: 0;
+        }
+
+        .table-tight .right {
+            text-align: right;
+        }
+
+        .table-tight .left {
+            text-align: left;
+        }
+    </style>
+    <script>
+        const inputName = document.getElementById('filterName');
+        const inputCity = document.getElementById('filterCar');
+        const clearBtn = document.getElementById('clearBtn');
+        const tbody = document.querySelector('#table tbody');
+        const tfooter = document.querySelector('#table tfoot');
+
+        const norm = s => String(s || '').toLowerCase();
+
+        const debouncedFilter = debounce(filtering, 300);
+
+        inputName.addEventListener('input', debouncedFilter);
+        inputCity.addEventListener('input', debouncedFilter);
+
+        clearBtn.addEventListener('click', () => {
+            inputName.value = '';
+            inputCity.value = '';
+            filtering();
+            inputName.focus();
+        });
+
+
+        function filtering() {
+            const nameTerm = norm(inputName.value).trim();
+            const cityTerm = norm(inputCity.value).trim();
+
+            for (const row of tbody.rows) {
+                const matchesName = nameTerm === '' || norm(row.cells[1].textContent).includes(nameTerm);
+                const matchesCity = cityTerm === '' || norm(row.cells[2].textContent).includes(cityTerm);
+
+                if (matchesName && matchesCity) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            }
+            recalculateTotal()
+        }
+
+        function debounce(fn, delay = 300) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        const recalculateTotal = () => {
+            let totalLiters = 0;
+            let totalKm = 0;
+
+            // Skip header row (start at 1)
+            for (const row of tbody.rows) {
+                if (!row.classList.contains('hidden')) {
+                    totalKm += parseFloat(row.cells[3].innerText.trim()) || 0;
+                    totalLiters += parseFloat(row.cells[5].innerText.trim()) || 0;
+                }
+            }
+            tfooter.rows[0].cells[3].innerHTML = totalKm;
+            tfooter.rows[0].cells[5].innerHTML = totalLiters;
+        }
+    </script>
+</section>
