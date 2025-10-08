@@ -1,0 +1,128 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Trip</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <form action="/trip" method="post" name="car">
+        <fieldset>
+            <label>
+                <input type="radio" name="person" th:value="${person}" th:text="${person}" checked aria-checked="true"/>
+            </label>
+            <fieldset role="group">
+                <th:block th:each="car : ${carsPreviousTotal}">
+                    <label>
+                        <input
+                                type="radio"
+                                name="carType"
+                                th:value="${car.key}"
+                                th:text="${car.key}" checked
+                                aria-checked="true"
+                                onclick="updateKmDriven(document.getElementById('kmTotal').valueAsNumber)"
+                        />
+                        (<span id="previous" th:text="${car.value}"></span>)
+                        &nbsp;&nbsp;
+                    </label>
+                </th:block>
+                <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            </fieldset>
+        </fieldset>
+        <fieldset>
+            <input
+                    name="driveDate"
+                    id="datum"
+                    type="date"
+                    placeholder="Datum"
+                    required
+                    aria-label="Datum"
+                    aria-required="true"
+            />
+            <fieldset>
+                <input
+                        name="kmTotal"
+                        id="kmTotal"
+                        type="number"
+                        placeholder="Eind Totaal km"
+                        required
+                        pattern="[09]*"
+                        aria-label="eind totaal"
+                        aria-required="true"
+                        min="0"
+                        onchange="updateKmDriven(this.valueAsNumber)"
+                />
+            </fieldset>
+            <fieldset role="group">
+                <input
+                        name="km"
+                        id="km"
+                        type="number"
+                        placeholder="Gereden km"
+                        required
+                        pattern="[09]*"
+                        aria-label="Gereden km"
+                        aria-required="true"
+                        min="0"
+                />
+                <input
+                        name="bedrag"
+                        id="bedrag"
+                        type="text"
+                        disabled
+                        tabindex=-1
+                        placeholder="bedrag ex benzine"
+                        pattern="[09]*"
+                        aria-label="bedrag"
+                        min="0"
+                />
+            </fieldset>
+
+            <fieldset>
+
+                <label for="litersStr">Getankt?</label>
+                <input name="petrol" type="checkbox" role="switch"/>
+            </fieldset>
+            <fieldset>
+                <input
+                        name="litersStr"
+                        id="litersStr"
+                        type="number"
+                        placeholder="Liters"
+                        pattern="[09]*"
+                        aria-label="liters"
+                        min="0"
+                />
+                <input
+                        name="AmountStr"
+                        id="amountStr"
+                        type="number"
+                        placeholder="amount (no '.' or ',')"
+                        pattern="[09]*"
+                        aria-label="amount"
+                        min="0"
+                />
+
+            </fieldset>
+            <fieldset>
+                <input
+                        type="submit"
+                        value="Opslaan"
+                />
+            </fieldset>
+        </fieldset>
+    </form>
+    <script>
+        // Insert date and time into HTML
+        document.getElementById("datum").valueAsNumber = Date.now() - (new Date()).getTimezoneOffset() * 60000;
+
+        function updateKmDriven(totalKmsDriven) {
+            if (Number.isNaN(totalKmsDriven)) return
+
+            totalOfCar = parseInt(document.querySelector('input[name="carType"]:checked').nextElementSibling.innerHTML);
+            kmsDriven = totalKmsDriven - totalOfCar
+            document.getElementById("km").setAttribute('value', (kmsDriven));
+            // set amount
+            document.getElementById("bedrag").setAttribute('value', ("€ " + (kmsDriven * .10).toLocaleString()));
+        }
+    </script>
+</section>

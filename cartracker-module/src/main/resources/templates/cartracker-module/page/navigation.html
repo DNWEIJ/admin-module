@@ -1,0 +1,14 @@
+<nav role="menu">
+    <label data-role="burger"><input type="checkbox"/></label>
+    <ul role="menubar">
+        <li></li>
+    </ul>
+    <ul role="menuitem">
+        <li th:if="${role == '[ROLE_ADMIN]'}"><a href="/car">Car</a></li>
+        <li><a href="/trip">Trip</a></li>
+        <li><a href="/trip/all">Volledig Overzicht</a></li>
+        <li><a href="/trip/alluser">Overzicht</a></li>
+        <li><a href="/trip/alluser/tank">Tank Overzicht</a></li>
+        <li><a href="/logout">Afmelden</a></li>
+    </ul>
+</nav>
