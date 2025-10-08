@@ -2,8 +2,8 @@ package dwe.holding.generic.cartracker.service;
 
 
 
-import dwe.holding.generic.cartracker.model.CarEntity;
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Car;
+import dwe.holding.generic.cartracker.model.Trip;
 import dwe.holding.generic.cartracker.repository.CarRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,31 +24,31 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<String> getAllAsCsv() {
-        Iterable<CarEntity> carEntities = carRepository.findAll();
+        Iterable<Car> carEntities = carRepository.findAll();
         return StreamSupport.stream(carEntities.spliterator(), false)
-                .map(CarEntity::toString)
+                .map(Car::toString)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<CarEntity> getAllAsList() {
+    public List<Car> getAllAsList() {
         return new ArrayList<>(carRepository.findAll());
     }
 
     @Override
     public List<String> getAllNames() {
-        return getAllAsList().stream().map(CarEntity::getName).collect(Collectors.toList());
+        return getAllAsList().stream().map(Car::getName).collect(Collectors.toList());
     }
 
     @Override
     public Map<String, Integer> getAllNameAndTotalKm() {
         return getAllAsList().stream()
-                .collect(Collectors.toMap(CarEntity::getName, CarEntity::getKmTotal));
+                .collect(Collectors.toMap(Car::getName, Car::getKmTotal));
     }
 
     @Override
-    public void saveRecord(TripEntity drive) {
-        CarEntity car = carRepository.findByName(drive.getCarType());
+    public void saveRecord(Trip drive) {
+        Car car = carRepository.findByName(drive.getCarType());
         car.setKmTotal(drive.getKmTotal());
         carRepository.save(car);
     }

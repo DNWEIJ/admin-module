@@ -1,20 +1,21 @@
 package dwe.holding.generic.cartracker.repository;
 
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Trip;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface DriveRepository extends JpaRepository<TripEntity, Long> {
+public interface DriveRepository extends JpaRepository<Trip, UUID> {
 
-    List<TripEntity> findByPersonOrderByDriveDateAsc(String name);
+    List<Trip> findByPersonOrderByDriveDateAsc(String name);
 
-    TripEntity findFirstByCarTypeOrderByKmTotalDesc(String carType);
+    Trip findFirstByCarTypeOrderByKmTotalDesc(String carType);
 
-    default List<TripEntity> findAllOrderByDriveDateAsc() {
+    default List<Trip> findAllOrderByDriveDateAsc() {
         Sort sortBy = Sort.by(Sort.Direction.ASC, "driveDate")
                 .and(Sort.by(Sort.Direction.ASC, "id"));
         return findAll(sortBy);

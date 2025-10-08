@@ -1,6 +1,6 @@
 package dwe.holding.generic.cartracker.controller;
 
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Trip;
 import dwe.holding.generic.cartracker.service.CarService;
 import dwe.holding.generic.cartracker.service.DriveService;
 import org.springframework.http.HttpHeaders;
@@ -46,52 +46,52 @@ class OverviewController {
     @GetMapping("/trip/alluser/tank")
     public String getCarListTank(Model model) {
 
-        List<TripEntity> list = driveService.getAllAsList();
+        List<Trip> list = driveService.getAllAsList();
         StringBuffer sb = new StringBuffer();
 
         int totalT_Daniel = 0, totalT_Maria = 0, totalT_Suzanne = 0;
         int totalVW_Daniel = 0, totalVW_Maria = 0, totalVW_Suzanne = 0;
         int oddOreven = 0;
 
-        for (TripEntity tripEntity : list) {
-            if (tripEntity.getCarType().equalsIgnoreCase("Toyota")) {
+        for (Trip trip : list) {
+            if (trip.getCarType().equalsIgnoreCase("Toyota")) {
 
-                if (tripEntity.getPerson().equalsIgnoreCase("daniel")) {
-                    totalT_Daniel += tripEntity.getKm();
+                if (trip.getPerson().equalsIgnoreCase("daniel")) {
+                    totalT_Daniel += trip.getKm();
                 }
-                if (tripEntity.getPerson().equalsIgnoreCase("maria")) {
-                    totalT_Maria += tripEntity.getKm();
+                if (trip.getPerson().equalsIgnoreCase("maria")) {
+                    totalT_Maria += trip.getKm();
                 }
-                if (tripEntity.getPerson().equalsIgnoreCase("suzanne")) {
-                    totalT_Suzanne += tripEntity.getKm();
+                if (trip.getPerson().equalsIgnoreCase("suzanne")) {
+                    totalT_Suzanne += trip.getKm();
                 }
             }
 
-            if (tripEntity.getCarType().equalsIgnoreCase("VW")) {
-                if (tripEntity.getPerson().equalsIgnoreCase("daniel")) {
-                    totalVW_Daniel += tripEntity.getKm();
+            if (trip.getCarType().equalsIgnoreCase("VW")) {
+                if (trip.getPerson().equalsIgnoreCase("daniel")) {
+                    totalVW_Daniel += trip.getKm();
                 }
-                if (tripEntity.getPerson().equalsIgnoreCase("maria")) {
-                    totalVW_Maria += tripEntity.getKm();
+                if (trip.getPerson().equalsIgnoreCase("maria")) {
+                    totalVW_Maria += trip.getKm();
                 }
-                if (tripEntity.getPerson().equalsIgnoreCase("suzanne")) {
-                    totalVW_Suzanne += tripEntity.getKm();
+                if (trip.getPerson().equalsIgnoreCase("suzanne")) {
+                    totalVW_Suzanne += trip.getKm();
                 }
             }
 
-            if (tripEntity.getLiters() != 0) {
+            if (trip.getLiters() != 0) {
                 sb.append(startTable.formatted((oddOreven++ % 2 == 0) ? "odd" : "even"));
                 sb.append(headerTable);
                 sb.append("<tbody>");
-                double totalAmount = tripEntity.getAmount() * 1.0 / 100;
+                double totalAmount = trip.getAmount() * 1.0 / 100;
 
-                if (tripEntity.getCarType().equalsIgnoreCase("VW")) {
+                if (trip.getCarType().equalsIgnoreCase("VW")) {
                     int totalKms = totalVW_Daniel + totalVW_Suzanne + totalVW_Maria;
 
                     sb.append(dataRowTable.formatted(totalVW_Daniel, totalVW_Suzanne, totalVW_Maria, totalKms,
-                                    tripEntity.getLiters(),
+                                    trip.getLiters(),
                                     "€" + df.format(totalAmount),
-                                    "<b>" + tripEntity.getPerson() + "</b>"
+                                    "<b>" + trip.getPerson() + "</b>"
                             )
                     );
 
@@ -103,13 +103,13 @@ class OverviewController {
 
                     totalVW_Daniel = totalVW_Maria = totalVW_Suzanne = 0;
                 }
-                if (tripEntity.getCarType().equalsIgnoreCase("Toyota")) {
+                if (trip.getCarType().equalsIgnoreCase("Toyota")) {
                     int totalKms = totalT_Daniel + totalT_Suzanne + totalT_Maria;
 
                     sb.append(dataRowTable.formatted(totalT_Daniel, totalT_Suzanne, totalT_Maria, totalKms,
-                                    tripEntity.getLiters(),
+                                    trip.getLiters(),
                                     "€" + df.format(totalAmount),
-                                    "<b>" + tripEntity.getPerson() + "</b>"
+                                    "<b>" + trip.getPerson() + "</b>"
                             )
                     );
 
@@ -134,7 +134,7 @@ class OverviewController {
         sb.append(footerTable);
 
         model.addAttribute("fueloverview", sb.append(footerTable));
-        return "/cartracker-module/overview";
+        return "cartracker-module/overview";
     }
 
     private void extracted(StringBuffer sb, int total_Daniel, double percDaniel, int total_Suzanne, double percSuzanne, int totalT_Maria, double percMaria, double totalAmount) {
@@ -163,20 +163,20 @@ class OverviewController {
 
     @GetMapping("/trip/alluser")
     public String getCarList(Model model) {
-        List<TripEntity> list = driveService.getAllAsList();
+        List<Trip> list = driveService.getAllAsList();
 
         model.addAttribute("trips", list);
         model.addAttribute("kmTotal",
                 list.stream()
-                        .map(TripEntity::getKm).map(Long::valueOf)
+                        .map(Trip::getKm).map(Long::valueOf)
                         .reduce(0L, Long::sum)
         );
         model.addAttribute("litersTotal",
                 list.stream()
-                        .map(TripEntity::getLiters).map(Long::valueOf)
+                        .map(Trip::getLiters).map(Long::valueOf)
                         .reduce(0L, Long::sum)
         );
-        return "/cartracker-module/listtrips";
+        return "cartracker-module/listtrips";
     }
 
     @GetMapping("/trip/all")

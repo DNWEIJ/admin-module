@@ -1,7 +1,7 @@
 package dwe.holding.generic.cartracker.service;
 
-import dwe.holding.generic.cartracker.model.CarEntity;
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Car;
+import dwe.holding.generic.cartracker.model.Trip;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ public interface CarService {
 
     List<String> getAllAsCsv();
 
-    List<CarEntity> getAllAsList();
+    List<Car> getAllAsList();
 
     List<String> getAllNames();
 
@@ -19,5 +19,5 @@ public interface CarService {
 
     Map<String, Integer> getAllNameAndTotalKm();
 
-    void saveRecord(TripEntity drive);
+    void saveRecord(Trip drive);
 }

@@ -1,13 +1,14 @@
 package dwe.holding.generic.cartracker.service;
 
 
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Trip;
 import dwe.holding.generic.cartracker.repository.DriveRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -20,20 +21,20 @@ public class DriveServiceImpl implements DriveService {
         this.driveRepository = driveRepository;
     }
 
-    public Long saveRecord(TripEntity car) {
+    public UUID saveRecord(Trip car) {
         return driveRepository.save(car).getId();
     }
 
     @Override
     public List<String> getAllAsCsv() {
-        Iterable<TripEntity> carEntities = driveRepository.findAllOrderByDriveDateAsc();
+        Iterable<Trip> carEntities = driveRepository.findAllOrderByDriveDateAsc();
         return StreamSupport.stream(carEntities.spliterator(), false)
-                .map(TripEntity::toString)
+                .map(Trip::toString)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<TripEntity> getAllAsList(String name) {
+    public List<Trip> getAllAsList(String name) {
         return driveRepository.findByPersonOrderByDriveDateAsc(name);
     }
 
@@ -44,13 +45,13 @@ public class DriveServiceImpl implements DriveService {
     }
 
     @Override
-    public String getHtmlStringOf(Long id) {
-        Optional<TripEntity> car = driveRepository.findById(id);
+    public String getHtmlStringOf(UUID id) {
+        Optional<Trip> car = driveRepository.findById(id);
         return (car.isPresent()) ? car.get().toHtmlString() : "";
     }
 
     @Override
-    public List<TripEntity> getAllAsList() {
+    public List<Trip> getAllAsList() {
         return new ArrayList<>(driveRepository.findAllOrderByDriveDateAsc());
     }
 

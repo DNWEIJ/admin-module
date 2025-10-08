@@ -2,6 +2,7 @@ package dwe.holding.generic;
 
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.admin.setup.SetupAdminService;
+import dwe.holding.generic.cartracker.setup.MigrationService;
 import dwe.holding.generic.cartracker.setup.SetupCarTrackerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class CarTrackerApplication implements CommandLineRunner {
     SetupCarTrackerService setupCarTrackerService;
     @Autowired
     SetupAdminService setupAdminService;
+    @Autowired
+    MigrationService migrationService;
 
     public static void main(String[] args) {
         SpringApplication.run(CarTrackerApplication.class, args);
@@ -60,5 +63,6 @@ public class CarTrackerApplication implements CommandLineRunner {
     public void run(String... args) {
         setupAdminService.init();
         setupCarTrackerService.init();
+        migrationService.init();
     }
 }

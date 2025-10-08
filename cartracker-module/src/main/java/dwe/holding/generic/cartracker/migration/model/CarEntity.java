@@ -1,9 +1,10 @@
-package dwe.holding.generic.cartracker.model;
+package dwe.holding.generic.cartracker.migration.model;
 
 
 import jakarta.persistence.*;
 
 @Entity(name = "car")
+@Deprecated
 public class CarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

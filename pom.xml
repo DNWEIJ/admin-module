@@ -20,6 +20,7 @@
         <module>teammover-module</module>
         <module>supply-inventory-module</module>
         <module>cartracker-module</module>
+        <module>parent-child-module</module>
     </modules>
     <properties>
         <java.version>21</java.version>

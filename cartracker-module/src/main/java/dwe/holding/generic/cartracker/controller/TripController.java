@@ -1,6 +1,6 @@
 package dwe.holding.generic.cartracker.controller;
 
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Trip;
 import dwe.holding.generic.cartracker.service.CarService;
 import dwe.holding.generic.cartracker.service.DriveService;
 import org.springframework.http.HttpStatus;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Controller
 class TripController {
@@ -31,9 +32,9 @@ class TripController {
     private int counter = 0;
 
     @PostMapping("/trip")
-    String saveCarRecord(@ModelAttribute("car") TripEntity drive, RedirectAttributes redirect) {
+    String saveCarRecord(@ModelAttribute("car") Trip drive, RedirectAttributes redirect) {
         if (drive.isValid()) {
-            Long id = driveService.saveRecord(drive);
+            UUID id = driveService.saveRecord(drive);
             carService.saveRecord(drive);
 
             redirect.addFlashAttribute("successAction", driveService.getHtmlStringOf(id));

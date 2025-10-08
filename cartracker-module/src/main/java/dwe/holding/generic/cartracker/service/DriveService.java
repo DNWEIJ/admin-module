@@ -1,22 +1,23 @@
 package dwe.holding.generic.cartracker.service;
 
-import dwe.holding.generic.cartracker.model.TripEntity;
+import dwe.holding.generic.cartracker.model.Trip;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public interface DriveService {
 
-    Long saveRecord(TripEntity car);
+    UUID saveRecord(Trip car);
 
     List<String> getAllAsCsv();
 
     void deleteCarRecords();
 
-    String getHtmlStringOf(Long id);
+    String getHtmlStringOf(UUID id);
 
-    List<TripEntity> getAllAsList(String name);
-    List<TripEntity> getAllAsList();
+    List<Trip> getAllAsList(String name);
+    List<Trip> getAllAsList();
 
     Integer getLatestTotal(String name);
 }

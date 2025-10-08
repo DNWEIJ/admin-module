@@ -4,6 +4,7 @@ import dwe.holding.generic.admin.authorisation.function_role.FunctionRepository;
 import dwe.holding.generic.admin.authorisation.function_role.FunctionRoleRepository;
 import dwe.holding.generic.admin.authorisation.function_role.RoleRepository;
 import dwe.holding.generic.admin.authorisation.function_role.UserRoleRepository;
+import dwe.holding.generic.admin.authorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.authorisation.member.MemberRepository;
 import dwe.holding.generic.admin.authorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.*;
@@ -30,14 +31,16 @@ public class SetupCarTrackerService {
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
+    private final LocalMemberRepository localMemberRepository;
 
-    public SetupCarTrackerService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupCarTrackerService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, LocalMemberRepository localMemberRepository) {
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
         this.functionRepository = functionRepository;
         this.roleRepository = roleRepository;
         this.functionRoleRepository = functionRoleRepository;
         this.userRoleRepository = userRoleRepository;
+        this.localMemberRepository = localMemberRepository;
     }
 
 
@@ -62,6 +65,13 @@ public class SetupCarTrackerService {
                             .applicationView("cartracker-module")
                             .applicationRedirect("redirect:/trip/list")
                             .build()
+            );
+
+            localMemberRepository.saveAndFlush(
+                    LocalMember.builder()
+                            .localMemberName("CAR")
+                            .mid(member.getId())
+                            .member(member).build()
             );
             log.info("SetupCarTrackerService:: user");
             User daniel = userRepository.saveAndFlush(

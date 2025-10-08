@@ -1,4 +1,4 @@
-package dwe.holding.generic.cartracker.model;
+package dwe.holding.generic.cartracker.migration.model;
 
 
 import jakarta.persistence.*;
@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity(name = "car_entity")
+@Deprecated
 public class TripEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Long id;
-
     @Transient
     LocalDateTime driveDateLocalDate;
     String driveDate;
