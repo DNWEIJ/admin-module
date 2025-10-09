@@ -68,7 +68,6 @@
                 height: 1.7em;
             }
         </style>
-
         <script>
             window.onload = function () {
                 document.querySelector('#fade-in').classList.add('show');
@@ -78,15 +77,17 @@
             }
         </script>
     </block>
-    <block th:if="${applicationName != null}">
-        <div th:replace="~{${applicationName}+'/page/navigation'}"></div>
+
+    <block th:if="${applicationView != null}">
+        <div th:replace="~{${applicationView}+'/page/navigation'}"></div>
     </block>
-    <block th:if="${applicationName == null}">
+    <block th:if="${applicationView == null}">
         <div th:replace="~{fragments/page/navigation}"></div>
     </block>
-    <div layout:fragment="content"></div>
+    <block id="content" layout:fragment="content"></block>
     <footer>
-        <p><a href="/teammover/userpreferences">preferences</a><br/>DWE Holding &copy;</p>
+        <p th:if="${applicationName != null}"><a th:href="'/'+${applicationName}+'/userpreferences'">preferences</a><br/>DWE Holding &copy;</p>
+        <p th:if="${applicationName == null}">DWE Holding &copy;</p>
     </footer>
 </div>
 </body>

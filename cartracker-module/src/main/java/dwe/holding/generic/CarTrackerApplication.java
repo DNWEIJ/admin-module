@@ -26,11 +26,13 @@ import java.util.Optional;
 })
 @EnableJpaRepositories(basePackages = {
         "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.preferences",
-        "dwe.holding.generic.cartracker.repository"
+        "dwe.holding.generic.cartracker.repository",
+        "dwe.holding.generic.cartracker.migration.repository"
 })
 @EntityScan(basePackages = {
         "dwe.holding.generic.admin.model",
-        "dwe.holding.generic.cartracker.model"
+        "dwe.holding.generic.cartracker.model",
+        "dwe.holding.generic.cartracker.migration.model"
 })
 @Slf4j
 public class CarTrackerApplication implements CommandLineRunner {

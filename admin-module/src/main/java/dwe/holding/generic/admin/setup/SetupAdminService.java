@@ -110,7 +110,9 @@ public class SetupAdminService {
                             Function.builder().name("RESETPASSWORD_CREATE").build(),
                             Function.builder().name("INDEX_READ").build(),
                             Function.builder().name("SETLOCALMEMBER_READ").build(),
-                            Function.builder().name("SETLOCALMEMBER_CREATE").build()
+                            Function.builder().name("SETLOCALMEMBER_CREATE").build(),
+                            Function.builder().name("LOGOUT_READ").build()
+
                     ));
 
 

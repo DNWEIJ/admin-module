@@ -5,7 +5,8 @@
 <body>
 <section layout:fragment="content">
 
-    <form action="/trip" method="post" name="car">
+    <form action="/cartracker/trip" method="post" name="car">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <fieldset>
             <label>
                 <input type="radio" name="person" th:value="${person}" th:text="${person}" checked aria-checked="true"/>
@@ -14,12 +15,8 @@
                 <th:block th:each="car : ${carsPreviousTotal}">
                     <label>
                         <input
-                                type="radio"
-                                name="carType"
-                                th:value="${car.key}"
-                                th:text="${car.key}" checked
-                                aria-checked="true"
-                                onclick="updateKmDriven(document.getElementById('kmTotal').valueAsNumber)"
+                                type="radio" name="carType" th:value="${car.key}" th:text="${car.key}" checked
+                                aria-checked="true" onclick="updateKmDriven(document.getElementById('kmTotal').valueAsNumber)"
                         />
                         (<span id="previous" th:text="${car.value}"></span>)
                         &nbsp;&nbsp;
@@ -29,52 +26,17 @@
             </fieldset>
         </fieldset>
         <fieldset>
-            <input
-                    name="driveDate"
-                    id="datum"
-                    type="date"
-                    placeholder="Datum"
-                    required
-                    aria-label="Datum"
-                    aria-required="true"
-            />
+            <input name="driveDate" id="datum" type="date" placeholder="Datum" required aria-label="Datum" aria-required="true" />
             <fieldset>
-                <input
-                        name="kmTotal"
-                        id="kmTotal"
-                        type="number"
-                        placeholder="Eind Totaal km"
-                        required
-                        pattern="[09]*"
-                        aria-label="eind totaal"
-                        aria-required="true"
-                        min="0"
-                        onchange="updateKmDriven(this.valueAsNumber)"
-                />
+                <input name="kmTotal" id="kmTotal" type="number" placeholder="Eind Totaal km"
+                        required pattern="[09]*" aria-label="eind totaal" aria-required="true" min="0"
+                        onchange="updateKmDriven(this.valueAsNumber)"/>
             </fieldset>
             <fieldset role="group">
-                <input
-                        name="km"
-                        id="km"
-                        type="number"
-                        placeholder="Gereden km"
-                        required
-                        pattern="[09]*"
-                        aria-label="Gereden km"
-                        aria-required="true"
-                        min="0"
-                />
-                <input
-                        name="bedrag"
-                        id="bedrag"
-                        type="text"
-                        disabled
-                        tabindex=-1
-                        placeholder="bedrag ex benzine"
-                        pattern="[09]*"
-                        aria-label="bedrag"
-                        min="0"
-                />
+                <input name="km" id="km" type="number" placeholder="Gereden km" required
+                        pattern="[09]*" aria-label="Gereden km" aria-required="true" min="0"/>
+                <input name="bedrag" id="bedrag" type="text" disabled tabindex=-1 placeholder="bedrag ex benzine"
+                        pattern="[09]*" aria-label="bedrag" min="0" />
             </fieldset>
 
             <fieldset>
@@ -83,31 +45,14 @@
                 <input name="petrol" type="checkbox" role="switch"/>
             </fieldset>
             <fieldset>
-                <input
-                        name="litersStr"
-                        id="litersStr"
-                        type="number"
-                        placeholder="Liters"
-                        pattern="[09]*"
-                        aria-label="liters"
-                        min="0"
-                />
-                <input
-                        name="AmountStr"
-                        id="amountStr"
-                        type="number"
-                        placeholder="amount (no '.' or ',')"
-                        pattern="[09]*"
-                        aria-label="amount"
-                        min="0"
-                />
+                <input name="litersStr" id="litersStr" type="number" placeholder="Liters"
+                        pattern="[09]*" aria-label="liters" min="0" />
+                <input name="AmountStr" id="amountStr" type="number" placeholder="amount (no '.' or ',')"
+                        pattern="[09]*" aria-label="amount" min="0" />
 
             </fieldset>
             <fieldset>
-                <input
-                        type="submit"
-                        value="Opslaan"
-                />
+                <input type="submit" value="Opslaan"name="_save"/>
             </fieldset>
         </fieldset>
     </form>

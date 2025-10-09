@@ -22,7 +22,7 @@ class OverviewController {
     final CarService carService;
     String startTable = """
             <details class="collapsable-table">
-            <summary>Click to open/close</summary>
+            <summary>Click to open or close</summary>
             <table class="table-tight %s" id="table">
             """;
     String headerTable = """
@@ -43,7 +43,7 @@ class OverviewController {
         this.carService = carService;
     }
 
-    @GetMapping("/trip/alluser/tank")
+    @GetMapping("/cartracker/trip/alluser/tank")
     public String getCarListTank(Model model) {
 
         List<Trip> list = driveService.getAllAsList();
@@ -161,7 +161,7 @@ class OverviewController {
         );
     }
 
-    @GetMapping("/trip/alluser")
+    @GetMapping("/cartracker/trip/alluser")
     public String getCarList(Model model) {
         List<Trip> list = driveService.getAllAsList();
 
@@ -179,7 +179,7 @@ class OverviewController {
         return "cartracker-module/listtrips";
     }
 
-    @GetMapping("/trip/all")
+    @GetMapping("/cartracker/trip/all")
     public ResponseEntity<String> getCarRecordList() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/csv");

@@ -1,20 +1,21 @@
 package dwe.holding.generic.admin.authorisation;
 
-import dwe.holding.generic.admin.authorisation.function_role.FunctionController;
-import dwe.holding.generic.admin.authorisation.function_role.RoleController;
-import dwe.holding.generic.admin.authorisation.member.LocalMemberController;
-import dwe.holding.generic.admin.authorisation.member.MemberController;
-import dwe.holding.generic.admin.authorisation.user.UserController;
+import dwe.holding.generic.admin.security.AutorisationUtils;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-@ControllerAdvice(assignableTypes = {FunctionController.class, RoleController.class,
-        MemberController.class, LocalMemberController.class, UserController.class})
+@ControllerAdvice
 public class AdminModelAdvice {
-
     @ModelAttribute
     void modelAdvice(Model model) {
-        model.addAttribute("applicationName", "admin-module");
+        try {
+            model.addAttribute("localMemberName", AutorisationUtils.getCurrentLocalMemberName());
+            model.addAttribute("memberShortCode", AutorisationUtils.getCurrentMember().getShortCode());
+            model.addAttribute("applicationView", AutorisationUtils.getCurrentMember().getApplicationView());
+            model.addAttribute("applicationName", AutorisationUtils.getCurrentMember().getApplicationName());
+        } catch (Exception e){
+            // do nothing, user not yet logged in
+        }
     }
 }

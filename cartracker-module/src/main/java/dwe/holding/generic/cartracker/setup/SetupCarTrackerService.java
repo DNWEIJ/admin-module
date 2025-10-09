@@ -63,11 +63,11 @@ public class SetupCarTrackerService {
                             .simultaneousUsers(1)
                             .applicationName("cartracker")
                             .applicationView("cartracker-module")
-                            .applicationRedirect("redirect:/trip/list")
+                            .applicationRedirect("redirect:/cartracker/trip")
                             .build()
             );
 
-            localMemberRepository.saveAndFlush(
+            LocalMember localMember = localMemberRepository.saveAndFlush(
                     LocalMember.builder()
                             .localMemberName("CAR")
                             .mid(member.getId())
@@ -85,6 +85,7 @@ public class SetupCarTrackerService {
                             .personnelStatus(PersonnelStatusEnum.Other)
                             .loginEnabled(YesNoEnum.Yes)
                             .member(member)
+                            .memberLocalId(localMember.getId())
                             .build()
             );
             User maria = userRepository.saveAndFlush(
@@ -98,6 +99,7 @@ public class SetupCarTrackerService {
                             .personnelStatus(PersonnelStatusEnum.Other)
                             .loginEnabled(YesNoEnum.Yes)
                             .member(member)
+                            .memberLocalId(localMember.getId())
                             .build()
             );
             User suus = userRepository.saveAndFlush(
@@ -111,6 +113,7 @@ public class SetupCarTrackerService {
                             .personnelStatus(PersonnelStatusEnum.Other)
                             .loginEnabled(YesNoEnum.Yes)
                             .member(member)
+                            .memberLocalId(localMember.getId())
                             .build()
             );
             Role defaultRole = roleRepository.getRoleByName("DEFAULT");
@@ -122,7 +125,7 @@ public class SetupCarTrackerService {
                     )
             );
 
-            log.info("SetupCarTrackerService:: general functions for DEFAULT role");
+            log.info("SetupCarTrackerService:: general functions for CAR_USER role");
             List<Function> listFuncDefault = functionRepository.saveAllAndFlush(
                     List.of(
                             Function.builder().name("TRIP_READ").build(),

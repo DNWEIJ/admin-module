@@ -1,5 +1,6 @@
 package dwe.holding.generic.cartracker.controller;
 
+import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.cartracker.model.Trip;
 import dwe.holding.generic.cartracker.service.CarService;
 import dwe.holding.generic.cartracker.service.DriveService;
@@ -31,9 +32,11 @@ class TripController {
     };
     private int counter = 0;
 
-    @PostMapping("/trip")
-    String saveCarRecord(@ModelAttribute("car") Trip drive, RedirectAttributes redirect) {
+    @PostMapping("/cartracker/trip")
+    String saveCarRecord(Trip drive, RedirectAttributes redirect) {
         if (drive.isValid()) {
+            drive.setMemberId(AutorisationUtils.getCurrentUserMid());
+            drive.setLocalMemberId(AutorisationUtils.getCurrentUserMid());
             UUID id = driveService.saveRecord(drive);
             carService.saveRecord(drive);
 
@@ -46,7 +49,7 @@ class TripController {
     }
 
 
-    @GetMapping("/trip")
+    @GetMapping("/cartracker/trip")
     String getCarRecord(Model model) {
         model.addAttribute("carTypes", carService.getAllNames());
         model.addAttribute("carsPreviousTotal", carService.getAllNameAndTotalKm());
@@ -81,7 +84,7 @@ class TripController {
         model.addAttribute("role", ((User) authentication.getPrincipal()).getAuthorities().toString());
     }
 
-    @GetMapping("/success")
+    @GetMapping("/cartracker/success")
     String getSuccess(Model model) {
         model.addAttribute("imagesrc", gifies[counter++ % 5]);
         return "success.html";
