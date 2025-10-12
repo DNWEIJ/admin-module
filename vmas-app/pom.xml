@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -8,11 +8,8 @@
         <artifactId>applications-framework</artifactId>
         <version>0.0.7</version>
     </parent>
-    <packaging>jar</packaging>
-    <artifactId>admin-module</artifactId>
-    <version>${module.version}</version>
-    <name>admin-module</name>
-    <description>Admin module for applications that require users with roles to access specific controllers</description>
+
+    <artifactId>vmas-app</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -21,6 +18,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>dwe.holding.generic</groupId>
+            <artifactId>admin-module</artifactId>
+            <version>${module.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dwe.holding.generic</groupId>
+            <artifactId>shared-module</artifactId>
+            <version>${module.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -72,12 +81,12 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
     </dependencies>
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -17,10 +17,13 @@
     </description>
     <modules>
         <module>admin-module</module>
-        <module>teammover-module</module>
+        <module>teammover-app</module>
         <module>supply-inventory-module</module>
-        <module>cartracker-module</module>
-        <module>parent-child-module</module>
+        <module>cartracker-app</module>
+        <module>customer-module</module>
+        <module>shared-module</module>
+        <module>vmas-app</module>
+        <module>scorekeeper</module>
     </modules>
     <properties>
         <java.version>21</java.version>

@@ -1,0 +1,60 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scorekeeper</title>
+    <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
+    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
+    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet"/>
+    <style>
+        #p1display, #p2display {
+            flex: 1; /* each takes up half the width */
+            display: flex;
+            justify-content: center; /* center text horizontally */
+            align-items: center; /* center text vertically */
+            font-size: 10vw; /* large text that scales with viewport */
+            color: white;
+            line-height: 50vw;
+        }
+
+        #p1display, #player1-plus, #player1-minus {
+            background-color: blue;
+        }
+
+        #p2display, #player2-plus, #player2-minus {
+            background-color: green;
+        }
+        [role=group]  :not(:last-child) {
+            margin-right: .1em;
+        }
+
+    </style>
+</head>
+<body>
+
+<article>
+    <header><h1>Score Tracker</h1></header>
+    <div>
+        <div role="group">
+            <span id="p1display">0</span>
+            <span id="p2display">0</span>
+        </div>
+    </div>
+    <footer>
+        <div role="group" >
+            <button id="player1-plus" title="Add one to score"><i class="fa-2x fa-solid fa-user-plus"></i></button>
+            <button id="player1-minus" title="Substract one from score"><i class="fa-2x fa-solid fa-user-minus"></i></button>
+            <button id="player2-plus" title="Add one to score"><i class="fa-2x fa-solid fa-user-plus"></i></button>
+            <button id="player2-minus" title="Substract one from score"><i class="fa-2x fa-solid fa-user-minus"></i></button>
+        </div>
+        <div role="group">
+            <button id="reset" title="reset to zero"><i class="fa-2x fa-solid fa-hourglass-start"></i></i></button>
+        </div>
+    </footer>
+</article>
+
+
+<script src="./app.js"></script>
+
+</body>
+</html>
