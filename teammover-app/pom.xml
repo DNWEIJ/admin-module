@@ -11,7 +11,7 @@
 
     <packaging>jar</packaging>
     <artifactId>teammover-app</artifactId>
-    <version>${module.version}</version>
+    <version>0.0.7</version>
     <name>teammover-app</name>
     <description>Car pooling for competition games</description>
 
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>dwe.holding.generic</groupId>
             <artifactId>admin-module</artifactId>
-            <version>${module.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,12 +78,4 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

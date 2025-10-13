@@ -10,8 +10,8 @@
     </parent>
 
     <packaging>jar</packaging>
-    <artifactId>scorekeeper</artifactId>
-    <version>${module.version}</version>
+    <artifactId>scorekeeper-app</artifactId>
+    <version>0.0.7</version>
     <name>scorekeeper-app</name>
     <description>Car pooling for competition games</description>
 

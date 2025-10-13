@@ -23,13 +23,14 @@
         <module>customer-module</module>
         <module>shared-module</module>
         <module>vmas-app</module>
-        <module>scorekeeper</module>
+        <module>scorekeeper-app</module>
     </modules>
     <properties>
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <module.version>0.0.1-SNAPSHOT</module.version>
+        <app.version>0.0.7</app.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -74,6 +75,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

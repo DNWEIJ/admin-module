@@ -20,12 +20,12 @@
         <dependency>
             <groupId>dwe.holding.generic</groupId>
             <artifactId>admin-module</artifactId>
-            <version>${module.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dwe.holding.generic</groupId>
             <artifactId>shared-module</artifactId>
-            <version>${module.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
 
@@ -80,12 +80,4 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
