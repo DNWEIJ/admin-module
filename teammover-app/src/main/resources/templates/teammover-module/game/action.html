@@ -4,7 +4,7 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/game/list')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/teammover/game/list')}"></th:block>
 
     <form action="/teammover/game" method="post">
         <fieldset role="presentation">
@@ -15,7 +15,7 @@
             <th:block th:insert="~{fragments/elements/input::inputHtml('whereIsTheGame','Waar is de wedstrijd?', 'game.whereIsTheGame', '2')}" th:with="placeholder='Locatie en zwembad naam'"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlDateTime('whenIsTheGame','Wanneer is de wedstrijd?', 'whenIsTheGame', '3')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtml('howManyPeople','Aantal teamleden die meegaan?', 'game.howManyPeople', '4')}"></th:block>
-            <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+            <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
         </fieldset>
     </form>
 </section>

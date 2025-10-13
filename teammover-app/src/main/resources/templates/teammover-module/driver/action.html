@@ -4,7 +4,7 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/game/list')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Berijder','/teammover/game/list')}"></th:block>
     <fieldset>
     <span class="twocolumn-spread">
         <th><h4 th:text="${game.whereIsTheGame}"></h4></th>
