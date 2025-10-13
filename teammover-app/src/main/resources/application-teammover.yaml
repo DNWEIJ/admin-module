@@ -1,14 +1,11 @@
 server:
-  port: 9003
+  port: 9002
 
-  http:
-    multipart:
-      enabled: false
-
+spring:
   datasource:
-    name: scorekeeper
+    name: teammover
     driverClassName: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:file:~/scorekeeper/database/scorekeeper;sql.syntax_mys=true
+    url: jdbc:hsqldb:file:~/teammover/database/teammover;sql.syntax_mys=true
     username: SA
   jpa:
     database: hsql

@@ -9,6 +9,25 @@
         <li><a href="/cartracker/trip/all">Volledig Overzicht</a></li>
         <li><a href="/cartracker/trip/alluser">Overzicht</a></li>
         <li><a href="/cartracker/trip/alluser/tank">Tank Overzicht</a></li>
-        <li><a href="/logout">Afmelden</a></li>
+        <li>
+            <form action="/logout" method="post">
+                <button name="afmelden" class="link-button">Afmelden</button>
+            </form>
+        </li>
     </ul>
 </nav>
+<style>
+    .link-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--pico-primary);
+    }
+    .link-button:hover {
+        text-decoration: underline;
+    }
+    .link-button:focus {
+        outline: none;
+        box-shadow: none;
+    }
+</style>

@@ -18,8 +18,10 @@ import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -44,10 +46,12 @@ public class SecurityConfig {
         authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/index"));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"));
 
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
 
         RequestMatcher publicEndpoints = request -> {
             String req = request.getRequestURI();
             return req.startsWith("/login") ||
+                    req.startsWith("/logout") ||
                     req.startsWith("/error") ||
                     req.startsWith("/lib/") ||
                     req.startsWith("/images/");
@@ -87,10 +91,8 @@ public class SecurityConfig {
                                 .maxSessionsPreventsLogin(false)
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .addLogoutHandler(clearSiteData)
                 )
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
-@Table(name = "ADMIN_LOCALMEMBER", uniqueConstraints = @UniqueConstraint(name = "uk_memberLocal_name", columnNames = "NAME"))
+@Table(name = "ADMIN_LOCALMEMBER", uniqueConstraints = @UniqueConstraint(name = "uk_memberLocal_name", columnNames = "local_member_name"))
 @Entity
 @SuperBuilder
 @AllArgsConstructor

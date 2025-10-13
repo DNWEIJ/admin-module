@@ -15,7 +15,7 @@ spring:
       enabled: false
 
   datasource:
-    name: carinformation
+    name: cartracker
     driverClassName: org.hsqldb.jdbc.JDBCDriver
     url: jdbc:hsqldb:file:~/carInformation/database/carInformation;sql.syntax_mys=true
     username: SA

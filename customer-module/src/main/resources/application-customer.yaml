@@ -6,9 +6,9 @@ server:
       enabled: false
 
   datasource:
-    name: scoreinformation
+    name: customer
     driverClassName: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:file:~/scorekeeperInformation/database/scorekeeperInformation;sql.syntax_mys=true
+    url: jdbc:hsqldb:file:~/customer/database/customer;sql.syntax_mys=true
     username: SA
   jpa:
     database: hsql
