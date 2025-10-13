@@ -14,12 +14,6 @@
     <version>0.0.7</version>
     <packaging>jar</packaging>
     <name>vmas-app</name>
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <module.version>0.0.1-SNAPSHOT</module.version>
-    </properties>
 
     <dependencies>
         <dependency>
