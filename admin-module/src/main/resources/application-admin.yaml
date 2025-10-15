@@ -29,6 +29,7 @@ spring:
 
   thymeleaf:
     cache: true
+
 logging:
   level:
     root: INFO

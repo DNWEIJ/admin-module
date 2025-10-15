@@ -44,6 +44,21 @@
     align-items: baseline; /* aligns text nicely */
 }
 
+ fieldset {
+     font-family: sans-serif;
+     border: .1em solid var(--pico-muted-border-color);
+     border-radius: .1em;
+     background-color: var(--pico-muted-border-color);
+ }
+
+fieldset legend {
+    font-size: 110%;
+    font-style: italic;
+    font-weight: bold;
+    border-radius: 1em;
+    margin-left: .1em;
+    background-color: var(--pico-muted-border-color);
+}
 
 /* ************************** */
 /* PICO SPECIFIC FOR THIS APP */
@@ -75,5 +90,5 @@
 
 html footer {
     text-align: center;
-    text-size-adjust: 50%;
+    text-size-adjust: 60%;
 }

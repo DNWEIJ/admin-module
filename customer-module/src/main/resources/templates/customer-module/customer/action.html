@@ -1,0 +1,189 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>Customer</title>
+
+
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Customer','/customer/customer/list')}"></th:block>
+
+    <span class="htmx-indicator"><span aria-busy="true">Searchin for customers...</span></span>
+    <input class="form-control" type="search"
+           name="search" placeholder="Begin typing to search for Customers..."
+           hx-post="/customer/search/customer"
+           hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
+           hx-target="#search-results"
+           hx-indicator=".htmx-indicator">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody id="search-results">
+        </tbody>
+    </table>
+<hr/>
+    <form action="/localmember" method="post">
+        <fieldset role="group">
+            <legend>
+                <th:block th:utext="#{customer.legend.customerName}"/>
+            </legend>
+
+            <label for="customer.lastName">
+                <th:block th:utext="#{customer.lastName}"/>
+                <input id="customer.lastName" name="customer.lastName" type="text" value=""/>
+            </label>
+
+            <label for="customer.surname">
+                <th:block th:utext="#{customer.surname}"/>
+                <input id="customer.surname" name="customer.surname" type="text" value=""/>
+            </label>
+
+            <label for="customer.firstName">
+                <th:block th:utext="#{customer.firstName}"/>
+                <input id="customer.firstName" name="customer.firstName" type="text" value=""/>
+            </label>
+
+            <label for="customer.middleInitial">
+                <th:block th:utext="#{customer.middleInitial}"/>
+                <input id="customer.middleInitial" name="customer.middleInitial" type="text" value=""/>
+            </label>
+
+            <label for="customer.title">
+                <th:block th:utext="#{customer.title}"/>
+                <input id="customer.title" name="customer.title" type="text" value=""/>
+            </label>
+        </fieldset>
+
+        <fieldset role="group">
+            <legend>
+                <th:block th:utext="#{customer.legend.contactInformation}"/>
+            </legend>
+
+            <label for="customer.email">
+                <th:block th:utext="#{customer.email}"/>
+                <input id="customer.email" name="customer.email" type="text" value=""/>
+            </label>
+
+            <label for="customer.mobilePhone">
+                <th:block th:utext="#{customer.mobilePhone}"/>
+                <input id="customer.mobilePhone" name="customer.mobilePhone" placeholder="06-12345678" pattern="[0-9]-" type="text" value=""/>
+            </label>
+
+            <label for="customer.workPhone">
+                <th:block th:utext="#{customer.workPhone}"/>
+                <input id="customer.workPhone" name="customer.workPhone" type="text" value=""/>
+            </label>
+
+            <label for="customer.status">
+                <th:block th:utext="#{customer.status}"/>
+                <select id="customer.status" name="customer.status">
+                    <option value="">&lt;&lt; Please choose &gt;&gt;</option>
+                    <option selected="selected" value="N">Normal</option>
+                    <option value="L">Late Payment</option>
+                    <option value="I">Incasso</option>
+                    <option value="C">Closed</option>
+                    <option value="H">HZP</option>
+                </select>
+            </label>
+        </fieldset>
+
+        <fieldset role="group">
+            <legend>
+                <th:block th:utext="#{customer.legend.oldAddress}"/>
+            </legend>
+
+            <label for="customer.address1">
+                <th:block th:utext="#{customer.address1}"/>
+                <input disabled="disabled" id="customer.address1" name="customer.address1" type="text" value=""/>
+                <input disabled="disabled" id="customer.address2" name="customer.address2" type="text" value=""/>
+                <input disabled="disabled" id="customer.address3" name="customer.address3" type="text" value=""/>
+            </label>
+        </fieldset>
+
+        <fieldset role="group">
+            <legend>
+                <th:block th:utext="#{customer.legend.addressInformation}"/>
+            </legend>
+
+            <label for="customer.addressLine">
+                <th:block th:utext="#{addressLine}"/>
+                <input id="customer.addressLine" name="addressLine" placeholder="Somehwerestreet 12" type="text" value=""/>
+            </label>
+
+            <label for="customer.zipCode">
+                <th:block th:utext="#{customer.zipCode}"/>
+                <input id="customer.zipCode" name="customer.zipCode" type="text" value=""/>
+            </label>
+
+            <label for="customer.city">
+                <th:block th:utext="#{customer.city}"/>
+                <input id="customer.city" name="customer.city" type="text" value=""/>
+            </label>
+        </fieldset>
+
+        <fieldset role="group">
+            <legend>
+                <th:block th:utext="#{customer.legend.emergencyInformation}"/>
+            </legend>
+
+            <label for="customer.emergencyContact">
+                <th:block th:utext="#{customer.emergencyContact}"/>
+                <input id="customer.emergencyContact" name="customer.emergencyContact" type="text" value=""/>
+            </label>
+
+            <label for="customer.emergencyContactPhone">
+                <th:block th:utext="#{customer.emergencyContactPhone}"/>
+                <input id="customer.emergencyContactPhone" name="customer.emergencyContactPhone" type="text" value=""/>
+            </label>
+        </fieldset>
+
+        <fieldset role="group">
+            <legend>
+                <th:block th:utext="#{customer.legend.otherInformation}"/>
+            </legend>
+
+            <label for="customer.veterinarian">
+                <th:block th:utext="#{customer.veterinarian}"/>
+                <input id="customer.veterinarian" name="customer.veterinarian" type="text" value=""/>
+            </label>
+
+            <label for="customer.veterinarianPhone">
+                <th:block th:utext="#{customer.veterinarianPhone}"/>
+                <input id="customer.veterinarianPhone" name="customer.veterinarianPhone" type="text" value=""/>
+            </label>
+
+            <label for="customer.newsletter">
+                <th:block th:utext="#{customer.newsletter}"/>
+                <select id="customer.newsletter" name="customer.newsletter">
+                    <option value="Yes">Yes</option>
+                    <option selected="selected" value="No">No</option>
+                </select>
+            </label>
+
+            <label for="customer.ubn">
+                <th:block th:utext="#{customer.ubn}"/>
+                <input id="customer.ubn" maxlength="25" name="customer.ubn" size="25" type="text" value=""/>
+            </label>
+        </fieldset>
+
+        <fieldset role="group">
+            <label for="customer.comments">
+                <th:block th:utext="#{customer.comments}"/>
+                <textarea cols="110" id="customer.comments" name="customer.comments" rows="8"></textarea>
+            </label>
+        </fieldset>
+    </form>
+
+</section>
+<script>
+    function check(input) {
+        if (!/^\d{1,5}$/.test(input.value)) {
+            input.reportValidity()
+        }
+    }
+</script>

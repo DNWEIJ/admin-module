@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport"/>
+    <meta content="light dark" name="color-scheme">
+
+    <title>Template title</title>
+
+    <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
+
+    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
+
+    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet"/>
+    <link href="/lib/tabulator/tabulator-materialize.css" rel="stylesheet"/>
+
+    <link href="/lib/toggle-switch/toggle-switch.css" rel="stylesheet"/>
+
+    <link href="/lib/ownstyle/style.css" rel="stylesheet"/>
+    <link href="/lib/ownstyle/hamburger.css" rel="stylesheet"/>
+
+    <!-- javascript-->
+    <script src="/lib/fontawesome/js/all.min.js" type="javascript"></script>
+    <script src="/lib/tabulator/tabulator.js" type="text/javascript"></script>
+    <script src="/lib/htmx/htmx.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <block th:if="${errors != null and errors.size() > 0}">
+        <fieldset>
+            <legend>Errors</legend>
+            <block th:each="error: ${errors}">
+                <span th:text="${error.field}"></span>&nbsp;<span th:text="${error.defaultMessage}"></span><br/>
+            </block>
+        </fieldset>
+    </block>
+
+    <block th:if="${message != null}">
+        <span id="fade-in" class="box" th:text="${message}"></span>
+        <style>
+            .box {
+                position: absolute;
+                opacity: 1;
+                top: -1.5em;
+                height: 1.5em;
+                width: 99%;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                align-self: center;
+                color: dimgrey;
+                text-align: center;
+                background: lightsteelblue;
+            }
+
+            #fade-in {
+                height: 1.5em;
+                opacity: 0;
+                top: -1.5em;
+                left: 0;
+                transition: all .3s ease;
+            }
+
+            #fade-in.show {
+                top: 0;
+                left: 0;
+                opacity: 1;
+                height: 1.7em;
+            }
+        </style>
+        <script>
+            window.onload = function () {
+                document.querySelector('#fade-in').classList.add('show');
+                setTimeout(function () {
+                    document.querySelector('#fade-in').classList.remove('show');
+                }, 1000)
+            }
+        </script>
+    </block>
+
+    <block th:if="${applicationView != null}">
+        <div th:replace="~{${applicationView}+'/page/navigation'}"></div>
+    </block>
+    <block th:if="${applicationView == null}">
+        <div th:replace="~{fragments/page/navigation}"></div>
+    </block>
+    <block id="content" layout:fragment="content"></block>
+    <footer>
+        <p th:if="${applicationName != null}"><a th:href="'/'+${applicationName}+'/userpreferences'">preferences</a><br/>DWE Holding &copy;</p>
+        <p th:if="${applicationName == null}">DWE Holding &copy;</p>
+    </footer>
+</div>
+</body>
+</html>

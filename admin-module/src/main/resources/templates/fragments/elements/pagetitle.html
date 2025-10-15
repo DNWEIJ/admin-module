@@ -1,35 +1,31 @@
 <th:block th:fragment="pageTitle(id, entityName,link)">
-    <fieldset style="display: flex; align-items: center; gap: 1rem;">
+    <div class="twocolumn-spread">
         <h3 th:if="${id == null}" th:text="${'Create '+ entityName}"></h3>
         <h3 th:if="${id != null}" th:text="${'Update '+ entityName}"></h3>
         <a th:href="${link}" th:if="${list != ''}" th:text="'Show list'"></a>
-    </fieldset>
+    </div>
 </th:block>
 <th:block th:fragment="pageTitleList(entityName,link)">
-    <fieldset style="display: flex; align-items: center; gap: 1rem;">
+    <div class="twocolumn-spread">
         <h3 th:text="${'List '+ entityName}"></h3>
         <a th:href="${link}" th:if="${link != ''}">Create</a>
-    </fieldset>
+    </div>
 </th:block>
 
 
 <th:block th:fragment="pageTitleNLWP(id, entityName,link)">
-    <fieldset>
         <div class="twocolumn-spread">
             <h3 th:if="${id == null}" th:utext="${'Creër '+ entityName }"></h3>
             <h3 th:if="${id != null}" th:utext="${'Bewerk '+ entityName }"></h3>
             <a th:href="${link}" th:if="${list != ''}" th:utext="'Toon lijst'"></a>
             <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
         </div>
-    </fieldset>
 </th:block>
 
 <th:block th:fragment="pageTitleListNL(entityName,link)">
-    <fieldset>
         <div class="twocolumn-spread">
             <h3 th:text="${'Lijst '+ entityName}"></h3>
             <a  th:if="${link != '' and #authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="${link}">Creër</a>
             <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
         </div>
-    </fieldset>
 </th:block>

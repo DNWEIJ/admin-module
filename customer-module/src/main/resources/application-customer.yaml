@@ -1,15 +1,17 @@
 server:
   port: 9004
 
-  http:
-    multipart:
-      enabled: false
+spring:
+  messages:
+    basename: customer/messages
+
 
   datasource:
     name: customer
     driverClassName: org.hsqldb.jdbc.JDBCDriver
     url: jdbc:hsqldb:file:~/customer/database/customer;sql.syntax_mys=true
     username: SA
+
   jpa:
     database: hsql
     hibernate:
