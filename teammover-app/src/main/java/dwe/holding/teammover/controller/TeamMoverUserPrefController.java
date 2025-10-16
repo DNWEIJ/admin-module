@@ -47,7 +47,6 @@ public class TeamMoverUserPrefController {
         userPreferencesService.storeAppPreferences(  Long.parseLong(form.id), form.userPreferences);
         return "redirect:/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
-
     record SettingsForm(String id, TeamMoverUserPreferences userPreferences) {
     }
 }
