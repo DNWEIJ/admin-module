@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+  
 
 @Service
 public class SetupSuppliesService {
@@ -44,7 +44,7 @@ public class SetupSuppliesService {
     public void init() {
         if (suppliesRepository.findAll().isEmpty()) {
 
-            UUID memberId = memberRepository.findByShortCode("DWE").getId();
+              Long memberId = memberRepository.findByShortCode("DWE").getId();
 
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(

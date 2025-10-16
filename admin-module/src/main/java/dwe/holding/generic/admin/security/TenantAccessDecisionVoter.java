@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.UUID;
 
 
 @Component
@@ -110,7 +109,7 @@ public class TenantAccessDecisionVoter {
             lastPart = uri.substring(uri.lastIndexOf(FILE_NAME_DELIMITER) + 1);
         }
 
-        if (isUUID(lastPart)) {
+        if (isLong(lastPart)) {
             return getPreviousBeforeLastPart(uri, lastPart);
         }
         return lastPart;
@@ -128,12 +127,12 @@ public class TenantAccessDecisionVoter {
         return ACCESS_DENIED;
     }
 
-    boolean isUUID(String str) {
+    boolean isLong(String str) {
         if (str == null) {
             return false;
         }
         try {
-            UUID.fromString(str);
+              Long.parseLong(str);
             return true;
         } catch (IllegalArgumentException e) {
             return false;

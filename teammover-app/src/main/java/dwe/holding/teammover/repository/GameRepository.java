@@ -6,17 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+  
 
-public interface GameRepository extends JpaRepository<Game, UUID> {
+public interface GameRepository extends JpaRepository<Game,   Long> {
 
     @Query("SELECT g FROM Game g " +
             "LEFT JOIN FETCH g.drivers " +
             "WHERE g.whenIsTheGame > :now AND g.localMemberId = :localMemberId " +
             "ORDER BY g.whenIsTheGame")
-    List<Game> findGamesByWhenIsTheGameGreaterThanAndLocalMemberId(LocalDateTime now, UUID localMemberId);
+    List<Game> findGamesByWhenIsTheGameGreaterThanAndLocalMemberId(LocalDateTime now,   Long localMemberId);
 
-    default List<Game> findGamesGreatherThenToday(UUID localMemberId) {
+    default List<Game> findGamesGreatherThenToday(  Long localMemberId) {
         return findGamesByWhenIsTheGameGreaterThanAndLocalMemberId(LocalDateTime.now().minusDays(1), localMemberId);
     }
 }

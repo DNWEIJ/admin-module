@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.UUID;
+  
 
 import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 
@@ -34,7 +34,7 @@ public class LocalMemberController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/localmember/action";
         }
-        UUID memberLocalId = processMemberLocal(localMember);
+          Long memberLocalId = processMemberLocal(localMember);
         redirect.addFlashAttribute("message", "Local Member saved successfully!");
         return getRedirectFor(request, memberLocalId, "redirect:/localmember");
     }
@@ -48,7 +48,7 @@ public class LocalMemberController {
 
 
     @GetMapping("/admin/localmember/{id}")
-    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
+    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, localMemberRepository.findById(id).orElseThrow());
         return "admin-module/localmember/action";
@@ -66,7 +66,7 @@ public class LocalMemberController {
         model.addAttribute("localmember", local);
     }
 
-    private UUID processMemberLocal(LocalMember localMember) {
+    private   Long processMemberLocal(LocalMember localMember) {
         localMember.setMid(AutorisationUtils.getCurrentUserMid());
         LocalMember savedLocalMember = localMemberRepository.save(localMember);
         return savedLocalMember.getId();

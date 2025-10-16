@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+  
 
 @Service
 @Slf4j
@@ -34,8 +34,8 @@ public class SetupTeamMoverDataService {
 
         if (gameRepository.findAll().isEmpty()) {
             log.info("MigrationTeamMoverDataService:: member");
-            UUID memberId = memberRepository.findByShortCode("ZVS").getId();
-            UUID localMemberId = localmemberRepository.findByLocalMemberName("GO12-2").getId();
+              Long memberId = memberRepository.findByShortCode("ZVS").getId();
+              Long localMemberId = localmemberRepository.findByLocalMemberName("GO12-2").getId();
 
             log.info("MigrationTeamMoverAdminService:: user");
             List<GameInfo> sassenheimGames = List.of(

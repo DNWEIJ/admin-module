@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collection;
-import java.util.UUID;
+  
 
 /**
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.
@@ -30,7 +30,7 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getMember();
     }
 
-    public static UUID getCurrentUserMid() {
+    public static   Long getCurrentUserMid() {
         return getCurrentUser().getUser().getMember().getId();
     }
 
@@ -38,7 +38,7 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getMember().getPassword();
     }
 
-    public static UUID getCurrentUserId() {
+    public static   Long getCurrentUserId() {
         return getCurrentUser().getUser().getId();
     }
 
@@ -46,11 +46,11 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getAccount();
     }
 
-    public static UUID getCurrentUserMlid() {
+    public static   Long getCurrentUserMlid() {
         return getCurrentUser().getUser().getMemberLocalId();
     }
 
-    public static UUID validateAndreturnLocalMemberId(UUID localMemberId) {
+    public static   Long validateAndreturnLocalMemberId(  Long localMemberId) {
         return getCurrentMember().getLocalMembers().stream().
                 filter(f -> f.getId().equals(localMemberId))
                 .findFirst()

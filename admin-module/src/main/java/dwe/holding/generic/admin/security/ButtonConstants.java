@@ -2,7 +2,7 @@ package dwe.holding.generic.admin.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.UUID;
+  
 
 /**
  * <p>
@@ -21,7 +21,7 @@ public final class ButtonConstants {
         // no default constructor
     }
 
-    public static String getRedirectFor(HttpServletRequest request, UUID id, String url) {
+    public static String getRedirectFor(HttpServletRequest request,   Long id, String url) {
         if (request.getParameter(ButtonConstants.PARAM_SAVE) != null) {
             return url + "/" + id;
         }

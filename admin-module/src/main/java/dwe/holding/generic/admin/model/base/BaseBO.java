@@ -12,7 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.UUID;
+  
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -23,9 +23,8 @@ import java.util.UUID;
 public abstract class BaseBO {
 
     @Id
-    @Column(columnDefinition = "UUID")
-    // @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Version
     @Column(nullable = false)
     private Long version;
@@ -39,13 +38,6 @@ public abstract class BaseBO {
     private Instant lastEditedOn;
 
     public BaseBO() {
-    }
-
-    @PrePersist
-    public void ensureId() {
-        if (id == null) {
-            id = UUID.randomUUID();
-        }
     }
 
     public boolean isNew() {

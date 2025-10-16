@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
+  
 
 @Service
 @Slf4j
@@ -42,7 +42,7 @@ public class SetupAdminService {
     }
 
     @Transactional
-    public UUID init() {
+    public   Long init() {
 
         if (memberRepository.findAll().isEmpty()) {
             log.info("MigrationAdminService:: member");

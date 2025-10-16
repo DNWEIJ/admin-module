@@ -4,7 +4,7 @@ import dwe.holding.generic.admin.model.PresentationFunction;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+
 
 
 @Component
@@ -25,7 +25,7 @@ public class StringToPresentationFunction implements Converter<String, Presentat
 
             switch (key) {
                 case "id":
-                    pf.setId(UUID.fromString(value));
+                    pf.setId(Long.parseLong(value));
                     break;
                 case "name":
                     pf.name = value;

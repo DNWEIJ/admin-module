@@ -11,7 +11,7 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
+  
 
 @Component
 public class FunctionQueryCriteria {
@@ -22,7 +22,7 @@ public class FunctionQueryCriteria {
     }
 
 
-    public List<Function> process(UUID id) {
+    public List<Function> process(  Long id) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Function> cq = cb.createQuery(Function.class);

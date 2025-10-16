@@ -6,14 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
+  
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PresentationFunction extends ToString {
-    public UUID id;
+    public   Long id;
     public String name;
     public Boolean connected = true;
 }

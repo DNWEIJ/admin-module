@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.NoSuchElementException;
-import java.util.UUID;
+  
 
 @Controller
 class TripController {
@@ -37,7 +37,7 @@ class TripController {
         if (drive.isValid()) {
             drive.setMemberId(AutorisationUtils.getCurrentUserMid());
             drive.setLocalMemberId(AutorisationUtils.getCurrentUserMid());
-            UUID id = driveService.saveRecord(drive);
+              Long id = driveService.saveRecord(drive);
             carService.saveRecord(drive);
 
             redirect.addFlashAttribute("successAction", driveService.getHtmlStringOf(id));

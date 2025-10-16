@@ -10,7 +10,7 @@ import dwe.holding.generic.admin.security.AutorisationUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
+  
 
 @Service
 public class UserPreferencesService {
@@ -25,7 +25,7 @@ public class UserPreferencesService {
     }
 
 
-    public void storeAppPreferences(UUID localMemberId, Object userPref) throws JsonProcessingException {
+    public void storeAppPreferences(  Long localMemberId, Object userPref) throws JsonProcessingException {
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
         user.setMemberLocalId(AutorisationUtils.validateAndreturnLocalMemberId(localMemberId));
         User savedUser = userRepository.save(user);

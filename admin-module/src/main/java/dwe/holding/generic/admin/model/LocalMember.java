@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
+  
 
 @Table(name = "ADMIN_LOCALMEMBER", uniqueConstraints = @UniqueConstraint(name = "uk_memberLocal_name", columnNames = "local_member_name"))
 @Entity
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 public class LocalMember extends BaseBO {
     @Column(nullable = false)
-    private UUID mid;
+    private   Long mid;
     @Column(nullable = false)
     private String localMemberName;
     private String phone1;

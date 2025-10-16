@@ -56,7 +56,7 @@ public class User extends BaseBO {
     @Builder.Default
     private Member member = new Member();
 
-    private UUID memberLocalId;
+    private   Long memberLocalId;
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")

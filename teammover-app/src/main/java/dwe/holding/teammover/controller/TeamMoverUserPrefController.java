@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Comparator;
-import java.util.UUID;
+
 
 @Controller
 public class TeamMoverUserPrefController {
@@ -44,7 +44,7 @@ public class TeamMoverUserPrefController {
 
     @PostMapping("/teammover/userpreferences")
     String localMember(SettingsForm form, Model model) throws JsonProcessingException {
-        userPreferencesService.storeAppPreferences(UUID.fromString(form.id), form.userPreferences);
+        userPreferencesService.storeAppPreferences(  Long.parseLong(form.id), form.userPreferences);
         return "redirect:/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 

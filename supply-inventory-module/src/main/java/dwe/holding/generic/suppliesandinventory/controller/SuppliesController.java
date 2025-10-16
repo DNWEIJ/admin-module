@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.UUID;
+  
 
 @Controller
 public class SuppliesController {
@@ -33,7 +33,7 @@ public class SuppliesController {
     }
 
     @GetMapping("/supplies/supplies/{id}")
-    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
+    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         Supplies supply = suppliesRepository.findById(id).orElseThrow();
         if (supply.getDistributor() == null) supply.setDistributor(new Distributor());

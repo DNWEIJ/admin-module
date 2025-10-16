@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+  
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,7 +21,7 @@ public class DriveServiceImpl implements DriveService {
         this.driveRepository = driveRepository;
     }
 
-    public UUID saveRecord(Trip car) {
+    public   Long saveRecord(Trip car) {
         return driveRepository.save(car).getId();
     }
 
@@ -45,7 +45,7 @@ public class DriveServiceImpl implements DriveService {
     }
 
     @Override
-    public String getHtmlStringOf(UUID id) {
+    public String getHtmlStringOf(  Long id) {
         Optional<Trip> car = driveRepository.findById(id);
         return (car.isPresent()) ? car.get().toHtmlString() : "";
     }

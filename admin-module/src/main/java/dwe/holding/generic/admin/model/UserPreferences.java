@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
+  
 
 
 @Table(name = "ADMIN_USER_PREFERENCES")
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 public class UserPreferences extends TenantBaseBO {
     String userPreferencesJson = "{}";
-    UUID userId;
+      Long userId;
 
     public UserPreferences() {
     }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.UUID;
+  
 
 @Controller
 @Validated
@@ -47,7 +47,7 @@ public class DriverController {
 
 
     @GetMapping("/teammover/game/{id}/driver")
-    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
+    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Bewerk");
         Game game = gameRepository.findById(id).orElseThrow();
         model.addAttribute("game", game);
@@ -63,7 +63,7 @@ public class DriverController {
         return "teammover-module/driver/action";
     }
 
-    Driver newDriver(UUID gameId) {
+    Driver newDriver(  Long gameId) {
         return Driver.builder()
                 .accountName(AutorisationUtils.getCurrentUserAccount())
                 .game(Game.builder().id(gameId).build())
@@ -72,7 +72,7 @@ public class DriverController {
                 .build();
     }
 
-    UUID processDriver(Driver formDriver) {
+      Long processDriver(Driver formDriver) {
         Game game = gameRepository.findById(formDriver.getGame().getId()).orElseThrow();
         if (formDriver.isNew()) {
             Driver savedGame = driverRepository.save(

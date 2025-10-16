@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.UUID;
+  
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -19,9 +19,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TenantBaseBO extends BaseBO {
     @Column(nullable = false)
-    private UUID memberId;
+    private   Long memberId;
     @Column(nullable = false)
-    private UUID localMemberId;
+    private   Long localMemberId;
 
     public TenantBaseBO() {
     }

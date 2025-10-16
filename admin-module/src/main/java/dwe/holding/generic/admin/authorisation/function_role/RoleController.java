@@ -49,7 +49,7 @@ public class RoleController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/role/action";
         }
-        UUID roleId = processRole(form.checkedFunctions, form.role);
+          Long roleId = processRole(form.checkedFunctions, form.role);
 
         redirect.addFlashAttribute("message", "Role saved successfully!");
 
@@ -65,7 +65,7 @@ public class RoleController {
     }
 
     @GetMapping("/admin/role/{id}")
-    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
+    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, roleRepository.findById(id).orElseThrow());
         return "admin-module/role/action";
@@ -85,7 +85,7 @@ public class RoleController {
 
     private List<List<PresentationFunction>> getAllFunctionsAndCheckedIfActive(Set<FunctionRole> functionRoleSet) {
         List<Function> functions = functionRepository.findAll();
-        Map<UUID, @NotEmpty String> functionIdsChecked = functionRoleSet.stream().collect(
+        Map<  Long, @NotEmpty String> functionIdsChecked = functionRoleSet.stream().collect(
                 Collectors.toMap(s -> s.getFunction().getId(), s -> s.getFunction().getName())
         );
 
@@ -99,7 +99,7 @@ public class RoleController {
         return groups;
     }
 
-    private UUID processRole(List<PresentationFunction> checked, Role formRole) {
+    private   Long processRole(List<PresentationFunction> checked, Role formRole) {
         Role role;
 
         if (formRole.isNew()) {
@@ -109,8 +109,8 @@ public class RoleController {
         }
         role.getFunctionRoles(); // lazy loading
 
-        List<UUID> currentFunctionIdsDelete = new ArrayList<>(role.getFunctionRoles().stream().map(a -> a.getFunction().getId()).toList());
-        List<UUID> currentFunctionIdsAdd = new ArrayList<>(role.getFunctionRoles().stream().map(a -> a.getFunction().getId()).toList());
+        List<  Long> currentFunctionIdsDelete = new ArrayList<>(role.getFunctionRoles().stream().map(a -> a.getFunction().getId()).toList());
+        List<  Long> currentFunctionIdsAdd = new ArrayList<>(role.getFunctionRoles().stream().map(a -> a.getFunction().getId()).toList());
 
         // initial so no data
         if (role.getFunctionRoles().isEmpty()) {

@@ -59,7 +59,7 @@ public class UserController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/user/action";
         }
-        UUID userId = processUser(form.checkedFunctions, form.user);
+          Long userId = processUser(form.checkedFunctions, form.user);
         redirect.addFlashAttribute("message", "Role saved successfully!");
         return getRedirectFor(request, userId, "redirect:/user");
     }
@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/admin/user/{id}")
-    String showEditScreen(@PathVariable @NotNull UUID id, Model model) {
+    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, userRepository.findById(id).orElseThrow());
         return "admin-module/user/action";
@@ -89,7 +89,7 @@ public class UserController {
     private List<List<PresentationFunction>> getAllFunctionsAndCheckedIfActive(Set<UserRole> userRoles) {
         if (userRoles == null ) return new ArrayList<>();
         List<Role> roles = roleRepository.findAll();
-        Map<UUID, String> roleIdsChecked = userRoles.stream().collect(
+        Map<  Long, String> roleIdsChecked = userRoles.stream().collect(
                 Collectors.toMap(s -> s.getRole().getId(), s -> s.getRole().getName())
         );
 
@@ -116,7 +116,7 @@ public class UserController {
         model.addAttribute("roles", getAllFunctionsAndCheckedIfActive(user.getUserRoles()));
     }
 
-    private UUID processUser(List<PresentationFunction> checked, User formUser) {
+    private   Long processUser(List<PresentationFunction> checked, User formUser) {
         User user;
         if (formUser.isNew()) {
             formUser.setPassword(AutorisationUtils.getCurrentMemberPassword());
@@ -127,8 +127,8 @@ public class UserController {
         }
         user.getUserRoles(); // lazy loading
 
-        List<UUID> currentFunctionIdsDelete = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
-        List<UUID> currentFunctionIdsAdd = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
+        List<  Long> currentFunctionIdsDelete = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
+        List<  Long> currentFunctionIdsAdd = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
 
         // initial so no data
         if (user.getUserRoles().isEmpty()) {

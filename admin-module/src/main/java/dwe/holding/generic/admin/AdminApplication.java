@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
-import java.util.UUID;
+  
 
 @EnableJpaAuditing
 @SpringBootApplication
@@ -42,6 +42,6 @@ public class AdminApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        UUID memberId = setupAdminService.init();
+          Long memberId = setupAdminService.init();
     }
 }
