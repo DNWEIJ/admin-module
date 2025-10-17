@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequestMapping("/admin")
 public class LoginController {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -29,7 +31,7 @@ public class LoginController {
         return "admin-module/login";
     }
 
-    @GetMapping("/admin/index")
+    @GetMapping("/index")
     String indexAdminScreen(Model model) {
         model.addAttribute("applicationName", "admin-module");
         return "/admin-module/index";

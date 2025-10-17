@@ -12,7 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-  
+
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -23,7 +23,7 @@ import java.time.Instant;
 public abstract class BaseBO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     @Column(nullable = false)

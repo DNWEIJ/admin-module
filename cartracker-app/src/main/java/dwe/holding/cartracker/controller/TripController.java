@@ -10,18 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.NoSuchElementException;
-  
+
 
 @Controller
+@RequestMapping(path = "/cartracker")
 class TripController {
-
 
     private final String[] gifies = {
             "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjZzNnl4Z2t6NGxuZnRkandheDB0NjhtbWVvazR3OWd2MWZhbTZwNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XreQmk7ETCak0/giphy.gif",
@@ -32,7 +29,7 @@ class TripController {
     };
     private int counter = 0;
 
-    @PostMapping("/cartracker/trip")
+    @PostMapping("/trip")
     String saveCarRecord(Trip drive, RedirectAttributes redirect) {
         if (drive.isValid()) {
             drive.setMemberId(AutorisationUtils.getCurrentUserMid());
@@ -42,14 +39,14 @@ class TripController {
 
             redirect.addFlashAttribute("successAction", driveService.getHtmlStringOf(id));
 
-            return "redirect:/cartracker/success";
+            return "redirect:/success";
         } else {
             return "redirect:/error";
         }
     }
 
 
-    @GetMapping("/cartracker/trip")
+    @GetMapping("/trip")
     String getCarRecord(Model model) {
         model.addAttribute("carTypes", carService.getAllNames());
         model.addAttribute("carsPreviousTotal", carService.getAllNameAndTotalKm());
@@ -84,7 +81,7 @@ class TripController {
         model.addAttribute("role", ((User) authentication.getPrincipal()).getAuthorities().toString());
     }
 
-    @GetMapping("/cartracker/success")
+    @GetMapping("/success")
     String getSuccess(Model model) {
         model.addAttribute("imagesrc", gifies[counter++ % 5]);
         return "cartracker-module/success.html";

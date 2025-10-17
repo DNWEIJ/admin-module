@@ -17,12 +17,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-  
+
 
 @Controller
 @Validated
+@RequestMapping("/teammover")
 public class DriverController {
     private final GameRepository gameRepository;
     private final DriverRepository driverRepository;
@@ -34,7 +36,7 @@ public class DriverController {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping("/teammover/game/{id}/driver")
+    @PostMapping("/game/{id}/driver")
     String save(@Valid Driver formDriver, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -46,7 +48,7 @@ public class DriverController {
     }
 
 
-    @GetMapping("/teammover/game/{id}/driver")
+    @GetMapping("/game/{id}/driver")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Bewerk");
         Game game = gameRepository.findById(id).orElseThrow();

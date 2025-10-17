@@ -11,10 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-  
 
 @Controller
+@RequestMapping("/supplies")
 public class SuppliesController {
     private final SuppliesRepository suppliesRepository;
     private final DistributorRepository distributorRepository;
@@ -24,7 +25,7 @@ public class SuppliesController {
         this.distributorRepository = distributorRepository;
     }
 
-    @GetMapping("/supplies/supplies")
+    @GetMapping("/supplies")
     String SuppliesScreen(Model model) {
         model.addAttribute("action", "Create");
         model.addAttribute("supply", newSupplies());
@@ -32,7 +33,7 @@ public class SuppliesController {
         return "supplies-module/supplies/action";
     }
 
-    @GetMapping("/supplies/supplies/{id}")
+    @GetMapping("/supplies/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         Supplies supply = suppliesRepository.findById(id).orElseThrow();
@@ -42,7 +43,7 @@ public class SuppliesController {
         return "supplies-module/supplies/action";
     }
 
-    @GetMapping("/supplies/supplies/list")
+    @GetMapping("/supplies/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("supplies", suppliesRepository.findAll());

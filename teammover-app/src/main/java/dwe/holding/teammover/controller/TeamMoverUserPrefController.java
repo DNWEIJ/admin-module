@@ -11,11 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Comparator;
 
 
 @Controller
+@RequestMapping("/teammover")
 public class TeamMoverUserPrefController {
 
     private final LocalMemberRepository localMemberRepository;
@@ -28,7 +30,7 @@ public class TeamMoverUserPrefController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/teammover/userpreferences")
+    @GetMapping("/userpreferences")
     String loadUserPreferences(Model model) {
         model.addAttribute("localMembersList",
                 localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentUserMid())
@@ -42,7 +44,7 @@ public class TeamMoverUserPrefController {
         return AutorisationUtils.getCurrentMember().getApplicationView() + "/userpreferences";
     }
 
-    @PostMapping("/teammover/userpreferences")
+    @PostMapping("/userpreferences")
     String localMember(SettingsForm form, Model model) throws JsonProcessingException {
         userPreferencesService.storeAppPreferences(  Long.parseLong(form.id), form.userPreferences);
         return "redirect:/index"; // required to redirect to the index to finish the flow of settings for initial login

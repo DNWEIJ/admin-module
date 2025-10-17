@@ -1,0 +1,1 @@
+ "C:\Program Files\MariaDB 10.5\bin\mysqldump.exe" -u root -p vmas customer patient diagnose location notepad reminder > .\customerpatient.sql

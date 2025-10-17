@@ -10,12 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Controller
+@RequestMapping(path = "/cartracker")
 class OverviewController {
 
     final DriveService driveService;
@@ -43,7 +45,7 @@ class OverviewController {
         this.carService = carService;
     }
 
-    @GetMapping("/cartracker/trip/alluser/tank")
+    @GetMapping("/trip/alluser/tank")
     public String getCarListTank(Model model) {
 
         List<Trip> list = driveService.getAllAsList();
@@ -161,7 +163,7 @@ class OverviewController {
         );
     }
 
-    @GetMapping("/cartracker/trip/alluser")
+    @GetMapping("/trip/alluser")
     public String getCarList(Model model) {
         List<Trip> list = driveService.getAllAsList();
 
@@ -179,7 +181,7 @@ class OverviewController {
         return "cartracker-module/listtrips";
     }
 
-    @GetMapping("/cartracker/trip/all")
+    @GetMapping("/trip/all")
     public ResponseEntity<String> getCarRecordList() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/csv");

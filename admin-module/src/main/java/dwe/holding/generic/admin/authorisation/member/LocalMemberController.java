@@ -13,14 +13,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-  
+
 
 import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 
 @Controller
 @Validated
+@RequestMapping("/admin")
 public class LocalMemberController {
     private final LocalMemberRepository localMemberRepository;
 
@@ -28,7 +30,7 @@ public class LocalMemberController {
         this.localMemberRepository = localMemberRepository;
     }
 
-    @PostMapping("/admin/localmember")
+    @PostMapping("/localmember")
     String save(@Valid LocalMember localMember, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -39,7 +41,7 @@ public class LocalMemberController {
         return getRedirectFor(request, memberLocalId, "redirect:/localmember");
     }
 
-    @GetMapping("/admin/localmember")
+    @GetMapping("/localmember")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new LocalMember());
@@ -47,14 +49,14 @@ public class LocalMemberController {
     }
 
 
-    @GetMapping("/admin/localmember/{id}")
+    @GetMapping("/localmember/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, localMemberRepository.findById(id).orElseThrow());
         return "admin-module/localmember/action";
     }
 
-    @GetMapping("/admin/localmember/list")
+    @GetMapping("/localmember/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("members", localMemberRepository.findAll());

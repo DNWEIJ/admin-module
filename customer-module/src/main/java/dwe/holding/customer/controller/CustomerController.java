@@ -17,11 +17,21 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
 
     @GetMapping("/customer")
-    String show() {
+    String newRecord() {
         return "customer-module/customer/action";
     }
 
-    @PostMapping("/customer/customer")
+    @GetMapping("/customer")
+    String editRecord() {
+        return "customer-module/customer/action";
+    }
+
+    @GetMapping("/customer")
+    String listRecord() {
+        return "customer-module/customer/action";
+    }
+
+    @PostMapping("/customer")
     String saveCustomer(Customer customerForm, Model model) {
         customerRepository.save(
         Customer.builder()

@@ -55,10 +55,13 @@ public class Customer extends TenantBaseBO {
     private String previousVeterinarian;
     private String previousVeterinarianPhone;
 
+    @Lob
     private String comments;
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private CustomerStatusEnum status;
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private YesNoEnum newsletter;
     private String ubn;
 

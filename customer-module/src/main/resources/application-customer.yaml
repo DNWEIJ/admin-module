@@ -4,44 +4,38 @@ server:
 spring:
   messages:
     basename: customer/messages
-
-
+#  datasource:
+#    driverClassName: org.hsqldb.jdbc.JDBCDriver
+#    url: jdbc:hsqldb:file:~/customer/database/customer;sql.syntax_mys=true
+#    username: SA
+#  jpa:
+#    database-platform: org.hibernate.dialect.HSQLDialect
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    database: hsql
+#    properties:
+#      jakarta:
+#        persistence:
+#          schema-generation:
+#            scripts:
+#              action: create
+#              create-target: ./customer-module/hsql-create.sql
 
 
   datasource:
-    driverClassName: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:file:~/customer/database/customer;sql.syntax_mys=true
-    username: SA
+    url: jdbc:mysql://localhost:3306/customer
+    username: root
+    password: root
   jpa:
-    database-platform: org.hibernate.dialect.HSQLDialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: create
     show-sql: true
     generate-ddl: true
-    database: hsql
-    properties:
-      javax:
-        persistence:
-          schema-generation:
-            scripts:
-              action: create
-              create-target: ./customer-module/hsql-create.sql
-
-
-
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/customer
-#    username: root
-#    password: root
-#  jpa:
-#    database-platform: org.hibernate.dialect.MariaDBDialect
-#    hibernate:
-#      ddl-auto: create
-#    show-sql: true
-#    generate-ddl: true
-#    database: mysql
+    database: mysql
 #    properties:
-#      javax:
+#      jakarta:
 #        persistence:
 #          schema-generation:
 #            scripts:

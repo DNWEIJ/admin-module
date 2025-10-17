@@ -53,7 +53,7 @@ public class UserController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/admin/user")
+    @PostMapping("/user")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -64,7 +64,7 @@ public class UserController {
         return getRedirectFor(request, userId, "redirect:/user");
     }
 
-    @GetMapping("/admin/user")
+    @GetMapping("/user")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new User());
@@ -72,14 +72,14 @@ public class UserController {
 
     }
 
-    @GetMapping("/admin/user/{id}")
+    @GetMapping("/user/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, userRepository.findById(id).orElseThrow());
         return "admin-module/user/action";
     }
 
-    @GetMapping("/admin/user/list")
+    @GetMapping("/user/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("users", userRepository.findAll());

@@ -12,14 +12,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-  
+
 
 import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 
 @Controller
 @Validated
+@RequestMapping("/admin")
 public class MemberController {
     private final MemberRepository memberRepository;
 
@@ -27,7 +29,7 @@ public class MemberController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/admin/member")
+    @PostMapping("/member")
     String save(@Valid Member member, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -38,7 +40,7 @@ public class MemberController {
         return getRedirectFor(request, savedMember.getId(), "redirect:/member");
     }
 
-    @GetMapping("/admin/member")
+    @GetMapping("/member")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         model.addAttribute("member", new Member());
@@ -48,7 +50,7 @@ public class MemberController {
     }
 
 
-    @GetMapping("/admin/member/{id}")
+    @GetMapping("/member/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         model.addAttribute("member", memberRepository.findById(id).orElseThrow());
@@ -56,7 +58,7 @@ public class MemberController {
         return "admin-module/member/action";
     }
 
-    @GetMapping("/admin/member/list")
+    @GetMapping("/member/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("members", memberRepository.findAll());

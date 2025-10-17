@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-  
+
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -20,7 +20,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class TenantBaseBO extends BaseBO {
     @Column(nullable = false)
     private   Long memberId;
-    @Column(nullable = false)
     private   Long localMemberId;
 
     public TenantBaseBO() {

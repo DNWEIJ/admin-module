@@ -32,7 +32,7 @@ public class GameController {
         this.gameRepository = gameRepository;
     }
 
-    @PostMapping("/teammover/game")
+    @PostMapping("/game")
     String save(@Valid Game game, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -42,7 +42,7 @@ public class GameController {
         return getRedirectFor(request, processGame(game), "redirect:/teammover/game/list");
     }
 
-    @GetMapping("/teammover/game")
+    @GetMapping("/game")
     String newScreen(Model model) {
         model.addAttribute("action", "Creer");
         model.addAttribute("game", new Game());
@@ -50,14 +50,14 @@ public class GameController {
 
     }
 
-    @GetMapping("/teammover/game/{id}")
+    @GetMapping("/game/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Bewerk");
         model.addAttribute("game", gameRepository.findById(id).orElseThrow());
         return "teammover-module/game/action";
     }
 
-    @GetMapping("/teammover/game/list")
+    @GetMapping("/game/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid());

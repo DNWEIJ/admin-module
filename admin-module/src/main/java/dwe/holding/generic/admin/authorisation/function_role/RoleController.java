@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -31,6 +32,7 @@ import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 @Controller
 @Validated
 @PreAuthorize("hasRole('SUPER_ADMIN')")
+@RequestMapping("/admin")
 public class RoleController {
     public static final int FOUR = 4;
     private final RoleRepository roleRepository;
@@ -43,7 +45,7 @@ public class RoleController {
         this.functionRepository = functionRepository;
     }
 
-    @PostMapping("/admin/role")
+    @PostMapping("/role")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -56,7 +58,7 @@ public class RoleController {
         return getRedirectFor(request, roleId, "redirect:/role");
     }
 
-    @GetMapping("/admin/role")
+    @GetMapping("/role")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new Role());
@@ -64,14 +66,14 @@ public class RoleController {
 
     }
 
-    @GetMapping("/admin/role/{id}")
+    @GetMapping("/role/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, roleRepository.findById(id).orElseThrow());
         return "admin-module/role/action";
     }
 
-    @GetMapping("/admin/role/list")
+    @GetMapping("/role/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("roles", roleRepository.findAll());
