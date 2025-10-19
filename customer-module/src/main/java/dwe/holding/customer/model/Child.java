@@ -2,7 +2,7 @@ package dwe.holding.customer.model;
 
 import dwe.holding.customer.model.type.SexTypeEnum;
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

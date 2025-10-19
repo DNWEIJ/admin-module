@@ -3,14 +3,13 @@ package dwe.holding.generic.admin.security;
 
 import dwe.holding.generic.admin.model.Member;
 import dwe.holding.generic.admin.model.User;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collection;
-  
 
 /**
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.

@@ -1,7 +1,9 @@
 package dwe.holding.customer.model;
 
+import dwe.holding.customer.model.converter.CustomerStatusConverter;
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.converter.YesNoEnumConverter;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import dwe.holding.customer.model.order.Payment;
 import dwe.holding.customer.model.type.CustomerStatusEnum;
 import jakarta.persistence.*;
@@ -57,15 +59,18 @@ public class Customer extends TenantBaseBO {
 
     @Lob
     private String comments;
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(255)")
+
+    @Column(columnDefinition = "varchar(1)")
+    @Convert(converter = CustomerStatusConverter.class)
     private CustomerStatusEnum status;
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(255)")
+
+    @Column(columnDefinition = "varchar(1)")
+    @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum newsletter;
+
     private String ubn;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     @Builder.Default
     private Set<Child> children = new HashSet<Child>(0);
 

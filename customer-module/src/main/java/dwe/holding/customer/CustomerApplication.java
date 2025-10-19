@@ -20,7 +20,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EntityScan(basePackages = {
    //     "dwe.holding.generic.admin.model",
-        "dwe.holding.customer.model"
+        "dwe.holding.customer.model",
+        "dwe.holding.shared.model"
 })
 @Slf4j
 public class CustomerApplication {

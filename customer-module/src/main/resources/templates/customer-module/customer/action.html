@@ -1,89 +1,190 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
 <head>
     <title>Customer</title>
+    <style>
+        .ac_results {
+            overflow: hidden;
+            background-color: var(--pico-background-color);
+            z-index: 99999;
+            border: 1px solid var(--pico-border-color);
+        }
 
+        .ac_results ul {
+            width: 100%;
+        }
 
+        .ac_results li {
+            cursor: default;
+            display: block;
+            overflow: hidden;
+        }
+        .ac_results li:nth-child(even) {
+            background-color:var(--pico-color);
+            color:  var(--pico-background-color);
+        }
+
+        .ac_results .selected {
+            background-color: slateblue;
+            color: deepskyblue;
+        }
+
+         .holder {
+             position: relative;
+         }
+        .dropdown {
+            position: absolute;
+            border: 1px solid var(--pico-border-color);
+            /*display: none;*/
+        }
+        /*input:focus + .dropdown {*/
+        /*    display: block;*/
+        /*}*/
+        </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById("customerFind");
+
+            let selectedIndex = -1;
+
+            function updateSelection(listItems) {
+
+                if (listItems.length === 0) return;
+                listItems.forEach((li, index) => {
+                    li.classList.toggle("selected", index === selectedIndex);
+                });
+                //
+                // if (selectedIndex >= 0) {
+                //     listItems[selectedIndex].scrollIntoView({
+                //         block: "nearest",
+                //         behavior: "smooth"
+                //     });
+            }
+            function getId(listItems) {
+
+                if (listItems.length === 0) return;
+                return Array.from(listItems).filter(li => li.classList.contains("selected"))[0].dataset.id
+            }
+
+            function getListItems() {
+                return document.querySelectorAll("#input-customerName li");
+            }
+
+            input.addEventListener("keydown", (event) => {
+
+                if (event.key === "ArrowDown") {
+                    const listItems = getListItems()
+                    if (listItems.length === 0) return;
+
+                    if (selectedIndex < listItems.length - 1) {
+                        selectedIndex++;
+                        updateSelection(listItems);
+                    } else if (selectedIndex === -1 && listItems.length > 0) {
+                        selectedIndex = 0;
+                        updateSelection();
+                    }
+                    event.preventDefault();
+                }
+                if (event.key === "ArrowUp") {
+                    const listItems = getListItems()
+                    if (listItems.length === 0) return;
+
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateSelection(listItems);
+                    }
+                    event.preventDefault();
+                }
+                if (event.key === "Enter") {
+                    window.location.href = window.location.href + "/" + getId(getListItems());
+                    event.preventDefault();
+                }
+            })
+        })
+    </script>
 </head>
 <body>
+
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Customer','/customer/customer/list')}"></th:block>
 
-    <span class="htmx-indicator"><span aria-busy="true">Searchin for customers...</span></span>
-    <input class="form-control" type="search"
-           name="search" placeholder="Begin typing to search for Customers..."
-           hx-post="/customer/search/customer"
-           hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
-           hx-target="#search-results"
-           hx-indicator=".htmx-indicator">
-    <table class="table">
-        <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-        <tbody id="search-results">
-        </tbody>
-    </table>
-<hr/>
-    <form action="/localmember" method="post">
-        <fieldset role="group">
+    <span class="htmx-indicator"><span aria-busy="true">Searching for customers...</span></span>
+
+    <fieldset class="grid">
+        <div class="holder">
+            <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" placeholder="Begin typing to search for Customers..."
+                   hx-post="/customer/search/customer"
+                   hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
+                   hx-target="#input-customerName"
+                   hx-indicator=".htmx-indicator"
+                   hx-include="#startLastName, #includeStreetName"
+                   autocomplete="off">
+            <div class="dropdown">
+                <div class="ac_results" id="input-customerName"></div>
+            </div>
+        </div>
+        <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','last name','form.startLastName','2')}"
+                  th:with="tooltip='start of lastname instead of anywhere within the lastname'"></th:block>
+        <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','street name','form.includeStreetName','3')}" th:with="tooltip='include street name'"></th:block>
+    </fieldset>
+
+    <hr/>
+    <form action="/customer/customer" method="post">
+        <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.customerName}"/>
             </legend>
-
             <label for="customer.lastName">
                 <th:block th:utext="#{customer.lastName}"/>
-                <input id="customer.lastName" name="customer.lastName" type="text" value=""/>
+                <input id="customer.lastName" name="customer.lastName" type="text" th:value="${customer.lastName}"/>
             </label>
 
             <label for="customer.surname">
                 <th:block th:utext="#{customer.surname}"/>
-                <input id="customer.surname" name="customer.surname" type="text" value=""/>
+                <input id="customer.surname" name="customer.surname" type="text" th:value="${customer.surname}"/>
             </label>
 
             <label for="customer.firstName">
                 <th:block th:utext="#{customer.firstName}"/>
-                <input id="customer.firstName" name="customer.firstName" type="text" value=""/>
+                <input id="customer.firstName" name="customer.firstName" type="text" th:value="${customer.firstName}"/>
             </label>
 
             <label for="customer.middleInitial">
                 <th:block th:utext="#{customer.middleInitial}"/>
-                <input id="customer.middleInitial" name="customer.middleInitial" type="text" value=""/>
+                <input id="customer.middleInitial" name="customer.middleInitial" type="text" th:value="${customer.middleInitial}"/>
             </label>
 
             <label for="customer.title">
                 <th:block th:utext="#{customer.title}"/>
-                <input id="customer.title" name="customer.title" type="text" value=""/>
+                <input id="customer.title" name="customer.title" type="text" th:value="${customer.title}"/>
             </label>
         </fieldset>
 
-        <fieldset role="group">
+        <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.contactInformation}"/>
             </legend>
 
             <label for="customer.email">
                 <th:block th:utext="#{customer.email}"/>
-                <input id="customer.email" name="customer.email" type="text" value=""/>
+                <input id="customer.email" name="customer.email" type="text" th:value="${customer.email}"/>
             </label>
 
             <label for="customer.mobilePhone">
                 <th:block th:utext="#{customer.mobilePhone}"/>
-                <input id="customer.mobilePhone" name="customer.mobilePhone" placeholder="06-12345678" pattern="[0-9]-" type="text" value=""/>
+                <input id="customer.mobilePhone" name="customer.mobilePhone" placeholder="06-12345678"
+                       pattern="[0-9]-" type="text" th:value="${customer.mobilePhone}"/>
             </label>
 
             <label for="customer.workPhone">
                 <th:block th:utext="#{customer.workPhone}"/>
-                <input id="customer.workPhone" name="customer.workPhone" type="text" value=""/>
+                <input id="customer.workPhone" name="customer.workPhone" type="text" th:value="${customer.workPhone}"/>
             </label>
 
             <label for="customer.status">
                 <th:block th:utext="#{customer.status}"/>
-                <select id="customer.status" name="customer.status">
-                    <option value="">&lt;&lt; Please choose &gt;&gt;</option>
-                    <option selected="selected" value="N">Normal</option>
+                <select id="customer.status" name="customer.status" th:value="${customer.status}">
+                    <option value=""><< Please choose >></option>
+                    <option value="N">Normal</option>
                     <option value="L">Late Payment</option>
                     <option value="I">Incasso</option>
                     <option value="C">Closed</option>
@@ -92,92 +193,96 @@
             </label>
         </fieldset>
 
-        <fieldset role="group">
+        <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.oldAddress}"/>
             </legend>
 
             <label for="customer.address1">
                 <th:block th:utext="#{customer.address1}"/>
-                <input disabled="disabled" id="customer.address1" name="customer.address1" type="text" value=""/>
-                <input disabled="disabled" id="customer.address2" name="customer.address2" type="text" value=""/>
-                <input disabled="disabled" id="customer.address3" name="customer.address3" type="text" value=""/>
+                <input disabled id="customer.address1" name="customer.address1" type="text" th:value="${customer.address1}"/>
+                <input disabled id="customer.address2" name="customer.address2" type="text" th:value="${customer.address2}"/>
+                <input disabled id="customer.address3" name="customer.address3" type="text" th:value="${customer.address3}"/>
             </label>
         </fieldset>
 
-        <fieldset role="group">
+        <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.addressInformation}"/>
             </legend>
 
             <label for="customer.addressLine">
                 <th:block th:utext="#{addressLine}"/>
-                <input id="customer.addressLine" name="addressLine" placeholder="Somehwerestreet 12" type="text" value=""/>
+                <input id="customer.addressLine" name="customer.addressLine" placeholder="Somehwerestreet 12"
+                       type="text" th:value="${customer.addressLine}"/>
             </label>
 
             <label for="customer.zipCode">
                 <th:block th:utext="#{customer.zipCode}"/>
-                <input id="customer.zipCode" name="customer.zipCode" type="text" value=""/>
+                <input id="customer.zipCode" name="customer.zipCode" type="text" th:value="${customer.zipCode}"/>
             </label>
 
             <label for="customer.city">
                 <th:block th:utext="#{customer.city}"/>
-                <input id="customer.city" name="customer.city" type="text" value=""/>
+                <input id="customer.city" name="customer.city" type="text" th:value="${customer.city}"/>
             </label>
         </fieldset>
 
-        <fieldset role="group">
+        <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.emergencyInformation}"/>
             </legend>
 
             <label for="customer.emergencyContact">
                 <th:block th:utext="#{customer.emergencyContact}"/>
-                <input id="customer.emergencyContact" name="customer.emergencyContact" type="text" value=""/>
+                <input id="customer.emergencyContact" name="customer.emergencyContact" type="text" th:value="${customer.emergencyContact}"/>
             </label>
 
             <label for="customer.emergencyContactPhone">
                 <th:block th:utext="#{customer.emergencyContactPhone}"/>
-                <input id="customer.emergencyContactPhone" name="customer.emergencyContactPhone" type="text" value=""/>
+                <input id="customer.emergencyContactPhone" name="customer.emergencyContactPhone" type="text" th:value="${customer.emergencyContactPhone}"/>
             </label>
         </fieldset>
 
-        <fieldset role="group">
+        <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.otherInformation}"/>
             </legend>
 
             <label for="customer.veterinarian">
                 <th:block th:utext="#{customer.veterinarian}"/>
-                <input id="customer.veterinarian" name="customer.veterinarian" type="text" value=""/>
+                <input id="customer.veterinarian" name="customer.veterinarian" type="text" th:value="${customer.previousVeterinarian}"/>
             </label>
 
             <label for="customer.veterinarianPhone">
                 <th:block th:utext="#{customer.veterinarianPhone}"/>
-                <input id="customer.veterinarianPhone" name="customer.veterinarianPhone" type="text" value=""/>
+                <input id="customer.veterinarianPhone" name="customer.veterinarianPhone" type="text" th:value="${customer.previousVeterinarianPhone}"/>
             </label>
 
             <label for="customer.newsletter">
                 <th:block th:utext="#{customer.newsletter}"/>
-                <select id="customer.newsletter" name="customer.newsletter">
+                <select id="customer.newsletter" name="customer.newsletter" th:value="${customer.newsletter}">
                     <option value="Yes">Yes</option>
-                    <option selected="selected" value="No">No</option>
+                    <option value="No">No</option>
                 </select>
             </label>
 
             <label for="customer.ubn">
                 <th:block th:utext="#{customer.ubn}"/>
-                <input id="customer.ubn" maxlength="25" name="customer.ubn" size="25" type="text" value=""/>
+                <input id="customer.ubn" maxlength="25" name="customer.ubn" size="25" type="text" th:value="${customer.ubn}"/>
             </label>
         </fieldset>
 
-        <fieldset role="group">
+        <fieldset class="grid">
             <label for="customer.comments">
                 <th:block th:utext="#{customer.comments}"/>
-                <textarea cols="110" id="customer.comments" name="customer.comments" rows="8"></textarea>
+                <textarea cols="110" id="customer.comments" name="customer.comments" rows="8" th:text="${comments}"></textarea>
             </label>
         </fieldset>
     </form>
+
+
+
 
 </section>
 <script>

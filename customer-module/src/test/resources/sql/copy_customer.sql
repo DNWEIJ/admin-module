@@ -63,4 +63,4 @@ SELECT
     IfNull(c.ZIPCODE, '-') AS zip_code,
     c.NEWSLETTER AS newsletter,
     c.STATUS AS status
-FROM vmas.customer c;
+FROM vmas.customer c where c.mid = 77;

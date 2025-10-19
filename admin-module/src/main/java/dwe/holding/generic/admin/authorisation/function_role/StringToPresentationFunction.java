@@ -1,6 +1,6 @@
 package dwe.holding.generic.admin.authorisation.function_role;
 
-import dwe.holding.generic.admin.model.PresentationFunction;
+import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class StringToPresentationFunction implements Converter<String, PresentationFunction> {
+public class StringToPresentationFunction implements Converter<String, PresentationElement> {
 
     @Override
-    public PresentationFunction convert(String source) {
-        PresentationFunction pf = new PresentationFunction();
+    public PresentationElement convert(String source) {
+        PresentationElement pf = new PresentationElement();
         // PresentationFunction[id=2,name=role_READ,connected=false]
         // haal de inhoud tussen [ ] eruit
         String content = source.substring(source.indexOf('[') + 1, source.indexOf(']'));

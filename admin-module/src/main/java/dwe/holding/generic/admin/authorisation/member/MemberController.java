@@ -1,7 +1,7 @@
 package dwe.holding.generic.admin.authorisation.member;
 
 import dwe.holding.generic.admin.model.Member;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
 package dwe.holding.generic.suppliesandinventory.model;
 
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import dwe.holding.generic.shared.model.type.TaxedTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDate;
 
 @Entity
 @SuperBuilder

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dwe.holding.generic.admin.authorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.expose.UserPreferencesService;
-import dwe.holding.generic.admin.model.PresentationFunction;
+import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
 import org.springframework.stereotype.Controller;
@@ -35,9 +35,9 @@ public class TeamMoverUserPrefController {
         model.addAttribute("localMembersList",
                 localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentUserMid())
                         .stream().map(
-                                f -> new PresentationFunction(f.getId(), f.getLocalMemberName(), true)
+                                f -> new PresentationElement(f.getId(), f.getLocalMemberName(), true)
                         )
-                        .sorted(Comparator.comparing(PresentationFunction::getName)).toList()
+                        .sorted(Comparator.comparing(PresentationElement::getName)).toList()
         );
         model.addAttribute("memberLocalId", AutorisationUtils.getCurrentUserMlid());
         model.addAttribute("nrOfTeamMembers", objectMapper.convertValue(AutorisationUtils.getCurrentUserPref(), TeamMoverUserPreferences.class).getNrOfTeamMembers());

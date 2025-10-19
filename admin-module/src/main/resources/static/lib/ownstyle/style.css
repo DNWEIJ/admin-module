@@ -60,6 +60,11 @@ fieldset legend {
     background-color: var(--pico-muted-border-color);
 }
 
+/* miscellaneous */
+.no-break {
+    white-space: nowrap;
+}
+
 /* ************************** */
 /* PICO SPECIFIC FOR THIS APP */
 :root {

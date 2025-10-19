@@ -14,16 +14,25 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="selectCheckBox(name, label, dbField, tabindex)">
-    <input role="switch"
-           th:checked="${__${dbField}__}"
-           th:id="${name}"
-           th:name="${name}"
-           th:tabindex="${tabindex}" type="checkbox"/>
-    <label th:for="${name}" th:text="${label}"></label>
-    <br/><br/>
+<th:block th:fragment="selectCheckBox(name, label, dbField, tabindex)" th:with="tooltip=${tooltip}?:''">
+    <label th:for="${name}">
+        <input role="switch"
+               th:checked="${__${dbField}__}"
+               th:id="${name}"
+               th:name="${name}"
+               th:tabindex="${tabindex}" type="checkbox"/><span class="no-break">[[${label}]]</span></label>
 </th:block>
 
+<th:block th:fragment="checkBox(name, label, dbField, tabindex)" th:with="tooltip=${tooltip}?:''">
+    <label th:for="${name}">
+        <input th:checked="${__${dbField}__}"
+               th:data-tooltip="${tooltip}"
+               th:id="${name}"
+               th:name="${name}"
+               th:tabindex="${tabindex}" type="checkbox"/>
+        <span class="no-break">[[${label}]]</span>
+    </label>
+</th:block>
 
 <th:block th:fragment="multipleSwitch(records, dbField, tabindex)">
     <div class="switch-toggle switch-candy">
@@ -34,7 +43,7 @@
                    th:tabindex="${tabindex}"
                    th:value="${record}"
                    type="radio"/>
-            <label  th:for="${dbField+'_'+record.name}" th:text="#{${record.label}}">standaard text</label>
+            <label th:for="${dbField+'_'+record.name}" th:text="#{${record.label}}">standaard text</label>
         </th:block>
         <a href=""></a>
     </div>

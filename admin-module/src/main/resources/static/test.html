@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+    <title>Hello world!</title>
+    <style>
+        select,
+        ::picker(select) {
+            appearance: base-select;
+        }
+
+        select {
+            border: 2px solid #dddddd;
+            background: #eeeeee;
+            padding: 10px;
+            transition: 0.4s;
+        }
+
+        select:hover,
+        select:focus {
+            background: #dddddd;
+        }
+
+        option {
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+            border: 2px solid #dddddd;
+            background: #eeeeee;
+            padding: 10px;
+            transition: 0.4s;
+        }
+
+        option:first-of-type {
+            border-radius: 8px 8px 0 0;
+        }
+
+        option:last-of-type {
+            border-radius: 0 0 8px 8px;
+        }
+
+        option:not(option:last-of-type) {
+            border-bottom: none;
+        }
+
+        option:nth-of-type(odd) {
+            background: white;
+        }
+
+        option:hover,
+        option:focus {
+            background: plum;
+        }
+
+        option .icon {
+            font-size: 1.6rem;
+            text-box: trim-both cap alphabetic;
+        }
+
+        option:checked {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<main class="container">
+    <style>
+        .holder {
+            position: relative;
+        }
+        .dropdown {
+            position: absolute;
+            border: 1px solid red;
+            display: none;
+        }
+
+        input:focus + .dropdown {
+            display: block;
+        }
+    </style>
+    <div class="holder">
+        <input type="text" />
+        <div class="dropdown">
+            <p>Testing</p>
+            <p>Css ONLY</p>
+            <p>Dropdown</p>
+        </div>
+    </div>
+</main>
+<!--    <fieldset>-->
+<!--        <label>-->
+<!--            <input name="terms" type="checkbox" role="switch"/>-->
+<!--            I agree to the Terms-->
+<!--        </label>-->
+<!--        <label>-->
+<!--            <input name="terms" type="checkbox" role="switch" data-tooltip="I agree to the Terms"/>-->
+<!--        </label>-->
+<!--        <label>-->
+<!--            <input name="terms" type="checkbox"/>-->
+<!--            I agree to the Terms-->
+<!--        </label>-->
+<!--        <label>-->
+<!--            <input name="terms" type="checkbox" data-tooltip="I agree to the Terms"/>-->
+<!--        </label>-->
+<!--    </fieldset>-->
+<!--    <fieldset>-->
+<!--        <form>-->
+<!--            <p>-->
+<!--                <label for="pet-select">Select pet:</label>-->
+<!--                <select id="pet-select">-->
+<!--                    <option><span><strong>Weijer</strong>, A.M.N. - Tilanusstraat 294 - 1091MX</span></option>-->
+<!--                    <option><span><strong>Weijer</strong>, F.R. - Tolstraat 14 - 1073 SB</span></option>-->
+<!--                    <option><span><strong>Weijer</strong>, J. - Amsteldijk 148 - III - 1079LG</span></option>-->
+<!--                    <option><span><strong>Weijer</strong>mars, P.S - Hunzestraat 4 III - 1079WC</span></option>-->
+<!--                    <option><span>♦<strong>Weijer</strong>s, N.S. - Oosterpark 82-3 - 1092AV</span></option>-->
+<!--                    <option><span>♦<strong>Weijer</strong>s, Y. - J. Israëlskade 51 - 1073 PW</span></option>-->
+<!--                    <option><span><strong>Weijer</strong>strass, J.B. - Snelspanusstraat 2-1 - 1097KX</span></option>-->
+<!--                </select>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--                <input list="countries" id="country" name="country">-->
+<!--                <span>-->
+<!--                <datalist id="countries">-->
+<!--                    <option value="United States">do it</option>-->
+<!--                    <option value="Canada">where                 i it</option>-->
+<!--                    <option value="Australia">kick it</option>-->
+<!--                </datalist>-->
+<!--                </span>-->
+<!--            </p>-->
+<!--        </form>-->
+<!--    </fieldset>-->
+</main>
+</body>
+</html>

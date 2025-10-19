@@ -1,6 +1,6 @@
 package dwe.holding.generic.suppliesandinventory.controller;
 
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.suppliesandinventory.repository.DistributorRepository;

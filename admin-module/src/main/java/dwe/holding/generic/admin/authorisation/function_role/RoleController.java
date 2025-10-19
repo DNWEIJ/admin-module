@@ -2,7 +2,7 @@ package dwe.holding.generic.admin.authorisation.function_role;
 
 import dwe.holding.generic.admin.model.Function;
 import dwe.holding.generic.admin.model.FunctionRole;
-import dwe.holding.generic.admin.model.PresentationFunction;
+import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import dwe.holding.generic.admin.model.Role;
 import dwe.holding.generic.admin.model.base.BaseBO;
 import dwe.holding.generic.admin.model.base.ToString;
@@ -85,23 +85,23 @@ public class RoleController {
         model.addAttribute("functions", getAllFunctionsAndCheckedIfActive(role.getFunctionRoles()));
     }
 
-    private List<List<PresentationFunction>> getAllFunctionsAndCheckedIfActive(Set<FunctionRole> functionRoleSet) {
+    private List<List<PresentationElement>> getAllFunctionsAndCheckedIfActive(Set<FunctionRole> functionRoleSet) {
         List<Function> functions = functionRepository.findAll();
         Map<  Long, @NotEmpty String> functionIdsChecked = functionRoleSet.stream().collect(
                 Collectors.toMap(s -> s.getFunction().getId(), s -> s.getFunction().getName())
         );
 
-        List<PresentationFunction> list = new ArrayList<>(functions.stream()
-                .map(f -> new PresentationFunction(f.getId(), f.getName(), functionIdsChecked.containsKey(f.getId())))
-                .sorted(Comparator.comparing(PresentationFunction::getName)).toList());
-        List<List<PresentationFunction>> groups = new ArrayList<>();
+        List<PresentationElement> list = new ArrayList<>(functions.stream()
+                .map(f -> new PresentationElement(f.getId(), f.getName(), functionIdsChecked.containsKey(f.getId())))
+                .sorted(Comparator.comparing(PresentationElement::getName)).toList());
+        List<List<PresentationElement>> groups = new ArrayList<>();
         for (int i = 0; i < list.size(); i += FOUR) {
             groups.add(list.subList(i, Math.min(i + FOUR, list.size())));
         }
         return groups;
     }
 
-    private   Long processRole(List<PresentationFunction> checked, Role formRole) {
+    private   Long processRole(List<PresentationElement> checked, Role formRole) {
         Role role;
 
         if (formRole.isNew()) {
@@ -135,7 +135,7 @@ public class RoleController {
             }
 
             // find th record to be added
-            List<PresentationFunction> pF = checked.stream().filter(a -> !currentFunctionIdsAdd.contains(a.getId())).toList();
+            List<PresentationElement> pF = checked.stream().filter(a -> !currentFunctionIdsAdd.contains(a.getId())).toList();
             pF.forEach(pf -> {
                         Function function = functionRepository.findById(pf.id).get();
                         role.getFunctionRoles().add(new FunctionRole(function, role));
@@ -153,6 +153,6 @@ public class RoleController {
     @NoArgsConstructor
     class Form extends ToString {
         Role role = new Role();
-        List<PresentationFunction> checkedFunctions = new ArrayList<>();
+        List<PresentationElement> checkedFunctions = new ArrayList<>();
     }
 }

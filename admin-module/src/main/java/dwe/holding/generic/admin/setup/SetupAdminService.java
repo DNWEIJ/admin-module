@@ -9,7 +9,7 @@ import dwe.holding.generic.admin.authorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.*;
 import dwe.holding.generic.admin.model.type.LanguagePrefEnum;
 import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-  
+
 
 @Service
 @Slf4j

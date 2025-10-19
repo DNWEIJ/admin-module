@@ -1,7 +1,7 @@
 package dwe.holding.generic.admin.model;
 
 import dwe.holding.generic.admin.model.base.BaseBO;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

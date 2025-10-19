@@ -3,7 +3,7 @@ package dwe.holding.generic.admin.authorisation.user;
 import dwe.holding.generic.admin.authorisation.function_role.RoleRepository;
 import dwe.holding.generic.admin.authorisation.function_role.UserRoleRepository;
 import dwe.holding.generic.admin.authorisation.member.MemberRepository;
-import dwe.holding.generic.admin.model.PresentationFunction;
+import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import dwe.holding.generic.admin.model.Role;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.UserRole;
@@ -11,8 +11,8 @@ import dwe.holding.generic.admin.model.base.BaseBO;
 import dwe.holding.generic.admin.model.base.ToString;
 import dwe.holding.generic.admin.model.type.LanguagePrefEnum;
 import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
-import dwe.holding.generic.admin.model.type.YesNoEnum;
 import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -86,18 +86,18 @@ public class UserController {
         return "admin-module/user/list";
     }
 
-    private List<List<PresentationFunction>> getAllFunctionsAndCheckedIfActive(Set<UserRole> userRoles) {
+    private List<List<PresentationElement>> getAllFunctionsAndCheckedIfActive(Set<UserRole> userRoles) {
         if (userRoles == null ) return new ArrayList<>();
         List<Role> roles = roleRepository.findAll();
         Map<  Long, String> roleIdsChecked = userRoles.stream().collect(
                 Collectors.toMap(s -> s.getRole().getId(), s -> s.getRole().getName())
         );
 
-        List<PresentationFunction> list = new ArrayList<>(roles.stream()
-                .map(f -> new PresentationFunction(f.getId(), f.getName(), roleIdsChecked.containsKey(f.getId())))
-                .sorted(Comparator.comparing(PresentationFunction::getName)).toList());
+        List<PresentationElement> list = new ArrayList<>(roles.stream()
+                .map(f -> new PresentationElement(f.getId(), f.getName(), roleIdsChecked.containsKey(f.getId())))
+                .sorted(Comparator.comparing(PresentationElement::getName)).toList());
 
-        List<List<PresentationFunction>> groups = new ArrayList<>();
+        List<List<PresentationElement>> groups = new ArrayList<>();
         for (int i = 0; i < list.size(); i += FOUR) {
             groups.add(list.subList(i, Math.min(i + FOUR, list.size())));
         }
@@ -116,7 +116,7 @@ public class UserController {
         model.addAttribute("roles", getAllFunctionsAndCheckedIfActive(user.getUserRoles()));
     }
 
-    private   Long processUser(List<PresentationFunction> checked, User formUser) {
+    private   Long processUser(List<PresentationElement> checked, User formUser) {
         User user;
         if (formUser.isNew()) {
             formUser.setPassword(AutorisationUtils.getCurrentMemberPassword());
@@ -151,7 +151,7 @@ public class UserController {
             }
 
             // find th record to be added
-            List<PresentationFunction> pF = checked.stream().filter(a -> !currentFunctionIdsAdd.contains(a.getId())).toList();
+            List<PresentationElement> pF = checked.stream().filter(a -> !currentFunctionIdsAdd.contains(a.getId())).toList();
             pF.forEach(pf -> {
                         Role role = roleRepository.findById(pf.getId()).get();
                         user.getUserRoles().add(new UserRole(user, role));
@@ -169,7 +169,7 @@ public class UserController {
     @NoArgsConstructor
     class Form extends ToString {
         User user = new User();
-        List<PresentationFunction> checkedFunctions = new ArrayList<>();
+        List<PresentationElement> checkedFunctions = new ArrayList<>();
     }
 
 }

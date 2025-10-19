@@ -1,6 +1,6 @@
 package dwe.holding.generic.suppliesandinventory.controller;
 
-import dwe.holding.generic.admin.model.PresentationFunction;
+import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.suppliesandinventory.model.Distributor;
 import dwe.holding.generic.suppliesandinventory.model.Supplies;
@@ -52,7 +52,7 @@ public class SuppliesController {
 
     private void setModelData(Model model) {
         model.addAttribute("distributorList", distributorRepository.findByMemberId(AutorisationUtils.getCurrentMember().getId()).stream()
-                .map(distributor -> new PresentationFunction(distributor.getId(), distributor.getDistributorName(), true)).toList()
+                .map(distributor -> new PresentationElement(distributor.getId(), distributor.getDistributorName(), true)).toList()
         );
     }
 
