@@ -31,7 +31,7 @@ public class LoginController {
         return "admin-module/login";
     }
 
-    @GetMapping("/index")
+    @GetMapping("/admin/index")
     String indexAdminScreen(Model model) {
         model.addAttribute("applicationName", "admin-module");
         return "/admin-module/index";

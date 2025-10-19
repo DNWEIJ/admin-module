@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "CAR_CAR")
+@Table(name = "CARTRACKER_CAR")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -39,9 +39,9 @@ public class SecurityConfigLocal {
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilterLocal());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
-        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/login"));
-        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/index"));
-        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"));
+        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/admin/login"));
+        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/admin/index"));
+        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/admin/login?error=true"));
 
         http
                 .csrf(csrf -> csrf
@@ -49,15 +49,15 @@ public class SecurityConfigLocal {
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .authorizeHttpRequests(
                         (requests) -> requests
-                                .requestMatchers("/login", "/error",
+                                .requestMatchers("/admin/login", "/admin/error",
                                         "/lib/**",
                                         "/images/**"
                                 ).permitAll()
                                 .anyRequest().access(adminAuthorizationManager)
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login")) // ⬅️ custom!
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/login")) // authenticated but forbidden
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login")) // ⬅️ custom!
+                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
                 )
                 // required to persist the security context between requests
                 .securityContext(securityContext ->
@@ -72,8 +72,8 @@ public class SecurityConfigLocal {
                                 .maxSessionsPreventsLogin(false)
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true")
+                        .logoutUrl("/admin/logout")
+                        .logoutSuccessUrl("/admin/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )

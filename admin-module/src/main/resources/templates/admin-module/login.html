@@ -15,7 +15,7 @@
                 <p style="color:red;">You are not logged in yet, please do so...</p>
             </div>
         </div>
-        <form method="post" th:action="@{/login}">
+        <form method="post" th:action="@{/admin/login}">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <fieldset>
                 <input id="id" name="id" th:value="${userId}" type="hidden">

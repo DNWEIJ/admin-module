@@ -58,7 +58,7 @@ public class MigrationService {
                             .person(trip.getPerson())
                             .km(trip.getKm())
                             .kmTotal(trip.getKmTotal())
-                            .petrol(trip.getPetrol())
+                            .petrol(trip.isPetrol())
                             .liters(trip.getLiters())
                             .amount(trip.getAmount())
                             .memberId(member.getId())

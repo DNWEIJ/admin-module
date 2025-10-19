@@ -101,7 +101,7 @@ class OverviewController {
                             totalVW_Daniel, (totalVW_Daniel * 1.0 / totalKms * 100),
                             totalVW_Suzanne, (totalVW_Suzanne * 1.0 / totalKms * 100),
                             totalVW_Maria, (totalVW_Maria * 1.0 / totalKms * 100),
-                            totalAmount);
+                            totalAmount, "Volkswagen");
 
                     totalVW_Daniel = totalVW_Maria = totalVW_Suzanne = 0;
                 }
@@ -118,7 +118,7 @@ class OverviewController {
                     extracted(sb, totalT_Daniel, (totalT_Daniel * 1.0 / totalKms * 100),
                             totalT_Suzanne, (totalT_Suzanne * 1.0 / totalKms * 100),
                             totalT_Maria, (totalT_Maria * 1.0 / totalKms * 100),
-                            totalAmount);
+                            totalAmount, "Toyota");
 
                     totalT_Daniel = totalT_Suzanne = totalT_Maria = 0;
                     sb.append(dataRowTable.formatted("", "", "", "", "", "", ""));
@@ -139,26 +139,29 @@ class OverviewController {
         return "cartracker-module/overview";
     }
 
-    private void extracted(StringBuffer sb, int total_Daniel, double percDaniel, int total_Suzanne, double percSuzanne, int totalT_Maria, double percMaria, double totalAmount) {
+    private void extracted(StringBuffer sb, int total_Daniel, double percDaniel,
+                           int total_Suzanne, double percSuzanne,
+                           int totalT_Maria, double percMaria,
+                           double totalAmount, String carType) {
         sb.append(dataRowTable.formatted(
                         (total_Daniel == 0) ? "0 %" : df.format(percDaniel) + "%",
                         (total_Suzanne == 0) ? "0 %" : df.format(percSuzanne) + "%",
                         (totalT_Maria == 0) ? "0 %" : df.format(percMaria) + "%",
-                        "", "%", "VW", ""
+                        "", "%", carType, ""
                 )
         );
         sb.append(dataRowTable.formatted(
                         (total_Daniel == 0) ? "€0" : "€" + df.format(totalAmount * percDaniel / 100),
                         (total_Suzanne == 0) ? "€0" : "€" + df.format(totalAmount * percSuzanne / 100),
                         (totalT_Maria == 0) ? "€0" : "€" + df.format(totalAmount * percMaria / 100),
-                        "", "fuel", "VW", ""
+                        "", "fuel", carType, ""
                 )
         );
         sb.append(dataRowTable.formatted(
                         (total_Daniel == 0) ? "€0" : "€" + df.format(total_Daniel * 0.1),
                         (total_Suzanne == 0) ? "€0" : "€" + df.format(total_Suzanne * 0.1),
                         (totalT_Maria == 0) ? "€0" : "€" + df.format(totalT_Maria * 0.1),
-                        "", "cost", "VW", ""
+                        "", "cost", carType, ""
                 )
         );
     }

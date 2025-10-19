@@ -42,17 +42,17 @@ public class SecurityConfig {
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
-        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/login"));
-        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/index"));
-        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"));
+        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/admin/login"));
+        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/admin/index"));
+        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/admin/login?error=true"));
 
         HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
 
         RequestMatcher publicEndpoints = request -> {
             String req = request.getRequestURI();
-            return req.startsWith("/login") ||
-                    req.startsWith("/logout") ||
-                    req.startsWith("/error") ||
+            return req.startsWith("/admin/login") ||
+                    req.startsWith("/admin/logout") ||
+                    req.startsWith("/admin/error") ||
                     req.startsWith("/lib/") ||
                     req.startsWith("/images/");
         };
@@ -75,8 +75,8 @@ public class SecurityConfig {
                         .anyRequest().access(compositeAuthManager)
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/login"))
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/login")) // authenticated but forbidden
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login"))
+                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
                 )
                 // required to persist the security context between requests
                 .securityContext(securityContext ->

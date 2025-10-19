@@ -14,9 +14,9 @@ public class CustomErrorController implements ErrorController {
     public void handleError(HttpServletResponse response) throws IOException {
         int status = response.getStatus();
         if (status == 401 || status == 403) {
-            response.sendRedirect("/login");
+            response.sendRedirect("/admin/login");
         } else {
-            response.sendRedirect("/index"); // fallback for other errors
+            response.sendRedirect("/admin/index"); // fallback for other errors
         }
     }
 }

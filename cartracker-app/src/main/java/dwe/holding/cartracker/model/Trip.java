@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "CAR_TRIP")
+@Table(name = "CARTRACKER_TRIP")
  @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

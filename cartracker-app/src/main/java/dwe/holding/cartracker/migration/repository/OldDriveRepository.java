@@ -6,18 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @Deprecated
-public interface OldDriveRepository extends JpaRepository<TripEntity, Long> {
+public interface OldDriveRepository extends JpaRepository<TripEntity, UUID> {
 
-    List<TripEntity> findByPersonOrderByDriveDateAsc(String name);
-
-    TripEntity findFirstByCarTypeOrderByKmTotalDesc(String carType);
-
-    default List<TripEntity> findAllOrderByDriveDateAsc() {
-        Sort sortBy = Sort.by(Sort.Direction.ASC, "driveDate")
-                .and(Sort.by(Sort.Direction.ASC, "id"));
-        return findAll(sortBy);
-    }
 }
