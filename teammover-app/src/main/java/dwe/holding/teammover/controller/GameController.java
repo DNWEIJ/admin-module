@@ -15,16 +15,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
-  
-
-import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 
 @Controller
 @Validated
+@RequestMapping("/teammover")
 public class GameController {
     private final GameRepository gameRepository;
 
@@ -39,7 +38,8 @@ public class GameController {
             return "teammover-module/game/action";
         }
         redirect.addFlashAttribute("message", "Wedstrijd opgeslagen!");
-        return getRedirectFor(request, processGame(game), "redirect:/teammover/game/list");
+        processGame(game);
+        return "redirect:/teammover/game/list";
     }
 
     @GetMapping("/game")
@@ -51,7 +51,7 @@ public class GameController {
     }
 
     @GetMapping("/game/{id}")
-    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
         model.addAttribute("action", "Bewerk");
         model.addAttribute("game", gameRepository.findById(id).orElseThrow());
         return "teammover-module/game/action";
@@ -62,7 +62,7 @@ public class GameController {
         model.addAttribute("action", "List");
         model.addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid());
 
-        List<Game> games = gameRepository.findGamesGreatherThenToday( AutorisationUtils.getCurrentUserMlid());
+        List<Game> games = gameRepository.findGamesGreatherThenToday(AutorisationUtils.getCurrentUserMlid());
         List<GameSummary> summaries = games.stream()
                 .map(game -> new GameSummary(
                         game.getId(),
@@ -77,10 +77,10 @@ public class GameController {
         return "teammover-module/game/list";
     }
 
-    record GameSummary(  Long id, String whereIsTheGame, LocalDateTime whenIsTheGame, int totalPlayers, int totalPlayersDriver, int totalSeatsDriver) {
+    record GameSummary(Long id, String whereIsTheGame, LocalDateTime whenIsTheGame, int totalPlayers, int totalPlayersDriver, int totalSeatsDriver) {
     }
 
-      Long processGame(Game formGame) {
+    Long processGame(Game formGame) {
 
         if (formGame.isNew()) {
             return gameRepository.save(

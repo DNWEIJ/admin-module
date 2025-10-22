@@ -6,28 +6,35 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/admin/user/list')}"></th:block>
 
-    <form action="/user" method="post">
+    <form action="/admin/user" method="post">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
         <fieldset class="grid" role="presentation">
             <input id="id" name="id" th:value="${user.id}" type="hidden">
             <input id="version" name="version" th:value="${user.version}" type="hidden">
-
-            <th:block th:insert="~{fragments/elements/input::inputHtml('account','Account name', 'user.account','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('name','Personal name', 'user.name','3')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('Email','email', 'user.email', '4')}" th:with="type='email'"></th:block>
+            <legend th:utext="'Details'"></legend>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('account','Account name', 'user.account','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','Personal name', 'user.name','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('Email','email', 'user.email', '4')}" th:with="type='email'"></th:block>
         </fieldset>
 
         <fieldset class="grid" role="presentation">
+            <legend th:utext="'Settings'"></legend>
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','Login enabled?', 'user.loginEnabled', ${ynvaluesList}, true,'5')}"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','Language Preference', 'user.language', ${languagePrefList}, true,'6')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','Personnel Status', 'user.personnelStatus', ${personnelStatusList}, true,'7')}"></th:block>
-            <th:block th:if="${isSuperAdmin}" th:insert="~{fragments/elements/dropdown::dbDropdown('member','Member', 'user.member.id', ${membersList}, true,'8')}"></th:block>
+            <th:block
+                    th:if="${applicationName != null and applicationName != 'teammover'}"
+                    th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','Personnel Status', 'user.personnelStatus', ${personnelStatusList}, true,'7')}">
+            </th:block>
+            <th:block
+                    th:if="${isSuperAdmin}"
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('member','Member', 'user.member.id', ${membersList}, true,'8')}">
+            </th:block>
         </fieldset>
         <hr/>
         <fieldset class="grid" role="presentation">
-            <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${roles}, 'checkedRoles', '2')}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${roles}, 'checkedRoles', '2', 'Roles')}"></th:block>
         </fieldset>
     </form>
 </section>

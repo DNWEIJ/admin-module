@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-  
+
 
 @Service
 @Slf4j
@@ -32,7 +32,7 @@ public class SetupTeamMoverDataService {
     @Transactional
     public void init() {
 
-        if (gameRepository.findAll().isEmpty()) {
+        if (gameRepository.count() == 0) {
             log.info("MigrationTeamMoverDataService:: member");
               Long memberId = memberRepository.findByShortCode("ZVS").getId();
               Long localMemberId = localmemberRepository.findByLocalMemberName("GO12-2").getId();

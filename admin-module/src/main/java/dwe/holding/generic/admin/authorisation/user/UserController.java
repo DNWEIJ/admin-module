@@ -3,6 +3,7 @@ package dwe.holding.generic.admin.authorisation.user;
 import dwe.holding.generic.admin.authorisation.function_role.RoleRepository;
 import dwe.holding.generic.admin.authorisation.function_role.UserRoleRepository;
 import dwe.holding.generic.admin.authorisation.member.MemberRepository;
+import dwe.holding.generic.admin.transactional.TranactionalUser;
 import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import dwe.holding.generic.admin.model.Role;
 import dwe.holding.generic.admin.model.User;
@@ -14,6 +15,7 @@ import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -27,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -37,20 +40,20 @@ import static dwe.holding.generic.admin.security.ButtonConstants.getRedirectFor;
 
 @Controller
 @Validated
+@RequestMapping("/admin")
 public class UserController {
     public static final int FOUR = 4;
-    private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final MemberRepository memberRepository;
-    private final SimpleGrantedAuthority SUPER_ADMIN = new SimpleGrantedAuthority("SUPER_ADMIN");
+    private final TranactionalUser tranactionalUser;
 
 
-    public UserController(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleRepository roleRepository, MemberRepository memberRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserRoleRepository userRoleRepository, RoleRepository roleRepository, MemberRepository memberRepository, TranactionalUser tranactionalUser) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.memberRepository = memberRepository;
+        this.tranactionalUser = tranactionalUser;
     }
 
     @PostMapping("/user")
@@ -75,14 +78,14 @@ public class UserController {
     @GetMapping("/user/{id}")
     String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
         model.addAttribute("action", "Edit");
-        setModelData(model, userRepository.findById(id).orElseThrow());
+        setModelData(model, tranactionalUser.getByIdLazy_RolesAndIpNumbers(id));
         return "admin-module/user/action";
     }
 
     @GetMapping("/user/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", tranactionalUser.findAll());
         return "admin-module/user/list";
     }
 
@@ -109,11 +112,17 @@ public class UserController {
         model.addAttribute("languagePrefList", LanguagePrefEnum.getWebList());
         model.addAttribute("personnelStatusList", PersonnelStatusEnum.getWebList());
         model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
-        model.addAttribute("isSuperAdmin", (AutorisationUtils.isRole("SUPER_ADMIN")));
-        if (AutorisationUtils.getCurrentAuthorities().contains(SUPER_ADMIN)) {
-            model.addAttribute("membersList", memberRepository.findAllProjectedBy());
-        }
+        model.addAttribute("membersList", memberRepository.findAllProjectedBy()
+                .stream()
+                .map(member -> new PresentationElement(member.id(), member.name(), false))
+                .toList());
         model.addAttribute("roles", getAllFunctionsAndCheckedIfActive(user.getUserRoles()));
+
+        if (AutorisationUtils.hasRole("SUPER_ADMIN")) {
+            model.addAttribute("isSuperAdmin", true);
+        } else {
+            model.addAttribute("isSuperAdmin", false);
+        }
     }
 
     private   Long processUser(List<PresentationElement> checked, User formUser) {
@@ -121,7 +130,7 @@ public class UserController {
         if (formUser.isNew()) {
             formUser.setPassword(AutorisationUtils.getCurrentMemberPassword());
             formUser.setMember(AutorisationUtils.getCurrentMember());
-            user = userRepository.save(formUser);
+            user = tranactionalUser.save(formUser);
         } else {
             user = formUser;
         }
@@ -160,7 +169,7 @@ public class UserController {
         }
 
         userRoleRepository.saveAllAndFlush(user.getUserRoles());
-        userRepository.save(user);
+        tranactionalUser.save(user);
         return user.getId();
     }
 

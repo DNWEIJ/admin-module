@@ -18,10 +18,10 @@ public class AdminAuthenticationFilterLocal implements AuthenticationConverter {
         if (request.getMethod().equals("POST")) {
             // String username = "jeroen";
             // String username = "vera";
-            // String username = "arjan";
-            String username = "daniel";
-            String password = "Daniel0904!";
-            String domain = "CAR";
+             String username = "arjan";
+            //String username = "daniel";
+            String password = "ZVS!DeEerste!";
+            String domain = "ZVS";
 
 //            String username = "daniel";
 //            String password = "pas!";

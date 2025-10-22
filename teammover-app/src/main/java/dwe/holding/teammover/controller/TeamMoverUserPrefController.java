@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dwe.holding.generic.admin.authorisation.member.LocalMemberRepository;
 import dwe.holding.generic.admin.expose.UserPreferencesService;
+import dwe.holding.generic.admin.model.UserPreferences;
 import dwe.holding.generic.shared.model.frontend.PresentationElement;
 import dwe.holding.generic.admin.security.AutorisationUtils;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
@@ -31,7 +32,7 @@ public class TeamMoverUserPrefController {
     }
 
     @GetMapping("/userpreferences")
-    String loadUserPreferences(Model model) {
+    String loadUserPreferences(Model model) throws JsonProcessingException {
         model.addAttribute("localMembersList",
                 localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentUserMid())
                         .stream().map(
@@ -40,15 +41,18 @@ public class TeamMoverUserPrefController {
                         .sorted(Comparator.comparing(PresentationElement::getName)).toList()
         );
         model.addAttribute("memberLocalId", AutorisationUtils.getCurrentUserMlid());
-        model.addAttribute("nrOfTeamMembers", objectMapper.convertValue(AutorisationUtils.getCurrentUserPref(), TeamMoverUserPreferences.class).getNrOfTeamMembers());
+        model.addAttribute("names", objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), TeamMoverUserPreferences.class).getNames());
         return AutorisationUtils.getCurrentMember().getApplicationView() + "/userpreferences";
     }
 
     @PostMapping("/userpreferences")
-    String localMember(SettingsForm form, Model model) throws JsonProcessingException {
-        userPreferencesService.storeAppPreferences(  Long.parseLong(form.id), form.userPreferences);
-        return "redirect:/index"; // required to redirect to the index to finish the flow of settings for initial login
+    String localMember(SettingsForm form) throws JsonProcessingException {
+        form.userPreferences.setNrOfTeamMembers(form.userPreferences.getNames().size());
+
+        userPreferencesService.storeAppPreferences(Long.parseLong(form.id), objectMapper.writeValueAsString(form.userPreferences));
+        return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
+
     record SettingsForm(String id, TeamMoverUserPreferences userPreferences) {
     }
 }

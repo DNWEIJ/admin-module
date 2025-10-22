@@ -1,6 +1,7 @@
 package dwe.holding.generic.admin.security;
 
 import dwe.holding.generic.admin.model.User;
+import dwe.holding.generic.admin.model.UserPreferences;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.Collection;
 public class AdminUserDetails extends org.springframework.security.core.userdetails.User {
 
     private User user;
-    private Object userPref; // casting to the actual preferences is needed to be done in the app itselv
+    private UserPreferences userPref;
 
     public AdminUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
@@ -22,11 +23,11 @@ public class AdminUserDetails extends org.springframework.security.core.userdeta
         this.user = user;
     }
 
-    public Object getUserPref() {
+    public UserPreferences getUserPref() {
         return userPref;
     }
 
-    public void setUserPref(Object userPref) {
+    public void setUserPref(UserPreferences userPref) {
         this.userPref = userPref;
     }
 }

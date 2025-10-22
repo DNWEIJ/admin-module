@@ -60,7 +60,7 @@ public class SetupAdminService {
                             .simultaneousUsers(4)
                             .applicationName("admin")
                             .applicationView("admin-module")
-                            .applicationRedirect("redirect:/admin/index")
+                            .applicationRedirect("/admin-module/index")
                             .build()
             );
             log.info("MigrationAdminService:: user");
@@ -106,13 +106,13 @@ public class SetupAdminService {
                     List.of(
                             Function.builder().name("RESETPASSWORD_READ").build(),
                             Function.builder().name("USERPREFERENCES_READ").build(),
-                            Function.builder().name("USERPREFERENCES_CREATE").build(),
-                            Function.builder().name("RESETPASSWORD_CREATE").build(),
                             Function.builder().name("INDEX_READ").build(),
                             Function.builder().name("SETLOCALMEMBER_READ").build(),
-                            Function.builder().name("SETLOCALMEMBER_CREATE").build(),
-                            Function.builder().name("LOGOUT_READ").build()
+                            Function.builder().name("LOGOUT_READ").build(),
 
+                            Function.builder().name("USERPREFERENCES_CREATE").build(),
+                            Function.builder().name("RESETPASSWORD_CREATE").build(),
+                            Function.builder().name("SETLOCALMEMBER_CREATE").build()
                     ));
 
 
@@ -120,7 +120,8 @@ public class SetupAdminService {
             List<Role> listRole = roleRepository.saveAllAndFlush(
                     List.of(
                             Role.builder().name("SUPER_ADMIN").memberId(member.getId()).build(),
-                            Role.builder().name("ADMIN").memberId(member.getId()).build(),
+                            Role.builder().name("ADMIN_READ").memberId(member.getId()).build(),
+                            Role.builder().name("ADMIN_CREATE").memberId(member.getId()).build(),
                             Role.builder().name("DEFAULT").memberId(member.getId()).build()
                     )
             );
@@ -131,12 +132,20 @@ public class SetupAdminService {
                             .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleSuperAdmin).build())
                             .toList()
             );
-            Role roleAdmin = listRole.stream().filter(r -> r.getName().equals("ADMIN")).findFirst().get();
+
+            Role roleAdminCreate = listRole.stream().filter(r -> r.getName().equals("ADMIN_CREATE")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
-                    listFuncAdmin.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdmin).build())
+                    listFuncAdmin.stream().filter(f -> f.getName().contains("CREATE"))
+                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdminCreate).build())
                             .toList()
             );
+            Role roleAdminRead = listRole.stream().filter(r -> r.getName().equals("ADMIN_READ")).findFirst().get();
+            functionRoleRepository.saveAllAndFlush(
+                    listFuncAdmin.stream().filter(f -> f.getName().contains("READ"))
+                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdminRead).build())
+                            .toList()
+            );
+
             Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncDefault.stream()
@@ -148,7 +157,8 @@ public class SetupAdminService {
             userRoleRepository.saveAllAndFlush(
                     List.of(
                             UserRole.builder().role(roleSuperAdmin).user(user).build(),
-                            UserRole.builder().role(roleAdmin).user(user).build(),
+                            UserRole.builder().role(roleAdminCreate).user(user).build(),
+                            UserRole.builder().role(roleAdminRead).user(user).build(),
                             UserRole.builder().role(roleDefault).user(user).build()
                     )
             );

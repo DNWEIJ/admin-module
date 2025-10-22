@@ -7,13 +7,6 @@
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Local Member','/admin/localmember')}"></th:block>
 
-    <style>
-        .colgroup {
-            width: 100%
-
-        }
-    </style>
-
     <table id="localmember-table">
         <thead>
         <tr>
@@ -48,11 +41,14 @@
     <script>
         var table = new Tabulator("#localmember-table",
             {
-                layout: "fitColumns",
-                responsiveLayout: "collapse",
                 columns: [ //set column definitions for imported table data
-                    {title: "Address", formatter: "html"}
-                ]
+                    {title: "Address", formatter: "html"},
+                    {title: "Name",  formatter: "html", sorter: function (a, b) {
+                            var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                            var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                            return textA.localeCompare(textB);
+                        }
+                    }]
             });
     </script>
 </section>

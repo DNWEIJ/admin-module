@@ -5,13 +5,13 @@
 .table-tight {
     width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 1px;
 }
 
 .table-tight td,
 .table-tight th {
-    padding: 0;
-    margin: 0;
+    padding: 1px;
+    margin: 1px;
     border-bottom: 1px solid lightgrey;
     line-height: 1;
 }
@@ -35,6 +35,10 @@
 .table-tight .left {
     text-align: left;
 }
+.table-tight .center {
+    text-align: center;
+}
+
 
 /* ***************************************** */
 /* two columns with alignment left and right */
@@ -59,6 +63,52 @@ fieldset legend {
     margin-left: .1em;
     background-color: var(--pico-muted-border-color);
 }
+
+
+ /* Placeholder floats up in input CSS */
+ :root {
+     --accent: #4c7ef3;
+     --muted: #6b7280;
+     --border: #d1d5db;
+     --bg: #fff;
+     --radius: 8px;
+     --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+ }
+
+.field {
+    position: relative;
+}
+
+/* Input */
+.field input {
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.field input:focus {
+    box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.08);
+}
+
+/* Label */
+.field label {
+    position: absolute;
+    left: 12px;
+    top: 14px; /* startpositie = midden van input */
+    pointer-events: none;
+    transition: all var(--transition);
+    color: var(--muted);
+    padding: 0 4px;
+}
+
+/* Wanneer input focus heeft of niet leeg is -> label omhoog */
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 8px;
+    font-size: 12px;
+    color: var(--accent);
+    background:  var(--pico-background-color);
+}
+
 
 /* miscellaneous */
 .no-break {

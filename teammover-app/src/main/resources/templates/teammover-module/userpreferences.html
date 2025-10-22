@@ -1,6 +1,44 @@
 <html layout:decorate="~{layout.html}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title>Gebruiker settings</title>
+    <script>
+        function addRowAtEndOfTable() {
+            const tableBody = document.querySelector("table tbody");
+            const lastRow = tableBody.lastElementChild;
+            const newRow = lastRow.cloneNode(true);
+            const rowCount = tableBody.rows.length;
+            const input = newRow.querySelector("input");
+            input.value = "";
+            input.name = `userPreferences.names[${rowCount}]`;
+            tableBody.appendChild(newRow);
+        }
+
+        function deleteLine(element) {
+            const row = element.closest("tr");
+            const tableBody = row.closest("tbody");
+            if (tableBody.rows.length > 1) {
+                row.remove();
+                tableBody.querySelectorAll("input").forEach((input, index) => {
+                    input.name = `name[${index}]`;
+                });
+            } else {
+                alert("Er moet minstens één speler blijven staan!");
+            }
+        }
+
+        function validateUniqueNames(event) {
+            const inputs = document.querySelectorAll('table tbody input');
+            const values = Array.from(inputs).map(i => i.value.trim()).filter(v => v !== '');
+            const duplicates = values.filter((v, i, a) => a.indexOf(v) !== i);
+
+            if (duplicates.length > 0) {
+                alert("Alle namen moeten uniek zijn.");
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
 <section layout:fragment="content">
@@ -10,10 +48,38 @@
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <fieldset>
                 <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>
-<!--                <th:block th:insert="~{fragments/elements/dropdown::dbDropdownMultiSelect('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>-->
+                <!--                <th:block th:insert="~{fragments/elements/dropdown::dbDropdownMultiSelect('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>-->
             </fieldset>
             <fieldset>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('userPreferences.nrOfTeamMembers','Aantal team leden?', 'nrOfTeamMembers','1')}"></th:block>
+                <table>
+                    <caption>Geef de naam(namen) van de speler(s):</caption>
+                    <a data-tooltip="voeg een speler toe" data-placement="right" style="cursor: pointer" onclick="addRowAtEndOfTable()"><i class="fa fa-2x fa-user-plus" aria-hidden="true" ></i></i></a>
+
+                    <tbody>
+                    <th:block th:if="${names.size() == 0}">
+                        <tr>
+                            <td>
+                                <fieldset role="group">
+                                    <input name="userPreferences.names[0]" required="true" type="input" value="">
+                                    <a data-tooltip="verwijder deze speler" data-placement="left" style="cursor: pointer" onclick="deleteLine(this)"><i class="fa fa-2x fa-user-minus" aria-hidden="true"></i></a>
+                                </fieldset>
+                            </td>
+                        </tr>
+                    </th:block>
+                    <th:block th:unless="${names.size() == 0}">
+                        <th:block th:each="element, cnt : ${names}">
+                            <tr>
+                                <td>
+                                    <fieldset role="group">
+                                        <input th:name="'userPreferences.names['+ ${cnt.index}+']'" required="true" type="input" th:value="${element}">
+                                        <a style="cursor: pointer" onclick="deleteLine(this)"><i class="fa fa-user-minus" aria-hidden="true"></i></a>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </th:block>
+                    </tbody>
+                </table>
             </fieldset>
             <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
         </form>

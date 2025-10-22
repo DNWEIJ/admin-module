@@ -27,16 +27,16 @@
 <body>
 
 <div class="container-fluid">
-    <block th:if="${errors != null and errors.size() > 0}">
+    <th:block th:if="${errors != null and errors.size() > 0}">
         <fieldset>
             <legend>Errors</legend>
-            <block th:each="error: ${errors}">
+            <th:block th:each="error: ${errors}">
                 <span th:text="${error.field}"></span>&nbsp;<span th:text="${error.defaultMessage}"></span><br/>
-            </block>
+            </th:block>
         </fieldset>
-    </block>
+    </th:block>
 
-    <block th:if="${message != null}">
+    <th:block th:if="${message != null}">
         <span id="fade-in" class="box" th:text="${message}"></span>
         <style>
             .box {
@@ -77,15 +77,15 @@
                 }, 1000)
             }
         </script>
-    </block>
+    </th:block>
 
-    <block th:if="${applicationView != null}">
+    <th:block th:if="${applicationView != null}">
         <div th:replace="~{${applicationView}+'/page/navigation'}"></div>
-    </block>
-    <block th:if="${applicationView == null}">
+    </th:block>
+    <th:block th:if="${applicationView == null}">
         <div th:replace="~{fragments/page/navigation}"></div>
-    </block>
-    <block id="content" layout:fragment="content"></block>
+    </th:block>
+    <th:block id="content" layout:fragment="content"></th:block>
     <footer>
         <p th:if="${applicationName != null}"><a th:href="'/'+${applicationName}+'/userpreferences'">preferences</a><br/>DWE Holding &copy;</p>
         <p th:if="${applicationName == null}">DWE Holding &copy;</p>

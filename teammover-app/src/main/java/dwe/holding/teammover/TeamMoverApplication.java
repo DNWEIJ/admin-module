@@ -21,7 +21,7 @@ import java.util.Optional;
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = {
         "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.exception", "dwe.holding.generic.admin.expose",
-        "dwe.holding.generic.admin.security", "dwe.holding.generic.admin.setup",
+        "dwe.holding.generic.admin.security", "dwe.holding.generic.admin.setup", "dwe.holding.generic.admin.transactional",
         "dwe.holding.teammover"
 })
 @EnableJpaRepositories(basePackages = {

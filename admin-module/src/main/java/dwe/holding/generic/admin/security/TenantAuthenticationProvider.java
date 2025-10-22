@@ -1,14 +1,13 @@
 package dwe.holding.generic.admin.security;
 
 import dwe.holding.generic.admin.authorisation.function_role.FunctionQueryCriteria;
-import dwe.holding.generic.admin.authorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.Function;
 import dwe.holding.generic.admin.model.IPSecurity;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.UserPreferences;
 import dwe.holding.generic.admin.preferences.UserPreferencesRepository;
+import dwe.holding.generic.admin.transactional.TranactionalUser;
 import dwe.holding.generic.shared.model.type.YesNoEnum;
-import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -28,18 +27,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Transactional
 public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final UserRepository userRepository;
     private final FunctionQueryCriteria functionQueryCriteria;
     private final UserPreferencesRepository userPreferencesRepository;
+    private final TranactionalUser tranactionalUser;
 
-    public TenantAuthenticationProvider(UserRepository userRepository, FunctionQueryCriteria functionQueryCriteria, UserPreferencesRepository userPreferencesRepository) {
-        this.userRepository = userRepository;
+    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, UserPreferencesRepository userPreferencesRepository, TranactionalUser tranactionalUser) {
         this.functionQueryCriteria = functionQueryCriteria;
         this.userPreferencesRepository = userPreferencesRepository;
+        this.tranactionalUser = tranactionalUser;
     }
 
     @Override
@@ -63,7 +61,8 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        List<User> users = userRepository.findByAccountWithMemberAndLocals(usernameAndShortCode[0]);
+        List<User> users = tranactionalUser.getByAccount(usernameAndShortCode[0]);
+
         if (users.isEmpty()) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
@@ -73,7 +72,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         if (usersList.size() != 1) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
-        User user = usersList.getFirst();
+        User user = tranactionalUser.getByIdLazy_RolesAndIpNumbers(usersList.getFirst().getId());
 
         if (user.getMember().getPassword().equals(user.getPassword())) {
             user.setChangePassword(true);
@@ -107,15 +106,6 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             }
 
         }
-
-        Collection<? extends GrantedAuthority> authorities = getGrantedAuthoritiesFromRolAndFuncties(user);
-
-        // create details
-        AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(), true, true, true, true, authorities);
-        adminUserDetails.setUser(user);
-        Optional<UserPreferences> optional = userPreferencesRepository.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
-
-        adminUserDetails.setUserPref(optional.orElse(new UserPreferences()));
         // update status
         LocalDate now = LocalDate.now();
         if (user.getLastVisitDate() == null || !now.equals(user.getLastVisitDate())) {
@@ -125,12 +115,20 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             } else {
                 user.setNumberOfVisits(user.getNumberOfVisits() + 1);
             }
-            userRepository.save(user);
+            tranactionalUser.save(user);
         }
+
+        // create details
+        AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(),
+                true, true, true, true, getGrantedAuthoritiesFromRolAndFunction(user));
+        adminUserDetails.setUser(user);
+        Optional<UserPreferences> optional = userPreferencesRepository.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
+
+        adminUserDetails.setUserPref(optional.orElse(new UserPreferences()));
         return adminUserDetails;
     }
 
-    Collection getGrantedAuthoritiesFromRolAndFuncties(User user) {
+    Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromRolAndFunction(User user) {
 
         if (user.getUserRoles() != null) {
             List<Function> functionList = functionQueryCriteria.process(user.getId());

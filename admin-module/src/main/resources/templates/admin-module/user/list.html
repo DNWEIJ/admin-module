@@ -6,13 +6,6 @@
 <section layout:fragment="content">
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('User','/admin/user')}"></th:block>
 
-<style>
-    .colgroup {
-        width: 100%
-
-    }
-</style>
-
 <table id="user-table">
     <thead>
     <tr>
@@ -45,11 +38,13 @@
 <script>
     var table = new Tabulator("#user-table",
         {
-            layout: "fitColumns",
-            responsiveLayout: "collapse",
             columns: [ //set column definitions for imported table data
-                {title: "Account name", formatter: "html"}
-            ]
+                {title: "Account name", formatter: "html", sorter: function (a, b) {
+                        var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                        var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                        return textA.localeCompare(textB);
+                    }
+                }]
         });
 </script>
 </section>

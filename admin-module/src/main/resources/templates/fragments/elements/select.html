@@ -1,6 +1,7 @@
-<th:block th:fragment="selectCheckBoxList(groups, dbField, tabindex)">
+<th:block th:fragment="selectCheckBoxList(groups, dbField, tabindex, legend)">
     <th:block th:each="group : ${groups}">
         <fieldset class="grid" role="presentation">
+            <legend th:text="${legend}"></legend>
             <label th:each="record : ${group}" th:for="${'rec-' + record.id}">[[${record.name}]]
                 <input role="switch"
                        th:checked="${record.connected}"

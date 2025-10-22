@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${role.id}, 'Role','/admin/role/list')}"></th:block>
 
-    <form action="/role" method="post" name="form">
+    <form action="/admin/role" method="post" name="form">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
@@ -17,6 +17,6 @@
             <th:block th:insert="~{fragments/elements/input::inputHtml('role.name','Role name', 'role.name', '1')}"></th:block>
         </fieldset>
         <hr/>
-        <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${functions}, 'checkedFunctions', '2')}"></th:block>
+        <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${functions}, 'checkedFunctions', '2', 'Functions')}"></th:block>
     </form>
 </section>

@@ -19,9 +19,6 @@ public class LoginController {
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
 
-
-    private final String start = "redirect:/index";
-
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -40,7 +37,7 @@ public class LoginController {
     @GetMapping("/index")
     String indexScreen() {
         if (AutorisationUtils.isNewUser()) {
-            return "redirect:/resetpassword";
+            return "redirect:/admin/resetpassword";
         }
 
         if (AutorisationUtils.isLocalMemberRequired() && AutorisationUtils.getCurrentUserMlid() == null) {
@@ -66,7 +63,7 @@ public class LoginController {
             user.setChangePassword(false);
             User savedUser = userRepository.save(user);
             AutorisationUtils.setCurrentUser(savedUser);
-            return start;
+            return "redirect:/admin/index";
         }
     }
 

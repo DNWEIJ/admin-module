@@ -10,7 +10,7 @@ import dwe.holding.generic.admin.security.AutorisationUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-  
+
 
 @Service
 public class UserPreferencesService {
@@ -24,31 +24,29 @@ public class UserPreferencesService {
         this.objectMapper = objectMapper;
     }
 
-
-    public void storeAppPreferences(  Long localMemberId, Object userPref) throws JsonProcessingException {
+    public void storeAppPreferences(Long localMemberId, String userPrefJson) {
+        // change selected local member
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
         user.setMemberLocalId(AutorisationUtils.validateAndreturnLocalMemberId(localMemberId));
         User savedUser = userRepository.save(user);
+        AutorisationUtils.setCurrentUser(savedUser);
 
-        String stringRepresentation = objectMapper.writeValueAsString(userPref);
+        // update preferences
         Optional<UserPreferences> optional = userPrefRepo.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
 
         UserPreferences userPreferences;
         if (optional.isPresent()) {
             userPreferences = optional.get();
-            userPreferences.setUserPreferencesJson(stringRepresentation);
-
+            userPreferences.setUserPreferencesJson(userPrefJson);
         } else {
             userPreferences = UserPreferences.builder()
                     .userId(user.getId())
                     .localMemberId(user.getMemberLocalId())
                     .memberId(user.getMember().getId())
-                    .userPreferencesJson(stringRepresentation)
+                    .userPreferencesJson(userPrefJson)
                     .build();
         }
-        userPrefRepo.save(userPreferences);
-
-        AutorisationUtils.setCurrentUser(savedUser);
-        AutorisationUtils.setCurrentUserPref(userPref);
+        userPreferences = userPrefRepo.save(userPreferences);
+        AutorisationUtils.setCurrentUserPref(userPreferences);
     }
 }

@@ -22,10 +22,10 @@
         </div>
 </th:block>
 
-<th:block th:fragment="pageTitleListNL(entityName,link)">
+<th:block th:fragment="pageTitleListNL(entityName, entity, link)">
         <div class="twocolumn-spread">
             <h3 th:text="${'Lijst '+ entityName}"></h3>
-            <a  th:if="${link != '' and #authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="${link}">Creër</a>
+            <a  th:if="${link != '' and #authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="${link}">Creër [[${entity}]]</a>
             <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
         </div>
 </th:block>

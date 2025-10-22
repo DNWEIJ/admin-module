@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport"/>
+    <meta content="light dark" name="color-scheme">
+    <title>Gebruiker settings</title>
+    <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
+    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
+    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet"/>
+    <!-- javascript-->
+    <script src="/lib/fontawesome/js/all.min.js" type="javascript"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <section id="content">
+        <article>
+            <header><h2>Gebruiker settings</h2></header>
+            <form action="/teammover/userpreferences" method="post">
+                <input name="_csrf" value="b1db6776-7e4d-4e27-aa44-c9a3dc057115" type="hidden"/>
+                <fieldset>
+                    <label for="id" value="Selecteer het team">Selecteer het team</label>
+                    <select id="id" name="id" tabindex="1" required="required">
+                        <option disabled readonly selected="true" value="">select</option>
+                        <option value="2">GO12-1</option>
+                        <option value="1">GO12-2</option>
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <table>
+                        <caption>Graag de naam (namen) van de speler(s) invullen:</caption>
+                        <i class="fa fa-user-plus" aria-hidden="true" onclick="addRowAtEndOfTable()"></i>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <fieldset role="group">
+                                    <input name="name[0]" required="true" type="input" value="">
+                                    <a style="cursor: pointer" onclick="deleteLine(this)">
+                                        <i class="fa fa-user-minus" aria-hidden="true"></i>
+                                    </a>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <fieldset role="group">
+                                    <input name="name[1]" required="true" type="input" value="">
+                                    <a style="cursor: pointer" onclick="deleteLine(this)">
+                                        <i class="fa fa-user-minus" aria-hidden="true"></i>
+                                    </a>
+                                </fieldset>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset class="grid" role="group">
+                    <input name="_save" type="submit" value="Opslaan">
+                </fieldset>
+            </form>
+        </article>
+    </section>
+    <footer>
+        <p>DWE Holding &copy;</p>
+    </footer>
+</div>
+</body>
+</html>
+<script>
+    function addRowAtEndOfTable() {
+        const tableBody = document.querySelector("table tbody");
+        const lastRow = tableBody.lastElementChild;
+        const newRow = lastRow.cloneNode(true);
+        const rowCount = tableBody.rows.length;
+        const input = newRow.querySelector("input");
+        input.value = "";
+        input.name = `name[${rowCount}]`;
+        tableBody.appendChild(newRow);
+    }
+
+    function deleteLine(element) {
+        const row = element.closest("tr");
+        const tableBody = row.closest("tbody");
+        if (tableBody.rows.length > 1) {
+            row.remove();
+            tableBody.querySelectorAll("input").forEach((input, index) => {
+                input.name = `name[${index}]`;
+            });
+        } else {
+            alert("Er moet minstens één speler blijven staan!");
+        }
+    }
+    function validateUniqueNames(event) {
+        const inputs = document.querySelectorAll('table tbody input');
+        const values = Array.from(inputs).map(i => i.value.trim()).filter(v => v !== '');
+        const duplicates = values.filter((v, i, a) => a.indexOf(v) !== i);
+
+        if (duplicates.length > 0) {
+            alert("Alle namen moeten uniek zijn.");
+            event.preventDefault();
+            return false;
+        }
+        return true;
+    }
+</script>

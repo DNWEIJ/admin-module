@@ -129,7 +129,7 @@ public class CustomerController {
             matcher.appendReplacement(result, "<strong>" + match + "</strong>");
         }
         matcher.appendTail(result);
-        // <li class="ac_even">♦<strong>Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
+        // must look like:  <li class="ac_even">♦<strong>Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
         return "<li  data-id=" + customer.getId() + ">"
                 + result + ", " + customer.getFirstName() + " - " + (customer.getAddressLine() == null ? "" : customer.getAddressLine())
                 + " - " + customer.getZipCode() + "</li>";

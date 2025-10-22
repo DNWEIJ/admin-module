@@ -1,5 +1,6 @@
 package dwe.holding.teammover.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dwe.holding.generic.admin.model.type.DriveOptionEnum;
 import dwe.holding.generic.admin.security.AutorisationUtils;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 
 @Controller
@@ -49,7 +49,7 @@ public class DriverController {
 
 
     @GetMapping("/game/{id}/driver")
-    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull Long id, Model model) throws JsonProcessingException {
         model.addAttribute("action", "Bewerk");
         Game game = gameRepository.findById(id).orElseThrow();
         model.addAttribute("game", game);
@@ -62,19 +62,22 @@ public class DriverController {
                                 .findFirst()
                                 .orElse(newDriver(game.getId()))
         );
+        model.addAttribute("calculatedTotalPeople", getTotalPeople(game));
+        model.addAttribute("calculatedTotalSeats", getTotalSeats(game));
+
         return "teammover-module/driver/action";
     }
 
-    Driver newDriver(  Long gameId) {
+    Driver newDriver(Long gameId) throws JsonProcessingException {
         return Driver.builder()
                 .accountName(AutorisationUtils.getCurrentUserAccount())
                 .game(Game.builder().id(gameId).build())
-                .nrOfTeamMembers(objectMapper.convertValue(AutorisationUtils.getCurrentUserPref(), TeamMoverUserPreferences.class).getNrOfTeamMembers())
+                .nrOfTeamMembers(objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), TeamMoverUserPreferences.class).getNrOfTeamMembers())
                 .driveOption(DriveOptionEnum.Not)
                 .build();
     }
 
-      Long processDriver(Driver formDriver) {
+    private Long processDriver(Driver formDriver) {
         Game game = gameRepository.findById(formDriver.getGame().getId()).orElseThrow();
         if (formDriver.isNew()) {
             Driver savedGame = driverRepository.save(
@@ -103,6 +106,15 @@ public class DriverController {
             Driver savedDriver = driverRepository.save(dbDriver);
             return savedDriver.getId();
         }
+    }
 
+    private int getTotalSeats(Game game) {
+        return game.getDrivers().stream()
+                .filter(driver -> driver.getDriveOption().equals(DriveOptionEnum.Via))
+                .mapToInt(Driver::getNrOfEmptySpots).sum();
+    }
+
+    private int getTotalPeople(Game game) {
+        return game.getDrivers().stream().mapToInt(Driver::getNrOfTeamMembers).sum();
     }
 }

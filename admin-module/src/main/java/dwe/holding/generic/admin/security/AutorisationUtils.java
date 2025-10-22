@@ -3,10 +3,10 @@ package dwe.holding.generic.admin.security;
 
 import dwe.holding.generic.admin.model.Member;
 import dwe.holding.generic.admin.model.User;
+import dwe.holding.generic.admin.model.UserPreferences;
 import dwe.holding.generic.shared.model.type.YesNoEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collection;
@@ -15,21 +15,21 @@ import java.util.Collection;
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.
  */
 public class AutorisationUtils {
-    private static final String ERROR_CODE_NOT_LOGGED_IN = "SYS-10008";
 
     protected AutorisationUtils() {
-        // Utility class. Do not create an instance.
     }
 
     public static String getCurrentLocalMemberName() {
-        return getCurrentMember().getLocalMembers().stream().filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getLocalMemberName();
+        return getCurrentMember().getLocalMembers().stream()
+                .filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst()
+                .orElseThrow().getLocalMemberName();
     }
 
     public static Member getCurrentMember() {
         return getCurrentUser().getUser().getMember();
     }
 
-    public static   Long getCurrentUserMid() {
+    public static Long getCurrentUserMid() {
         return getCurrentUser().getUser().getMember().getId();
     }
 
@@ -37,7 +37,7 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getMember().getPassword();
     }
 
-    public static   Long getCurrentUserId() {
+    public static Long getCurrentUserId() {
         return getCurrentUser().getUser().getId();
     }
 
@@ -45,24 +45,16 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getAccount();
     }
 
-    public static   Long getCurrentUserMlid() {
+    public static Long getCurrentUserMlid() {
         return getCurrentUser().getUser().getMemberLocalId();
     }
 
-    public static   Long validateAndreturnLocalMemberId(  Long localMemberId) {
+    public static Long validateAndreturnLocalMemberId(Long localMemberId) {
         return getCurrentMember().getLocalMembers().stream().
                 filter(f -> f.getId().equals(localMemberId))
                 .findFirst()
                 .orElseThrow()
                 .getId();
-    }
-
-    public static boolean isNewUser() {
-        return getCurrentUser().getUser().isChangePassword();
-    }
-
-    public static boolean isLocalMemberRequired() {
-        return getCurrentUser().getUser().getMember().getLocalMemberSelectRequired().equals(YesNoEnum.Yes);
     }
 
     public static Collection<GrantedAuthority> getCurrentAuthorities() {
@@ -76,10 +68,10 @@ public class AutorisationUtils {
             if (principal instanceof AdminUserDetails) {
                 return (AdminUserDetails) principal;
             } else {
-                throw new RuntimeException(ERROR_CODE_NOT_LOGGED_IN);
+                throw new RuntimeException("No principal found in security context");
             }
         } else {
-            throw new RuntimeException(ERROR_CODE_NOT_LOGGED_IN);
+            throw new RuntimeException("No authentication found in security context");
         }
     }
 
@@ -87,15 +79,32 @@ public class AutorisationUtils {
         getCurrentUser().setUser(user);
     }
 
-    public static void setCurrentUserPref(Object jsonPreferences) {
-        getCurrentUser().setUserPref(jsonPreferences);
+    public static void setCurrentUserPref(UserPreferences userPreferences) {
+        getCurrentUser().setUserPref(userPreferences);
     }
 
-    public static Object getCurrentUserPref() {
-        return getCurrentUser().getUserPref();
+    public static String getCurrentUserJsonPref() {
+        return getCurrentUser().getUserPref().getUserPreferencesJson();
     }
 
-    public static boolean isRole(String role) {
-        return AutorisationUtils.getCurrentAuthorities().contains(new SimpleGrantedAuthority(role));
+
+    public static boolean isNewUser() {
+        return getCurrentUser().getUser().isChangePassword();
+    }
+
+    public static boolean isLocalMemberRequired() {
+        return getCurrentUser().getUser().getMember().getLocalMemberSelectRequired().equals(YesNoEnum.Yes);
+    }
+
+    public static boolean hasRole(String role) {
+        return getCurrentUser().getUser().getRoles().contains(role);
+    }
+
+    public static boolean isLoggedIn() {
+        try {
+            return !getCurrentUser().getUser().getRoles().isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

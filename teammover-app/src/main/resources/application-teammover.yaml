@@ -16,7 +16,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         generate-ddl: no
-        show_sql: false
+        show_sql: true
         use_sql_comments: false
         format_sql: false
         use_jdbc_metadata_defaults: false
@@ -24,5 +24,5 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO

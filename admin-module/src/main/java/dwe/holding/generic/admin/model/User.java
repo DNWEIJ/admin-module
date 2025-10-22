@@ -62,8 +62,10 @@ public class User extends BaseBO {
     @Builder.Default
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<>(0);
+    @Transient
+    private List<String> roles = new ArrayList<>(0);
     @Builder.Default
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "userId")
     private List<IPSecurity> ipNumbers = new ArrayList<>(0);
 
     public User() {
