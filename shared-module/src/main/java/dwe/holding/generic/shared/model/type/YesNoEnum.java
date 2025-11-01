@@ -28,7 +28,15 @@ public enum YesNoEnum {
 
     public static YesNoEnum getEnum(String value) {
         if (value == null)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Null value for YesNoEnum");
+        for (YesNoEnum anEnum : values())
+            if (value.equalsIgnoreCase(anEnum.name())) return anEnum;
+        throw new IllegalArgumentException();
+    }
+
+    public static YesNoEnum getEnumFromDbField(String value) {
+        if (value == null)
+            throw new IllegalArgumentException("Null value in db for YesNoEnum");
         for (YesNoEnum anEnum : values())
             if (value.equalsIgnoreCase(anEnum.getDatabaseField())) return anEnum;
         throw new IllegalArgumentException();

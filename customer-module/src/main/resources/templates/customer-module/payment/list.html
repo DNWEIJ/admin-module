@@ -1,0 +1,42 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.payment}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.payment},'/customer/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
+
+<hr/>
+    <table class="table-tight" id="show-table">
+        <thead>
+        <tr>
+            <th>[[#{label.payment.paymentDate}]]</th>
+            <th>[[#{label.payment.location}]]</th>
+            <th>[[#{label.payment.method}]]</th>
+            <th>[[#{label.payment.amount}]]</th>
+            <th>[[#{label.payment.referenceNumber}]]</th>
+            <th>[[#{label.payment.lasteditedby}]]</th>
+        </tr>
+<!--        <tr>-->
+<!--            <th>[[#{label.payment.chipTattooId}]]</th>-->
+<!--        </tr>-->
+        </thead>
+        <tbody>
+        <th:block th:each="payment : ${payments}">
+            <tr>
+                <td><a th:href="'/customer/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
+                <td>[[${payment.localMemberId}]]</td>
+                <td>[[#{${payment.method.getLabel}}]]</td>
+                <td>[[${#numbers.formatCurrency(payment.amount)}]]</td>
+                <td>[[${payment.referenceNumber}]]</td>
+                <td>
+                <small th:data-tooltip="'Created by  '+${payment.addedBy}+' on ' +${#temporals.format(payment.addedOn, 'dd-MM-yy')}">
+                    [[${payment.lastEditedBy}]] • [[${#temporals.format(payment.lastEditedOn, 'dd-MM-yy')}]]
+                </small>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</section>

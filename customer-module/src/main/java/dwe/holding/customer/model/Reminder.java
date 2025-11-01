@@ -1,8 +1,10 @@
 package dwe.holding.customer.model;
 
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,18 +20,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public  class Reminder extends TenantBaseBO implements Serializable {
+public class Reminder extends MemberBaseBO implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CHILD_ID")
-    private Child child;
+    @JoinColumn(name = "pet_id")
+    @NotNull
+    private Pet pet;
 
     @Column(nullable = false)
+    @NotNull
     private LocalDate dueDate;
 
     @Column(nullable = false)
+    @NotBlank
     private String reminder;
 
     @Column(nullable = false)
+    @NotNull
     private Long originatingAppointmentId;
 }

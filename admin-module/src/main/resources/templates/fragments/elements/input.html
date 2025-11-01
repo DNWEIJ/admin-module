@@ -4,19 +4,16 @@
            th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}">
 </th:block>
 
-<th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)" th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}">
+<th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)" th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}, pattern=${pattern}?:''">
     <div class="field">
-        <input th:id="${name}" th:name="${name}" placeholder=" " th:required="${required}" autocomplete="off"
+        <input th:id="${name}" th:name="${name}" placeholder=" " th:required="${required}"
+               th:pattern="${pattern}"  autocomplete="off"
                th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}">
-        <label th:for="${name}" th:text="${label}"></label>
+        <label th:for="${name}" th:utext="#{${label}}"></label>
     </div>
 </th:block>
 
-<th:block th:fragment="inputHtmlDateTime(name, label, dbField, tabindex)" th:with="required=${required}?:true">
-    <label th:for="${name}" th:text="${label}"></label>
-    <input th:id="${name}" th:name="${name}" th:placeholder="${label}" th:required="${required}"
-           th:value="${#temporals.format(game.whenIsTheGame, 'yyyy-MM-dd HH:mm')}" th:tabindex="${tabindex}" type="datetime-local">
-</th:block>
+
 
 <th:block th:fragment="inputHtmlOptional(name, label, dbField, tabindex)" th:with="type=${type}?:'text'">
     <label th:for="${name}">[[${label}]]

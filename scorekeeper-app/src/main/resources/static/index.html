@@ -5,7 +5,6 @@
     <title>Scorekeeper</title>
     <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
     <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
-    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet"/>
     <style>
         #p1display, #p2display {
             flex: 1; /* each takes up half the width */
@@ -24,9 +23,22 @@
         #p2display, #player2-plus, #player2-minus {
             background-color: green;
         }
-        [role=group]  :not(:last-child) {
+
+        [role=group] :not(:last-child) {
             margin-right: .1em;
         }
+        svg {
+            fill: currentColor;
+            color: orange;
+            transition: color 0.3s ease;
+            width: 48px;
+            height: 48px;
+        }
+
+        button:hover {
+            color: darkred;
+        }
+
 
     </style>
 </head>
@@ -41,19 +53,40 @@
         </div>
     </div>
     <footer>
-        <div role="group" >
-            <button id="player1-plus" title="Add one to score"><i class="fa-2x fa-solid fa-user-plus"></i></button>
-            <button id="player1-minus" title="Substract one from score"><i class="fa-2x fa-solid fa-user-minus"></i></button>
-            <button id="player2-plus" title="Add one to score"><i class="fa-2x fa-solid fa-user-plus"></i></button>
-            <button id="player2-minus" title="Substract one from score"><i class="fa-2x fa-solid fa-user-minus"></i></button>
+
+
+        <div role="group">
+            <button id="player1-plus" title="Add one to score">
+                <svg>
+                    <use height="48px" width="48px"  href="/tabler-icons/outline/plus.svg"></use>
+                </svg>
+            </button>
+            <button id="player1-minus" title="Substract one from score">
+                <svg>
+                    <use height="48px" width="48px"  href="/tabler-icons/outline/minus.svg"></use>
+                </svg>
+            </button>
+            <button id="player2-plus" title="Add one to score">
+                <svg>
+                    <use height="48px" width="48px"  href="/tabler-icons/outline/plus.svg"></use>
+                </svg>
+            </button>
+            <button id="player2-minus" title="Substract one from score">
+                <svg>
+                    <use height="48px" width="48px" href="/tabler-icons/outline/minus.svg"></use>
+                </svg>
+            </button>
         </div>
         <div role="group">
-            <button id="reset" title="reset to zero"><i class="fa-2x fa-solid fa-hourglass-start"></i></i></button>
+            <button id="reset" title="reset to zero">
+                <svg>
+                    <use height="48px" width="48px" href="/tabler-icons/outline/square-rounded-letter-x.svg"></use>
+                </svg>
+            </button>
         </div>
+
     </footer>
 </article>
-
-
 <script src="./app.js"></script>
 
 </body>

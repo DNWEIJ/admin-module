@@ -2,9 +2,12 @@ package dwe.holding.generic.admin.model;
 
 
 import dwe.holding.generic.admin.model.base.BaseBO;
+import dwe.holding.generic.admin.model.converter.LanguagePrefEnumConverter;
+import dwe.holding.generic.admin.model.converter.PersonnelStatusEnumConverter;
 import dwe.holding.generic.admin.model.type.LanguagePrefEnum;
 import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
 
+import dwe.holding.generic.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,18 +31,21 @@ public class User extends BaseBO {
     @NotEmpty
     @Column(nullable = false)
     private String account;
+
     @NotEmpty
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
 
-    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = PersonnelStatusEnumConverter.class)
     private PersonnelStatusEnum personnelStatus;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+
+    @Column(columnDefinition = "varchar(2)", nullable = false)
+    @Convert(converter = LanguagePrefEnumConverter.class)
     private LanguagePrefEnum language;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+
+    @Column(columnDefinition = "varchar(1)")
+    @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum loginEnabled;
 
     @Column(nullable = false)
@@ -47,6 +53,7 @@ public class User extends BaseBO {
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)
+
     @Builder.Default
     private boolean changePassword = false;
     private LocalDate lastVisitDate;

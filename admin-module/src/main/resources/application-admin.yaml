@@ -4,20 +4,20 @@ server:
   port: 9001
 
 spring:
-  servlet:
-    multipart:
-      max-file-size: 1GB
-      max-request-size: 1GB
+  messages:
+    basename: admin/messages
+
   datasource:
-    name: admin-module
-    driverClassName: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:file:~/admin-module/database/admin-module;sql.syntax_mys=true
-    username: SA
+    url: jdbc:mysql://localhost:3306/admin
+    username: root
+    password: root
   jpa:
-    database: hsql
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update  # validate or update
-
+    show-sql: true
+    generate-ddl: true
+    database: mysql
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -27,11 +27,9 @@ spring:
         format_sql: false
         use_jdbc_metadata_defaults: false
 
-  thymeleaf:
-    cache: false
-
 logging:
   level:
     root: INFO
     org.springframework.web: INFO
     org.springframework.security: INFO
+    org.hibernate.tool.schema: INFO

@@ -117,7 +117,7 @@ public class RoleController {
         // initial so no data
         if (role.getFunctionRoles().isEmpty()) {
             checked.forEach(pf -> {
-                Function function = functionRepository.findById(pf.id).get();
+                Function function = functionRepository.findById(pf.id).orElseThrow();
                 FunctionRole functionRole = new FunctionRole(function, role);
                 function.getFunctionRoles().add(functionRole);
                 role.getFunctionRoles().add(functionRole);
@@ -137,7 +137,7 @@ public class RoleController {
             // find th record to be added
             List<PresentationElement> pF = checked.stream().filter(a -> !currentFunctionIdsAdd.contains(a.getId())).toList();
             pF.forEach(pf -> {
-                        Function function = functionRepository.findById(pf.id).get();
+                        Function function = functionRepository.findById(pf.id).orElseThrow();
                         role.getFunctionRoles().add(new FunctionRole(function, role));
                     }
             );

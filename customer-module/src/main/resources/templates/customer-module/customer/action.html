@@ -1,16 +1,23 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:hx-on="http://www.w3.org/1999/xhtml" layout:decorate="~{customer-module/layout.html}">
 <head>
-    <title>Customer</title>
+    <title>[[#{label.title.customer}]]</title>
     <style>
-        .ac_results {
-            overflow: hidden;
-            background-color: var(--pico-background-color);
-            z-index: 99999;
-            border: 1px solid var(--pico-border-color);
+        .gridSearchWithCheck {
+            display: grid;
+            grid-template-columns: 4fr repeat(3, 1fr);
+            grid-template-rows: 1fr;
+            grid-column-gap: 1em;
+            grid-row-gap: 0;
         }
 
-        .ac_results ul {
+        .ac_results {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--pico-background-color);
             width: 100%;
+            z-index: 999;
+            border: 1px solid black;
+            box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
         }
 
         .ac_results li {
@@ -20,58 +27,66 @@
         }
 
         .ac_results li:nth-child(even) {
-            background-color: var(--pico-color);
-            color: var(--pico-background-color);
+            background-color: var(--pico-dropdown-background-color);
         }
 
-        .ac_results .selected {
-            background-color: slateblue;
-            color: deepskyblue;
+        .ac_results li.selected {
+            background-color: darkblue;
+            color: white;
         }
 
-        .holder {
-            position: relative;
+       .ac_results:empty {
+            display: none;
         }
 
-        .dropdown {
-            position: absolute;
-            border: 1px solid var(--pico-border-color);
-            /*display: none;*/
-        }
-
-        /*input:focus + .dropdown {*/
-        /*    display: block;*/
-        /*}*/
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById("customerFind");
+        let baseUrl;
+        let selectedIndex = -1;
 
-            let selectedIndex = -1;
+        function updateSelection(listItems) {
 
-            function updateSelection(listItems) {
+            if (listItems.length === 0) return;
+            listItems.forEach((li, index) => {
+                li.classList.toggle("selected", index === selectedIndex);
+                if (index === selectedIndex) {
+                    li.scrollIntoView({ block: "nearest" });
+                }
+            });
+        }
 
-                if (listItems.length === 0) return;
-                listItems.forEach((li, index) => {
-                    li.classList.toggle("selected", index === selectedIndex);
+        function getId(listItems) {
+
+            if (listItems.length === 0) return;
+            return Array.from(listItems).filter(li => li.classList.contains("selected"))[0].dataset.id
+        }
+
+        function getListItems() {
+            return document.querySelectorAll("#input-customerName li");
+        }
+
+        function attachMouseHandlers() {
+            const listItems = getListItems();
+
+            listItems.forEach((li, index) => {
+                li.addEventListener("mouseenter", () => {
+                    // highlight hovered item
+                    selectedIndex = index;
+                    updateSelection(listItems);
                 });
-                //
-                // if (selectedIndex >= 0) {
-                //     listItems[selectedIndex].scrollIntoView({
-                //         block: "nearest",
-                //         behavior: "smooth"
-                //     });
-            }
-            function getId(listItems) {
 
-                if (listItems.length === 0) return;
-                return Array.from(listItems).filter(li => li.classList.contains("selected"))[0].dataset.id
-            }
+                li.addEventListener("click", (event) => {
+                    window.location.href = `${window.location.origin}/customer/customer/` + getId(getListItems());
+                    event.preventDefault();
+                });
+            });
+        }
 
-            function getListItems() {
-                return document.querySelectorAll("#input-customerName li");
-            }
-
+        document.addEventListener("DOMContentLoaded", () => {
+            attachMouseHandlers()
+            baseUrl = window.location.href;
+            const input = document.getElementById("customerFind");
+            selectedIndex = -1;
             input.addEventListener("keydown", (event) => {
 
                 if (event.key === "ArrowDown") {
@@ -98,7 +113,7 @@
                     event.preventDefault();
                 }
                 if (event.key === "Enter") {
-                    window.location.href = window.location.href + "/" + getId(getListItems());
+                    window.location.href = `${window.location.origin}/customer/customer/` + getId(getListItems());
                     event.preventDefault();
                 }
             })
@@ -108,13 +123,12 @@
 <body>
 
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Customer','/customer/customer/list')}"></th:block>
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
 
     <span class="htmx-indicator"><span aria-busy="true">Searching for customers...</span></span>
-
-    <fieldset class="grid">
+    <div class="gridSearchWithCheck">
         <div class="holder">
-            <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" placeholder="Begin typing to search for Customers..."
+            <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}"
                    hx-post="/customer/search/customer"
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
@@ -122,173 +136,84 @@
                    hx-include="#startLastName, #includeStreetName"
                    autocomplete="off">
             <div class="dropdown">
-                <div class="ac_results" id="input-customerName"></div>
+                <div class="ac_results" id="input-customerName" hx-on::after-swap="attachMouseHandlers()"></div>
             </div>
         </div>
-        <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','last name','form.startLastName','2')}"
-                  th:with="tooltip='start of lastname instead of anywhere within the lastname'"></th:block>
-        <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','street name','form.includeStreetName','3')}" th:with="tooltip='include street name'"></th:block>
-    </fieldset>
-
+        <div>
+            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','last name','form.startLastName','2')}"
+                      th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
+        </div>
+        <div>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','street name','form.includeStreetName','3')}"
+                      th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
+        </div>
+        <div>
+            <input name="_save" type="submit" th:value="#{label.button.save}" form="createForm">
+        </div>
+    </div>
     <hr/>
-    <form action="/customer/customer" method="post">
+    <form id="createForm"  action="/customer/customer" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${customer.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${customer.version}" type="hidden"/>
+
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.customerName}"/>
             </legend>
-            <label for="customer.lastName">
-                <th:block th:utext="#{customer.lastName}"/>
-                <input id="customer.lastName" name="customer.lastName" type="text" th:value="${customer.lastName}"/>
-            </label>
-
-            <label for="customer.surname">
-                <th:block th:utext="#{customer.surname}"/>
-                <input id="customer.surname" name="customer.surname" type="text" th:value="${customer.surname}"/>
-            </label>
-
-            <label for="customer.firstName">
-                <th:block th:utext="#{customer.firstName}"/>
-                <input id="customer.firstName" name="customer.firstName" type="text" th:value="${customer.firstName}"/>
-            </label>
-
-            <label for="customer.middleInitial">
-                <th:block th:utext="#{customer.middleInitial}"/>
-                <input id="customer.middleInitial" name="customer.middleInitial" type="text" th:value="${customer.middleInitial}"/>
-            </label>
-
-            <label for="customer.title">
-                <th:block th:utext="#{customer.title}"/>
-                <input id="customer.title" name="customer.title" type="text" th:value="${customer.title}"/>
-            </label>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('lastName','customer.lastName','customer.lastName','4')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('surname','customer.surname','customer.surName','5')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('firstName','customer.firstName','customer.firstName','6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('middleInitial','customer.middleInitial','customer.middleInitial','7')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('title','customer.title','customer.title','8')}" th:with="required=false"></th:block>
         </fieldset>
-
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.contactInformation}"/>
             </legend>
-
-            <label for="customer.email">
-                <th:block th:utext="#{customer.email}"/>
-                <input id="customer.email" name="customer.email" type="text" th:value="${customer.email}"/>
-            </label>
-
-            <label for="customer.mobilePhone">
-                <th:block th:utext="#{customer.mobilePhone}"/>
-                <input id="customer.mobilePhone" name="customer.mobilePhone" placeholder="06-12345678"
-                       pattern="[0-9]-" type="text" th:value="${customer.mobilePhone}"/>
-            </label>
-
-            <label for="customer.workPhone">
-                <th:block th:utext="#{customer.workPhone}"/>
-                <input id="customer.workPhone" name="customer.workPhone" type="text" th:value="${customer.workPhone}"/>
-            </label>
-
-            <label for="customer.status">
-                <th:block th:utext="#{customer.status}"/>
-                <select id="customer.status" name="customer.status" th:value="${customer.status}">
-                    <option value=""><< Please choose >></option>
-                    <option value="N">Normal</option>
-                    <option value="L">Late Payment</option>
-                    <option value="I">Incasso</option>
-                    <option value="C">Closed</option>
-                    <option value="H">HZP</option>
-                </select>
-            </label>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','9')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('homePhone','customer.homePhone','customer.homePhone','10')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('mobilePhone','customer.mobilePhone','customer.mobilePhone','11')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('workPhone','customer.workPhone','customer.workPhone','12')}" th:with="required=false"></th:block>
         </fieldset>
-
         <fieldset class="grid">
-            <legend>
-                <th:block th:utext="#{customer.legend.oldAddress}"/>
-            </legend>
-
-            <label for="customer.address1">
-                <th:block th:utext="#{customer.address1}"/>
-                <input disabled id="customer.address1" name="customer.address1" type="text" th:value="${customer.address1}"/>
-                <input disabled id="customer.address2" name="customer.address2" type="text" th:value="${customer.address2}"/>
-                <input disabled id="customer.address3" name="customer.address3" type="text" th:value="${customer.address3}"/>
-            </label>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', 'customer.status', ${statusList}, true,'13')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', 'customer.newsletter', ${ynvaluesList}, true,'14')}" th:with="required=false"></th:block>
         </fieldset>
-
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.addressInformation}"/>
             </legend>
-
-            <label for="customer.addressLine">
-                <th:block th:utext="#{addressLine}"/>
-                <input id="customer.addressLine" name="customer.addressLine" placeholder="Somehwerestreet 12"
-                       type="text" th:value="${customer.addressLine}"/>
-            </label>
-
-            <label for="customer.zipCode">
-                <th:block th:utext="#{customer.zipCode}"/>
-                <input id="customer.zipCode" name="customer.zipCode" type="text" th:value="${customer.zipCode}"/>
-            </label>
-
-            <label for="customer.city">
-                <th:block th:utext="#{customer.city}"/>
-                <input id="customer.city" name="customer.city" type="text" th:value="${customer.city}"/>
-            </label>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','customer.address1','customer.address1','15')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','customer.address2','customer.address2','16')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipCode','customer.zipCode','17')}" th:with="pattern='^[1-9][0-9]{3}\s?[A-Z]{2}$', placeholder='XXXZZ'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','customer.city','customer.city','18')}"></th:block>
         </fieldset>
-
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.emergencyInformation}"/>
             </legend>
-
-            <label for="customer.emergencyContact">
-                <th:block th:utext="#{customer.emergencyContact}"/>
-                <input id="customer.emergencyContact" name="customer.emergencyContact" type="text" th:value="${customer.emergencyContact}"/>
-            </label>
-
-            <label for="customer.emergencyContactPhone">
-                <th:block th:utext="#{customer.emergencyContactPhone}"/>
-                <input id="customer.emergencyContactPhone" name="customer.emergencyContactPhone" type="text" th:value="${customer.emergencyContactPhone}"/>
-            </label>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('emergencyContact','customer.emergencyContact','customer.emergencyContact','19')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('emergencyContactPhone','customer.emergencyContactPhone','customer.emergencyContactPhone','20')}" th:with="required=false"></th:block>
         </fieldset>
-
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.otherInformation}"/>
             </legend>
-
-            <label for="customer.veterinarian">
-                <th:block th:utext="#{customer.veterinarian}"/>
-                <input id="customer.veterinarian" name="customer.veterinarian" type="text" th:value="${customer.previousVeterinarian}"/>
-            </label>
-
-            <label for="customer.veterinarianPhone">
-                <th:block th:utext="#{customer.veterinarianPhone}"/>
-                <input id="customer.veterinarianPhone" name="customer.veterinarianPhone" type="text" th:value="${customer.previousVeterinarianPhone}"/>
-            </label>
-
-            <label for="customer.newsletter">
-                <th:block th:utext="#{customer.newsletter}"/>
-                <select id="customer.newsletter" name="customer.newsletter" th:value="${customer.newsletter}">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </label>
-
-            <label for="customer.ubn">
-                <th:block th:utext="#{customer.ubn}"/>
-                <input id="customer.ubn" maxlength="25" name="customer.ubn" size="25" type="text" th:value="${customer.ubn}"/>
-            </label>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarian','customer.previousVeterinarian','customer.previousVeterinarian','21')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarianPhone','customer.previousVeterinarianPhone','customer.previousVeterinarianPhone','22')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('ubn','customer.ubn','customer.ubn','23')}" th:with="required=false"></th:block>
         </fieldset>
+
 
         <fieldset class="grid">
             <label for="customer.comments">
                 <th:block th:utext="#{customer.comments}"/>
-                <textarea cols="110" id="customer.comments" name="customer.comments" rows="8" th:text="${comments}"></textarea>
+                <textarea cols="110" id="customer.comments" name="customer.comments" rows="8" th:utext="${customer.comments}"></textarea>
             </label>
         </fieldset>
     </form>
-
+    <th:block th:insert="~{fragments/elements/audit::audit('customer.addedBy','customer.addedOn', 'customer.lastEditedBy', 'customer.lastEditedOn')}"></th:block>
 </section>
-<script>
-    function check(input) {
-        if (!/^\d{1,5}$/.test(input.value)) {
-            input.reportValidity()
-        }
-    }
-</script>
+</body>
+</html>

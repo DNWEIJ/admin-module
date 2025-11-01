@@ -1,0 +1,42 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.pet}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.pet},'/customer/customer/'+ ${customerId}+ '/pet', ${customerInformation})}"></th:block>
+    <hr/>
+    <table class="table-tight" id="show-table">
+        <thead>
+        <tr>
+            <th>[[#{pet.name}]]</th>
+            <th>[[#{pet.species}]]</th>
+            <th>[[#{pet.breed}]]</th>
+            <th>[[#{pet.sex}]]</th>
+            <th>[[#{pet.birthday}]]</th>
+            <th>[[#{pet.rabiesId}]]</th>
+            <th>[[#{pet.chipTattooId}]]</th>
+            <th>[[#{label.list.auditinfo}]]</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="pet : ${pets}">
+            <tr>
+                <td><a th:href="'/customer/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}"><span th:utext="${pet.nameWithDeceased}" th:remove="tag"></span></a></td>
+                <td>[[${pet.species}]]</td>
+                <td>[[${pet.breed}]]</td>
+                <td>[[#{${pet.sex.getLabel}}]]</td>
+                <td th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
+                <td>[[${pet.rabiesId}]]</td>
+                <td>[[${pet.chipTattooId}]]</td>
+                <td>
+                    <small th:data-tooltip="'Created by  '+${pet.addedBy}+' on ' +${#temporals.format(pet.addedOn, 'dd-MM-yy')}">
+                        [[${pet.lastEditedBy}]] • [[${#temporals.format(pet.lastEditedOn, 'dd-MM-yy')}]]
+                    </small>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</section>

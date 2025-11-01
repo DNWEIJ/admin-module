@@ -1,22 +1,27 @@
 package dwe.holding.customer.model.type;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public enum SexTypeEnum {
 
-    FEMALE("label.patientsexstatus.female", 1),
-    FEMALESPAYED("label.patientsexstatus.female_spayed", 2),
-    MALE("label.patientsexstatus.male", 3),
-    MALENEUTERED("label.patientsexstatus.male_neutered", 4),
-    UNKNOWN("label.patientsexstatus.unknown", 5),
-    MALEPENISAMPUTATION("label.patientsexstatus.male_penisamputation", 6),
-    MALEVASECTOMIE("label.patientsexstatus.male_vasectomie", 7);
+    FEMALE("F", "label.petsexstatus.female", 1),
+    FEMALESPAYED("S", "label.petsexstatus.female.spayed", 2),
+    MALE("M", "label.petsexstatus.male", 3),
+    MALENEUTERED("N", "label.petsexstatus.male.neutered", 4),
+    UNKNOWN("U", "label.petsexstatus.unknown", 5),
+    MALEPENISAMPUTATION("P", "label.petsexstatus.penisamputation", 6),
+    MALEVASECTOMIE("V", "label.petsexstatus.vasectomie", 7);
 
+    private final String databaseField;
     private final String label;
     private final int order;
 
-    SexTypeEnum(String label, int order) {
+    SexTypeEnum(String databasesField, String label, int order) {
+        this.databaseField = databasesField;
         this.order = order;
         this.label = label;
     }
@@ -25,12 +30,20 @@ public enum SexTypeEnum {
         return Arrays.stream(SexTypeEnum.values()).sorted(new SexTypeEnum.SexTypeEnumComparator()).toList();
     }
 
-    public int getOrder() {
-        return order;
+    public static SexTypeEnum getEnum(String value) {
+        if (value == null)
+            throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
+        for (SexTypeEnum anEnum : values())
+            if (value.equalsIgnoreCase(anEnum.name())) return anEnum;
+        throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
     }
 
-    public String getLabel() {
-        return label;
+    public static SexTypeEnum getEnumFromDbField(String value) {
+        if (value == null)
+            throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
+        for (SexTypeEnum anEnum : values())
+            if (value.equalsIgnoreCase(anEnum.getDatabaseField())) return anEnum;
+        throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
     }
 
     private static class SexTypeEnumComparator implements java.util.Comparator<SexTypeEnum> {

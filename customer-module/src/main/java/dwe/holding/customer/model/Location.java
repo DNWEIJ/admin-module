@@ -1,6 +1,6 @@
 package dwe.holding.customer.model;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Location extends TenantBaseBO {
+public class Location extends MemberBaseBO {
 
     @ManyToOne
     @JoinColumn(name = "diagnose_id")

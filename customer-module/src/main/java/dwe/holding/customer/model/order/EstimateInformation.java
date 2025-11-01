@@ -1,7 +1,7 @@
 package dwe.holding.customer.model.order;
 
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
-import dwe.holding.customer.model.Child;
+import dwe.holding.customer.model.Pet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,11 +19,11 @@ import lombok.experimental.SuperBuilder;
     public  class EstimateInformation extends TenantBaseBO {
 
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "CHILD_ID")
-        private Child child;
+        @JoinColumn(name = "pet_id")
+        private Pet pet;
 
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "ESTIMATE_ID")
+        @JoinColumn(name = "estimate_id")
         private Estimate estimate;
 
         private String veterinarian;

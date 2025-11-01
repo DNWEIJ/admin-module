@@ -48,6 +48,62 @@
     align-items: baseline; /* aligns text nicely */
 }
 
+.threecolumn-spread {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 1em 1em;
+    grid-template-areas:
+    "one two three";
+    align-items: center;
+}
+.threecolumn-spread .three {
+    justify-self: end;
+    grid-area: three;
+    align-self: center;
+
+}
+.threecolumn-spread .two { grid-area: two;
+    justify-self: center;
+    align-self: center;
+}
+. threecolumn-spread .one {
+    justify-self: start;
+    align-self: center;
+    grid-area: one;
+}
+
+.fourcolumn-spread {
+    display: grid;
+    grid-template-columns: 2fr 2fr .1fr .1fr;
+    grid-template-rows: 1fr;
+    gap: 1em 1em;
+    grid-template-areas: "one two three four";
+    align-items: center;
+}
+.fourcolumn-spread .four {
+    grid-area: four;
+    justify-self: end;
+    align-self: center;
+}
+.fourcolumn-spread .three {
+    grid-area: three;
+    justify-self: center;
+    align-self: start;
+
+}
+.fourcolumn-spread .two {
+    grid-area: two;
+    justify-self: center;
+    align-self: center;
+}
+. fourcolumn-spread .one {
+    grid-area: one;
+    justify-self: start;
+    align-self: center;
+}
+
+
  fieldset {
      font-family: sans-serif;
      border: .1em solid var(--pico-muted-border-color);
@@ -107,28 +163,13 @@ fieldset legend {
     font-size: 12px;
     color: var(--accent);
     background:  var(--pico-background-color);
+    z-index: 100;
 }
 
 
 /* miscellaneous */
 .no-break {
     white-space: nowrap;
-}
-
-/* ************************** */
-/* PICO SPECIFIC FOR THIS APP */
-:root {
-    --pico-border-radius: 0.3rem;
-    --pico-typography-spacing-vertical: .5rem;
-    --pico-form-element-spacing-vertical: .5rem;
-    --pico-form-element-spacing-horizontal: 0.25rem;
-    --pico-font-size: initial;
-    --pico-spacing: 0.5rem;
-}
-
-:root:not([data-theme=dark]), [data-theme=light] {
-    --pico-background-color: #f3f3f3;
-    --pico-spacing: 0.5rem;
 }
 
 /** show the required fields with a red border */
@@ -146,4 +187,21 @@ fieldset legend {
 html footer {
     text-align: center;
     text-size-adjust: 60%;
+}
+
+
+/* ************************** */
+/* PICO SPECIFIC FOR THIS APP */
+:root {
+    --pico-border-radius: 0.3rem;
+    --pico-typography-spacing-vertical: .5rem;
+    --pico-form-element-spacing-vertical: .5rem;
+    --pico-form-element-spacing-horizontal: 0.25rem;
+    --pico-font-size: initial;
+    --pico-spacing: 0.5rem;
+}
+
+:root:not([data-theme=dark]), [data-theme=light] {
+    --pico-background-color: #f3f3f3;
+    --pico-spacing: 0.5rem;
 }

@@ -20,6 +20,6 @@ public class YesNoEnumConverter implements AttributeConverter<YesNoEnum, String>
         if (dbData == null) {
             throw new IllegalArgumentException("Null value in db for YesNoEnum");
         }
-        return YesNoEnum.getEnum(dbData);
+        return YesNoEnum.getEnumFromDbField(dbData);
     }
 }

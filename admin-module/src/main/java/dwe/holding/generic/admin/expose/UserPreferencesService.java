@@ -1,7 +1,5 @@
 package dwe.holding.generic.admin.expose;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dwe.holding.generic.admin.authorisation.user.UserRepository;
 import dwe.holding.generic.admin.model.User;
 import dwe.holding.generic.admin.model.UserPreferences;
@@ -16,18 +14,16 @@ import java.util.Optional;
 public class UserPreferencesService {
     private final UserRepository userRepository;
     private final UserPreferencesRepository userPrefRepo;
-    private final ObjectMapper objectMapper;
 
-    public UserPreferencesService(UserRepository userRepository, UserPreferencesRepository userPrefRepo, ObjectMapper objectMapper) {
+    public UserPreferencesService(UserRepository userRepository, UserPreferencesRepository userPrefRepo) {
         this.userRepository = userRepository;
         this.userPrefRepo = userPrefRepo;
-        this.objectMapper = objectMapper;
     }
 
     public void storeAppPreferences(Long localMemberId, String userPrefJson) {
         // change selected local member
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
-        user.setMemberLocalId(AutorisationUtils.validateAndreturnLocalMemberId(localMemberId));
+        user.setMemberLocalId(AutorisationUtils.validateAndReturnLocalMemberId(localMemberId));
         User savedUser = userRepository.save(user);
         AutorisationUtils.setCurrentUser(savedUser);
 

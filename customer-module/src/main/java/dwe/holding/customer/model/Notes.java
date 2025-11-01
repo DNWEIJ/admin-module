@@ -1,7 +1,9 @@
 package dwe.holding.customer.model;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,23 +18,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Notes extends TenantBaseBO {
+public class Notes extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CHILD_ID", nullable = false)
-    private Child child;
-
+    @JoinColumn(name = "pet_id", nullable = false)
+    private Pet pet;
 
     @Column(nullable = false)
+    @NotNull
     private LocalDate noteDate;
 
-
+    @NotBlank
     @Column(nullable = false)
     private String purpose;
-
 
     @Column(nullable = false)
     private String staffMember;
 
-    private String notes;
+    @Lob
+    @NotNull
+    private String note;
 }

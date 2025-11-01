@@ -1,31 +1,66 @@
 <th:block th:fragment="pageTitle(id, entityName,link)">
     <div class="twocolumn-spread">
-        <h3 th:if="${id == null}" th:text="${'Create '+ entityName}"></h3>
-        <h3 th:if="${id != null}" th:text="${'Update '+ entityName}"></h3>
+        <h3 th:if="${id == null}" th:text="#{label.create} +' '+ ${entityName}"></h3>
+        <h3 th:if="${id != null}" th:text="#{label.update} + ' '+ ${entityName}"></h3>
         <a th:href="${link}" th:if="${list != ''}" th:text="'Show list'"></a>
     </div>
 </th:block>
+
 <th:block th:fragment="pageTitleList(entityName,link)">
     <div class="twocolumn-spread">
-        <h3 th:text="${'List '+ entityName}"></h3>
-        <a th:href="${link}" th:if="${link != ''}">Create</a>
+        <h3 th:text="#{label.list} + ' ' + ${entityName}"></h3>
+        <a th:href="${link}" th:if="${link != ''}">[[#{label.create}]]</a>
+    </div>
+</th:block>
+
+
+<th:block th:fragment="pageTitleCreateThreePlusSave(id, entityName, link, info)">
+    <div class="fourcolumn-spread">
+        <div class="one">
+            <h3 th:if="${id == null}" th:text="#{label.create} +' '+ ${entityName}"></h3>
+            <h3 th:if="${id != null}" th:text="#{label.update} + ' '+ ${entityName}"></h3>
+        </div>
+        <div class="two">
+            <h4 th:text="${info}"></h4>
+        </div>
+        <div class="three">
+            <a role="button" class="outline" th:href="${link}" th:text="#{label.list}"></a>
+        </div>
+        <div class="four">
+            <input type="submit" form="createForm" th:value="#{label.button.save}"/>
+        </div>
+    </div>
+</th:block>
+
+
+<th:block th:fragment="pageTitleListThree(entityName,link, info)">
+    <div class="threecolumn-spread">
+        <div class="one">
+            <h3 th:text="#{label.list} + ' ' + ${entityName}"></h3>
+        </div>
+        <div class="two">
+            <h4 th:text="${info}"></h4>
+        </div>
+        <div class="three">
+            <a role="button" class="outline" th:href="${link}" th:if="${link != ''}" th:text="#{label.create}"></a>
+        </div>
     </div>
 </th:block>
 
 
 <th:block th:fragment="pageTitleNLWP(id, entityName,link)">
-        <div class="twocolumn-spread">
-            <h3 th:if="${id == null}" th:utext="${'Creër '+ entityName }"></h3>
-            <h3 th:if="${id != null}" th:utext="${'Bewerk '+ entityName }"></h3>
-            <a th:href="${link}" th:if="${list != ''}" th:utext="'Toon lijst'"></a>
-            <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
-        </div>
+    <div class="twocolumn-spread">
+        <h3 th:if="${id == null}" th:utext="${'Creër '+ entityName }"></h3>
+        <h3 th:if="${id != null}" th:utext="${'Bewerk '+ entityName }"></h3>
+        <a th:href="${link}" th:if="${list != ''}" th:utext="'Toon lijst'"></a>
+        <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
+    </div>
 </th:block>
 
 <th:block th:fragment="pageTitleListNL(entityName, entity, link)">
-        <div class="twocolumn-spread">
-            <h3 th:text="${'Lijst '+ entityName}"></h3>
-            <a  th:if="${link != '' and #authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="${link}">Creër [[${entity}]]</a>
-            <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
-        </div>
+    <div class="twocolumn-spread">
+        <h3 th:text="${'Lijst '+ entityName}"></h3>
+        <a th:if="${link != '' and #authorization.expression('hasAuthority(''GAME_CREATE'')')}" th:href="${link}">Creër [[${entity}]]</a>
+        <span><strong>[[${memberShortCode}]]&nbsp;</strong><small>([[${localMemberName}]])</small></span>
+    </div>
 </th:block>

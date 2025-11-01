@@ -14,7 +14,7 @@
         <input id="id" name="id" th:value="${function.id}" type="hidden"/>
         <input id="version" name="version" th:value="${function.version}" type="hidden"/>
 
-        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','Function name', 'function.name','1')}" th:with="autofocus=true"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','Function name', 'function.name','1')}"></th:block>
     </fieldset>
 </form>
 </section>

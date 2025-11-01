@@ -1,8 +1,10 @@
 package dwe.holding.customer.model.lookup;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
 import dwe.holding.customer.model.Diagnose;
-import jakarta.persistence.*;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LookupDiagnose extends TenantBaseBO implements Serializable {
+public class LookupDiagnose extends MemberBaseBO implements Serializable {
     private String nomenclature;
     private Long venomId;
 

@@ -1,0 +1,32 @@
+INSERT INTO customer.customer_payment
+(id,
+ version,
+ customer_id,
+ member_id,
+ local_member_id,
+ payment_date,
+ amount,
+ method,
+ reference_number,
+ comments,
+ added_by,
+ added_on,
+ last_edited_by,
+ last_edited_on
+)
+SELECT
+PAYMENT_ID,
+VERSION,
+CUSTOMER_ID,
+MID,
+MLID,
+PAYMENTDATE,
+AMOUNT,
+METHOD,
+REFERENCENUMBER,
+COMMENTS,
+ADDEDBY,
+ADDEDON,
+LASTEDITEDBY,
+LASTEDITEDON
+FROM vmas.payment WHERE mid = 77;

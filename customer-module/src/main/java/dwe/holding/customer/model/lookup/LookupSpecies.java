@@ -1,5 +1,7 @@
 package dwe.holding.customer.model.lookup;
 
+import dwe.holding.generic.admin.model.base.BaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import dwe.holding.generic.admin.model.base.TenantBaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LookupSpecies extends TenantBaseBO {
+public class LookupSpecies extends MemberBaseBO {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "species")
     @Cascade({org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     private Set<LookupBreeds> breeds = new HashSet<>(0);

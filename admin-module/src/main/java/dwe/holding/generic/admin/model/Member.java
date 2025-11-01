@@ -1,6 +1,7 @@
 package dwe.holding.generic.admin.model;
 
 import dwe.holding.generic.admin.model.base.BaseBO;
+import dwe.holding.generic.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -42,17 +43,18 @@ public class Member extends BaseBO {
     @NotEmpty
     @Column(nullable = false)
     private String shortCode;
-    @Column(nullable = false)
-    @NotNull
-    @Enumerated(EnumType.STRING)
+
+    @Column(columnDefinition = "varchar(1)")
+    @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum active;
-    @NotNull
-    @Enumerated(EnumType.STRING)
+
+    @Column(columnDefinition = "varchar(1)")
+    @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum localMemberSelectRequired;
     @Column(nullable = false)
     @NotNull
-    private LocalDate start;
-    private LocalDate stop;
+    private LocalDate startDate;
+    private LocalDate stopDate;
     @NotEmpty
     private String applicationName;
     @NotEmpty

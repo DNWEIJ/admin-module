@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class PaymentVisit extends TenantBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "PAYMENT_ID", nullable = false)
+    @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 // TODO
     //    @ManyToOne(fetch = FetchType.EAGER)

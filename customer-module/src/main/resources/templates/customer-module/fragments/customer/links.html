@@ -1,0 +1,9 @@
+<th:block th:fragment="customerLinks">
+    <div th:if="${customerId != null}" role="group" class="overflow-auto">
+            <a role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/pets'" th:text="#{label.title.pet}"></a>
+            <a role="button" th:class="${activeMenu == 'visits'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/visits'" th:text="#{label.title.visit}"></a>
+            <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/payments'" th:text="#{label.title.payment}"></a>
+            <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/reminders'" th:text="#{label.title.reminder}"></a>
+            <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/notes'" th:text="#{label.title.notes}"></a>
+    </div>
+</th:block>

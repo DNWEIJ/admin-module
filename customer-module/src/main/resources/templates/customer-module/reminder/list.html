@@ -1,0 +1,41 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.reminder}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.reminder},'/customer/customer/'+ ${customerId} + '/reminder', ${customerInformation})}"></th:block>
+
+    <hr/>
+    <table class="table-tight" id="show-table">
+        <thead>
+        <tr>
+        <tr>
+            <th>[[#{label.reminder.petname}]]</th>
+            <th>[[#{label.reminder.duedate}]]</th>
+            <th>[[#{label.reminder.reminder}]]</th>
+            <th>[[#{label.list.auditinfo}]]</th>
+        </tr>
+         </thead>
+        <tbody>
+        <th:block th:each="reminder : ${reminders}">
+            <tr>
+                <td><a th:href="'/customer/customer/'+ ${customerId}+ '/reminder/'+ ${reminder.id}">[[${reminder.pet.nameWithDeceased}]]</a></td>
+                <td th:text="${#temporals.format(reminder.dueDate, 'dd-MM-yyyy')}"></td>
+                <td>[[${reminder.reminder}]]</td>
+                <td>
+                    <small th:data-tooltip="'Created by  '+${reminder.addedBy}+' on ' +${#temporals.format(reminder.addedOn, 'dd-MM-yy')}">
+                        [[${reminder.lastEditedBy}]] • [[${#temporals.format(reminder.lastEditedOn, 'dd-MM-yy')}]]
+                    </small>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+        </tr>
+        </tfoot>
+    </table>
+</section>

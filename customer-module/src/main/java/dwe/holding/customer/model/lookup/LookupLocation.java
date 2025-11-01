@@ -1,6 +1,7 @@
 package dwe.holding.customer.model.lookup;
 
 import dwe.holding.generic.admin.model.base.BaseBO;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
     @AllArgsConstructor
     @Getter
     @Setter
-    public  class LookupLocation extends BaseBO   {
+    public  class LookupLocation extends MemberBaseBO {
         @Column(nullable = false)
         private String nomenclature;
     }

@@ -54,7 +54,7 @@ public class Supplies extends MemberBaseBO {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = true, name = "DISTRIBUTOR_ID")
+    @JoinColumn(nullable = true, name = "distributor_id")
     private Distributor distributor;
 
     private Long barcode;

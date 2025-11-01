@@ -1,5 +1,7 @@
 package dwe.holding.generic.admin.model.base;
 
+import dwe.holding.generic.admin.tenant.TenantDiscriminator;
+import dwe.holding.generic.admin.tenant.TenantEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -9,17 +11,17 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-  
 
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, TenantEntityListener.class})
 @Getter
 @Setter
 @SuperBuilder
 @AllArgsConstructor
 public class MemberBaseBO extends BaseBO {
     @Column(nullable = false)
-    private   Long memberId;
+    @TenantDiscriminator
+    private Long memberId;
 
     public MemberBaseBO() {
     }

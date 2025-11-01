@@ -1,0 +1,44 @@
+
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.note}]]</title>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.js"></script>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+
+    <form id="createForm"  th:action="'/customer/customer/'+${customerId}+'/note'" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="note.id" th:value="${note.id}" type="hidden"/>
+        <input id="version" name="note.version" th:value="${note.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('pet','label.notes.petname', 'note.id', ${petsList}, true,'1')}"></th:block>
+            <!--            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('user','label.notes.personnel', 'note.staffMember', ${staffList}, true,'1')}"></th:block>-->
+        </fieldset>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('noteDate','label.notes.notedate','note.noteDate','2')}" th:with="type='date'"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','label.notes.purpose','note.purpose','3')}"></th:block>
+        </fieldset>
+<!--        <textarea cols="110" id="note.note" name="note.note" rows="8" th:utext="${note.note}"></textarea>-->
+        <div id="editor">
+            <p>Hello World!</p>
+            <p>Some initial <strong>bold</strong> text</p>
+            <p><br /></p>
+        </div>
+
+    </form>
+    <script>
+        const quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+    </script>
+
+</section>
+</body>
+</html>

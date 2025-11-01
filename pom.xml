@@ -24,6 +24,7 @@
         <module>shared-module</module>
         <module>vmas-app</module>
         <module>scorekeeper-app</module>
+        <module>report-module</module>
     </modules>
     <properties>
         <java.version>21</java.version>

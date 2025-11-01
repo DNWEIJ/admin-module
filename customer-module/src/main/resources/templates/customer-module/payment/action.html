@@ -1,0 +1,44 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.payment}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${payment.id}, #{label.title.pet},'/customer/customer/'+ ${customerId}+ '/payments', ${customerInformation})}"></th:block>
+
+
+    <form id="createForm"  th:action="'/customer/customer/'+${customerId}+ '/payment'" method="post">
+<!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${payment.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${payment.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <legend>[[#{label.payment.information}]]</legend>
+            <div>
+                <label text="#{label.balance}">Balance</label>
+                <span text="${payment.balance}">€0.0</span>
+            </div>
+        </fieldset>
+
+        <fieldset class="grid">
+            <legend>[[#{label.payment.details}]]</legend>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method','payment.method', ${payMethodsList}, true,'1')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','payment.amount','2')}"  th:with="pattern='^\d+([.]\d{1,2})?$'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('paymentDate','label.payment.paymentDate','payment.paymentDate','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('referenceNumber','label.payment.referenceNumber','payment.referenceNumber','4')}" th:with="required=false"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <label for="payment.comments">
+                <th:block th:utext="#{label.payment.comments}"/>
+                <textarea cols="110" id="payment.comments" name="payment.comments" rows="8" tabindex="5" th:utext="${payment.comments}"></textarea>
+            </label>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('payment.addedBy','payment.addedOn', 'payment.lastEditedBy', 'payment.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

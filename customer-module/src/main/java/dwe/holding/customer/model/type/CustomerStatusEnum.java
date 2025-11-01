@@ -33,6 +33,14 @@ public enum CustomerStatusEnum {
         if (value == null)
             throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
         for (CustomerStatusEnum anEnum : values())
+            if (value.equalsIgnoreCase(anEnum.name())) return anEnum;
+        throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
+    }
+
+    public static CustomerStatusEnum getEnumFromDbField(String value) {
+        if (value == null)
+            throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
+        for (CustomerStatusEnum anEnum : values())
             if (value.equalsIgnoreCase(anEnum.getDatabaseField())) return anEnum;
         throw new IllegalArgumentException(value + " is not a valid CustomerStatusEnum");
     }

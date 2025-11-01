@@ -49,7 +49,7 @@ public class AutorisationUtils {
         return getCurrentUser().getUser().getMemberLocalId();
     }
 
-    public static Long validateAndreturnLocalMemberId(Long localMemberId) {
+    public static Long validateAndReturnLocalMemberId(Long localMemberId) {
         return getCurrentMember().getLocalMembers().stream().
                 filter(f -> f.getId().equals(localMemberId))
                 .findFirst()
@@ -107,4 +107,13 @@ public class AutorisationUtils {
             return false;
         }
     }
+
+    public static void setInfoObject(InformationObject informationObject) {
+     // TODO:    getCurrentUser().setInformationObject(informationObject);
+    }
+    public static InformationObject getInfoObject() {
+        return getCurrentUser().getInformationObject();
+    }
+
+
 }

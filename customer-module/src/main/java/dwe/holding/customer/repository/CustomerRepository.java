@@ -4,17 +4,32 @@ import dwe.holding.customer.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Collection;
 import java.util.List;
 
 
 public interface CustomerRepository extends JpaRepository<Customer,   Long> {
-    Customer findByLastNameStartsWith(String name);
+    @Query("""
+                SELECT c FROM Customer c
+                WHERE LOWER(c.lastName) LIKE LOWER(CONCAT(:prefix, '%'))
+                  AND c.memberId = :currentUserMid
+                ORDER BY 
+                  CASE WHEN LOWER(c.lastName) LIKE LOWER(CONCAT(:prefix, '%')) THEN 0 ELSE 1 END,
+                  c.lastName ASC,
+                  c.firstName ASC
+            """)
+    List<Customer> getCustomerStartLastName(String prefix, Long currentUserMid);
 
-    List<Customer> findByLastNameStartsWithAndMemberId(String lastName, Long currentUserMid);
+    @Query("""
+                SELECT c FROM Customer c
+                WHERE LOWER(c.lastName) LIKE LOWER(CONCAT('%',CONCAT(:prefix, '%')))
+                  AND c.memberId = :currentUserMid
+                ORDER BY 
+                  CASE WHEN LOWER(c.lastName) LIKE LOWER(CONCAT('%',CONCAT(:prefix, '%'))) THEN 0 ELSE 1 END,
+                  c.lastName ASC,
+                  c.firstName ASC
+            """)
+    List<Customer> getCustomerSomewhereLastName(String prefix, Long currentUserMid);
 
-    List<Customer> findByLastNameContainingAndMemberId(String lastName, Long currentUserMid);
-
-    List<Customer> findByAddressLineContainingAndMemberId(String lastName, Long currentUserMid);
+    List<Customer> findByAddressLineContainingAndMemberIdOrderByLastNameAscFirstNameAsc(String prefix, Long currentUserMid);
 
 }

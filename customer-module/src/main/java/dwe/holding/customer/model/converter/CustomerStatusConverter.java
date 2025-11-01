@@ -1,7 +1,6 @@
 package dwe.holding.customer.model.converter;
 
 import dwe.holding.customer.model.type.CustomerStatusEnum;
-import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -11,7 +10,7 @@ public class CustomerStatusConverter implements AttributeConverter<CustomerStatu
     @Override
     public String convertToDatabaseColumn(CustomerStatusEnum attribute) {
         if (attribute == null) {
-            throw new IllegalArgumentException("Null value for YesNoEnum");
+            throw new IllegalArgumentException("Null value for CustomerStatusEnum");
         }
         return attribute.getDatabaseField();
     }
@@ -19,8 +18,8 @@ public class CustomerStatusConverter implements AttributeConverter<CustomerStatu
     @Override
     public CustomerStatusEnum convertToEntityAttribute(String dbData) {
         if (dbData == null) {
-            throw new IllegalArgumentException("Null value in db for YesNoEnum");
+            throw new IllegalArgumentException("Null value in db for CustomerStatusEnum");
         }
-        return CustomerStatusEnum.getEnum(dbData);
+        return CustomerStatusEnum.getEnumFromDbField(dbData);
     }
 }

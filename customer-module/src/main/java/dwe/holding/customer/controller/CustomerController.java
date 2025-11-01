@@ -1,8 +1,13 @@
 package dwe.holding.customer.controller;
 
 
+import dwe.holding.customer.CustomerInformationHolder;
+import dwe.holding.customer.mapper.CustomerMapper;
 import dwe.holding.customer.model.Customer;
+import dwe.holding.customer.model.type.CustomerStatusEnum;
 import dwe.holding.customer.repository.CustomerRepository;
+import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,11 +31,15 @@ import java.util.regex.Pattern;
 @Slf4j
 public class CustomerController {
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     @GetMapping("/customer")
     String newRecord(Model model) {
-        model.addAttribute("form", new form(true, false));
-        model.addAttribute("customer", new Customer());
+        model.addAttribute("form", new CustomerForm(true, false));
+        model.addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
+        // TODO: Activate!!
+        AutorisationUtils.setInfoObject(null);
+        setModel(model);
         return "customer-module/customer/action";
     }
 
@@ -38,89 +48,120 @@ public class CustomerController {
         if (id == 0) {
             return newRecord(model);
         }
-        model.addAttribute("form", new form(true, false));
-        model.addAttribute("customer", customerRepository.findById(id).get());
-        return "customer-module/customer/action";
-    }
+        setModel(model);
+        model.addAttribute("form", new CustomerForm(true, false));
+        Customer customer = customerRepository.findById(id).get();
+        model.addAttribute("customer", customer);
+        model.addAttribute("customerId", customer.getId());
 
-    @GetMapping("/customer/list")
-    String listRecord() {
+        AutorisationUtils.setInfoObject(new CustomerInformationHolder(new CustomerInformationHolder.CustomerInfo(customer.getCustomerNameWithId(), customer.getId())));
         return "customer-module/customer/action";
     }
 
     @PostMapping("/customer")
-    String saveCustomer(@Valid Customer customerForm) {
-        customerRepository.save(
-                Customer.builder()
-                        .address1(customerForm.getAddress1()).address2(customerForm.getAddress2()).address3(customerForm.getAddress3())
-                        .addressLine(customerForm.getAddressLine()).zipCode(customerForm.getZipCode()).city(customerForm.getCity()).state(customerForm.getState())
-                        .email(customerForm.getEmail()).mobilePhone(customerForm.getMobilePhone())
-                        .firstName(customerForm.getFirstName()).surname(customerForm.getSurname()).lastName(customerForm.getLastName())
-                        .middleInitial(customerForm.getMiddleInitial()).title(customerForm.getTitle())
-                        .emergencyContact(customerForm.getEmergencyContact()).emergencyContactPhone(customerForm.getEmergencyContactPhone())
-                        .status(customerForm.getStatus())
-                        .previousVeterinarian(customerForm.getPreviousVeterinarian()).previousVeterinarianPhone(customerForm.getPreviousVeterinarianPhone())
-                        .workPhone(customerForm.getWorkPhone()).mobilePhone(customerForm.getMobilePhone()).comments(customerForm.getComments())
-                        .build()
-        );
+    String saveCustomer(@Valid Customer customerForm, RedirectAttributes redirect) {
+        if (customerForm.getStatus() == null || customerForm.getNewsletter() == null) {
+            redirect.addFlashAttribute("message", "Something went wrong. Please try again");
+            return "redirect:/customer/customer";
+        }
 
-        customerRepository.save(customerForm);
-        return "redirec:/customer";
+        if (customerForm.isNew()) {
+            Customer savedCustomer = customerRepository.save(
+                    Customer.builder()
+                            // fill per item all fields
+                            .firstName(customerForm.getFirstName()).surName(customerForm.getSurName()).lastName(customerForm.getLastName()).middleInitial(customerForm.getMiddleInitial()).title(customerForm.getTitle())
+
+                            .email(customerForm.getEmail()).homePhone(customerForm.getHomePhone()).workPhone(customerForm.getWorkPhone()).mobilePhone(customerForm.getMobilePhone())
+
+                            .status(customerForm.getStatus()).newsletter(customerForm.getNewsletter())
+
+                            .address1(customerForm.getAddress1()).address2(customerForm.getAddress2()).address3(customerForm.getAddress3())
+                            .addressLine(customerForm.getAddressLine()).zipCode(customerForm.getZipCode()).city(customerForm.getCity()).state(customerForm.getState())
+
+                            .emergencyContact(customerForm.getEmergencyContact()).emergencyContactPhone(customerForm.getEmergencyContactPhone())
+
+                            .previousVeterinarian(customerForm.getPreviousVeterinarian()).previousVeterinarianPhone(customerForm.getPreviousVeterinarianPhone())
+                            .ubn(customerForm.getUbn())
+                            .comments(customerForm.getComments())
+                            .build()
+            );
+            return "redirect:/customer/customer/" + savedCustomer.getId();
+        } else {
+            Customer customer = customerRepository.findById(customerForm.getId()).get();
+            if (!customer.getMemberId().equals(77L)) { // TODO autorisationUtils.
+                redirect.addFlashAttribute("message", "Something went wrong. Please try again");
+                return "redirect:/customer/customer";
+            }
+            customerMapper.updateCustomerFromForm(customerForm, customer);
+            redirect.addFlashAttribute("message", "label.customer.saved");
+            return "redirect:/customer/customer/" + customerRepository.save(customer).getId();
+        }
     }
 
     @PostMapping("/search/customer")
     /**
      * Search for a customer via htmx:
      *   SearchCriteria can start with an I/i to indicate a search on Id.
-     *   Two boolean fields to increase the search scope: everywhere and street.
+     *   Two boolean fields to increase the search scope: startLastName and includeStreetName.
      */
-    String searchCustomerHtmx(Model model, String searchCriteria, boolean everywhere, boolean street) {
+    public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName) {
         if (searchCriteria == null || searchCriteria.isEmpty()) {
-            model.addAttribute("flatData", "<ul style=\"max-height: 180px; overflow: auto;\"></ul>");
-            model.addAttribute("form", new form(everywhere, street));
-            return "fragments/elements/flatData";
+            model.addAttribute("flatData", "");
+            model.addAttribute("form", new CustomerForm(startLastName, includeStreetName));
+        } else {
+            if (searchCriteria.toLowerCase().charAt(0) == 'i') {
+                // find on ID
+                Optional<Customer> maybeCustomer = customerRepository.findById(Long.parseLong(searchCriteria.substring(1)));
+                if (maybeCustomer.isPresent()) {
+                    model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), Pattern.compile(Pattern.quote(""), Pattern.CASE_INSENSITIVE)))));
+                    return "fragments/elements/flatData";
+                } else {
+                    model.addAttribute("flatData", wrap(List.of()));
+                }
+            }
+
+            model.addAttribute("flatData", wrap(getCustomers(searchCriteria, startLastName, includeStreetName)));
         }
-        if (searchCriteria.toLowerCase().charAt(0) == 'i') {
-            // find on ID
-            return editRecord(Long.parseLong(searchCriteria.substring(1)), model);
-        }
-        model.addAttribute("flatData", getCustomers(searchCriteria, everywhere, street));
         return "fragments/elements/flatData";
     }
 
-    private Object getCustomers(String searchCriteria, boolean everywhere, boolean street) {
+    private List<String> getCustomers(String searchCriteria, boolean startLastName, boolean includeStreetName) {
         List<String> listCustomers = new ArrayList<>();
 
         String escapedSearch = Pattern.quote(searchCriteria);
         Pattern pattern = Pattern.compile(escapedSearch, Pattern.CASE_INSENSITIVE);
 
-        if (!everywhere) {
-            listCustomers.addAll(customerRepository.findByLastNameStartsWithAndMemberId(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+        if (startLastName) {
+            listCustomers.addAll(customerRepository.getCustomerStartLastName(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         } else {
-            listCustomers.addAll(customerRepository.findByLastNameContainingAndMemberId(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+            listCustomers.addAll(customerRepository.getCustomerSomewhereLastName(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         }
-        if (street) {
-            listCustomers.addAll(customerRepository.findByAddressLineContainingAndMemberId(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+        if (includeStreetName) {
+            listCustomers.addAll(customerRepository.findByAddressLineContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         }
         log.info("found customers:" + listCustomers.size());
-        return "<ul style=\"max-height: 180px; overflow: auto;\">" +
-                String.join("", listCustomers)
-                + "</ul>";
+        return listCustomers;
     }
 
-    String getOption(Customer customer, Pattern pattern) {
+    private String wrap(List<String> listCustomers) {
+        return (listCustomers.size() > 0) ?
+                "<ul style=\"max-height: 180px; overflow: auto;\">" + String.join("", listCustomers) + "</ul>"
+                : "\"<ul style=\\\"max-height: 180px; overflow: auto;\\\"><li>No record found</li></ul>\"";
+    }
+
+    private String getOption(Customer customer, Pattern pattern) {
 
         StringBuilder result = new StringBuilder();
         Matcher matcher = pattern.matcher(customer.getLastName());
@@ -129,12 +170,25 @@ public class CustomerController {
             matcher.appendReplacement(result, "<strong>" + match + "</strong>");
         }
         matcher.appendTail(result);
-        // must look like:  <li class="ac_even">♦<strong>Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
+        // must look like:  <li class="ac_even">♦<strong>van der Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
         return "<li  data-id=" + customer.getId() + ">"
-                + result + ", " + customer.getFirstName() + " - " + (customer.getAddressLine() == null ? "" : customer.getAddressLine())
+                + (customer.getStatus().equals(CustomerStatusEnum.CLOSED) ? "&#9670;" : "")
+                + getStringText(customer.getSurName()) + result + ", "
+                + customer.getFirstName()
+                + " - " + getStringText(customer.getAddress2())
                 + " - " + customer.getZipCode() + "</li>";
     }
 
-    record form(boolean startLastName, boolean includeStreetName) {
+
+    private String getStringText(String stringText) {
+        return (stringText == null || stringText.isBlank()) ? "" : stringText + " ";
+    }
+
+    private void setModel(Model model) {
+        model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
+        model.addAttribute("statusList", CustomerStatusEnum.getWebList());
+    }
+
+    public record CustomerForm(boolean startLastName, boolean includeStreetName) {
     }
 }

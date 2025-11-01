@@ -1,17 +1,18 @@
 package dwe.holding.customer.model;
 
 import dwe.holding.customer.model.converter.CustomerStatusConverter;
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
-import dwe.holding.generic.shared.model.converter.YesNoEnumConverter;
-import dwe.holding.generic.shared.model.type.YesNoEnum;
 import dwe.holding.customer.model.order.Payment;
 import dwe.holding.customer.model.type.CustomerStatusEnum;
+import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.generic.shared.model.converter.YesNoEnumConverter;
+import dwe.holding.generic.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Table(name = "CUSTOMER_CUSTOMER") // , uniqueConstraints = @UniqueConstraint(name = "uk_parent_name", columnNames = "NAME"))
@@ -21,7 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Customer extends TenantBaseBO {
+public class Customer extends MemberBaseBO {
 
     @NotEmpty
     @Column(nullable = false)
@@ -29,7 +30,7 @@ public class Customer extends TenantBaseBO {
     @NotEmpty
     @Column(nullable = false)
     private String firstName;
-    private String surname;
+    private String surName;
     private String middleInitial;
 
     private String title;
@@ -64,7 +65,7 @@ public class Customer extends TenantBaseBO {
     @Convert(converter = CustomerStatusConverter.class)
     private CustomerStatusEnum status;
 
-    @Column(columnDefinition = "varchar(1)")
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum newsletter;
 
@@ -72,8 +73,29 @@ public class Customer extends TenantBaseBO {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     @Builder.Default
-    private Set<Child> children = new HashSet<Child>(0);
+    private Set<Pet> pets = new HashSet<Pet>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     private Set<Payment> payments = new HashSet<Payment>(0);
+
+    public String getCustomerName() {
+        String CustomerName = getLastName();
+
+        if(getSurName() != null && !getSurName().isEmpty()) {
+            CustomerName = getSurName() + " " + CustomerName;
+        }
+        if((getFirstName() != null) && (!getFirstName().isEmpty())) {
+            CustomerName = CustomerName + ", " + getFirstName();
+        }
+        if((getMiddleInitial() != null) && (!getMiddleInitial().isEmpty())) {
+            CustomerName = CustomerName + " " + getMiddleInitial() + (getMiddleInitial().endsWith(".") ? "" : ".");
+
+        }
+        return CustomerName;
+    }
+
+    @Transient
+    public String getCustomerNameWithId() {
+        return getCustomerName() + " (" + getId() + ")";
+    }
 }
