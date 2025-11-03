@@ -1,9 +1,8 @@
-INSERT INTO customer.customer_lookupbreeds
+ INSERT INTO customer_lookup_breeds
 (id,
  version,
  member_id,
- local_member_id,
- lookupspecies_id,
+  lookupspecies_id,
  species_name,
  breed,
  added_by,
@@ -13,8 +12,7 @@ INSERT INTO customer.customer_lookupbreeds
 SELECT LOOKUPBREED_ID,
        VERSION,
        MID,
-       0,
-       LOOKUPSPECIES_ID,
+        LOOKUPSPECIES_ID,
        SPECIES,
        BREED,
        'migration',
@@ -22,5 +20,4 @@ SELECT LOOKUPBREED_ID,
        'migration',
        now()
 FROM vmas.lookupbreed
-where mid = -1
-   OR 77;
+where mid = -1 OR mid=77;

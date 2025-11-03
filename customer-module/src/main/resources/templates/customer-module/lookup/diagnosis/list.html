@@ -1,0 +1,35 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.diagnosis}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.diagnosis},'/customer/lookup/diagnose', '')}"></th:block>
+
+    <hr/>
+    <div class="overflow-auto">
+        <table id="show-table" class="table-tight">
+            <thead>
+            <tr>
+                <th>[[#{label.lookupDiagnose.nomenclature}]]</th>
+                <th>[[#{label.list.auditinfo}]]</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="diagnose : ${diagnoses}">
+                <tr>
+                    <td><a th:href="'/customer/lookup/diagnose/'+ ${diagnose.id}">[[${diagnose.nomenclature}]]</a></td>
+                    <td>
+                        <small th:data-tooltip="'Created by  '+${diagnose.addedBy}+' on ' +${#temporals.format(diagnose.addedOn, 'dd-MM-yy')}">
+                            [[${diagnose.lastEditedBy}]] • [[${#temporals.format(diagnose.lastEditedOn, 'dd-MM-yy')}]]
+                        </small>
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+</section>

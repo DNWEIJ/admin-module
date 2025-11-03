@@ -1,4 +1,4 @@
-INSERT INTO customer.customer_payment
+ INSERT INTO customer_payment
 (id,
  version,
  customer_id,

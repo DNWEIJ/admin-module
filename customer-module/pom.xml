@@ -10,7 +10,8 @@
     </parent>
 
     <artifactId>customer-module</artifactId>
-
+    <version>0.0.1-SNAPSHOT</version>
+    <name>customer-module</name>
     <dependencies>
         <dependency>
             <groupId>org.mapstruct</groupId>

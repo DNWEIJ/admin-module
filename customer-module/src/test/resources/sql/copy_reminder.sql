@@ -1,9 +1,8 @@
-INSERT INTO customer.customer_reminder
+ INSERT INTO customer_reminder
 (id,
   version,
  pet_id,
- local_member_id,
- member_id,
+  member_id,
  due_date,
  reminder,
  originating_appointment_id,
@@ -15,7 +14,6 @@ SELECT
 REMINDER_ID,
     VERSION,
     PATIENT_ID,
-    0,
     MID,
     DUEDATE,
     REMINDER,

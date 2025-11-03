@@ -1,4 +1,4 @@
-INSERT INTO customer.customer_customer (
+ INSERT INTO customer_customer (
     added_on,
     id,
     last_edited_on,

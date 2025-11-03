@@ -5,7 +5,8 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.notes},'/customer/customer/'+ ${customerId}+'/note', ${customrInformation})}"></th:block>
+
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.notes},'/customer/customer/'+ ${customerId}+'/note', ${customerInformation})}"></th:block>
 
     <hr/>
     <div class="overflow-auto">

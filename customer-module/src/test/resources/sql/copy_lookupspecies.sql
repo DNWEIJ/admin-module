@@ -1,8 +1,7 @@
-INSERT INTO customer.customer_lookupspecies
+ INSERT INTO customer_lookup_species
 (id,
  version,
  member_id,
- local_member_id,
  species,
  added_by,
  added_on,
@@ -11,12 +10,10 @@ INSERT INTO customer.customer_lookupspecies
 SELECT LOOKUPSPECIES_ID,
        VERSION,
        MID,
-       0,
        SPECIES,
        'migration',
        now(),
        'migration',
        now()
 FROM vmas.lookupspecies
-where mid = -1
-   OR 77;
+where mid = -1 OR mid=77;

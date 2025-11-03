@@ -1,0 +1,24 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.purpose}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${purpose.id}, #{label.title.purpose},'/customer/lookup/purposes','')}"></th:block>
+
+    <form id="createForm" action="/customer/lookup/purpose" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${purpose.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${purpose.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('definedPurpose','label.purpose.definedPurpose','purpose.definedPurpose','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('timeInMinutes','label.purpose.timeInMinutes','purpose.timeInMinutes','1')}" th:with="type='number'"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('purpose.addedBy','purpose.addedOn', 'purpose.lastEditedBy', 'purpose.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

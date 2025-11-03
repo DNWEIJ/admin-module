@@ -1,8 +1,7 @@
-INSERT INTO customer.customer_notes
+ INSERT INTO customer_notes
 (id,
  version,
- local_member_id,
- member_id,
+  member_id,
  note_date,
  note,
  purpose,
@@ -14,7 +13,6 @@ INSERT INTO customer.customer_notes
  last_edited_on)
 SELECT NOTEPAD_ID,
        VERSION,
-       0,
        MID,
        NOTEDATE,
        IfNull(NOTES, ''),

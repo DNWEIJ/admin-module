@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.diagnosis}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${lookupDiagnosis.id}, #{label.title.diagnosis},'/customer/lookup/diagnosis','')}"></th:block>
+
+    <form id="createForm" action="/customer/lookup/diagnosis" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${lookupDiagnosis.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${lookupDiagnosis.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.lookupDiagnose.nomenclature','lookupDiagnosis.nomenclature','1')}"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('lookupDiagnosis.addedBy','lookupDiagnosis.addedOn', 'lookupDiagnosis.lastEditedBy', 'lookupDiagnosis.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

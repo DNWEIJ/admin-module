@@ -1,4 +1,4 @@
-INSERT INTO customer.customer_lookup_notepurpose
+ INSERT INTO customer_lookup_notepurpose
 (id,
  version,
  member_id,
@@ -18,5 +18,4 @@ LOOKUPPREDEFINEDNOTEPADPURPOSE_ID,
 'migration',
 now()
 FROM vmas.lookuppredefinednotepadpurpose
-where mid = -1
-   OR 77;
+where mid = -1 OR mid=77;

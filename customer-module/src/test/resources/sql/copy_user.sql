@@ -1,4 +1,4 @@
-INSERT INTO customer.admin_user
+ INSERT INTO admin_user
 (id,
  version,
  account,

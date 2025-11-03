@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.room}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${room.id}, #{label.title.room},'/customer/lookup/rooms','')}"></th:block>
+
+    <form id="createForm" action="/customer/lookup/room" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${room.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${room.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('room','label.room.room','room.room','1')}"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('room.addedBy','room.addedOn', 'room.lastEditedBy', 'room.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.species}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${specy.id}, #{label.title.species},'/customer/lookup/species','')}"></th:block>
+
+    <form id="createForm" action="/customer/lookup/specy" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${specy.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${specy.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('species','label.title.species','specy.species','1')}"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('specy.addedBy','specy.addedOn', 'specy.lastEditedBy', 'specy.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

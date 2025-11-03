@@ -1,0 +1,34 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.room}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.room},'/customer/lookup/room', '')}"></th:block>
+
+    <hr/>
+    <div class="overflow-auto">
+        <table id="show-table" class="table-tight">
+            <thead>
+            <tr>
+                <th>[[#{label.room.room}]]</th>
+                <th>[[#{label.list.auditinfo}]]</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="room : ${rooms}">
+                <tr>
+                    <td><a th:href="'/customer/lookup/room/'+ ${room.id}">[[${room.room}]]</a></td>
+                    <td>
+                        <small th:data-tooltip="'Created by  '+${room.addedBy}+' on ' +${#temporals.format(room.addedOn, 'dd-MM-yy')}">
+                            [[${room.lastEditedBy}]] • [[${#temporals.format(room.lastEditedOn, 'dd-MM-yy')}]]
+                        </small>
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+</section>

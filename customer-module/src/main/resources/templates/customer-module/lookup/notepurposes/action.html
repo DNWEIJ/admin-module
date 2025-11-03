@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.purpose}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${notepurpose.id}, #{label.title.purpose},'/customer/lookup/notepurposes','')}"></th:block>
+
+    <form id="createForm" action="/customer/lookup/notepurpose" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${notepurpose.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${notepurpose.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('preDefinedPurpose','label.notepurpose.predefinedpurpose','notepurpose.preDefinedPurpose','1')}"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('notepurpose.addedBy','notepurpose.addedOn', 'notepurpose.lastEditedBy', 'notepurpose.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

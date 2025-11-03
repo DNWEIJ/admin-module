@@ -1,0 +1,34 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.purpose}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.purpose},'/customer/lookup/notepurpose', '')}"></th:block>
+
+    <hr/>
+    <div class="overflow-auto">
+        <table id="show-table" class="table-tight">
+            <thead>
+            <tr>
+                <th>[[#{label.notepurpose.predefinedpurpose}]]</th>
+                <th>[[#{label.list.auditinfo}]]</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="notepurpose : ${notepurposes}">
+                <tr>
+                    <td><a th:href="'/customer/lookup/notepurpose/'+ ${notepurpose.id}">[[${notepurpose.preDefinedPurpose}]]</a></td>
+                    <td>
+                        <small th:data-tooltip="'Created by  '+${notepurpose.addedBy}+' on ' +${#temporals.format(notepurpose.addedOn, 'dd-MM-yy')}">
+                            [[${notepurpose.lastEditedBy}]] • [[${#temporals.format(notepurpose.lastEditedOn, 'dd-MM-yy')}]]
+                        </small>
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+</section>

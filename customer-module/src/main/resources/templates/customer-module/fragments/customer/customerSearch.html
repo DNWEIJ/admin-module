@@ -1,0 +1,152 @@
+<th:block th:fragment="customerSearch(saveButton)">
+    <style>
+        .gridSearchWithCheck {
+            display: grid;
+            grid-template-columns: 3fr repeat(3, 1fr);
+            grid-column-gap: .5em;
+        }
+
+
+        @media (max-width: var(--breakpoint-sm)) {
+            .gridSearchWithCheck {
+                grid-template-columns: 1fr;
+                grid-row-gap: .5em;
+            }
+        }
+
+        .ac_results {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--pico-background-color);
+            width: 100%;
+            z-index: 999;
+            border: 1px solid black;
+            box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
+        }
+
+        .ac_results li {
+            cursor: default;
+            display: block;
+            overflow: hidden;
+        }
+
+        .ac_results li:nth-child(even) {
+            background-color: var(--pico-dropdown-background-color);
+        }
+
+        .ac_results li.selected {
+            background-color: darkblue;
+            color: white;
+        }
+
+        .ac_results:empty {
+            display: none;
+        }
+
+    </style>
+    <script>
+        let baseUrl;
+        let selectedIndex = -1;
+
+        function updateSelection(listItems) {
+
+            if (listItems.length === 0) return;
+            listItems.forEach((li, index) => {
+                li.classList.toggle("selected", index === selectedIndex);
+                if (index === selectedIndex) {
+                    li.scrollIntoView({block: "nearest"});
+                }
+            });
+        }
+
+        function getId(listItems) {
+
+            if (listItems.length === 0) return;
+            return Array.from(listItems).filter(li => li.classList.contains("selected"))[0].dataset.id
+        }
+
+        function getListItems() {
+            return document.querySelectorAll("#input-customerName li");
+        }
+
+        function attachMouseHandlers() {
+            const listItems = getListItems();
+
+            listItems.forEach((li, index) => {
+                li.addEventListener("mouseenter", () => {
+                    // highlight hovered item
+                    selectedIndex = index;
+                    updateSelection(listItems);
+                });
+
+                li.addEventListener("click", (event) => {
+                    window.location.href = `${window.location.origin}/customer/customer/` + getId(getListItems());
+                    event.preventDefault();
+                });
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            attachMouseHandlers()
+            baseUrl = window.location.href;
+            const input = document.getElementById("customerFind");
+            selectedIndex = -1;
+            input.addEventListener("keydown", (event) => {
+
+                if (event.key === "ArrowDown") {
+                    const listItems = getListItems()
+                    if (listItems.length === 0) return;
+
+                    if (selectedIndex < listItems.length - 1) {
+                        selectedIndex++;
+                        updateSelection(listItems);
+                    } else if (selectedIndex === -1 && listItems.length > 0) {
+                        selectedIndex = 0;
+                        updateSelection();
+                    }
+                    event.preventDefault();
+                }
+                if (event.key === "ArrowUp") {
+                    const listItems = getListItems()
+                    if (listItems.length === 0) return;
+
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateSelection(listItems);
+                    }
+                    event.preventDefault();
+                }
+                if (event.key === "Enter") {
+                    window.location.href = `${window.location.origin}/customer/customer/` + getId(getListItems());
+                    event.preventDefault();
+                }
+            })
+        })
+    </script>
+    <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
+    <div class="gridSearchWithCheck">
+        <div class="holder">
+            <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}"
+                   hx-post="/customer/search/customer"
+                   hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
+                   hx-target="#input-customerName"
+                   hx-indicator=".htmx-indicator"
+                   hx-include="#startLastName, #includeStreetName"
+                   autocomplete="off">
+            <div class="dropdown">
+                <div class="ac_results" id="input-customerName" hx-on::after-swap="attachMouseHandlers()"></div>
+            </div>
+        </div>
+        <div role="group">
+            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','2')}"
+                      th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','3')}"
+                      th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
+        </div>
+        <div role="group">
+            <input class="secondary" name="_advancedsearch" type="button" th:value="#{label.button.advancedsearch}"/>
+            <input class="secondary" name="_reset" type="button" th:value="#{label.button.reset}"   onclick="window.location.href=window.location.origin + '/customer/customer'"/>
+            <input th:if="${saveButton}" name="_save" type="submit" th:value="#{label.button.save}" form="createForm"/>
+        </div>
+    </div>
+</th:block>

@@ -6,36 +6,110 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.js"></script>
 </head>
 <body>
+<!--
+check for carousel stile images
+https://developer.mozilla.org/en-US/play?uuid=f65c3a450a1b82efee53cf11d8df960bcb8eb2f3&state=pVXNcpw4EH6VLlKpsrOWDeNNvKuZctXWXjbnXLkI0QyKhaSSxBiS8m2fIXmXPM4%2ByRYIGLBnXFTCBVB%2F3er%2B%2Bu9rVPpKRjTalcn9358%2BAWdW1w4lVLX0wkgE4bFyYNCCYXvc3ZTJfap2tbxPFcBOiv4NsCs39x89VpDsbspNEN4M0hOozSrU7SrU76tQ71ehPqxC3a1C%2FbEK9ecqVBKvg61jP1lHf7KO%2F2RdApIXGdjd9GUUXUXcuYhG7%2BBrJ810Q5z4ItSeQqZtjpZkutmm6ilVqcp03gZcxexeKArxtvsrtPKkYJWQLYU0%2BgflAb3gLI2uII3%2BsoLJ7tMx5YhDK4rRYJkEcx4bT5gUe0WBo%2FJoj3ad%2BIIUkus7i1XQq2XQehS5LykkcXx47PElin3pKdzGsWn6E8PyvA8mCSfdmT6gLaR%2BJA0Fx62WsoeGT%2BIUM8S3Bik0UDGVM69tO6hyLetKOQrJ9qzbT6mSIjgohfPE%2BVbiYFFphYOpXDgjWUtBKCkUkkxq%2FrCIIonjt9tZnJv4GEPG%2BMPe6lrlhGupLYU32D%2FbkMUucxQS04DTUuTwJu%2BfJSebkaUpm3Oa5sFJLPyYMymo8iXhpZD5BR5QXQ6l88Il3jI1ZozSwF3Azrk%2BwV8HHyBZ7b1WF%2B%2FGS4bI4uf1sQnVMXdjorvPW%2BdQJtnAsTaMC99SiK%2FvAqK2roMYLY5%2BnPaEll0FXZ0RFprXLjg7XZK8ao5xLw44NIJlyknmMSQvMc2rqrlwLJOYP7svvt4sgqqVQ3%2FeUJfdgV%2BulUfluy7%2B7%2Fu%2FaXReyXZFekLr24%2B5VpAzxUttiWIVUiCkasm4616LLuga7YQXWlFgmdOy9iGj4zEJtlebncVqQ5txJvlFsDJICdzFprkcWsl7XS1RXptL%2BA2S2wBaQVBnd2ljkP7cVYsmqph9QEu6mjcUWHG6eueoXyMWwGuz9DJ4vozmc%2B28KFriUBZ0rIDZbJ%2FmXyGxWWhM1TRD75mZ5tVinjwL8EU99sV4XBUfhok3zdjx4OX06lvRMIvKL4bqZhqqx3EyrErLclG7adlMOTjpKvXM7tETXtvujnNDdLzkqV%2FWn7tdHV1FvsQKIxrJLozo6X8%3D&srcPrefix=%2Fen-US%2Fdocs%2FWeb%2FCSS%2FCSS_overflow%2FCSS_carousels%2F
+-->
 <section layout:fragment="content">
-    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <style>
+        .menu-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
 
-    <form id="createForm"  th:action="'/customer/customer/'+${customerId}+'/note'" method="post">
-        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
-        <input id="id" name="note.id" th:value="${note.id}" type="hidden"/>
-        <input id="version" name="note.version" th:value="${note.version}" type="hidden"/>
+        .scroll-button {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #555;
+            padding: 0.25rem 0.5rem;
+            z-index: 2;
+        }
 
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('pet','label.notes.petname', 'note.id', ${petsList}, true,'1')}"></th:block>
-            <!--            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('user','label.notes.personnel', 'note.staffMember', ${staffList}, true,'1')}"></th:block>-->
-        </fieldset>
+        .scroll-button:hover {
+            color: #000;
+        }
 
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('noteDate','label.notes.notedate','note.noteDate','2')}" th:with="type='date'"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','label.notes.purpose','note.purpose','3')}"></th:block>
-        </fieldset>
-<!--        <textarea cols="110" id="note.note" name="note.note" rows="8" th:utext="${note.note}"></textarea>-->
-        <div id="editor">
-            <p>Hello World!</p>
-            <p>Some initial <strong>bold</strong> text</p>
-            <p><br /></p>
-        </div>
+        ul[role="menuitem"] {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 0.5rem;
+            list-style: none;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* mobile smooth scroll */
+            cursor: grab;
+        }
 
-    </form>
+        ul[role="menuitem"] li {
+            flex: 0 0 auto;
+        }
+
+        ul[role="menuitem"] a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        ul[role="menuitem"] svg {
+            width: 48px;
+            height: 48px;
+        }
+    </style>
+
+    <div class="menu-container">
+        <button class="scroll-button" id="scrollLeft">&#x276E;</button>
+
+        <ul role="menuitem" id="menuScroll">
+            <li><a href="/a/b"><svg><use href="/lib/images/newAppointment.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/OTC.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/priceInformation.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/agenda.svg"></use></svg></a></li>
+            <li><a href="/customer/customer"><svg><use href="/lib/images/customerPet.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/newAppointment.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/OTC.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/priceInformation.svg"></use></svg></a></li>
+            <li><a href="/a/b"><svg><use href="/lib/images/agenda.svg"></use></svg></a></li>
+            <li><a href="/customer/customer"><svg><use href="/lib/images/customerPet.svg"></use></svg></a></li>
+        </ul>
+
+        <button class="scroll-button" id="scrollRight">&#x276F;</button>
+    </div>
+
     <script>
-        const quill = new Quill('#editor', {
-            theme: 'snow'
+        const menu = document.getElementById('menuScroll');
+        const btnLeft = document.getElementById('scrollLeft');
+        const btnRight = document.getElementById('scrollRight');
+
+        btnLeft.onclick = () => menu.scrollBy({ left: -150, behavior: 'smooth' });
+        btnRight.onclick = () => menu.scrollBy({ left: 150, behavior: 'smooth' });
+
+        // Drag to scroll
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        menu.addEventListener('mousedown', (e) => {
+            isDown = true;
+            menu.classList.add('active');
+            startX = e.pageX - menu.offsetLeft;
+            scrollLeft = menu.scrollLeft;
+        });
+
+        menu.addEventListener('mouseleave', () => isDown = false);
+        menu.addEventListener('mouseup', () => isDown = false);
+
+        menu.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - menu.offsetLeft;
+            const walk = x - startX;
+            menu.scrollLeft = scrollLeft - walk;
         });
     </script>
 

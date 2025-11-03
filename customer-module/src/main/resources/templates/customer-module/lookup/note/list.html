@@ -1,0 +1,37 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.reminder}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.notes},'/customer/customer/'+ ${customerId}+'/note', ${customerInformation})}"></th:block>
+
+    <hr/>
+    <div class="overflow-auto">
+        <table id="show-table" class="table-tight">
+            <thead>
+            <tr>
+                <th>[[#{label.notes.petname}]]</th>
+                <th>[[#{label.notes.notedate}]]</th>
+                <th>[[#{label.notes.purpose}]]</th>
+                <th>[[#{label.list.auditinfo}]]</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="note : ${notes}">
+                <tr>
+                    <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}">[[${note.pet.name}]]</a></td>
+                    <td th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></td>
+                    <td>[[${note.purpose}]]</td>
+                    <td>
+                        <small th:data-tooltip="'Created by  '+${note.addedBy}+' on ' +${#temporals.format(note.addedOn, 'dd-MM-yy')}">
+                            [[${note.lastEditedBy}]] • [[${#temporals.format(note.lastEditedOn, 'dd-MM-yy')}]]
+                        </small>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</section>

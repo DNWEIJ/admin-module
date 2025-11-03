@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.notes}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${note.id}, #{label.title.notes},'/customer/lookup/note','')}"></th:block>
+
+    <form id="createForm" action="/customer/lookup/note" method="post">
+        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input id="id" name="id" th:value="${note.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${note.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','customer.address1','customer.address1','1')}"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('note.addedBy','note.addedOn', 'note.lastEditedBy', 'note.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

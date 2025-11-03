@@ -1,0 +1,9 @@
+<th:block th:fragment="lookupLinks">
+    <div role="group" class="overflow-auto">
+        <a role="button" th:class="${activeMenu == 'diagnosis'} ? 'secondary' : null" th:href="'/customer/lookup/diagnosis'" th:text="#{label.title.diagnosis}"></a>
+        <a role="button" th:class="${activeMenu == 'room'} ? 'secondary' : null" th:href="'/customer/lookup/rooms'" th:text="#{label.title.room}"></a>
+        <a role="button" th:class="${activeMenu == 'purpose'} ? 'secondary' : null" th:href="'/customer/lookup/purposes'" th:text="#{label.title.purpose}"></a>
+        <a role="button" th:class="${activeMenu == 'notepurpose'} ? 'secondary' : null" th:href="'/customer/lookup/notepurposes'" th:text="#{label.title.notepurpose}"></a>
+        <a role="button" th:class="${activeMenu == 'species'} ? 'secondary' : null" th:href="'/customer/lookup/species'" th:text="#{label.title.species}"></a>
+    </div>
+</th:block>

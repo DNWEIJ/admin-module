@@ -1,4 +1,4 @@
-INSERT INTO customer.customer_pet (allergies,
+ INSERT INTO customer_pet (allergies,
                                    birthday,
                                    chip_date,
                                    deceased,
