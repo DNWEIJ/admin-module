@@ -2,9 +2,9 @@ package dwe.holding.customer.client.model;
 
 import dwe.holding.customer.client.model.converter.CustomerStatusConverter;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
-import dwe.holding.generic.shared.model.converter.YesNoEnumConverter;
-import dwe.holding.generic.shared.model.type.YesNoEnum;
+import dwe.holding.admin.model.base.MemberBaseBO;
+import dwe.holding.shared.model.converter.YesNoEnumConverter;
+import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -59,7 +59,7 @@ public class Customer extends MemberBaseBO {
     @Lob
     private String comments;
 
-    @Column(columnDefinition = "varchar(1)")
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = CustomerStatusConverter.class)
     private CustomerStatusEnum status;
 
@@ -73,8 +73,8 @@ public class Customer extends MemberBaseBO {
     @Builder.Default
     private Set<Pet> pets = new HashSet<Pet>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-    private Set<Payment> payments = new HashSet<Payment>(0);
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+//    private Set<Payment> payments = new HashSet<Payment>(0);
 
     public String getCustomerName() {
         String CustomerName = getLastName();

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 
-public interface CustomerRepository extends JpaRepository<Customer,   Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("""
                 SELECT c FROM Customer c
                 WHERE LOWER(c.lastName) LIKE LOWER(CONCAT(:prefix, '%'))
@@ -32,4 +32,7 @@ public interface CustomerRepository extends JpaRepository<Customer,   Long> {
 
     List<Customer> findByAddressLineContainingAndMemberIdOrderByLastNameAscFirstNameAsc(String prefix, Long currentUserMid);
 
+    Customer findByIdAndMemberId(Long customerId, Long memberId);
+
+    Customer findByPets_IdAndMemberId(Long patientId, long l);
 }

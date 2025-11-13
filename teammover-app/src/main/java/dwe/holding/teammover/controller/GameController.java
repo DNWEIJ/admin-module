@@ -1,7 +1,7 @@
 package dwe.holding.teammover.controller;
 
-import dwe.holding.generic.admin.model.type.DriveOptionEnum;
-import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.admin.model.type.DriveOptionEnum;
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.teammover.model.Driver;
 import dwe.holding.teammover.model.Game;
 import dwe.holding.teammover.repository.GameRepository;

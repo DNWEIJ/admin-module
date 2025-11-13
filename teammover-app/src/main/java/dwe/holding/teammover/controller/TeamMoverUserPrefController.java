@@ -2,11 +2,11 @@ package dwe.holding.teammover.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dwe.holding.generic.admin.authorisation.member.LocalMemberRepository;
-import dwe.holding.generic.admin.expose.UserPreferencesService;
-import dwe.holding.generic.admin.model.UserPreferences;
-import dwe.holding.generic.shared.model.frontend.PresentationElement;
-import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.admin.authorisation.member.LocalMemberRepository;
+import dwe.holding.admin.expose.UserPreferencesService;
+import dwe.holding.admin.model.UserPreferences;
+import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

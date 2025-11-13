@@ -2,7 +2,7 @@ package dwe.holding.customer.client.controller;
 
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.admin.security.AutorisationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 

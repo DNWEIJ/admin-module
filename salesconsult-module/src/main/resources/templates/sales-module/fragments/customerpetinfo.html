@@ -1,0 +1,48 @@
+<th:block th:fragment="customerPetInfo(customer, pet, backbutton)">
+    <div class="threecolumn-spread">
+        <div class="one">
+            <th:block th:if="${backbutton}">
+                <a href="/sales/otc/search" role="button" th:text="#{label.button.back}"></a>
+            </th:block>
+            <th:block th:if="${!backbutton}">
+                <th:block th:if="${customer != null}">
+                    <h6 class="center" th:text="'Customer: '+ ${customer.customerName} +' - ' + #{__${customer.status.label}__}"></h6>
+                    <div class="center" th:text="${customer.email}"></div>
+                    <div class="center" th:text="${customer.address2}+', '+ ${customer.address3}"></div>
+                    <div class="center" th:text="${customer.homePhone}+', '+ ${customer.mobilePhone}+', '+ ${customer.workPhone}"></div>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="two">
+            <th:block th:if="${backbutton}">
+                <th:block th:if="${customer != null}">
+                    <h6 class="center" th:text="'Customer: '+ ${customer.customerName} +' - ' + #{__${customer.status.label}__}"></h6>
+                    <div class="center" th:text="${customer.email}"></div>
+                    <div class="center" th:text="${customer.address2}+', '+ ${customer.address3}"></div>
+                    <div class="center" th:text="${customer.homePhone}+', '+ ${customer.mobilePhone}+', '+ ${customer.workPhone}"></div>
+                </th:block>
+            </th:block>
+            <th:block th:if="${!backbutton}">
+                <th:block th:if="${pet != null}">
+                    <h6 class="center" th:text="'Pet: '+ ${pet.name} +' (' + #{__${customer.status.label}__} + ')'"></h6>
+                    <div class="center" th:text="#{__${pet.sex.label}__}"></div>
+                    <div class="center" th:text="${pet.birthday}+' ('+ ${pet.age}+')'"></div>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="three">
+            <th:block th:if="${backbutton}">
+                <th:block th:if="${pet != null}">
+                    <h6 class="center" th:text="'Pet: '+ ${pet.name} +' (' + #{__${customer.status.label}__} + ')'"></h6>
+                    <div class="center" th:text="#{__${pet.sex.label}__}"></div>
+                    <div class="center" th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' ('+ ${pet.age}+')'"></div>
+                </th:block>
+            </th:block>
+            <th:block th:if="${pet != null}">
+                <div class="center" th:text="'I: '+ #{__${pet.insured.label}__} +' - ' + ${pet.insuredBy}"></div>
+                <div class="center" th:text="'D: '+  #{__${pet.gpwarning.label}__} +' - ' + ${pet.gpwarningDescription}"></div>
+                <div class="center" th:text="'A: '+  #{__${pet.allergies.label}__} +' - ' + ${pet.allergiesDescription} "></div>
+            </th:block>
+        </div>
+    </div>
+</th:block>

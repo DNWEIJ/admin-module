@@ -1,0 +1,86 @@
+<style>
+    .icon,
+    svg {
+        fill: currentColor;
+        color: #aaa;
+        transition: color 0.3s ease;
+        vertical-align: middle;
+    }
+
+    a:hover .icon,
+    a:hover svg {
+        color: #222;
+    }
+</style>
+<nav role="menu">
+    <label data-role="burger"><input type="checkbox"/></label>
+    <ul role="menuitem">
+        <li>
+            <a href="/a/b" data-tooltip="New appointment" data-placement="right">
+                <svg width="48" height="48" aria-label="New appointment">
+                    <use href="/lib/images/newAppointment.svg"></use>
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="/sales/otc/search" data-tooltip="OTC" data-placement="bottom">
+                <svg width="48" height="48" aria-label="OTC">
+                    <use href="/lib/images/OTC.svg"></use>
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="/a/b" data-tooltip="Price Information" data-placement="bottom">
+                <svg width="48" height="48" aria-label="Price information">
+                    <use href="/lib/images/priceInformation.svg"></use>
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="/a/b" data-tooltip="Agenda" data-placement="bottom">
+                <svg width="48" height="48" aria-label="Agenda">
+                    <use href="/lib/images/agenda.svg"></use>
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="/customer/customer" data-tooltip="Customer & Pet" data-placement="bottom">
+                <svg width="48" height="48" aria-label="Customer & Pet">
+                    <use href="/lib/images/customerPet.svg"></use>
+                </svg>
+            </a>
+        </li>
+    </ul>
+    <ul role="menuitem">
+        <li>
+            <details class="dropdown">
+                <summary>Tasks</summary>
+                <ul>
+                    <li><a href="/a/b">Appointment List</a></li>
+                    <li><a href="/a/b">Execute tasks</a></li>
+                    <li><a href="/a/b">Supplies</a></li>
+                </ul>
+            </details>
+        </li>
+        <li>
+            <details class="dropdown">
+                <summary>Admin</summary>
+                <ul>
+                    <li><a href="/admin/member">Member</a></li>
+                    <li><a href="/admin/localmember">Local Member</a></li>
+                    <li><a href="/admin/function">Function</a></li>
+                    <li><a href="/admin/role">Role</a></li>
+                    <li><a href="/admin/user">User</a></li>
+                </ul>
+            </details>
+        </li>
+        <li>
+            <details class="dropdown">
+                <summary>User</summary>
+                <ul>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </details>
+        </li>
+    </ul>
+</nav>

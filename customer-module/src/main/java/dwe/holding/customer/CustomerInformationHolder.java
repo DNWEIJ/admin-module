@@ -1,6 +1,6 @@
 package dwe.holding.customer;
 
-import dwe.holding.generic.admin.security.InformationObject;
+import dwe.holding.admin.security.InformationObject;
 
 public class CustomerInformationHolder implements InformationObject {
 

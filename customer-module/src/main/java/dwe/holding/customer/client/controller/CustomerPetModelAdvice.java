@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-@ControllerAdvice(assignableTypes = {CustomerController.class, PetController.class, NotesController.class, PaymentController.class, ReminderController.class})
+@ControllerAdvice(assignableTypes = {CustomerController.class, PetController.class, NotesController.class, ReminderController.class})
 public class CustomerPetModelAdvice {
     @ModelAttribute
     void modelAdvice(Model model) {

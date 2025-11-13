@@ -8,7 +8,7 @@
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
 
-    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true)}"></div>
+    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer/')}"></div>
     <hr/>
     <form id="createForm"  action="/customer/customer" method="post">
         <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->

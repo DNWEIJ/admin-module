@@ -7,9 +7,9 @@ import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.repository.LookupBreedsRepository;
 import dwe.holding.customer.client.repository.LookupSpeciesRepository;
 import dwe.holding.customer.client.repository.PetRepository;
-import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.shared.model.frontend.PresentationElement;
-import dwe.holding.generic.shared.model.type.YesNoEnum;
+import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -78,7 +78,7 @@ public class PetController {
                             .allergies(petForm.getAllergies()).insured(petForm.getInsured()).deceased(petForm.getDeceased()).gpwarning(petForm.getGpwarning())
                             .allergiesDescription(petForm.getAllergiesDescription()).insuredBy(petForm.getInsuredBy()).deceasedDate(petForm.getDeceasedDate()).gpwarningDescription(petForm.getGpwarningDescription())
 
-                            .rabiesId(petForm.getRabiesId()).chipTattooId(petForm.getChipTattooId()).chipDate(petForm.getChipDate())
+                            .passportNumber(petForm.getPassportNumber()).chipTattooId(petForm.getChipTattooId()).chipDate(petForm.getChipDate())
                             .comments(petForm.getComments())
 
                             .customer(customer)

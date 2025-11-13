@@ -23,7 +23,7 @@
                                    insured_by,
                                    last_edited_by,
                                    name,
-                                   rabies_id,
+                                   passport_number,
                                    species,
                                    sex)
 

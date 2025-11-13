@@ -1,10 +1,57 @@
 /* STYLING FOR SPECIFIC ELEMENTS OF THIS APP */
 
+
+/* *********************** */
+/* dynamiuc search with search result window */
+.gridSearchWithCheck {
+    display: grid;
+    grid-template-columns: 3fr repeat(3, 0fr);
+    grid-column-gap: .5em;
+}
+
+
+@media (max-width: 576px) {
+.gridSearchWithCheck {
+    grid-template-columns: 1fr;
+    grid-row-gap: .5em;
+}
+}
+
+.ac_results {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--pico-background-color);
+    width: 100%;
+    z-index: 999;
+    border: 1px solid black;
+    box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
+}
+
+.ac_results li {
+    cursor: default;
+    display: block;
+    overflow: hidden;
+}
+
+.ac_results li:nth-child(even) {
+    background-color: var(--pico-dropdown-background-color);
+}
+
+.ac_results li.selected {
+    background-color: darkblue;
+    color: white;
+}
+
+.ac_results:empty {
+    display: none;
+}
+
+
 /* *********************** */
 /* narrow table definition */
 .table-tight {
     width: 100%;
-    margin: 0;
+    margin-top: .5em;
     padding: 1px;
 }
 
@@ -204,4 +251,17 @@ html footer {
 :root:not([data-theme=dark]), [data-theme=light] {
     --pico-background-color: #f3f3f3;
     --pico-spacing: 0.5rem;
+
+    --pico-border-radius: 0.3rem;
+    --pico-typography-spacing-vertical: .5rem;
+    --pico-form-element-spacing-vertical: .5rem;
+    --pico-form-element-spacing-horizontal: 0.5rem;
+    --pico-font-size: initial;
+}
+
+[role=group] [role=button],
+[role=group] [type=button],
+[role=group] [type=submit],
+[role=group] button {
+    --pico-form-element-spacing-horizontal: .5rem;
 }

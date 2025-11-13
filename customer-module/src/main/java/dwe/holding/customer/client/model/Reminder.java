@@ -1,7 +1,7 @@
 package dwe.holding.customer.client.model;
 
 
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

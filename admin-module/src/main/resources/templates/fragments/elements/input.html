@@ -4,11 +4,12 @@
            th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}">
 </th:block>
 
+
 <th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)" th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}, pattern=${pattern}?:''">
     <div class="field">
         <input th:id="${name}" th:name="${name}" placeholder=" " th:required="${required}"
                th:pattern="${pattern}"  autocomplete="off"
-               th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}">
+               th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__ ?: ''}">
         <label th:for="${name}" th:utext="#{${label}}"></label>
     </div>
 </th:block>

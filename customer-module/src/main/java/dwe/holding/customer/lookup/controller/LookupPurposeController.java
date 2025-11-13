@@ -2,7 +2,6 @@ package dwe.holding.customer.lookup.controller;
 
 import dwe.holding.customer.client.model.lookup.LookupPurpose;
 import dwe.holding.customer.lookup.repository.LookupPurposeRepository;
-import dwe.holding.generic.admin.security.AutorisationUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,7 @@ public class LookupPurposeController {
 
     @GetMapping("lookup/purposes")
     String list(Model model) {
-        model.addAttribute("purposes", lookupPurposeRepository.getByMemberId(77L)); // todo replace with
+        model.addAttribute("purposes", lookupPurposeRepository.getByMemberIdOrderByDefinedPurpose(77L)); // todo replace with
         model.addAttribute("activeMenu", "purpose");
         return "customer-module/lookup/purposes/list";
     }

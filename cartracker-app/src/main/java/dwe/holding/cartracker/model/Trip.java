@@ -1,7 +1,7 @@
 package dwe.holding.cartracker.model;
 
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.TenantBaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

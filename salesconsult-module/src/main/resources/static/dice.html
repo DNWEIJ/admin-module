@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Dice Map Generator - Hoge Resolutie</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        canvas { border: 1px solid #333; image-rendering: pixelated; display:block; margin-top:20px; }
+    </style>
+</head>
+<body>
+
+<h2>Dice Map Generator - Hoge Resolutie</h2>
+
+<input type="file" id="fileInput" accept="image/*"><br><br>
+
+<label>Dice size:</label>
+<input type="number" id="diceSize" value="20" min="4"><br><br>
+
+<label>Zoom factor (resolutie boost):</label>
+<input type="number" id="zoomFactor" value="1.5" step="0.1" min="1"><br><br>
+
+<button id="processBtn">Genereer</button>
+<button id="downloadBtn">Download</button>
+
+<canvas id="outputCanvas"></canvas>
+
+<script>
+    function averageBrightness(imgData, x, y, size, w, h){
+        let sum=0, count=0;
+        for(let j=0;j<size;j++){
+            for(let i=0;i<size;i++){
+                let px=x+i, py=y+j;
+                if(px>=w||py>=h) continue;
+                let idx=(py*w+px)*4;
+                sum += (imgData.data[idx]+imgData.data[idx+1]+imgData.data[idx+2])/3;
+                count++;
+            }
+        }
+        return sum/count;
+    }
+
+    function brightnessToDiceValue(b){
+        if(b>230) return 1;
+        if(b>200) return 2;
+        if(b>170) return 3;
+        if(b>140) return 4;
+        if(b>110) return 5;
+        return 6;
+    }
+
+    function drawDice(ctx,x,y,size,value){
+        ctx.fillStyle="white";
+        ctx.fillRect(x,y,size,size);
+        ctx.fillStyle="black";
+
+        let r=size*0.10;
+        let o=size*0.28;
+
+        const dots={
+            1:[[0.5,0.5]],
+            2:[[0.5-o/size,0.5-o/size],[0.5+o/size,0.5+o/size]],
+            3:[[0.5-o/size,0.5-o/size],[0.5,0.5],[0.5+o/size,0.5+o/size]],
+            4:[[0.5-o/size,0.5-o/size],[0.5+o/size,0.5-o/size],[0.5-o/size,0.5+o/size],[0.5+o/size,0.5+o/size]],
+            5:[[0.5-o/size,0.5-o/size],[0.5+o/size,0.5-o/size],[0.5,0.5],[0.5-o/size,0.5+o/size],[0.5+o/size,0.5+o/size]],
+            6:[[0.5-o/size,0.5-o/size],[0.5+o/size,0.5-o/size],[0.5-o/size,0.5],[0.5+o/size,0.5],[0.5-o/size,0.5+o/size],[0.5+o/size,0.5+o/size]]
+        };
+
+        dots[value].forEach(d=>{
+            ctx.beginPath();
+            ctx.arc(x+d[0]*size, y+d[1]*size, r, 0, Math.PI*2);
+            ctx.fill();
+        });
+    }
+
+    const outputCanvas=document.getElementById("outputCanvas");
+    const ctxOut=outputCanvas.getContext("2d");
+    let img=new Image();
+
+    document.getElementById("fileInput").addEventListener("change",function(){
+        let reader=new FileReader();
+        reader.onload=e=>img.src=e.target.result;
+        reader.readAsDataURL(this.files[0]);
+    });
+
+    document.getElementById("processBtn").onclick=function(){
+        const size=parseInt(document.getElementById("diceSize").value);
+        const zoom=parseFloat(document.getElementById("zoomFactor").value);
+
+        let temp=document.createElement("canvas");
+        let tctx=temp.getContext("2d");
+        temp.width=img.width;
+        temp.height=img.height;
+        tctx.drawImage(img,0,0);
+
+        let imgData=tctx.getImageData(0,0,img.width,img.height);
+        let blocksX=Math.ceil(img.width/size);
+        let blocksY=Math.ceil(img.height/size);
+
+        // canvas vergroten voor hogere resolutie
+        outputCanvas.width = blocksX * size * zoom;
+        outputCanvas.height = blocksY * size * zoom;
+
+        // schaal context zodat dobbelstenen dezelfde grootte behouden
+        ctxOut.setTransform(zoom,0,0,zoom,0,0);
+
+        for(let by=0;by<blocksY;by++){
+            for(let bx=0;bx<blocksX;bx++){
+                let x=bx*size, y=by*size;
+                let b=averageBrightness(imgData,x,y,size,img.width,img.height);
+                let v=brightnessToDiceValue(b);
+                drawDice(ctxOut,x,y,size,v);
+            }
+        }
+
+        // visuele weergave op scherm
+        outputCanvas.style.width = (blocksX*size) + "px";
+        outputCanvas.style.height = (blocksY*size) + "px";
+    };
+
+    document.getElementById("downloadBtn").onclick=function(){
+        const a=document.createElement("a");
+        a.download="dice_map.png";
+        a.href=outputCanvas.toDataURL();
+        a.click();
+    };
+</script>
+
+</body>
+</html>

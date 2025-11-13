@@ -1,7 +1,7 @@
 package dwe.holding.teammover;
 
-import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.admin.setup.SetupAdminService;
+import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.setup.SetupAdminService;
 import dwe.holding.teammover.setup.SetupTeamMoverAdminService;
 import dwe.holding.teammover.setup.SetupTeamMoverDataService;
 import lombok.extern.slf4j.Slf4j;

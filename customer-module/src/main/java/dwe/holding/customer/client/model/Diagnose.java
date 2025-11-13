@@ -2,13 +2,10 @@ package dwe.holding.customer.client.model;
 
 
 import dwe.holding.customer.client.model.lookup.LookupDiagnose;
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
@@ -31,6 +28,7 @@ public class Diagnose extends MemberBaseBO {
     private Pet pet;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "diagnose")
+    @Builder.Default
     private Set<Location> locations = new HashSet<>(0);
 
     @ManyToOne(fetch = FetchType.EAGER)

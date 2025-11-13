@@ -8,6 +8,6 @@ import java.util.List;
 
 
 public interface LookupBreedsRepository extends JpaRepository<LookupBreeds, Long> {
-    @Query("SELECT s FROM CUSTOMER_LOOKUPBREEDS s WHERE s.memberId = ?1 OR s.memberId = -1")
+    @Query("SELECT s FROM CUSTOMER_LOOKUP_BREEDS s WHERE s.memberId = ?1 OR s.memberId = -1")
     List<LookupBreeds> getList(Long memberId);
 }

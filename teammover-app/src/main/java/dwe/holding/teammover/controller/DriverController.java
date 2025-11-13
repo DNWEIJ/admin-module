@@ -2,8 +2,8 @@ package dwe.holding.teammover.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dwe.holding.generic.admin.model.type.DriveOptionEnum;
-import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.admin.model.type.DriveOptionEnum;
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.teammover.model.Driver;
 import dwe.holding.teammover.model.Game;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;

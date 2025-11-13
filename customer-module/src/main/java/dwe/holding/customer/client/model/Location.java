@@ -1,6 +1,6 @@
 package dwe.holding.customer.client.model;
 
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

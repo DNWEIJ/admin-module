@@ -1,0 +1,58 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{sales-module/layout.html}">
+<head>
+    <title>[[#{label.title.otc}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <fieldset role="group" class="grid">
+    <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
+    </fieldset>
+    <hr/>
+    <fieldset role="" class="grid">
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('petId','', 'selectedPet.id', ${petsOnVisit}, true,'900')}"></th:block>
+        <button th:text="#{label.otc.sell.add.pet}"></button>
+        <button th:text="#{label.otc.sell.history}"></button>
+        <button th:text="#{label.otc.sell.soap}"></button>
+        <button th:text="#{label.otc.sell.delete}"></button>
+
+    </fieldset>
+    <hr/>
+    <fieldset role="group" class="grid">
+        <legend>somestuff</legend>
+        <table class="table-tight">
+            <thead>
+            <tr>
+                <th th:text="#{label.otc.sell.description}"></th>
+                <th th:text="#{label.otc.sell.category}"></th>
+                <th th:text="#{label.otc.sell.amount}"></th>
+                <th th:text="#{label.otc.sell.cost}"></th>
+                <th th:text="#{label.otc.sell.taxed}"></th>
+                <th th:text="#{label.otc.sell.total}"></th>
+                <th>
+                    <svg width="32px" height="32px"><use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use></svg>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="lineItemsReplacedByHtmx">
+            <!-- Line items will be inserted here -->
+            </tbody>
+            <tfoot>
+            <tr>
+            <!-- Footer total of the line items, customer name, pet name-->
+            <th th:text="#{label.otc.sell.description}"></th>
+            <th th:text="#{label.otc.sell.category}"></th>
+            <th th:text="#{label.otc.sell.amount}"></th>
+            <th th:text="#{label.otc.sell.cost}"></th>
+            <th th:text="#{label.otc.sell.taxed}"></th>
+            <th th:text="#{label.otc.sell.total}"></th>
+            <th>
+                <svg width="32px" height="32px"><use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use></svg>
+            </th>
+            </tr>
+            </tfoot>
+        </table>
+    </fieldset>
+    <div id="replacePartForCostingSearch" th:replace="~{supplies-module/fragments/costing/costingSearch::costingSearch(true, '/sales/otc/search/'+${selectedPet.id}+'/sell/'+${appointment.id}+'/product/','replacedByHtmx')}"></div>
+</section>
+</body>
+</html>

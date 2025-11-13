@@ -1,6 +1,6 @@
 package dwe.holding.customer.client.model.lookup;
 
-import dwe.holding.generic.admin.model.base.MemberBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

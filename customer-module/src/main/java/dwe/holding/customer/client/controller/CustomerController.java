@@ -6,8 +6,8 @@ import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.shared.model.type.YesNoEnum;
+import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,7 +158,7 @@ public class CustomerController {
     private String wrap(List<String> listCustomers) {
         return (listCustomers.size() > 0) ?
                 "<ul style=\"max-height: 180px; overflow: auto;\">" + String.join("", listCustomers) + "</ul>"
-                : "\"<ul style=\\\"max-height: 180px; overflow: auto;\\\"><li>No record found</li></ul>\"";
+                : "<ul style=\"max-height: 180px; overflow: auto;\">No record found</ul>";
     }
 
     private String getOption(Customer customer, Pattern pattern) {

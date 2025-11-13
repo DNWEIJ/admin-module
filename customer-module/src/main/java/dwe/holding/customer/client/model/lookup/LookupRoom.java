@@ -1,6 +1,6 @@
 package dwe.holding.customer.client.model.lookup;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.TenantBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotEmpty;

@@ -5,7 +5,7 @@ import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.client.repository.ReminderRepository;
-import dwe.holding.generic.shared.model.frontend.PresentationElement;
+import dwe.holding.shared.model.frontend.PresentationElement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package dwe.holding.customer.client.model.order;
 
-import dwe.holding.generic.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.TenantBaseBO;
 import dwe.holding.customer.client.model.Pet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

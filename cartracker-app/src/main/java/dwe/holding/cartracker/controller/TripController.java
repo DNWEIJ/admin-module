@@ -1,6 +1,6 @@
 package dwe.holding.cartracker.controller;
 
-import dwe.holding.generic.admin.security.AutorisationUtils;
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.cartracker.model.Trip;
 import dwe.holding.cartracker.service.CarService;
 import dwe.holding.cartracker.service.DriveService;

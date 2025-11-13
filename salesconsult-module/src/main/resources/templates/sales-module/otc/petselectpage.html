@@ -1,0 +1,13 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{sales-module/layout.html}">
+<head>
+    <title>[[#{label.title.otc}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="overflow-auto">
+        <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
+        <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets})}"></th:block>
+    </div>
+</section>
+</body>
+</html>

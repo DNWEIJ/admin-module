@@ -14,7 +14,7 @@
     <fieldset class="grid" role="presentation">
         <input id="id" name="id" th:value="${id}" type="hidden">
         <input id="version" name="version" th:value="${version}" type="hidden">
-        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','Full name of clinic', 'localMemberName','1')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::t('name','Full name of clinic', 'localMemberName','1')}"></th:block>
     </fieldset>
     <!--    <fieldset class="grid" role="presentation">-->
     <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone1','Clinic phone', 'phone1','2')}" th:with="type='tel'"></th:block>-->

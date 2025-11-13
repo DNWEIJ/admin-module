@@ -1,16 +1,16 @@
 package dwe.holding.cartracker.setup;
 
-import dwe.holding.generic.admin.authorisation.function_role.FunctionRepository;
-import dwe.holding.generic.admin.authorisation.function_role.FunctionRoleRepository;
-import dwe.holding.generic.admin.authorisation.function_role.RoleRepository;
-import dwe.holding.generic.admin.authorisation.function_role.UserRoleRepository;
-import dwe.holding.generic.admin.authorisation.member.LocalMemberRepository;
-import dwe.holding.generic.admin.authorisation.member.MemberRepository;
-import dwe.holding.generic.admin.authorisation.user.UserRepository;
-import dwe.holding.generic.admin.model.*;
-import dwe.holding.generic.admin.model.type.LanguagePrefEnum;
-import dwe.holding.generic.admin.model.type.PersonnelStatusEnum;
-import dwe.holding.generic.shared.model.type.YesNoEnum;
+import dwe.holding.admin.authorisation.function_role.FunctionRepository;
+import dwe.holding.admin.authorisation.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.function_role.RoleRepository;
+import dwe.holding.admin.authorisation.function_role.UserRoleRepository;
+import dwe.holding.admin.authorisation.member.LocalMemberRepository;
+import dwe.holding.admin.authorisation.member.MemberRepository;
+import dwe.holding.admin.authorisation.user.UserRepository;
+import dwe.holding.admin.model.*;
+import dwe.holding.admin.model.type.LanguagePrefEnum;
+import dwe.holding.admin.model.type.PersonnelStatusEnum;
+import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

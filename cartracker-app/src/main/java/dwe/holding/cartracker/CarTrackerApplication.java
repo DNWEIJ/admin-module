@@ -1,7 +1,7 @@
 package dwe.holding.cartracker;
 
-import dwe.holding.generic.admin.security.AutorisationUtils;
-import dwe.holding.generic.admin.setup.SetupAdminService;
+import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.setup.SetupAdminService;
 import dwe.holding.cartracker.setup.MigrationService;
 import dwe.holding.cartracker.setup.SetupCarTrackerService;
 import lombok.extern.slf4j.Slf4j;
