@@ -1,11 +1,12 @@
 package dwe.holding.salesconsult.sales.model;
 
 
-import dwe.holding.admin.exception.ApplicationException;
 import dwe.holding.admin.model.base.TenantBaseBO;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
-import dwe.holding.supplyinventory.model.LookupCostingCategory;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "SALES_LINEITEM")
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+@Table(name = "SALES_LINE_ITEM")
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -26,7 +30,7 @@ public class LineItem extends TenantBaseBO {
     private Long appointmentId;
 
     @NotNull
-    private Long patientId;
+    private Long petId;
 
     @NotNull
     private Long categoryId;
@@ -36,56 +40,80 @@ public class LineItem extends TenantBaseBO {
     private String nomenclature;
 
     @NotNull
-    @Column(nullable = false)
-    private Double quantity;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private
+    BigDecimal quantity;
 
     @NotNull
     private TaxedTypeEnum taxForSellExTaxPrice;
-
-    private Double taxGoodPercentage;
-    private Double taxServicePercentage;
-    private Double sellExTaxPrice;
-    private Double processingFee;
-    private Double total;
-    private Double TaxPortionOfSell;
-    private Double TaxPortionOfProcessingFeeService;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal taxGoodPercentage;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal taxServicePercentage;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal sellExTaxPrice;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal processingFee;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal total;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal taxPortionOfSell;
+    @Column(precision = 38, scale = 4)
+    private
+    BigDecimal taxPortionOfProcessingFeeService;
+    private boolean hasPrintLabel;
 
     @Transient
-    public Double calculateTotal(Double reduction) {
-        double goodTtax = 0.0;
+    public BigDecimal calculateTotal(BigDecimal reduction) {
+        BigDecimal goodTax = new BigDecimal("0.0");
 
         if (TaxedTypeEnum.GOOD.equals(taxForSellExTaxPrice)) {
-            goodTtax = getTaxGoodPercentage() / 100.0;
+            goodTax = getTaxGoodPercentage().divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP);
         }
         if (TaxedTypeEnum.SERVICE.equals(taxForSellExTaxPrice)) {
-            goodTtax = getTaxServicePercentage() / 100.0;
+            goodTax = getTaxServicePercentage().divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP);
         }
 
-        Double realCost = sellExTaxPrice; //real price
+        BigDecimal realCost = sellExTaxPrice; //real price
         if (reduction != null) {
-            realCost = realCost * (1 - reduction / 100);
+            realCost = realCost.multiply(
+                    ((new BigDecimal("1.00")).min(
+                            reduction.divide(new BigDecimal("100.00"), 4, RoundingMode.HALF_UP))
+                    )
+            );
         }
 
-        double result = ( (realCost * quantity * (goodTtax + 1)) + (processingFee + processingFee * (taxServicePercentage / 100.0)) );
-        result = Math.round(result * 100);
-        result = result / 100;
-
-        return result;
+        //  total = (realCost * quantity * (goodTtax + 1)) + (processingFee + processingFee * (taxServicePercentage / 100.0));
+        BigDecimal part1 = realCost
+                .multiply(quantity)
+                .multiply(goodTax.add(BigDecimal.ONE));
+        // processingFee + processingFee * (taxServicePercentage / 100)
+        BigDecimal part2 =
+                processingFee
+                        .add(
+                                processingFee.multiply(
+                                        taxServicePercentage.divide(BigDecimal.valueOf(100))
+                                )
+                        );
+        // final result
+        return part1.add(part2);
     }
 
     @Transient
-    public Double calculateProcessingFeeServiceTax() {
-        double result = processingFee * getTaxServicePercentage() / 100.0;
-        result = Math.round(result * 100);
-        result = result / 100;
-        return result;
+    public BigDecimal calculateProcessingFeeServiceTax() {
+        return processingFee.multiply(getTaxServicePercentage().divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP));
     }
 
     @Transient
-    public Double calculateCostTaxPortion() {
-        double result = getTotal() - (processingFee + TaxPortionOfProcessingFeeService + (getQuantity() * sellExTaxPrice));
-        result = Math.round(result * 100);
-        result = result / 100;
-        return result;
+    public BigDecimal calculateCostTaxPortion() {
+        BigDecimal part1 = quantity.multiply(sellExTaxPrice);
+        return total.min(processingFee.add(taxPortionOfProcessingFeeService.add(part1)));
+
     }
 }

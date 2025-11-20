@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @Entity(name = "SUPPLY_COSTING")
 @SuperBuilder
 @NoArgsConstructor
@@ -26,21 +28,21 @@ public class Costing extends MemberBaseBO {
 
     @Column(nullable = false)
     private String nomenclature;
-    @Column(nullable = false)
-    private Double sellExTaxPrice; //verkoop ex btw
-    @Column(nullable = false)
-    private Double purchasePrice; // inkoop prijs / distributor price
-    @Column(nullable = false)
-    private Double processingFee;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal sellExTaxPrice; //verkoop ex btw
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal purchasePrice; // inkoop prijs / distributor price
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal processingFee;
 
     private String distributor;
     private String distributorDescription;
     private String itemNumber;
-    @Column(nullable = false)
-    private Double quantityPerPackage;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal quantityPerPackage;
 
-    @Column(nullable = false)
-    private Double uplift;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal uplift;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
@@ -75,8 +77,8 @@ public class Costing extends MemberBaseBO {
 
     private Long supplies2Id;
 
-    @Column(nullable = false)
-    private Double supplies2IdIndyQtyDeduction;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal supplies2IdIndyQtyDeduction;
 
     private Long barcode;
 

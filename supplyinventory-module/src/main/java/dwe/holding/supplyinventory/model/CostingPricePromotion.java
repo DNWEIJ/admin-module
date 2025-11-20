@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity(name = "SUPPLY_COSTING_PRICE_PROMOTION")
@@ -37,14 +38,17 @@ public class CostingPricePromotion extends MemberBaseBO {
     // you give a reduction percentage
     // NOT BOTH!!!
     @NotNull
-    @Column(nullable = false)
-    private Double sellExTaxPrice;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private
+    BigDecimal sellExTaxPrice;
 
     @NotNull
-    @Column(nullable = false)
-    private Double processingFee;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private
+    BigDecimal processingFee;
 
     @NotNull
-    @Column(nullable = false)
-    private Double reductionPercentage;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private
+    BigDecimal reductionPercentage;
 }

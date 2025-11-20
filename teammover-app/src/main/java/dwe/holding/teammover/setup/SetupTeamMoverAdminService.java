@@ -67,8 +67,8 @@ public class SetupTeamMoverAdminService {
             log.info("MigrationTeamMoverAdminService:: localMember: the teams");
             List<LocalMember> localMembers = localMemberRepository.saveAllAndFlush(
                     List.of(
-                            LocalMember.builder().localMemberName("GO12-2").mid(member.getId()).member(member).build(),
-                            LocalMember.builder().localMemberName("GO12-1").mid(member.getId()).member(member).build()
+                            LocalMember.builder().localMemberName("GO12-2").member(member).build(),
+                            LocalMember.builder().localMemberName("GO12-1").member(member).build()
                     )
             );
 

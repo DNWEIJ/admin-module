@@ -1,0 +1,11 @@
+<dialog open>
+    <!-- HX-Trigger-After-Settle::-->
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"></button>
+        </header>
+        <p>
+            <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets}, ${'/sales/otc/search/'+ customerId + '/sell/' + appointmentId+ '/addpet'}, false)}"></th:block>
+        </p>
+    </article>
+</dialog>

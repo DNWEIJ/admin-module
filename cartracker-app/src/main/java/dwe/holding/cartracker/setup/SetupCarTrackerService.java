@@ -70,7 +70,6 @@ public class SetupCarTrackerService {
             LocalMember localMember = localMemberRepository.saveAndFlush(
                     LocalMember.builder()
                             .localMemberName("CAR")
-                            .mid(member.getId())
                             .member(member).build()
             );
             log.info("SetupCarTrackerService:: user");

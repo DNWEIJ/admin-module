@@ -18,16 +18,16 @@ import java.util.Optional;
 
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = {
-        "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.exception", "dwe.holding.generic.admin.expose",
-        "dwe.holding.generic.admin.security",
+        "dwe.holding.admin.authorisation", "dwe.holding.admin.exception",
+        "dwe.holding.admin.expose", "dwe.holding.admin.security", "dwe.holding.admin.transactional",
         "dwe.holding.supplyinventory"
 })
 @EnableJpaRepositories(basePackages = {
-        "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.preferences",
+        "dwe.holding.admin.authorisation", "dwe.holding.admin.preferences",
         "dwe.holding.supplyinventory.repository"
 })
 @EntityScan(basePackages = {
-        "dwe.holding.generic.admin.model",
+        "dwe.holding.admin.model",
         "dwe.holding.supplyinventory.model"
 })
 @Slf4j
@@ -55,6 +55,6 @@ public class SupplyInventoryApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        setupSuppliesService.init();
+  //      setupSuppliesService.init();
     }
 }

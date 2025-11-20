@@ -1,12 +1,13 @@
 package dwe.holding.customer.client.controller;
 
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.CustomerInformationHolder;
 import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
+import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class CustomerController {
 
     @GetMapping("/customer")
     String newRecord(Model model) {
-        model.addAttribute("form", new CustomerForm(true, false));
+        model.addAttribute("form", new CustomerForm(true, false, false, false));
         model.addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
         // TODO: Activate!!
         AutorisationUtils.setInfoObject(null);
@@ -49,7 +50,7 @@ public class CustomerController {
             return newRecord(model);
         }
         setModel(model);
-        model.addAttribute("form", new CustomerForm(true, false));
+        model.addAttribute("form", new CustomerForm(true, false, false, false));
         Customer customer = customerRepository.findById(id).get();
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
@@ -104,10 +105,10 @@ public class CustomerController {
      *   SearchCriteria can start with an I/i to indicate a search on Id.
      *   Two boolean fields to increase the search scope: startLastName and includeStreetName.
      */
-    public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName) {
+    public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
         if (searchCriteria == null || searchCriteria.isEmpty()) {
             model.addAttribute("flatData", "");
-            model.addAttribute("form", new CustomerForm(startLastName, includeStreetName));
+            model.addAttribute("form", new CustomerForm(startLastName, includeStreetName, includeFirstTel, includePet));
         } else {
             if (searchCriteria.toLowerCase().charAt(0) == 'i') {
                 // find on ID
@@ -119,13 +120,12 @@ public class CustomerController {
                     model.addAttribute("flatData", wrap(List.of()));
                 }
             }
-
-            model.addAttribute("flatData", wrap(getCustomers(searchCriteria, startLastName, includeStreetName)));
+            model.addAttribute("flatData", wrap(getCustomers(searchCriteria, startLastName, includeStreetName, includeFirstTel, includePet)));
         }
         return "fragments/elements/flatData";
     }
 
-    private List<String> getCustomers(String searchCriteria, boolean startLastName, boolean includeStreetName) {
+    private List<String> getCustomers(String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
         List<String> listCustomers = new ArrayList<>();
 
         String escapedSearch = Pattern.quote(searchCriteria);
@@ -151,6 +151,20 @@ public class CustomerController {
                     ).toList()
             );
         }
+        if (includeFirstTel) {
+            listCustomers.addAll(customerRepository.findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+                    .stream().map(
+                            f -> getOption(f, pattern)
+                    ).toList()
+            );
+        }
+        if (includePet) {
+            listCustomers.addAll(customerRepository.findByPet(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+                    .stream().map(
+                            f -> getOption(f.customer(), pattern, f.pet())
+                    ).toList()
+            );
+        }
         log.info("found customers:" + listCustomers.size());
         return listCustomers;
     }
@@ -162,7 +176,10 @@ public class CustomerController {
     }
 
     private String getOption(Customer customer, Pattern pattern) {
+        return getOption(customer, pattern, null);
+    }
 
+    private String getOption(Customer customer, Pattern pattern, Pet pet) {
         StringBuilder result = new StringBuilder();
         Matcher matcher = pattern.matcher(customer.getLastName());
         while (matcher.find()) {
@@ -176,9 +193,24 @@ public class CustomerController {
                 + getStringText(customer.getSurName()) + result + ", "
                 + customer.getFirstName()
                 + " - " + getStringText(customer.getAddress2())
-                + " - " + customer.getZipCode() + "</li>";
+                + " - " + customer.getZipCode()
+                + petDetails(pet)
+                + "</li>";
     }
 
+
+    private String petDetails(Pet pet) {
+        if (pet == null) {
+            return "";
+        } else {
+        return " - "
+             + pet.getNameWithDeceased()
+             + (pet.getChipTattooId() != null && !pet.getChipTattooId().isEmpty() ?  " - " + pet.getChipTattooId() : "")
+             + (pet.getPassportNumber() != null && !pet.getPassportNumber().isEmpty() ?  " - " + pet.getPassportNumber() : "")
+                ;
+        }
+
+    }
 
     private String getStringText(String stringText) {
         return (stringText == null || stringText.isBlank()) ? "" : stringText + " ";
@@ -189,6 +221,6 @@ public class CustomerController {
         model.addAttribute("statusList", CustomerStatusEnum.getWebList());
     }
 
-    public record CustomerForm(boolean startLastName, boolean includeStreetName) {
+    public record CustomerForm(boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
     }
 }

@@ -17,8 +17,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class LocalMember extends BaseBO {
     @Column(nullable = false)
-    private   Long mid;
-    @Column(nullable = false)
     private String localMemberName;
     private String phone1;
     private String phone2;

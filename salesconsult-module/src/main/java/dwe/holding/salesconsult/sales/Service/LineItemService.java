@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Component
@@ -26,7 +27,7 @@ public class LineItemService {
     private final AppointmentRepository appointmentRepository;
 
     @Transactional
-    public List<LineItem> createOTC(Appointment app, Long petId, Long costingId, Double amount, String batchNumber, String spillageName) {
+    public List<LineItem> createOTC(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
 
         // validate if we are allowed to add a line item
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
@@ -48,7 +49,7 @@ public class LineItemService {
         List<CostingPriceProjection> priceIncludingPromotions = costingService.getCorrectedPriceAndGroupingForCostingId(costingId);
 
         // we need the quantity of the grouping to calculate
-        Map<Long, Double> costingGroupList;
+        Map<Long, BigDecimal> costingGroupList;
         if (priceIncludingPromotions.size() > 1) {
             costingGroupList = costingService.getGroupingsQuantity(costingId);
         } else {
@@ -61,19 +62,21 @@ public class LineItemService {
             // create the lineitem to save; fill it with the generic and reference stuff
             LineItem newLineItem = LineItem.builder().appointmentId(
                             app.getId())
-                    .patientId(foundVisit.getPet().getId())
+                    .petId(foundVisit.getPet().getId())
                     .localMemberId(90L) // TODO: Autorisaton
                     .processingFee(cpp.processingFee())
                     .taxForSellExTaxPrice(cpp.taxed())
                     .sellExTaxPrice(cpp.sellExTaxPrice())
                     .categoryId(cpp.lookupCostingCategory().getId())
                     .nomenclature(cpp.nomenclature())
-                    .taxGoodPercentage(21.00) // TODO member
-                    .taxServicePercentage(19.00) // TODO member
+                    .taxGoodPercentage(new BigDecimal("21.00")) // TODO member
+                    .taxServicePercentage(new BigDecimal("9.00")) // TODO member
                     // calculations
                     .quantity(
                             getQuantity(amount, costingGroupList.get(costingId))
-                    ).build();
+                    )
+                    .hasPrintLabel(cpp.prescriptionLabel() != null && !cpp.prescriptionLabel().isEmpty())
+                    .build();
 
             newLineItem.setTotal(newLineItem.calculateTotal(cpp.reductionPercentage()));
             newLineItem.setTaxPortionOfProcessingFeeService(newLineItem.calculateProcessingFeeServiceTax());
@@ -94,13 +97,10 @@ public class LineItemService {
         return savedLineItems;
     }
 
-    private Double getQuantity(Double amount, Double groupQuantity) {
+    private BigDecimal getQuantity(BigDecimal amount, BigDecimal groupQuantity) {
         if (groupQuantity == null) {
             return amount;
         }
-        double result = amount * groupQuantity;
-        result = Math.round(result * 100);
-        result = result / 100;
-        return result;
+        return amount.multiply(groupQuantity);
     }
 }

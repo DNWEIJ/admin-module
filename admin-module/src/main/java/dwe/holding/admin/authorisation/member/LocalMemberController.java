@@ -69,7 +69,7 @@ public class LocalMemberController {
     }
 
     private   Long processMemberLocal(LocalMember localMember) {
-        localMember.setMid(AutorisationUtils.getCurrentUserMid());
+        localMember.setMember(AutorisationUtils.getCurrentMember());
         LocalMember savedLocalMember = localMemberRepository.save(localMember);
         return savedLocalMember.getId();
     }

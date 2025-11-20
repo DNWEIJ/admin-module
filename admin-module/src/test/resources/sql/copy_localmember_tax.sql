@@ -1,0 +1,24 @@
+INSERT INTO admin_localmember_tax
+(id,
+ version,
+ local_member_id,
+ start_date,
+ end_date,
+ tax_low,
+ tax_high,
+ added_by,
+ added_on,
+ last_edited_by,
+ last_edited_on)
+SELECT MEMBERLOCAL_TAX_ID,
+       VERSION,
+       MEMBERLOCAL_ID,
+       START_DATE,
+       END_DATE,
+       TAX_LOW,
+       TAX_HIGH,
+       'migration',
+       now(),
+       'migration',
+       now()
+FROM vmas.thau_memberlocal_tax where memberlocal_id IN (89,90,91)

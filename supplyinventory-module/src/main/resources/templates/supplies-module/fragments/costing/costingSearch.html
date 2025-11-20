@@ -3,23 +3,23 @@
         const selectedPetId = /*[[${selectedPet.id}]]*/ 0;
     </script>
     <script>
-        let baseUrl;
-        let selectedIndex = -1;
-        let hxPostUrl;
+        let baseUrl
+        let selectedIndex = -1
+        let hxPostUrl
         let selectedField
 
         function updateToSelectedElement(listItems) {
-            if (listItems.length === 0) return;
+            if (listItems.length === 0) return
             listItems.forEach((li, index) => {
-                li.classList.toggle("selected", index === selectedIndex);
+                li.classList.toggle("selected", index === selectedIndex)
                 if (index === selectedIndex) {
-                    li.scrollIntoView({block: "nearest"});
+                    li.scrollIntoView({block: "nearest"})
                 }
-            });
+            })
         }
 
         function getAllItems() {
-            return document.querySelectorAll("#input-costingName li");
+            return document.querySelectorAll("#input-costingName li")
         }
 
         function executeAction(action) {
@@ -28,7 +28,7 @@
                 if (selectedField === undefined) {
                     alert("select a costing")
                 } else {
-                    // we already setting the url, since we will loose the selected field; test on hx-get being set instead
+                    // we already setting the url, since we will loose the selected field test on hx-get being set instead
                     let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
                     costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedField.dataset.id + '/batchnumbers')
 
@@ -43,7 +43,7 @@
                 }
             }
             if (action === "costingAmount") {
-                if (selectedField === undefined && selectedField.dataset.hasBatchNumber) {
+                if (selectedField !== undefined && selectedField.dataset.hasBatch === 'true') {
                     let element = document.getElementById("batchNumberForCosting")
                     let inputElement = document.getElementById("inputBatchNumber")
                     htmx.process(element)
@@ -59,7 +59,7 @@
                 }
             }
             if (action === "batch") {
-                if (selectedField === undefined && selectedField.dataset.hasSpillage) {
+                if (selectedField !== undefined && selectedField.dataset.hasSpillage === 'true') {
                     let element = document.getElementById("spillageForCosting")
                     let inputElement = document.getElementById("inputSpillage")
                     htmx.process(element)
@@ -81,6 +81,12 @@
         }
 
         function resetForNextItem() {
+            // global values
+            baseUrl = ''
+            selectedIndex = -1
+            hxPostUrl = ''
+            selectedField = undefined
+
             document.getElementById("inputCostingAmount").value = ''
 
             var element = document.getElementById("inputBatchNumber")
@@ -99,144 +105,162 @@
             // reset url
 
         }
+
         function attachMouseHandlersToAllItems() {
-            const listItems = getAllItems();
+            const listItems = getAllItems()
 
             listItems.forEach((li, index) => {
                 li.addEventListener("mouseenter", () => {
                     // highlight hovered item
-                    selectedIndex = index;
-                    updateToSelectedElement(listItems);
-                });
+                    selectedIndex = index
+                    updateToSelectedElement(listItems)
+                })
 
                 li.addEventListener("click", (event) => {
                     executeAction("find")
-                    event.preventDefault();
-                });
-            });
+                    event.preventDefault()
+                })
+            })
         }
 
-        document.body.addEventListener("htmx:targetError", function (evt) {
-            console.log("Error event:", evt.detail);
-            console.log("Target:", evt.detail.target);        // The element HTMX tried to update
-        });
-
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("costingFind").focus()
-
             attachMouseHandlersToAllItems()
-            baseUrl = window.location.href;
-            hxPostUrl = window.location.href ;
+            baseUrl = window.location.href
+            hxPostUrl = window.location.href
 
-            selectedIndex = -1;
+            selectedIndex = -1
             document.getElementById("costingFind").addEventListener("keydown", (event) => {
                 const listItems = getAllItems()
-                if (listItems.length === 0) return;
-
+                if (listItems.length === 0) {
+                    if (event.key === "Enter" || event.key === "Tab") {
+                        alert("start typing to search for a product")
+                        event.preventDefault()
+                        return
+                    }
+                }
                 switch (event.key) {
                     case "ArrowDown":
                         if (selectedIndex < listItems.length - 1) {
-                            selectedIndex++;
-                            updateToSelectedElement(listItems);
+                            selectedIndex++
+                            updateToSelectedElement(listItems)
                         } else if (selectedIndex === -1 && listItems.length > 0) {
-                            selectedIndex = 0;
-                            updateToSelectedElement();
+                            selectedIndex = 0
+                            updateToSelectedElement()
                         }
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
                     case "ArrowUp":
                         if (selectedIndex > 0) {
-                            selectedIndex--;
-                            updateToSelectedElement(listItems);
+                            selectedIndex--
+                            updateToSelectedElement(listItems)
                         }
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
                     case "Enter":
                     case "Tab":
                         executeAction("find")
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
                 }
             })
+
             document.getElementById("inputCostingAmount").addEventListener("keydown", (event) => {
                 switch (event.key) {
                     case "Enter":
                     case "Tab":
                         executeAction("costingAmount")
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
                 }
             })
             document.getElementById("inputBatchNumber").addEventListener("keydown", (event) => {
                 switch (event.key) {
                     case "Enter":
                     case "Tab":
+                        // we need to have a value
+                        if (event.currentTarget.value.trim() === "") {
+                            alert("add a batch number")
+                            break
+                        }
                         executeAction("batch")
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
                 }
             })
             document.getElementById("inputSpillage").addEventListener("keydown", (event) => {
                 switch (event.key) {
                     case "Enter":
                     case "Tab":
+                        // we need to have a value
+                        if (event.currentTarget.value.trim() === "") {
+                            alert("add a spillage identifier on this product")
+                            break
+                        }
                         executeAction("spillage")
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
                 }
             })
+
+            document.getElementById("costingFind").focus()
+
         })
     </script>
-    <form id="costingSearchForm" hx-post="" >
+    <form id="costingSearchForm" hx-post="" hx-swap="none">
         <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
-        <fieldset class="grid" role="group">
-            <div>
-                <a>
-                    <svg width="32px" height="32px" align="center">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/search.svg"></use>
+        <fieldset>
+            <div class="gridSearchWithCheck">
+                <div>
+                <a
+                        hx-post="/costing/search/costing"
+                        hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
+                        hx-target="#input-costingName"
+                        hx-indicator=".htmx-indicator"
+                        hx-swap="innerHTML"
+                        autocomplete="off">
+                    <svg width="36px" height="36px" align="center">
+                        <use width="36px" height="36px" align="center" href="/lib/tabler-icons-3_35_0/icons/outline/search.svg"></use>
                     </svg>
                 </a>
-            </div>
-
-            <div class="gridSearchWithCheck">
+                </div>
                 <div class="holder">
                     <input tabindex="1" list="input-costingName" id="costingFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.costing.search.placeholder}"
                            hx-post="/costing/search/costing"
                            hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                            hx-target="#input-costingName"
                            hx-indicator=".htmx-indicator"
+                           hx-swap="innerHTML"
                            autocomplete="off">
                     <div id="result-dropdown" class="dropdown">
                         <div class="ac_results" id="input-costingName" hx-on::after-swap="attachMouseHandlersToAllItems()"></div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <input type="hidden" name="inputCostingId" id="inputCostingId"/>
-                <input id="inputCostingAmount" tabindex="2" name="inputCostingAmount" size="2" type="number" value="1.0" autocomplete="off">
-            </div>
 
-            <div id="costingBatchNumberContainer">
-                <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
-                <datalist id="batchNumberForCosting"
-                          hx-get="writtenByJavascript"
-                          hx-swap="innerHTML"
-                          hx-target="#batchNumberForCosting"
-                          hx-trigger="batchRequired"
-                          hx-include="#inputBatchNumber">
-                </datalist>
-            </div>
-            <div id="costingSpillageContainer">
-                <input list="spillageForCosting" id="inputSpillage" tabindex="4" name="inputSpillage" size="15" type="text" disabled="true"/>
-                <datalist id="spillageForCosting"
-                          hx-get="writtenByJavascript"
-                          hx-swap="innerHTML"
-                          hx-target="#spillageForCosting"
-                          hx-trigger="spillageRequired"
-                          hx-include="#inputSpillage">
-                </datalist>
-            </div>
+                <div>
+                    <input id="inputCostingAmount" tabindex="2" name="inputCostingAmount" size="2" type="number" value="1.0" autocomplete="off">
+                </div>
 
+                <div id="costingBatchNumberContainer">
+                    <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
+                    <datalist id="batchNumberForCosting"
+                              hx-get="writtenByJavascript"
+                              hx-swap="innerHTML"
+                              hx-target="#batchNumberForCosting"
+                              hx-trigger="batchRequired"
+                              hx-include="#inputBatchNumber">
+                    </datalist>
+                </div>
+                <div id="costingSpillageContainer">
+                    <input list="spillageForCosting" id="inputSpillage" tabindex="4" name="inputSpillage" size="15" type="text" disabled="true"/>
+                    <datalist id="spillageForCosting"
+                              hx-get="writtenByJavascript"
+                              hx-swap="innerHTML"
+                              hx-target="#spillageForCosting"
+                              hx-trigger="spillageRequired"
+                              hx-include="#inputSpillage">
+                    </datalist>
+                </div>
+            </div>
         </fieldset>
     </form>
 </th:block>

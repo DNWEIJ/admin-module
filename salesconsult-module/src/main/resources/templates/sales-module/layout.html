@@ -18,6 +18,7 @@
     <!-- javascript-->
     <script src="/lib/tabulator/tabulator.js" type="text/javascript"></script>
     <script src="/lib/htmx/htmx.js" type="text/javascript"></script>
+    <script src="/lib/pico/modal.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -77,9 +78,10 @@
     <div th:replace="~{sales-module/navigation}"></div>
 
     <th:block id="content" layout:fragment="content"></th:block>
+    <div id="modal-container"></div>
     <footer>
         <p th:if="${applicationName != null}"><a th:href="'/'+${applicationName}+'/userpreferences'"
-                                                 th:text="'loggedin User:' + ${T(dwe.holding.generic.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
+                                                 th:text="'loggedin User:' + ${T(dwe.holding.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
             <br/>DWE Holding B.V. &copy;</p>
         <p th:if="${applicationName == null}">DWE Holding B.V. &copy;</p>
     </footer>

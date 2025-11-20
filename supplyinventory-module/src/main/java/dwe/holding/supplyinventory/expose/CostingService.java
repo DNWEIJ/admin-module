@@ -7,6 +7,7 @@ import dwe.holding.supplyinventory.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +98,7 @@ public class CostingService {
         );
     }
 
-    public Map<Long, Double> getGroupingsQuantity(Long costingId) {
+    public Map<Long, BigDecimal> getGroupingsQuantity(Long costingId) {
         return costingGroupRepository.getCostingGroupsByParentCostingId(costingId).stream()
                 .collect(Collectors.toMap(CostingGroup::getChildCostingId, CostingGroup::getQuantity)
                 );

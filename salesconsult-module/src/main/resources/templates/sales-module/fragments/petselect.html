@@ -1,6 +1,8 @@
-<th:block th:fragment="petSelect(pets, deceasedPets)">
+<th:block th:fragment="petSelect(pets, deceasedPets, postUrl, showPetLink)">
     <script th:inline="javascript">
-        document.addEventListener("DOMContentLoaded", function () {
+        function addEventListenersForPetSelect() {
+
+            console.log("addEventListenersForPetSelect has been called");
             // Attach listener to all dropdown starting with 'speciesList['
             // copy the purpose and check the checkbox
             document.querySelectorAll("select[id^='speciesList']").forEach(select => {
@@ -15,16 +17,17 @@
                     if (checkBox) checkBox.checked = true;
                 });
             });
-            // prevent submit form if no checkbox is checked
+            // prevent submitting the form if no checkbox is checked
             document.getElementById("createForm").addEventListener("submit", function (e) {
                 if (!document.querySelectorAll('input[type=checkbox]:checked').length) {
                     alert( [[#{label.otc.pet.checkbox.error}]] )
                     e.preventDefault();
                 }
             });
-        });
+        }
+        document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
     </script>
-    <form id="createForm" th:action="'/sales/otc/search/' + ${customer.id}" method="post">
+    <form id="createForm" th:action="${postUrl}" method="post">
         <fieldset role="group">
             <legend>[[#{label.otc.petList}]]</legend>
             <table id="show-table" class="table-tight">
@@ -41,7 +44,8 @@
                         <td>
                             <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','','1')}"></th:block>
                         </td>
-                        <td><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
+                        <td th:if="${showPetLink}"><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
+                        <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
                         <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                         <td>
                             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${iStat.index}+']', '', '', ${reasons}, true,'1')}" th:with="required=false"></th:block>
@@ -69,7 +73,6 @@
                     </tr>
                     </thead>
                     <tbody>
-
                     <th:block th:each="pet, iStat : ${deceasedPets}">
                         <tr>
                             <td>
@@ -78,7 +81,7 @@
                             <td><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
                             <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                             <td>
-                                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${iStat.index}+']', '', '', ${reasons}, true,'1')}"
+                                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${pets.size() + iStat.index}+']', '', '', ${reasons}, true,'1')}"
                                           th:with="required=false"></th:block>
                             </td>
                             <td>
@@ -95,5 +98,4 @@
             <input type="submit" form="createForm" th:value="#{label.button.next}"/>
         </fieldset>
     </form>
-
 </th:block>

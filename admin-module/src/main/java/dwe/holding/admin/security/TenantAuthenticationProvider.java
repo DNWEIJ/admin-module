@@ -11,6 +11,7 @@ import dwe.holding.shared.model.type.YesNoEnum;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private final FunctionQueryCriteria functionQueryCriteria;
     private final UserPreferencesRepository userPreferencesRepository;
     private final TranactionalUser tranactionalUser;
@@ -40,17 +42,32 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         this.tranactionalUser = tranactionalUser;
     }
 
-    @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) {
+    enum PasswordState {
+        success, succesAndUpdate,
+        failure
+    }
+
+    protected TenantAuthenticationProvider.PasswordState validatePasswordChecks(String inputPassword, String dbPassword) {
 
         // No password entered?
-        if (authentication.getCredentials() == null) {
-            throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badCredentials", "Bad credentials"));
+        if (inputPassword == null || inputPassword.isEmpty()) {
+            return PasswordState.failure;
         }
 
-        if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
-            throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badCredentials", "Bad credentials"));
+        if (!passwordEncoder.matches(inputPassword, dbPassword)) {
+            // maybe we have an old md5, if so change to new bcrypt
+            if (LegacyMd5Encoder.matches(inputPassword, dbPassword)) {
+                return PasswordState.succesAndUpdate;
+            } else {
+                return PasswordState.failure;
+            }
         }
+        return PasswordState.success;
+    }
+
+    @Override
+    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        // moved to the retrieveUser in order to be able to update the user for the password md5 to bcrypt
     }
 
     @Override
@@ -72,7 +89,17 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         if (usersList.size() != 1) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
+
         User user = tranactionalUser.getByIdLazy_RolesAndIpNumbers(usersList.getFirst().getId());
+
+        PasswordState state = validatePasswordChecks(authentication.getCredentials().toString(), user.getPassword());
+        if (state.equals(PasswordState.failure)) {
+            throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
+        }
+        if (state.equals(PasswordState.succesAndUpdate)) {
+            user.setPassword(passwordEncoder.encode(authentication.getCredentials().toString()));
+            user = tranactionalUser.save(user);
+        }
 
         if (user.getMember().getPassword().equals(user.getPassword())) {
             user.setChangePassword(true);

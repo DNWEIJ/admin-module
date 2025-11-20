@@ -34,7 +34,8 @@ public interface CostingMapper {
                 costingPricePromotion.getSellExTaxPrice(),
                 costing.getTaxed(),
                 costingPricePromotion.getReductionPercentage(),
-                costing.getLookupCostingCategory()
+                costing.getLookupCostingCategory(),
+                costing.getPrescriptionLabel()
         );
     }
 }

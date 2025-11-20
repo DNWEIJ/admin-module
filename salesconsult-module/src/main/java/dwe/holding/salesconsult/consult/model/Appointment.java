@@ -43,7 +43,7 @@ public class Appointment extends TenantBaseBO {
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum OTC;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "appointment",  cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "appointment",  cascade = {CascadeType.ALL}, orphanRemoval = true)
     @Builder.Default
     private Set<Visit> visits = new HashSet<>(0);
 
@@ -51,6 +51,18 @@ public class Appointment extends TenantBaseBO {
     @Builder.Default
     private Set<LineItem> lineItems = new HashSet<>(0);
 
+    @Transient
+    public boolean isCancelled() {
+       return cancelled.equals(YesNoEnum.Yes);
+    }
+    @Transient
+    public boolean iscompleted() {
+        return completed.equals(YesNoEnum.Yes);
+    }
+    @Transient
+    public boolean isPickedUp() {
+        return pickedUp.equals(YesNoEnum.Yes);
+    }
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "unresolved")
 //    @Builder.Default
 //    private Set<Diagnose> diagnoses = new HashSet<>(0);

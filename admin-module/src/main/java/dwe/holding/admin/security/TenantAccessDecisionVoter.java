@@ -1,6 +1,7 @@
 package dwe.holding.admin.security;
 
 import ch.qos.logback.core.joran.spi.HttpUtil;
+import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
@@ -18,7 +21,6 @@ public class TenantAccessDecisionVoter {
     static final int ACCESS_GRANTED = 1;
     static final int ACCESS_DENIED = -1;
 
-
     protected static final String FILE_NAME_DELIMITER = "/";
 
     private static final String ATTRIBUTE_CREATE = "CREATE";
@@ -26,6 +28,7 @@ public class TenantAccessDecisionVoter {
     private static final String ATTRIBUTE_DELETE = "DELETE";
 
     private static final String LIST = "list";
+    private final Map<String, String> autorisationKeys = new HashMap<>();
 
     /**
      * The vote determines if access is granted: using url and submit button. The
@@ -34,11 +37,17 @@ public class TenantAccessDecisionVoter {
      * authorisation is needed - Check if the url is valid - Check if it is a
      * report
      */
+
+    @PreDestroy
+    public void destroy() {
+        autorisationKeys.forEach((key, value) -> System.out.printf("key: %s, value: %s%n", key, value));
+    }
+
     public int vote(Authentication authentication, Object object) {
         // check for no security needed
         HttpServletRequest request = ((RequestAuthorizationContext) object).getRequest();
         String uri = request.getRequestURI();
-    log.info("------------------>> vote called for uri=" + uri);
+        log.info("------------------>> vote called for uri=" + uri);
         if (uri.compareToIgnoreCase(request.getContextPath()) == 0) {
             return ACCESS_GRANTED;
         }
@@ -81,19 +90,36 @@ public class TenantAccessDecisionVoter {
         int returnvalue = checkAuthorizationAttribute(authorizationAttribute, authentication.getAuthorities());
 
         if (returnvalue == -1) {
-            log.debug("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri + "  authorizationAttribute=" + authorizationAttribute);
-            return returnvalue;
-        } else {
-            Object principal = authentication.getDetails();
-            if (principal instanceof WebAuthenticationDetails) {
-                log.debug("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
-                        AutorisationUtils.getCurrentUserMid() + "|" +
-                        AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
-
-                return returnvalue;
+            try {
+                autorisationKeys.put(uri, authorizationAttribute);
+            } catch (Exception e) {
             }
-            return ACCESS_DENIED;
         }
+
+        Object principal = authentication.getDetails();
+        if (principal instanceof WebAuthenticationDetails) {
+            log.info("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
+                    AutorisationUtils.getCurrentUserMid() + "|" +
+                    AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
+
+            return ACCESS_GRANTED;
+        }
+        return -1;
+
+//        if (returnvalue == -1) {
+//            log.debug("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri + "  authorizationAttribute=" + authorizationAttribute);
+//            return returnvalue;
+//        } else {
+//            Object principal = authentication.getDetails();
+//            if (principal instanceof WebAuthenticationDetails) {
+//                log.debug("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
+//                        AutorisationUtils.getCurrentUserMid() + "|" +
+//                        AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
+//
+//                return returnvalue;
+//            }
+//            return ACCESS_DENIED;
+//        }
     }
 
     private String getPreviousBeforeLastPart(String uri, String endPart) {
@@ -132,7 +158,7 @@ public class TenantAccessDecisionVoter {
             return false;
         }
         try {
-              Long.parseLong(str);
+            Long.parseLong(str);
             return true;
         } catch (IllegalArgumentException e) {
             return false;

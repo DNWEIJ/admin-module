@@ -23,7 +23,6 @@ public class UserPreferencesService {
     public void storeAppPreferences(Long localMemberId, String userPrefJson) {
         // change selected local member
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
-        user.setMemberLocalId(AutorisationUtils.validateAndReturnLocalMemberId(localMemberId));
         User savedUser = userRepository.save(user);
         AutorisationUtils.setCurrentUser(savedUser);
 
@@ -37,7 +36,6 @@ public class UserPreferencesService {
         } else {
             userPreferences = UserPreferences.builder()
                     .userId(user.getId())
-                    .localMemberId(user.getMemberLocalId())
                     .memberId(user.getMember().getId())
                     .userPreferencesJson(userPrefJson)
                     .build();

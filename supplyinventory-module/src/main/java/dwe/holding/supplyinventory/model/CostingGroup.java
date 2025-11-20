@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @Entity(name = "SUPPLY_COSTING_GROUP")
 @SuperBuilder
 @NoArgsConstructor
@@ -26,6 +28,7 @@ public class CostingGroup extends MemberBaseBO {
     private Long childCostingId;
 
     @NotNull
-    @Column(nullable = false)
-    private Double quantity;
+    @Column(nullable = false,precision = 38, scale = 4)
+    private
+    BigDecimal quantity;
 }

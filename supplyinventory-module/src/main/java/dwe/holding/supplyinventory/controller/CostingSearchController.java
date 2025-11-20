@@ -6,6 +6,7 @@ import dwe.holding.supplyinventory.repository.CostingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,6 +20,11 @@ import java.util.regex.Pattern;
 public class CostingSearchController {
 
     private final CostingRepository costingRepository;
+
+    @GetMapping("/search/costing")
+    public String searchCustomerScreen() {
+        return "supplies-module/fragments/costing/costingSearch";
+    }
 
     @PostMapping("/search/costing")
     public String searchCustomerHtmx(Model model, String searchCriteria) {
@@ -55,7 +61,7 @@ public class CostingSearchController {
         }
         matcher.appendTail(result);
         return "<li data-id=" + proj.id()
-                + " data-hasbatch=" + (proj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
+                + " data-has-batch=" + (proj.hasBatchNr().equals(YesNoEnum.Yes))
                 + " data-nomenclature=\"" + proj.nomenclature() + "\""
                 + ">" + proj.nomenclature() + "</li>";
     }

@@ -121,5 +121,4 @@ public class AutorisationUtils {
         return getCurrentUser().getInformationObject();
     }
 
-
 }

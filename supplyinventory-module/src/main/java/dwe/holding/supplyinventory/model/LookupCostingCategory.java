@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 
-@Entity(name = "SUPPLYINVENTORY_LOOKUP_COSTING_CATEGORY")
+@Entity(name = "SUPPLY_LOOKUP_COSTING_CATEGORY")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

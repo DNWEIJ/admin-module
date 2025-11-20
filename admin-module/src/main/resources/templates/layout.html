@@ -73,7 +73,7 @@
     </script>
 </th:block>
 <div class="container-fluid">
-    <th:block th:if="${T(dwe.holding.generic.admin.security.AutorisationUtils).isLoggedIn()}">
+    <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
         <th:block th:if="${applicationView != null}">
             <div th:replace="~{${applicationView}+'/page/navigation'}"></div>
         </th:block>
@@ -87,12 +87,12 @@
             <th:block th:if="${applicationName != null}">
                 <a th:href="'/'+${applicationName}+'/userpreferences'">preferences</a>
             </th:block>
-            <th:block th:if="${T(dwe.holding.generic.admin.security.AutorisationUtils).isLoggedIn() and T(dwe.holding.generic.admin.security.AutorisationUtils).hasRole('PLANNER')}">
+            <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn() and T(dwe.holding.admin.security.AutorisationUtils).hasRole('PLANNER')}">
                 <a th:href="'/admin/user'">administration</a>
             </th:block>
             <br/>
-            <th:block th:if="${T(dwe.holding.generic.admin.security.AutorisationUtils).isLoggedIn()}">
-                <a th:href="'/customer/preferences/user'" th:text="'loggedin User:' + ${T(dwe.holding.generic.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
+            <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
+                <a th:href="'/customer/preferences/user'" th:text="'loggedin User:' + ${T(dwe.holding.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
             </th:block>
 
             DWE Holding &copy;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -45,6 +46,12 @@ public class CustomerService {
         return customerMapper.toCustomer(
                 customerRepository.findByPets_IdAndMemberId(patientId, 77L) // TODO AutorisationUtils.getCurrentUserMid())
         );
+    }
+
+    public dwe.holding.customer.client.model.Pet getPet(Long customerId, Long petId) {
+        dwe.holding.customer.client.model.Customer customer = customerRepository.findByIdAndMemberId(customerId, 77L); // TODO AutorisationUtils.getCurrentUserMid())
+        Optional<dwe.holding.customer.client.model.Pet> pet = customer.getPets().stream().filter(custPet -> custPet.getId().equals(petId)).findFirst();
+        return pet.orElseThrow();
     }
 
     public record Customer(

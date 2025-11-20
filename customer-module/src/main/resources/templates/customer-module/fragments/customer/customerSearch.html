@@ -1,5 +1,4 @@
 <th:block th:fragment="customerSearch(saveButton, url)">
-
     <script>
         let baseUrl;
         let selectedIndex = -1;
@@ -87,7 +86,7 @@
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
                    hx-indicator=".htmx-indicator"
-                   hx-include="#startLastName, #includeStreetName"
+                   hx-include="#startLastName, #includeStreetName, #includeFirstTel, #includePet"
                    autocomplete="off">
             <div class="dropdown">
                 <div class="ac_results" id="input-customerName" hx-on::after-swap="attachMouseHandlers()"></div>
@@ -96,6 +95,10 @@
         <div role="group">
             <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','2')}" th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
             <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','3')}" th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','4')}" th:with="tooltip=#{label.tooltip.customer.firstel}"></th:block>
+        </div>
+        <div role="group">
+            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','5')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
         </div>
         <div role="group">
             <input class="secondary" name="_advancedsearch" type="button" th:value="#{label.button.advancedsearch}"/>

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity(name = "SUPPLY_COSTING_SPILLAGE")
@@ -25,8 +26,9 @@ public class CostingSpillage extends TenantBaseBO {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Double packageAmount;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private
+    BigDecimal packageAmount;
 
     @Column(nullable = false)
     private LocalDate startDate;

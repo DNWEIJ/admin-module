@@ -3,15 +3,14 @@ package dwe.holding.salesconsult.sales.controller;
 import dwe.holding.customer.client.controller.CustomerController;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
-import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
-import dwe.holding.shared.model.frontend.PresentationElement;
-import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.InvoiceStatusEnum;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
+import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,15 +24,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/sales")
 @Controller
 @AllArgsConstructor
-@SessionAttributes("otcData")
 public class OTCSelectController {
     private final CustomerService customerService;
     private final AppointmentRepository appointmentRepository;
-    private final PetRepository petRepository;
 
     @GetMapping("/otc/search")
     String first_SearchCustomer(Model model) {
-        model.addAttribute("form", new CustomerController.CustomerForm(true, false))
+        model.addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
 
         return "sales-module/otc/searchpage";
@@ -51,7 +48,7 @@ public class OTCSelectController {
         model.addAttribute("customer", customer)
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !pet.deceased()).toList())
                 .addAttribute("deceasedPets", customer.pets().stream().filter(CustomerService.Pet::deceased).toList())
-                .addAttribute("form", new CustomerController.CustomerForm(true, false))
+                .addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
                 .addAttribute("reasons", customerService.getReasons().stream()
                         .map(rec -> new PresentationElement(rec.getId(), rec.getDefinedPurpose(), true)).toList()
                 );
@@ -68,12 +65,12 @@ public class OTCSelectController {
             model.addAttribute("message", "Something went wrong. Please try again");
             return "sales-module/otc/searchpage";
         }
-        Appointment app = saveOTC(pets);
+        Appointment app = saveOTC(pets, customerId);
         // start selling for the first pet in the list...
-        return "redirect:/sales/otc/search/" + customerId + "/sell/" + app.getId() +"/" +  app.getVisits().iterator().next().getPet().getId();
+        return "redirect:/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + app.getVisits().iterator().next().getPet().getId();
     }
 
-    private Appointment saveOTC(List<PetsForm.FormPet> pets) {
+    private Appointment saveOTC(List<PetsForm.FormPet> pets, Long customerId) {
         Appointment appointment = Appointment.builder()
                 .OTC(YesNoEnum.Yes)
                 .cancelled(YesNoEnum.No)
@@ -86,7 +83,7 @@ public class OTCSelectController {
                 pets.stream().map(formPet ->
                         Visit.builder()
                                 .appointment(appointment)
-                                .pet(petRepository.getReferenceById(formPet.getId()))
+                                .pet(customerService.getPet(customerId, formPet.getId()))
                                 .room("")
                                 .purpose(formPet.getPurpose() == null ? "" : formPet.getPurpose())
                                 .estimatedTimeInMinutes(5)

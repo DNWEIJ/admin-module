@@ -4,15 +4,18 @@ import dwe.holding.shared.model.type.TaxedTypeEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.LookupCostingCategory;
 
+import java.math.BigDecimal;
+
 public record CostingPriceProjection(
         Long id,
         String nomenclature,
         YesNoEnum hasBatchNr,
         YesNoEnum hasSpillage,
-        Double processingFee,
-        Double sellExTaxPrice,
+        BigDecimal processingFee,
+        BigDecimal sellExTaxPrice,
         TaxedTypeEnum taxed,
-        Double reductionPercentage,
-        LookupCostingCategory lookupCostingCategory
+        BigDecimal reductionPercentage,
+        LookupCostingCategory lookupCostingCategory,
+        String prescriptionLabel
 ) {
 }

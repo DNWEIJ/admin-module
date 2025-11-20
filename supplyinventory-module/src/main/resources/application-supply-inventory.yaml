@@ -1,5 +1,4 @@
 app:
-
 server:
   port: 9005
 
@@ -9,15 +8,16 @@ spring:
       max-file-size: 1GB
       max-request-size: 1GB
   datasource:
-    name: admin-module
-    driverClassName: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:file:~/admin-module/database/admin-module;sql.syntax_mys=true
-    username: SA
+    url: jdbc:mysql://localhost:3306/salesconsult
+    username: root
+    password: root
   jpa:
-    database: hsql
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
-      ddl-auto: update  # validate or update
-
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    database: mysql
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -27,10 +27,17 @@ spring:
         format_sql: false
         use_jdbc_metadata_defaults: false
 
-  thymeleaf:
-    cache: true
+
+#    properties:
+#      hibernate:
+#        show_sql: false
+#        use_sql_comments: false
+#        format_sql: false
+#        use_jdbc_metadata_defaults: false
+
 logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
+    org.hibernate.tool.schema: DEBUG

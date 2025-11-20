@@ -2,10 +2,10 @@
 
 
 /* *********************** */
-/* dynamiuc search with search result window */
+/* dynamic search with search result window */
 .gridSearchWithCheck {
     display: grid;
-    grid-template-columns: 3fr repeat(3, 0fr);
+    grid-template-columns: .01fr 2fr repeat(3, 1fr);
     grid-column-gap: .5em;
 }
 
