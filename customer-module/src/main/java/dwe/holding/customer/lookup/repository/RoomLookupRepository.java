@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface RoomLookupRepository extends JpaRepository<LookupRoom, Long> {
-    List<LookupRoom> getByMemberId(Long memberId);
+    List<LookupRoom> getByMemberIdOrderByRoom(Long memberId);
 }

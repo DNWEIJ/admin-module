@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(path = "/customer")
 @Slf4j
+// TODO: Move to admin module or shared-module? This isn't customer...
 public class RoomLookupController {
     private final RoomLookupRepository roomLookupRepository;
 
@@ -25,7 +26,7 @@ public class RoomLookupController {
 
     @GetMapping("lookup/rooms")
     String list(Model model) {
-        model.addAttribute("rooms", roomLookupRepository.getByMemberId(77L)); // todo replace with
+        model.addAttribute("rooms", roomLookupRepository.getByMemberIdOrderByRoom(77L)); // todo replace with
         model.addAttribute("activeMenu", "room");
         return "customer-module/lookup/rooms/list";
     }

@@ -42,7 +42,7 @@
             padding: 0;
             box-sizing: border-box;
             align-self: center;
-            z-index: 999999;
+            z-index: 99999;
             color: dimgrey;
             text-align: center;
             background: lightsteelblue;
@@ -63,14 +63,6 @@
             height: 1.7em;
         }
     </style>
-    <script>
-        window.onload = function () {
-          //  document.querySelector('#fade-in').classList.add('show');
-            // setTimeout(function () {
-            //     document.querySelector('#fade-in').classList.remove('show');
-            // }, 1000)
-        }
-    </script>
 </th:block>
 <div class="container-fluid">
     <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">

@@ -1,6 +1,5 @@
 package dwe.holding.admin.model.converter;
 
-import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

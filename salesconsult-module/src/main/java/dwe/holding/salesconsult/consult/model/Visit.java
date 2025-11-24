@@ -53,10 +53,10 @@ public class Visit extends MemberBaseBO {
     @Column(nullable = false)
     private Integer estimatedTimeInMinutes;
 
+    // TODO move to invoice handling
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = InvoiceStatusConverter.class)
     private InvoiceStatusEnum invoiceStatus;
-
     private LocalDate invoiceDate;
     private Long invoiceNumber;
     private LocalDate reminderSendDate;

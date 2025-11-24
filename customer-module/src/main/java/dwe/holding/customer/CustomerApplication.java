@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = {
-        "dwe.holding.generic.admin.expose",
+        "dwe.holding.admin.expose",
         "dwe.holding.customer"
 })
 @EnableJpaRepositories(basePackages = {
-        "dwe.holding.generic.admin.authorisation",
-        "dwe.holding.generic.admin.preferences",
+        "dwe.holding.admin.authorisation",
+        "dwe.holding.admin.preferences",
         "dwe.holding.customer.client.repository",
         "dwe.holding.customer.lookup.repository"
 })
@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "dwe.holding.customer.client.model",
         "dwe.holding.customer.model.lookup",
         "dwe.holding.shared.model",
-        "dwe.holding.generic.admin.model"
+        "dwe.holding.admin.model"
 })
 @Slf4j
 public class CustomerApplication {

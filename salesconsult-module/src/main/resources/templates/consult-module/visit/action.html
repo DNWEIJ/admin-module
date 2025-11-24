@@ -1,0 +1,115 @@
+<html layout:decorate="~{customer-module/layout.html}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>[[#{label.title.visit}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1> Status overzicht/veranderen</h1>
+    <h1> afspraken volgorde lijst</h1>
+    <style>
+        details[open] {
+            border: 1px solid #ccc;
+            padding: 0.1em;
+        }
+
+        details summary {
+            cursor: pointer;
+        }
+
+        details summary > * {
+            display: inline;
+        }
+
+    </style>
+
+    <details open>
+        <summary>
+            <h4 style="font-style: italic" th:text="#{visit.customerinfo.title}"></h4>
+        </summary>
+        <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
+    </details>
+
+
+    <form id="visitForm" method="post">
+        <input name="visit.id" th:value="${visit.id}" type="hidden"/>
+        <input name="visit.version" th:value="${visit.version}" type="hidden"/>
+        <details open>
+            <summary>
+                <h4 style="font-style: italic" th:text="#{visit.info.title}"></h4>
+            </summary>
+            <fieldset class="grid">
+                <th:block th:with="extras=~{sales-module/fragments/extrabuttons::noneButtons}">
+                    <th:block th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnVisit}, ${selectedPet}, ${customer}, ${appointment}, ${extras})}"></th:block>
+                </th:block>
+            </fieldset>
+            <fieldset class="grid" style="margin-top: 1rem">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','visit.purpose','visit.purpose','1')}"></th:block>
+            </fieldset>
+            <fieldset class="grid">
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('veterinarian','visit.staff','visit.veterinarian', ${staffList}, false, '3')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('room','visit.room','visit.room', ${rooms}, false, '6')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sentToInsurance','visit.insurance','visit.sentToInsurance', ${ynvaluesList}, false, '4')}"></th:block>
+            </fieldset>
+
+            <fieldset class="grid">
+                <!--                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('selectedPet','visit.petName','selectedPet.name','2')}" th:with="postfix='Kg',required=false"></th:block>-->
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('weight','visit.weight','visit.weight','2')}" th:with="postfix='Kg',required=false"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('temperature','visit.temperature','visit.temperature','5')}" th:with="postfix='°C',required=false"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','7')}" th:with="postfix='mmol/L',required=false"></th:block>
+            </fieldset>
+
+
+            <fieldset class="grid">
+                <div>
+                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('template','visit.template','visit.template', ${templates}, false, '3')}"></th:block>
+                </div>
+                <div>
+                    <label><input id="overwriteText" th:checked="${overwriteText}" type="checkbox"/>
+                        <th:block th:text="#{visit.template.overwrite}"/>
+                    </label>
+                </div>
+                <textarea cols="110" id="visit.comments" name="visit.comments" rows="4" th:text="${visit.comments}"></textarea>
+            </fieldset>
+            <th:block th:insert="~{fragments/elements/audit::audit('visit.addedBy','visit.addedOn', 'visit.lastEditedBy', 'visit.lastEditedOn')}"></th:block>
+        </details>
+        <button name="_save" type="submit" th:text="#{label.button.save}"></button>
+    </form>
+
+    <details open>
+        <summary>
+            <h4 style="font-style: italic" th:text="#{visit.info.title}"></h4>
+        </summary>
+        <h1> Analyse gegevens</h1>
+    </details>
+
+    <details open>
+        <summary>
+            <h4 style="font-style: italic" th:text="#{label.otc.legend.lineitems}"></h4>
+        </summary>
+        <fieldset role="group" class="grid">
+            <table class="table-tight">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th class="left" th:text="#{label.otc.sell.description}"></th>
+                    <th class="left" th:text="#{label.otc.sell.category}"></th>
+                    <th class="right" th:text="#{label.otc.sell.amount}"></th>
+                    <th class="right" th:text="#{label.otc.sell.cost}"></th>
+                    <th class="right" th:text="#{label.otc.sell.cost}"></th>
+                    <th class="right" th:text="#{label.otc.sell.taxed}"></th>
+                    <th class="right" th:text="#{label.otc.sell.total}"></th>
+                    <th class="center">
+                        <svg width="32px" height="32px">
+                            <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
+                        </svg>
+                    </th>
+                </tr>
+                </thead>
+                <!-- body and footer -->
+                <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
+            </table>
+        </fieldset>
+        <div id="replacePartForCostingSearch"
+             th:replace="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
+    </details>
+</section>

@@ -1,4 +1,4 @@
-package dwe.holding.admin.model.type;
+package dwe.holding.teammover.model.type;
 
 import java.util.Arrays;
 import java.util.List;

@@ -3,8 +3,7 @@
         function addEventListenersForPetSelect() {
 
             console.log("addEventListenersForPetSelect has been called");
-            // Attach listener to all dropdown starting with 'speciesList['
-            // copy the purpose and check the checkbox
+            // Attach listener to all dropdowns starting with 'speciesList['  copy the purpose and check the checkbox
             document.querySelectorAll("select[id^='speciesList']").forEach(select => {
                 select.addEventListener("change", function () {
                     const index = this.id.match(/\[(\d+)\]/)[1]; // extract index number

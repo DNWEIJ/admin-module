@@ -76,7 +76,8 @@ public class PetController {
                             .species(petForm.getSpecies()).breed(petForm.getBreed()).breedOther(petForm.getBreedOther()).sex(petForm.getSex())
                             .briefDescription(petForm.getBriefDescription())
                             .allergies(petForm.getAllergies()).insured(petForm.getInsured()).deceased(petForm.getDeceased()).gpwarning(petForm.getGpwarning())
-                            .allergiesDescription(petForm.getAllergiesDescription()).insuredBy(petForm.getInsuredBy()).deceasedDate(petForm.getDeceasedDate()).gpwarningDescription(petForm.getGpwarningDescription())
+                            .allergiesDescription(petForm.getAllergiesDescription()).insuredBy(petForm.getInsuredBy())
+                            .deceasedDate(petForm.getDeceasedDate()).gpwarningDescription(petForm.getGpwarningDescription())
 
                             .passportNumber(petForm.getPassportNumber()).chipTattooId(petForm.getChipTattooId()).chipDate(petForm.getChipDate())
                             .comments(petForm.getComments())

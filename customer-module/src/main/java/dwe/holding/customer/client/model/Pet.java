@@ -92,6 +92,7 @@ public class Pet extends MemberBaseBO {
     }
 
     @Transient
+    // TODO make the years and month variables to be replaced in the string in the controller
     public String getAge() {
         LocalDate today = LocalDate.now();
         return getBirthday() == null ? "" : getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months";

@@ -15,7 +15,7 @@
             <th>[[#{pet.breed}]]</th>
             <th>[[#{pet.sex}]]</th>
             <th>[[#{pet.birthday}]]</th>
-            <th>[[#{pet.rabiesId}]]</th>
+            <th>[[#{pet.passportNumber}]]</th>
             <th>[[#{pet.chipTattooId}]]</th>
             <th>[[#{label.list.auditinfo}]]</th>
         </tr>
@@ -28,7 +28,7 @@
                 <td>[[${pet.breed}]]</td>
                 <td>[[#{${pet.sex.getLabel}}]]</td>
                 <td th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
-                <td>[[${pet.rabiesId}]]</td>
+                <td>[[${pet.passportNumber}]]</td>
                 <td>[[${pet.chipTattooId}]]</td>
                 <td>
                     <small th:data-tooltip="'Created by  '+${pet.addedBy}+' on ' +${#temporals.format(pet.addedOn, 'dd-MM-yy')}">

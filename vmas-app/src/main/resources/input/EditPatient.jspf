@@ -161,7 +161,7 @@
             </td>
         </tr>
         <tr>
-            <td class=" style2"><spring:message code="label.patient.rabies_id"/></td>
+            <td class=" style2"><spring:message code="label.patient.passportNumber"/></td>
             <td>
                 <form:input path="patient.rabiesId" id="patient.rabiesId" cssStyle="width:95%" maxlength="20"/>
             </td>

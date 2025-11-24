@@ -1,7 +1,7 @@
 package dwe.holding.teammover.model;
 
 import dwe.holding.admin.model.base.TenantBaseBO;
-import dwe.holding.admin.model.type.DriveOptionEnum;
+import dwe.holding.teammover.model.type.DriveOptionEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

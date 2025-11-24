@@ -1,0 +1,4 @@
+<option  disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
+<th:block th:each="lookupCosting : ${lookupCostings}">
+    <option th:value="${lookupCosting.key}"  th:text="${lookupCosting.value}"></option>
+</th:block>

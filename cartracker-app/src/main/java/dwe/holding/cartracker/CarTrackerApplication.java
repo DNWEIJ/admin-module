@@ -21,17 +21,17 @@ import java.util.Optional;
 
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = {
-        "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.exception", "dwe.holding.generic.admin.expose",
-        "dwe.holding.generic.admin.security", "dwe.holding.generic.admin.setup",
+        "dwe.holding.admin.authorisation", "dwe.holding.admin.exception", "dwe.holding.admin.expose",
+        "dwe.holding.admin.transactional", "dwe.holding.admin.security", "dwe.holding.admin.setup",
         "dwe.holding.cartracker"
 })
 @EnableJpaRepositories(basePackages = {
-        "dwe.holding.generic.admin.authorisation", "dwe.holding.generic.admin.preferences",
+        "dwe.holding.admin.authorisation", "dwe.holding.admin.preferences",
         "dwe.holding.cartracker.repository",
         "dwe.holding.cartracker.migration.repository"
 })
 @EntityScan(basePackages = {
-        "dwe.holding.generic.admin.model",
+        "dwe.holding.admin.model",
         "dwe.holding.cartracker.model",
         "dwe.holding.cartracker.migration.model"
 })

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class CostingService {
+    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
     private CostingRepository costingRepository;
     private CostingGroupRepository costingGroupRepository;
     private CostingPricePromotionRepository costingPricePromotionRepository;
@@ -65,9 +66,9 @@ public class CostingService {
     }
 
     public void createBatchNumberIfNotExisting(Long id, String batchNumber) {
-        Optional<CostingBatchNumber> cbnOptional = costingBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(id, 77l, 90l, batchNumber); // TODO AutorisationUtils
+        Optional<CostingBatchNumber> cbnOptional = costingBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(id, 77L, 90l, batchNumber); // TODO AutorisationUtils
         if (cbnOptional.isEmpty()) {
-            costingBatchNumberRepository.save(CostingBatchNumber.builder().costingId(id).memberId(77l).localMemberId(90l).batchNumber(batchNumber).build());
+            costingBatchNumberRepository.save(CostingBatchNumber.builder().costingId(id).memberId(77L).localMemberId(90l).batchNumber(batchNumber).build());
         }
     }
 
@@ -77,7 +78,7 @@ public class CostingService {
      */
     public void createOrUpdateSpillage(Long costingId, String spillageName, Long lineItemId) {
         Costing costing = costingRepository.findByIdAndMemberId(costingId, 77L).orElseThrow(); // TODO: AutorisationUtils
-        CostingSpillage costingSpillage = costingSpillageRepository.findByNameAndMemberIdAndLocalMemberIdAndEndDateNotNull(spillageName, 77l, 90L); // todo AutorisationUtils
+        CostingSpillage costingSpillage = costingSpillageRepository.findByNameAndMemberIdAndLocalMemberIdAndEndDateNotNull(spillageName, 77L, 90L); // todo AutorisationUtils
         if (costingSpillage == null) {
             costingSpillage = new CostingSpillage();
             costingSpillage.setCostingId(costing.getId());
@@ -102,5 +103,9 @@ public class CostingService {
         return costingGroupRepository.getCostingGroupsByParentCostingId(costingId).stream()
                 .collect(Collectors.toMap(CostingGroup::getChildCostingId, CostingGroup::getQuantity)
                 );
+    }
+
+    public Map<Long, String>  getCategories() {
+        return lookupCostingCategoryRepository.findByMemberIdOrderByCategory(77L).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
     }
 }

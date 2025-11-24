@@ -80,6 +80,7 @@ public class OTCHtmxController {
                                 .build()
                 ).collect(Collectors.toSet()));
         Appointment savedApp = appointmentRepository.save(app);
+        // todo if visit fo somewhere else, this is for OTC
         return "redirect:/sales/otc/search/" + customerId + "/sell/" + appointmentId + '/' + savedApp.getVisits().stream().mapToLong(visit -> visit.getPet().getId()).max().orElseThrow();
     }
 }

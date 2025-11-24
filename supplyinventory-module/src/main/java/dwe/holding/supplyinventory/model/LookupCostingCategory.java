@@ -21,9 +21,4 @@ public class LookupCostingCategory extends MemberBaseBO {
     @Column(nullable = false)
     @NotEmpty
     private String category;
-
-    // TODO
-//        @OneToMany(fetch = FetchType.LAZY, mappedBy = "lookupCostingCategory")
-//        @Cascade({CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
-//        private Set<Costing> costings = new HashSet<>(0);
 }

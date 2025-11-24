@@ -77,7 +77,7 @@ public class CustomerService {
             String age,
             boolean deceased,
             String species,
-            SexTypeEnum sexTypeEnum,
+            SexTypeEnum sex,
             String idealWeight,
             YesNoEnum allergies,
             String allergiesDescription,

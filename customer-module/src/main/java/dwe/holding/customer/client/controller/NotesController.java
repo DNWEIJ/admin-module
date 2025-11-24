@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping(path = "/customer")
 @Slf4j
@@ -54,7 +56,7 @@ public class NotesController {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
 
         Customer customer = customerRepository.findById(customerId).orElseThrow();
-        model.addAttribute("note", new Notes());
+        model.addAttribute("note", Notes.builder().noteDate(LocalDate.now()).staffMember("daniel").build()); // TODO AutoriationUtils.GetCurrentUserName()));
         setModelOneRecord(model, customer);
 
         setModel(model, customer.getId());

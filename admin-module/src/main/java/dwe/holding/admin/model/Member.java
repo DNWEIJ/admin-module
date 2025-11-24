@@ -53,7 +53,7 @@ public class Member extends BaseBO {
     private YesNoEnum localMemberSelectRequired;
     @Column(nullable = false)
     @NotNull
-    private LocalDate startDate;
+    private LocalDate startDate = LocalDate.now();
     private LocalDate stopDate;
     @NotEmpty
     private String applicationName;

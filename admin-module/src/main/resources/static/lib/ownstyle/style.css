@@ -1,20 +1,34 @@
-/* STYLING FOR SPECIFIC ELEMENTS OF THIS APP */
+/* STYLING FOR SPECIFIC Elements OF THIS APP */
 
+.hidden {
+    display: none;
+}
 
 /* *********************** */
 /* dynamic search with search result window */
-.gridSearchWithCheck {
+.gridSearchCustomerWithCheck {
     display: grid;
-    grid-template-columns: .01fr 2fr repeat(3, 1fr);
-    grid-column-gap: .5em;
+    grid-template-columns: 3fr repeat(3, 0fr);
+    grid-column-gap: .5rem;
+}
+
+.gridSearchCostingWithCheck {
+    display: grid;
+    grid-template-columns: .1fr 2fr repeat(3, 1fr);
+    grid-column-gap: .5rem;
 }
 
 
 @media (max-width: 576px) {
-.gridSearchWithCheck {
-    grid-template-columns: 1fr;
-    grid-row-gap: .5em;
-}
+    .gridSearchCustomerWithCheck {
+        grid-template-columns: 1fr;
+        grid-row-gap: .5rem;
+    }
+
+    .gridSearchCostingWithCheck {
+        grid-template-columns: 1fr;
+        grid-row-gap: .5rem;
+    }
 }
 
 .ac_results {
@@ -24,7 +38,7 @@
     width: 100%;
     z-index: 999;
     border: 1px solid black;
-    box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
+    box-shadow: .1rem .1rem .3rem rgba(100, 0, 0, 0.85);
 }
 
 .ac_results li {
@@ -51,17 +65,22 @@
 /* narrow table definition */
 .table-tight {
     width: 100%;
-    margin-top: .5em;
-    padding: 1px;
+    margin-top: .5rem;
+    padding: .1rem;
 }
 
 .table-tight td,
 .table-tight th {
-    padding: 1px;
-    margin: 1px;
+    padding: .1rem .1rem .1rem .1rem;
+    margin: 0;
     border-bottom: 1px solid lightgrey;
     line-height: 1;
 }
+
+.table-tight tr:nth-child(even)  td {
+    background-color: var(--pico-dropdown-background-color);
+}
+
 
 .table-tight tr {
     margin: 0;
@@ -70,10 +89,16 @@
 }
 
 .table-tight footer {
-    margin: .5em;
+    margin: .5rem;
     padding: 0;
     border: 2px black;
 }
+
+.table-tight tbody .red-text {
+    color: var(--pico-color-red-500);
+    background-color: black;
+}
+
 
 .table-tight .right {
     text-align: right;
@@ -82,6 +107,7 @@
 .table-tight .left {
     text-align: left;
 }
+
 .table-tight .center {
     text-align: center;
 }
@@ -99,21 +125,25 @@
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: 1fr;
-    gap: 1em 1em;
+    gap: 1rem 1rem;
     grid-template-areas:
     "one two three";
     align-items: center;
 }
+
 .threecolumn-spread .three {
     justify-self: end;
     grid-area: three;
     align-self: center;
 
 }
-.threecolumn-spread .two { grid-area: two;
+
+.threecolumn-spread .two {
+    grid-area: two;
     justify-self: center;
     align-self: center;
 }
+
 . threecolumn-spread .one {
     justify-self: start;
     align-self: center;
@@ -124,26 +154,30 @@
     display: grid;
     grid-template-columns: 2fr 2fr .1fr .1fr;
     grid-template-rows: 1fr;
-    gap: 1em 1em;
+    gap: 1rem 1rem;
     grid-template-areas: "one two three four";
     align-items: center;
 }
+
 .fourcolumn-spread .four {
     grid-area: four;
     justify-self: end;
     align-self: center;
 }
+
 .fourcolumn-spread .three {
     grid-area: three;
     justify-self: center;
     align-self: start;
 
 }
+
 .fourcolumn-spread .two {
     grid-area: two;
     justify-self: center;
     align-self: center;
 }
+
 . fourcolumn-spread .one {
     grid-area: one;
     justify-self: start;
@@ -151,32 +185,33 @@
 }
 
 
- fieldset {
-     font-family: sans-serif;
-     border: .1em solid var(--pico-muted-border-color);
-     border-radius: .1em;
-     background-color: var(--pico-muted-border-color);
- }
+fieldset {
+    font-family: sans-serif;
+    border: .1rem solid var(--pico-muted-border-color);
+    border-radius: .1rem;
+    background-color: var(--pico-muted-border-color);
+}
 
 fieldset legend {
     font-size: 110%;
     font-style: italic;
     font-weight: bold;
-    border-radius: 1em;
-    margin-left: .1em;
+    border-radius: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 1.3rem;
     background-color: var(--pico-muted-border-color);
 }
 
 
- /* Placeholder floats up in input CSS */
- :root {
-     --accent: #4c7ef3;
-     --muted: #6b7280;
-     --border: #d1d5db;
-     --bg: #fff;
-     --radius: 8px;
-     --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
- }
+/* Placeholder floats up in input CSS */
+:root {
+    --accent: var(--pico-contrast-focus);
+    --floating: var(--pico-contrast-focus);
+    --border:var(--pico-border-color);
+    --bg: var(--pico-background-color);
+    --radius: 8px;
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 .field {
     position: relative;
@@ -188,28 +223,28 @@ fieldset legend {
 }
 
 .field input:focus {
-    box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.08);
+    box-shadow: 0 0 0 24px rgba(76, 126, 243, 0.08);
 }
 
 /* Label */
 .field label {
     position: absolute;
-    left: 12px;
-    top: 14px; /* startpositie = midden van input */
+    left: .2rem;
+    top: .4rem; /* startpositie = midden van input */
     pointer-events: none;
     transition: all var(--transition);
-    color: var(--muted);
-    padding: 0 4px;
+    /*color: var(--floating);*/
+    padding: 0 .4rem;
 }
 
 /* Wanneer input focus heeft of niet leeg is -> label omhoog */
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
-    top: -8px;
+    top: -.9rem;
     left: 8px;
-    font-size: 12px;
-    color: var(--accent);
-    background:  var(--pico-background-color);
+    /*font-size: 1rem;*/
+    /*color: var(--accent);*/
+    background: var(--pico-background-color);
     z-index: 100;
 }
 
@@ -223,10 +258,12 @@ fieldset legend {
 :required {
     box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
 }
+
 :required:focus {
     border: 1px solid red;
     outline: none;
 }
+
 :required:hover {
     opacity: 1;
 }
@@ -239,6 +276,9 @@ html footer {
 
 /* ************************** */
 /* PICO SPECIFIC FOR THIS APP */
+
+
+
 :root {
     --pico-border-radius: 0.3rem;
     --pico-typography-spacing-vertical: .5rem;
@@ -249,14 +289,13 @@ html footer {
 }
 
 :root:not([data-theme=dark]), [data-theme=light] {
-    --pico-background-color: #f3f3f3;
-    --pico-spacing: 0.5rem;
-
+    /*--pico-background-color: #f3f3f3;*/
     --pico-border-radius: 0.3rem;
     --pico-typography-spacing-vertical: .5rem;
     --pico-form-element-spacing-vertical: .5rem;
     --pico-form-element-spacing-horizontal: 0.5rem;
     --pico-font-size: initial;
+    --pico-spacing: 0.5rem;
 }
 
 [role=group] [role=button],

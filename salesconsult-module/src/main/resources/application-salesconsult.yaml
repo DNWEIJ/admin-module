@@ -3,7 +3,7 @@ server:
 
 spring:
   messages:
-    basename: admin.messages, shared.messages, customer.messages, lookup.messages,  supplyinventory.messages, sales.messages
+    basename: admin.messages, shared.messages, customer.messages, lookup.messages,  supplyinventory.messages, sales.messages, consult.messages
   #  datasource:
   #    driverClassName: org.hsqldb.jdbc.JDBCDriver
   #    url: jdbc:hsqldb:file:~/customer/database/customer;sql.syntax_mys=true

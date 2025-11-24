@@ -71,25 +71,27 @@ public class LineItem extends TenantBaseBO {
 
     @Transient
     public BigDecimal calculateTotal(BigDecimal reduction) {
+        BigDecimal hundred = new BigDecimal("100.0");
         BigDecimal goodTax = new BigDecimal("0.0");
 
         if (TaxedTypeEnum.GOOD.equals(taxForSellExTaxPrice)) {
-            goodTax = getTaxGoodPercentage().divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP);
+            goodTax = getTaxGoodPercentage().divide(hundred, 4, RoundingMode.HALF_UP);
         }
         if (TaxedTypeEnum.SERVICE.equals(taxForSellExTaxPrice)) {
-            goodTax = getTaxServicePercentage().divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP);
+            goodTax = getTaxServicePercentage().divide(hundred, 4, RoundingMode.HALF_UP);
         }
 
         BigDecimal realCost = sellExTaxPrice; //real price
         if (reduction != null) {
+            //  realCost = realCost * (1 - reduction / 100);
             realCost = realCost.multiply(
-                    ((new BigDecimal("1.00")).min(
-                            reduction.divide(new BigDecimal("100.00"), 4, RoundingMode.HALF_UP))
+                    (( BigDecimal.ONE).subtract(
+                            reduction.divide(hundred, 4, RoundingMode.HALF_UP))
                     )
             );
         }
 
-        //  total = (realCost * quantity * (goodTtax + 1)) + (processingFee + processingFee * (taxServicePercentage / 100.0));
+        //  result = ( (realCost * quantity * (goodTtax + 1)) + (processingFee + processingFee * (taxServicePercentage / 100.0)) );
         BigDecimal part1 = realCost
                 .multiply(quantity)
                 .multiply(goodTax.add(BigDecimal.ONE));
@@ -98,7 +100,7 @@ public class LineItem extends TenantBaseBO {
                 processingFee
                         .add(
                                 processingFee.multiply(
-                                        taxServicePercentage.divide(BigDecimal.valueOf(100))
+                                        taxServicePercentage.divide(BigDecimal.valueOf(100),4, RoundingMode.HALF_UP)
                                 )
                         );
         // final result
@@ -107,13 +109,16 @@ public class LineItem extends TenantBaseBO {
 
     @Transient
     public BigDecimal calculateProcessingFeeServiceTax() {
-        return processingFee.multiply(getTaxServicePercentage().divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP));
+        // double result = processingFee * getTaxServicePercentage() / 100.0;
+        return processingFee.multiply(getTaxServicePercentage()).divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP);
     }
 
     @Transient
     public BigDecimal calculateCostTaxPortion() {
+        // double result = getTotal() - (processingFee + TaxPortionOfProcessingFeeService + (getQuantity() * sellExTaxPrice));
         BigDecimal part1 = quantity.multiply(sellExTaxPrice);
-        return total.min(processingFee.add(taxPortionOfProcessingFeeService.add(part1)));
+        BigDecimal part2 = processingFee.add(taxPortionOfProcessingFeeService).add(part1);
+        return getTotal().subtract(part2);
 
     }
 }

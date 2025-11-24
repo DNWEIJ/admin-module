@@ -1,0 +1,33 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="~{customer-module/layout.html}">
+<head>
+    <title>[[#{label.title.visit}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.visit},'/customer/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
+
+    <hr/>
+
+    <table class="table-tight" id="visit-table">
+        <thead>
+        <tr>
+            <th th:text="#{visit.header.visitDate}"></th>
+            <th th:text="#{visit.header.petName}"></th>
+            <th th:text="#{visit.header.purpose}"></th>
+            <th th:text="#{visit.header.location}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="visit : ${visits}">
+            <td>
+                <a th:href="'/consult/customer/'+ ${customerId} + '/visit/'+ ${visit.id}"
+                   th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm')} + ${visit.appointmentOTC.label == 'label.yesno.yes' ? ' (OTC)':''}"></a>
+            </td>
+            <td th:text="${visit.petName}"></td>
+            <td th:text="${visit.purpose}"></td>
+            <td th:text="${memberLocals.get(visit.appointmentLocalMemberId)}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>

@@ -1,8 +1,10 @@
 package dwe.holding.supplyinventory.controller;
 
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.model.LookupCostingCategory;
 import dwe.holding.supplyinventory.model.projection.CostingProjection;
 import dwe.holding.supplyinventory.repository.CostingRepository;
+import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -20,11 +24,35 @@ import java.util.regex.Pattern;
 public class CostingSearchController {
 
     private final CostingRepository costingRepository;
+    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
 
-    @GetMapping("/search/costing")
-    public String searchCustomerScreen() {
-        return "supplies-module/fragments/costing/costingSearch";
+    private Map<Long, String> costing;
+
+    @GetMapping("/costing/search/costing/dropdown")
+    public String searchLookupCostingDropdown(Model model) {
+
+        if (costing == null || costing.isEmpty()) {
+            costing = lookupCostingCategoryRepository.findByMemberIdOrderByCategory(77L).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
+        }
+        model.addAttribute("lookupCostings", costing);
+        return "supplies-module/fragments/costing/selectcosting";
     }
+
+    @PostMapping("/costing/search/costing/dropdown/found/costing")
+    public String searchCostingForDropDown(Long categoryId, Model model) {
+        StringBuilder sb = new StringBuilder();
+        costingRepository.findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(categoryId, 77L).forEach(costingProj -> { //AutorisationUtils.getCurrentUserMid()
+            sb.append("<option data-has-batch=\"").append(costingProj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
+                    .append("\" data-id=\"").append(costingProj.id())
+                    .append("\" data-nomenclature=\"").append(costingProj.nomenclature())
+                    .append("\">")
+                    .append(costingProj.nomenclature())
+                    .append("</option>");
+        });
+        model.addAttribute("flatData", sb.toString());
+        return "fragments/elements/flatData";
+    }
+
 
     @PostMapping("/search/costing")
     public String searchCustomerHtmx(Model model, String searchCriteria) {

@@ -12,6 +12,7 @@ import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.CostingService;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class LineItemService {
     private final AppointmentRepository appointmentRepository;
 
     @Transactional
-    public List<LineItem> createOTC(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
+    public void createOTC(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
 
         // validate if we are allowed to add a line item
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
@@ -94,7 +95,6 @@ public class LineItemService {
         List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
         app.getLineItems().addAll(savedLineItems);
         appointmentRepository.save(app);
-        return savedLineItems;
     }
 
     private BigDecimal getQuantity(BigDecimal amount, BigDecimal groupQuantity) {
@@ -102,5 +102,9 @@ public class LineItemService {
             return amount;
         }
         return amount.multiply(groupQuantity);
+    }
+
+    public void delete(@NotNull Long lineItemId) {
+        lineItemRepository.deleteById(lineItemId);
     }
 }

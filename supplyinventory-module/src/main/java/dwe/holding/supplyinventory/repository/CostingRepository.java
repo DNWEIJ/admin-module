@@ -25,4 +25,5 @@ public interface CostingRepository extends JpaRepository<Costing, Long> {
 
     List<CostingProjection> findByNomenclatureContainsAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no);
 
+    List<CostingProjection> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long currentUserMid);
 }

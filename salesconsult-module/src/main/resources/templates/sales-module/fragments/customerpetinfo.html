@@ -6,7 +6,7 @@
             </th:block>
             <th:block th:if="${!backbutton}">
                 <th:block th:if="${customer != null}">
-                    <h6 class="center" th:text="'Customer: '+ ${customer.customerName} +' - ' + #{__${customer.status.label}__}"></h6>
+                    <h6 class="center" th:text="'Customer: '+ ${customer.customerName} +' (' + #{__${customer.status.label}__} + ')'"></h6>
                     <div class="center" th:text="${customer.email}"></div>
                     <div class="center" th:text="${customer.address2}+', '+ ${customer.address3}"></div>
                     <div class="center" th:text="${customer.homePhone}+', '+ ${customer.mobilePhone}+', '+ ${customer.workPhone}"></div>
@@ -39,10 +39,25 @@
                 </th:block>
             </th:block>
             <th:block th:if="${pet != null}">
-                <div class="center" th:text="'I: '+ #{__${pet.insured.label}__} +' - ' + ${pet.insuredBy}"></div>
-                <div class="center" th:text="'D: '+  #{__${pet.gpwarning.label}__} +' - ' + ${pet.gpwarningDescription}"></div>
-                <div class="center" th:text="'A: '+  #{__${pet.allergies.label}__} +' - ' + ${pet.allergiesDescription} "></div>
+                <table class="table-tight">
+                    <tr class="center">
+                        <td>I:</td>
+                        <td th:text="#{__${pet.insured.label}__}"></td>
+                        <td th:text="(${pet.insuredBy}?: '')"></td>
+                    </tr>
+                    <tr class="center" th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                        <td>D:</td>
+                        <td th:text="#{__${pet.gpwarning.label}__}"></td>
+                        <td th:text="(${pet.gpwarningDescription}?: '')"></td>
+                    </tr>
+                    <tr class="center" th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                        <td>A:</td>
+                        <td th:text="#{__${pet.allergies.label}__}"></td>
+                        <td th:text="(${pet.allergiesDescription}?: '')"></td>
+                    </tr>
+                </table>
             </th:block>
+            </table>
         </div>
     </div>
 </th:block>

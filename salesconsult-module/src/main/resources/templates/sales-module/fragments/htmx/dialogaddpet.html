@@ -1,11 +1,42 @@
-<dialog open>
+<dialog id="pets-modal" open>
     <!-- HX-Trigger-After-Settle::-->
     <article>
         <header>
-            <button aria-label="Close" rel="prev"></button>
+            <button aria-label="Close" rel="prev" data-target="pets-modal" onclick="toggleModal(event)"></button>
         </header>
         <p>
             <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets}, ${'/sales/otc/search/'+ customerId + '/sell/' + appointmentId+ '/addpet'}, false)}"></th:block>
         </p>
     </article>
 </dialog>
+
+
+<!--<dialog id="modal-example">-->
+<!--    <article>-->
+<!--        <header>-->
+<!--            <button-->
+<!--                    aria-label="Close"-->
+<!--                    rel="prev"-->
+<!--                    data-target="modal-example"-->
+<!--                    onclick="toggleModal(event)"-->
+<!--            ></button>-->
+<!--            <h3>Confirm your action!</h3>-->
+<!--        </header>-->
+<!--        <p>-->
+<!--            Cras sit amet maximus risus. Pellentesque sodales odio sit amet augue finibus-->
+<!--            pellentesque. Nullam finibus risus non semper euismod.-->
+<!--        </p>-->
+<!--        <footer>-->
+<!--            <button-->
+<!--                    role="button"-->
+<!--                    class="secondary"-->
+<!--                    data-target="modal-example"-->
+<!--                    onclick="toggleModal(event)"-->
+<!--            >-->
+<!--                Cancel</button-->
+<!--            ><button autofocus data-target="modal-example" onclick="toggleModal(event)">-->
+<!--            Confirm-->
+<!--        </button>-->
+<!--        </footer>-->
+<!--    </article>-->
+<!--</dialog>-->

@@ -1,0 +1,3 @@
+<th:block th:fragment="showMoney_td(money)">
+     <td class="right" th:text="${#numbers.formatDecimal(money, 1, 2, 'COMMA')}"></td>
+</th:block>

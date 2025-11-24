@@ -38,7 +38,10 @@
             </label>
         </fieldset>
     </form>
-    <th:block th:insert="~{fragments/elements/audit::audit('payment.addedBy','payment.addedOn', 'payment.lastEditedBy', 'payment.lastEditedOn')}"></th:block>
+    <fieldset class="grid">
+        <th:block th:insert="~{fragments/elements/audit::audit('payment.addedBy','payment.addedOn', 'payment.lastEditedBy', 'payment.lastEditedOn')}"></th:block>
+    </fieldset>
+
 </section>
 </body>
 </html>

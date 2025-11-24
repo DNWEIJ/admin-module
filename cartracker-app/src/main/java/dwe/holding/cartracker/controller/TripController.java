@@ -21,12 +21,12 @@ import java.util.NoSuchElementException;
 class TripController {
 
     private final String[] gifies = {
-            "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjZzNnl4Z2t6NGxuZnRkandheDB0NjhtbWVvazR3OWd2MWZhbTZwNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XreQmk7ETCak0/giphy.gif",
-            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTJxcHllcDcwejRvYmFza2xxNHE5NTBwOGl2eWVmdjNsNm53bHhpcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7kO9VZjCv3FkI/giphy.gif",
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2lyOXlpbTJnd3Y0Y2VoeTc5d3NibTY2NXBrZjVmb3l5c3I4aWhjbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1GTZA4flUzQI0/giphy.gif",
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR0cTQwdzE2bWdnbDQzeWYzaXJ1Y2N2ZnBqdHJqeHFzYXJjMHViNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CvZuv5m5cKl8c/giphy.gif",
-            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzV3MHEwZWt6eG5oOTY0ODJpd2FheTJvMWFnbHVoaDhwbnNxODU2eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8xSnw21AM7OQo/giphy.gif"
-    };
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTI5N2Z1cmI4aXdvdWNoazhrcHVva25tdWUyeG54NDAycWFxYzRtcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xNBcChLQt7s9a/giphy.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW5rdXNtNmp1NHc1NG4zOWFqcnRienhiaDBkbGV4eTAyYzl0OWRvMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13wQVrbvz2nyG4/giphy.gif",
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHc1bG9maHNsc215bXFpamE5bjl6dGk0czdyeGRheWF0dmU5YzdzMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1dagNhv8Oqu6l8U3ZK/giphy.gif",
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjBvMmFzY2Z3d3dicGpxam9tYWs4NGwzcDZscjV2Z3lxazBkMGo4YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9Iglw135UyrrzjB6/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTB4eHVnYzl4cnF3Z292cGZpdzFvMHRiNzQzZWRkdjB1cWxlemQzdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lN9Mm4dMyDdu16hIqQ/giphy.gif"
+        };
     private int counter = 0;
 
     @PostMapping("/trip")
@@ -39,9 +39,9 @@ class TripController {
 
             redirect.addFlashAttribute("successAction", driveService.getHtmlStringOf(id));
 
-            return "redirect:/success";
+            return "redirect:/cartracker/success";
         } else {
-            return "redirect:/error";
+            return "redirect:/cartracker/error";
         }
     }
 

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @Setter
 public class Costing extends MemberBaseBO {
     // TODO
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOOKUPCOSTINGCATEGORY_ID", nullable = false)
     private LookupCostingCategory lookupCostingCategory;
 

@@ -1,34 +1,45 @@
-<tbody id="lineItemsReplacedByHtmx" hx-swap-oob="innerHTML">
-    <th:block th:each="lineitem : ${allLineItems}">
-        <tr>
-            <td th:text="${lineitem.nomenclature}"></td>
-            <td th:text="${lineitem.categoryId}"></td>
-            <td th:text="${lineitem.quantity}"></td>
-            <td th:text="${lineitem.sellExTaxPrice}"></td>
-            <td th:text="${lineitem.processingFee}"></td>
-            <td th:text="${lineitem.taxPortionOfSell + lineitem.taxPortionOfProcessingFeeService}"></td>
-            <td th:text="${lineitem.total}"></td>
-            <td>
-                <a th:if="${lineitem.hasPrintLabel}" href="">
-                    <svg width="32px" height="32px">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
-                    </svg>
-                </a>
-            </td>
-        </tr>
-    </th:block>
+<tbody id="lineItemsReplacedByHtmx"
+       hx-swap-oob="innerHTML"
+       th:hx-confirm="#{label.otc.sell.delete.confirm}"
+       hx-target="closest tr"
+       hx-swap="outerHTML swap:1s">
+<th:block th:each="lineitem : ${allLineItems}">
+    <tr>
+        <td class="center" th:hx-delete="${url+lineitem.id}">
+            <a>
+                <svg width="32px" height="32px">
+                    <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
+                </svg>
+            </a>
+        </td>
+        <td th:text="${lineitem.nomenclature}"></td>
+        <td th:text="${categoryNames.get(lineitem.categoryId)}"></td>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.quantity})}"></th:block>
+
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.sellExTaxPrice})}"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.processingFee})}"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.taxPortionOfSell + lineitem.taxPortionOfProcessingFeeService})}"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.total})}"></th:block>
+        <td class="center">
+            <a th:if="${lineitem.hasPrintLabel}" href="">
+                <svg width="32px" height="32px">
+                    <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
+                </svg>
+            </a>
+        </td>
+    </tr>
+</th:block>
 </tbody>
 <tfoot>
 <tr>
-    <!-- Footer total of the line items, customer name, pet name-->
-    <th th:text="#{label.otc.sell.description}"></th>
-    <th th:text="#{label.otc.sell.category}"></th>
-    <th th:text="#{label.otc.sell.amount}"></th>
-    <th th:text="#{label.otc.sell.cost}"></th>
-    <th th:text="#{label.otc.sell.cost}"></th>
-    <th th:text="#{label.otc.sell.taxed}"></th>
-    <th th:text="${totalAmount}"></th>
-    <th>
-    </th>
+    <th></th>
+    <th class="left"></th>
+    <th class="left"></th>
+    <th class="right"></th>
+    <th class="right"></th>
+    <th class="right"></th>
+    <th class="right" th:text="#{label.otc.sell.total}"></th>
+    <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalAmount})}"></th:block>
+    <th class="right"></th>
 </tr>
 </tfoot>

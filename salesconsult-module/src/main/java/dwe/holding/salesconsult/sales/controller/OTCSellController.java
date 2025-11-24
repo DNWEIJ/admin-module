@@ -8,14 +8,15 @@ import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -30,14 +31,21 @@ import java.util.stream.Collectors;
 public class OTCSellController {
     private final CustomerService customerService;
     private final LineItemService lineItemService;
+    private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
 
 
     @GetMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
-    String setupProductSell(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model) {
+    String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
+
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // todo autorisationUtils.getCurrentMemberId()
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect);
+        if (app == null) return "redirect:/sales/otc/search/";
+
         HashSet<Long> petsOnVisit = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
+        // after refresh the petId isn't available anymore on the visit, so select the first one then....
+        List<Visit> visits = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).toList();
+        Pet selectedPet = (visits.isEmpty()) ? app.getVisits().iterator().next().getPet() : visits.getFirst().getPet();
 
         model
                 .addAttribute("appointment", app)
@@ -45,15 +53,45 @@ public class OTCSellController {
                 .addAttribute("petsOnVisit", app.getVisits().stream().map(Visit::getPet)
                         .map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased()))
                         .sorted(Comparator.comparing(PresentationElement::getId)).toList())
-                .addAttribute("selectedPet",
-                        app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).toList().getFirst().getPet()
-                )
+                .addAttribute("selectedPet", selectedPet)
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && !pet.deceased()))
-                .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && pet.deceased()));
+                .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && pet.deceased()))
+                .addAttribute("url", "/sales/otc/search/" + customer.id() + "/sell/" + app.getId() + "/" + selectedPet.getId() + "/");
         updateModel(model, petId, app);
         return "sales-module/otc/productpage";
     }
 
+    @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
+    ResponseEntity<?> deleteVisitFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("HX-Refresh", "true");
+
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect);
+
+        if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
+            return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
+        }
+        app.getVisits().removeIf(visit -> visit.getPet().getId().equals(petId));
+        app.getLineItems().removeIf(lineItem -> lineItem.getPetId().equals(petId));
+        appointmentRepository.save(app);
+        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}/{lineItemId}")
+    String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
+        // still allowed to delete line item?
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect);
+        if (app == null) return "redirect:/sales/otc/search/";
+
+        lineItemService.delete(lineItemId);
+
+        Appointment newApp = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
+        updateModel(model, petId, newApp);
+        model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
+        return "sales-module/fragments/htmx/lineitemsoverview";
+    }
+
+    // TODO do we need to add version ?
     @PostMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
     String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId,
                                           @NotNull BigDecimal inputCostingAmount, String inputBatchNumber, Long inputCostingId, String spillageName,
@@ -64,22 +102,28 @@ public class OTCSellController {
             return "redirect:/sales/otc/search/";
         }
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
-        List<LineItem> newLineItems = lineItemService.createOTC(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
+        lineItemService.createOTC(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
         updateModel(model, petId, app);
+        model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
-    void updateModel(Model model, Long petId, Appointment app) {
-        List<LineItem> lineItems = getLineItems(petId, app);
+
+    private Appointment getAndValidateAppointment(Long appointmentId, RedirectAttributes redirect) {
+        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
+        if (app.isCancelled() || app.iscompleted()) {
+            redirect.addFlashAttribute("message", "Appointment is cancelled or completed.");
+            return null;
+        }
+        return app;
+    }
+
+    private void updateModel(Model model, Long petId, Appointment app) {
+        List<LineItem> lineItems = app.getLineItems(petId);
         model.addAttribute("allLineItems", lineItems);
         if (!lineItems.isEmpty()) {
             model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
         }
-    }
-
-    private static List<LineItem> getLineItems(Long petId, Appointment app) {
-        return app.getLineItems().stream().filter(lineItem -> lineItem.getPetId().equals(petId))
-                .sorted(Comparator.comparing(LineItem::getId))
-                .toList();
+        model.addAttribute("categoryNames", costingService.getCategories());
     }
 }

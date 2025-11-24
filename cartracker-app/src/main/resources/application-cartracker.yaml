@@ -17,7 +17,7 @@ spring:
   datasource:
     name: cartracker
     driverClassName: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:file:~/carInformation/database/carInformation;sql.syntax_mys=true
+    url: jdbc:hsqldb:file:~/carInformation/database/carInformation
     username: SA
   jpa:
     database: hsql
@@ -26,7 +26,7 @@ spring:
 
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.HSQLDialect
         generate-ddl: no
         show_sql: false
         use_sql_comments: false

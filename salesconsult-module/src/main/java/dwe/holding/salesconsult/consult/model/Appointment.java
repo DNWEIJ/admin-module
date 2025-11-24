@@ -10,7 +10,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Table(name = "CONSULT_APPOINTMENT")
@@ -62,6 +64,13 @@ public class Appointment extends TenantBaseBO {
     @Transient
     public boolean isPickedUp() {
         return pickedUp.equals(YesNoEnum.Yes);
+    }
+
+    @Transient
+    public List<LineItem> getLineItems(Long petId) {
+        return lineItems.stream().filter(lineItem -> lineItem.getPetId().equals(petId))
+                .sorted(Comparator.comparing(LineItem::getId))
+                .toList();
     }
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "unresolved")
 //    @Builder.Default

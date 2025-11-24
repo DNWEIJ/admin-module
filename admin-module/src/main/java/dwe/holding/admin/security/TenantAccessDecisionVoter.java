@@ -89,37 +89,38 @@ public class TenantAccessDecisionVoter {
 
         int returnvalue = checkAuthorizationAttribute(authorizationAttribute, authentication.getAuthorities());
 
-        if (returnvalue == -1) {
-            try {
-                autorisationKeys.put(uri, authorizationAttribute);
-            } catch (Exception e) {
-            }
-        }
-
-        Object principal = authentication.getDetails();
-        if (principal instanceof WebAuthenticationDetails) {
-            log.info("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
-                    AutorisationUtils.getCurrentUserMid() + "|" +
-                    AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
-
-            return ACCESS_GRANTED;
-        }
-        return -1;
-
+        // running with always ACCESS_GRANTED
 //        if (returnvalue == -1) {
-//            log.debug("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri + "  authorizationAttribute=" + authorizationAttribute);
-//            return returnvalue;
-//        } else {
-//            Object principal = authentication.getDetails();
-//            if (principal instanceof WebAuthenticationDetails) {
-//                log.debug("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
-//                        AutorisationUtils.getCurrentUserMid() + "|" +
-//                        AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
-//
-//                return returnvalue;
+//            try {
+//                autorisationKeys.put(uri, authorizationAttribute);
+//            } catch (Exception e) {
 //            }
-//            return ACCESS_DENIED;
 //        }
+//
+//        Object principal = authentication.getDetails();
+//        if (principal instanceof WebAuthenticationDetails) {
+//            log.info("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
+//                    AutorisationUtils.getCurrentUserMid() + "|" +
+//                    AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
+//
+//            return ACCESS_GRANTED;
+//        }
+//        return -1;
+
+        if (returnvalue == -1) {
+            log.debug("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri + "  authorizationAttribute=" + authorizationAttribute);
+            return returnvalue;
+        } else {
+            Object principal = authentication.getDetails();
+            if (principal instanceof WebAuthenticationDetails) {
+                log.debug("TenantAccesDecisionVoter:: Voting: ACCESS_GRANTED |user" +
+                        AutorisationUtils.getCurrentUserMid() + "|" +
+                        AutorisationUtils.getCurrentUserAccount() + " |prcssdUri=" + uri + "|authAttrd=" + authorizationAttribute);
+
+                return returnvalue;
+            }
+            return ACCESS_DENIED;
+        }
     }
 
     private String getPreviousBeforeLastPart(String uri, String endPart) {
