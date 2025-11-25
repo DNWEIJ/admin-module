@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport"/>
+    <meta content="light dark" name="color-scheme">
+
+    <title>Template title</title>
+
+    <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
+
+    <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
+    <link href="/lib/tabulator/tabulator-materialize.css" rel="stylesheet"/>
+    <link href="/lib/toggle-switch/toggle-switch.css" rel="stylesheet"/>
+    <link href="/lib/ownstyle/style.css" rel="stylesheet"/>
+    <link href="/lib/ownstyle/hamburger.css" rel="stylesheet"/>
+
+    <!-- javascript-->
+    <script src="/lib/tabulator/tabulator.js" type="text/javascript"></script>
+    <script src="/lib/htmx/htmx.js" type="text/javascript"></script>
+</head>
+<body>
+
+<th:block th:if="${message != null}">
+    <div id="fade-in" class="box" th:text="#{${message}}"></div>
+    <style>
+        .box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1.5em;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            align-self: center;
+            z-index: 99999; /* make sure it beats all others */
+            color: dimgrey;
+            text-align: center;
+            background: lightsteelblue;
+        }
+        #fade-in {
+            height: 1.5em;
+            opacity: 0;
+            top: -1.5em;
+            left: 0;
+            transition: all .3s ease;
+        }
+
+        #fade-in.show {
+            top: 0;
+            left: 0;
+            opacity: 1;
+            height: 1.7em;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            document.querySelector('#fade-in').classList.add('show');
+            setTimeout(function () {
+                document.querySelector('#fade-in').classList.remove('show');
+            }, 500)
+        }
+    </script>
+</th:block>
+
+<div class="container-fluid">
+    <th:block th:if="${errors != null and errors.size() > 0}">
+        <fieldset>
+            <legend>Errors</legend>
+            <th:block th:each="error: ${errors}">
+                <span th:text="${error.field}"></span>&nbsp;<span th:text="${error.defaultMessage}"></span><br/>
+            </th:block>
+        </fieldset>
+    </th:block>
+
+    <div th:replace="~{customer-module/navigation}"></div>
+
+    <th:block id="content" layout:fragment="content"></th:block>
+    <footer>
+        <p th:if="${applicationName != null}"><a th:href="'/'+${applicationName}+'/userpreferences'"
+                                                 th:text="'loggedin User:' + ${T(dwe.holding.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
+            <br/>DWE Holding B.V. &copy;</p>
+        <p th:if="${applicationName == null}">DWE Holding B.V. &copy;</p>
+    </footer>
+</div>
+</body>
+</html>

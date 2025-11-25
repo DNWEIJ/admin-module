@@ -1,0 +1,2 @@
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot suppliesinventory < .\drop_schema_suppliesinventory.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot suppliesinventory < .\create_schema_suppliesinventory.sql
