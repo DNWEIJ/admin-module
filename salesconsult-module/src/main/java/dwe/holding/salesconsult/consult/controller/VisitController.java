@@ -62,7 +62,7 @@ public class VisitController {
                 .addAttribute("rooms", roomLookupRepository.getByMemberIdOrderByRoom(77L).stream().map(rec -> new DoubleText(rec.getRoom(), rec.getRoom())).toList()) // TODO: AutorisationUtils.getCurrentUserMid());
                 .addAttribute("staffList", userService.getStaffMembers(77L).stream().map(rec -> new DoubleText(rec.getName(), rec.getName())).toList()) // TODO: AutorisationUtils.getCurrentUserMid());
                 .addAttribute("reasons", new ArrayList())
-                .addAttribute("templates", memberRepository.findByShortCode("GWZ").getLocalMembers().iterator().next());
+                .addAttribute("templates", new ArrayList());
 
         return "consult-module/visit/action";
     }

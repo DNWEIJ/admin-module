@@ -6,7 +6,6 @@
 <section layout:fragment="content">
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${member.id}, 'Member','/admin/member/list')}"></th:block>
-
     <form action="/admin/member" method="post">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
@@ -15,17 +14,19 @@
             <input id="id" name="id" th:value="${member.id}" type="hidden"/>
             <input id="version" name="version" th:value="${member.version}" type="hidden"/>
 
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','Member name', 'member.name','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('password','Password for the main account', 'member.password','2')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('simultaneousUsers','Simultaneous Users', 'member.simultaneousUsers','3')}" th:with="type='number'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','member.name', 'member.name','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('password','member.password', 'member.password','2')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('simultaneousUsers','member.simultaneousUsers', 'member.simultaneousUsers','3')}" th:with="type='number'"></th:block>
         </fieldset>
+
         <fieldset role="presentation" class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','Short code for login', 'member.shortCode','4')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('start','Start Date', 'member.start','5')}" th:with="type='date'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('stop','End Date', 'member.stop','6')}" th:with="type='date'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','member.shortCode', 'member.shortCode','4')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('start','member.startDate', 'member.startDate','5')}" th:with="type='date'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('stop','member.stopDate', 'member.stopDate','6')}" th:with="type='date'"></th:block>
         </fieldset>
+
         <fieldset role="presentation" class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('active','Active?', 'member.active', ${ynvaluesList}, true,'7')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('active','member.active', 'member.active', ${ynvaluesList}, true,'7')}"></th:block>
         </fieldset>
     </form>
 </section>

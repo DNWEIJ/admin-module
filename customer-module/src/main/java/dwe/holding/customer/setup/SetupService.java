@@ -1,4 +1,4 @@
-package dwe.holding.admin.setup;
+package dwe.holding.customer.setup;
 
 import dwe.holding.admin.authorisation.function_role.FunctionRepository;
 import dwe.holding.admin.authorisation.function_role.FunctionRoleRepository;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class SetupAdminService {
+public class SetupService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
@@ -32,7 +32,7 @@ public class SetupAdminService {
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public SetupAdminService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
         this.functionRepository = functionRepository;
@@ -43,40 +43,40 @@ public class SetupAdminService {
 
     @Transactional
     public   Long init() {
-        if (functionRepository.findAll().isEmpty()) {
-//        if (memberRepository.findAll().isEmpty()) {
-//            log.info("MigrationAdminService:: member");
-//            String password = passwordEncoder.encode("pas!");
-//
-//            Member member = memberRepository.saveAndFlush(
-//                    Member.builder()
-//                            .name("DWE Holding")
-//                            .localMemberSelectRequired(YesNoEnum.No)
-//                            .active(YesNoEnum.Yes)
-//                            .password(password)
-//                            .startDate(LocalDate.now())
-//                            .stopDate(LocalDate.now())
-//                            .shortCode("DWE")
-//                            .simultaneousUsers(4)
-//                            .applicationName("admin")
-//                            .applicationView("admin-module")
-//                            .applicationRedirect("/admin-module/index")
-//                            .build()
-//            );
-//            log.info("MigrationAdminService:: user");
-//            User user = userRepository.saveAndFlush(
-//                    User.builder()
-//                            .name("daniel")
-//                            .email("danielweijers@gmail.com")
-//                            .account("daniel")
-//                            .changePassword(true)
-//                            .password(password)
-//                            .language(LanguagePrefEnum.English)
-//                            .personnelStatus(PersonnelStatusEnum.Vet)
-//                            .loginEnabled(YesNoEnum.Yes)
-//                            .member(member)
-//                            .build()
-//            );
+
+        if (memberRepository.findAll().isEmpty()) {
+            log.info("MigrationAdminService:: member");
+            String password = passwordEncoder.encode("pas!");
+
+            Member member = memberRepository.saveAndFlush(
+                    Member.builder()
+                            .name("DWE Holding")
+                            .localMemberSelectRequired(YesNoEnum.No)
+                            .active(YesNoEnum.Yes)
+                            .password(password)
+                            .startDate(LocalDate.now())
+                            .stopDate(LocalDate.now())
+                            .shortCode("DWE")
+                            .simultaneousUsers(4)
+                            .applicationName("admin")
+                            .applicationView("admin-module")
+                            .applicationRedirect("/admin-module/index")
+                            .build()
+            );
+            log.info("MigrationAdminService:: user");
+            User user = userRepository.saveAndFlush(
+                    User.builder()
+                            .name("daniel")
+                            .email("danielweijers@gmail.com")
+                            .account("daniel")
+                            .changePassword(true)
+                            .password(password)
+                            .language(LanguagePrefEnum.English)
+                            .personnelStatus(PersonnelStatusEnum.Vet)
+                            .loginEnabled(YesNoEnum.Yes)
+                            .member(member)
+                            .build()
+            );
 
             log.info("MigrationAdminService:: function for SUPER_ADMIN Role");
             List<Function> listFuncSuperAdmin = functionRepository.saveAllAndFlush(
@@ -119,10 +119,10 @@ public class SetupAdminService {
             log.info("MigrationAdminService:: role");
             List<Role> listRole = roleRepository.saveAllAndFlush(
                     List.of(
-                            Role.builder().name("SUPER_ADMIN").memberId(77L).build(),
-                            Role.builder().name("ADMIN_READ").memberId(77L).build(),
-                            Role.builder().name("ADMIN_CREATE").memberId(77L).build(),
-                            Role.builder().name("DEFAULT").memberId(77L).build()
+                            Role.builder().name("SUPER_ADMIN").memberId(member.getId()).build(),
+                            Role.builder().name("ADMIN_READ").memberId(member.getId()).build(),
+                            Role.builder().name("ADMIN_CREATE").memberId(member.getId()).build(),
+                            Role.builder().name("DEFAULT").memberId(member.getId()).build()
                     )
             );
             log.info("MigrationAdminService:: start creating the connection between function and role..");
@@ -152,7 +152,7 @@ public class SetupAdminService {
                             .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleDefault).build())
                             .toList()
             );
-            User user = userRepository.findByAccount("daniel").stream().filter(usr -> usr.getMember().getId().equals(77L)).findFirst().get();
+
             log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
             userRoleRepository.saveAllAndFlush(
                     List.of(
@@ -162,12 +162,13 @@ public class SetupAdminService {
                             UserRole.builder().role(roleDefault).user(user).build()
                     )
             );
-            return 77L;
+            return member.getId();
         }
         return null;
     }
 
-    public void adminFunctionRoleAndConnect(Long memberId) {
+    @Transactional
+    public   void initFunctions() {
         log.info("MigrationAdminService:: function for SUPER_ADMIN Role");
         List<Function> listFuncSuperAdmin = functionRepository.saveAllAndFlush(
                 List.of(
@@ -191,21 +192,10 @@ public class SetupAdminService {
 
                 )
         );
-        log.info("MigrationAdminService:: general functions for DEFAULT role");
-        List<Function> listFuncDefault = functionRepository.saveAllAndFlush(
-                List.of(
-                        Function.builder().name("RESETPASSWORD_READ").build(),
-                        Function.builder().name("USERPREFERENCES_READ").build(),
-                        Function.builder().name("INDEX_READ").build(),
-                        Function.builder().name("SETLOCALMEMBER_READ").build(),
-                        Function.builder().name("LOGOUT_READ").build(),
+    }
 
-                        Function.builder().name("USERPREFERENCES_CREATE").build(),
-                        Function.builder().name("RESETPASSWORD_CREATE").build(),
-                        Function.builder().name("SETLOCALMEMBER_CREATE").build()
-                ));
-
-
+    @Transactional
+    public void initRoles(Long memberId) {
         log.info("MigrationAdminService:: role");
         List<Role> listRole = roleRepository.saveAllAndFlush(
                 List.of(
@@ -215,33 +205,5 @@ public class SetupAdminService {
                         Role.builder().name("DEFAULT").memberId(memberId).build()
                 )
         );
-        log.info("MigrationAdminService:: start creating the connection between function and role..");
-        Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SUPER_ADMIN")).findFirst().get();
-        functionRoleRepository.saveAllAndFlush(
-                listFuncSuperAdmin.stream()
-                        .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleSuperAdmin).build())
-                        .toList()
-        );
-
-        Role roleAdminCreate = listRole.stream().filter(r -> r.getName().equals("ADMIN_CREATE")).findFirst().get();
-        functionRoleRepository.saveAllAndFlush(
-                listFuncAdmin.stream().filter(f -> f.getName().contains("CREATE"))
-                        .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdminCreate).build())
-                        .toList()
-        );
-        Role roleAdminRead = listRole.stream().filter(r -> r.getName().equals("ADMIN_READ")).findFirst().get();
-        functionRoleRepository.saveAllAndFlush(
-                listFuncAdmin.stream().filter(f -> f.getName().contains("READ"))
-                        .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleAdminRead).build())
-                        .toList()
-        );
-
-        Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
-        functionRoleRepository.saveAllAndFlush(
-                listFuncDefault.stream()
-                        .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleDefault).build())
-                        .toList()
-        );
-
     }
 }

@@ -1,30 +1,21 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
 <head>
-    <title>Member settings</title>
+    <title>Functie lijst</title>
 </head>
 <body>
 <section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Function','/admin/function')}"></th:block>
 
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Member','/admin/member')}"></th:block>
-
-    <table id="member-table">
+    <table id="show-table">
         <thead>
         <tr>
             <th>Name</th>
-            <th>Active</th>
-            <th>Short code</th>
-            <th>Start</th>
-            <th>End</th>
         </tr>
         </thead>
         <tbody>
-        <th:block th:each="member : ${members}">
+        <th:block th:each="function : ${functions}">
             <tr>
-                <td><a th:href="@{'/admin/member/'+ ${member.id}}">[[${member.name}]]</a></td>
-                <td>[[${member.active}]]</td>
-                <td>[[${member.shortCode}]]</td>
-                <td>[[${member.startDate}]]</td>
-                <td>[[${member.stopDate}]]</td>
+                <td><a th:href="@{'/admin/function/'+ ${function.id}}">[[${function.name}]]</a></td>
             </tr>
         </th:block>
         </tbody>
@@ -35,10 +26,9 @@
         </tfoot>
     </table>
     <script>
-        var table = new Tabulator("#member-table",
+        var table = new Tabulator("#show-table",
             {
-                columns: [ //set column definitions for imported table data
-                    {title: "Name", formatter: "html"},
+                columns: [
                     {title: "Name",  formatter: "html", sorter: function (a, b) {
                             var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
                             var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();

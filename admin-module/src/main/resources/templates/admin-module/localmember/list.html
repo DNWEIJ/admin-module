@@ -10,45 +10,25 @@
     <table id="localmember-table">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Located</th>
-            <th>Email</th>
-            <th>Clinic phone</th>
-            <th>Second phone</th>
-            <th>Fax</th>
-            <th>Address</th>
+            <th th:text="#{localmember.name}">Name</th>
+            <th th:text="#{localmember.email}">Email</th>
+            <th th:text="#{localmember.phone1}">Clinic phone</th>
+            <th th:text="#{localmember.phone2}">Second phone</th>
+            <th th:text="#{localmember.address1}">Address</th>
+            <th th:text="#{localmember.zipCode}">Zipcode</th>
         </tr>
         </thead>
         <tbody>
         <th:block th:each="localmember : ${localmembers}">
             <tr>
-                <td><a th:href="@{'/admin/localmember/'+ ${localmember.id}}">[[${localmember.fullNamePoc}]]</a></td>
-                <td>[[${localmember.clinic}]]</td>
+                <td><a th:href="@{'/admin/localmember/'+ ${localmember.id}}">[[${localmember.localMemberName}]]</a></td>
                 <td>[[${localmember.email}]]</td>
-                <td>[[${localmember.phone}]]</td>
+                <td>[[${localmember.phone1}]]</td>
                 <td>[[${localmember.phone2}]]</td>
-                <td>[[${localmember.fax}]]</td>
-                <td>[[${localmember.Address1}]]<br/>[[${localmember.Address2}]]<br/>[[${localmember.Address3}]]</td>
+                <td>[[${localmember.Address1}]]</td>
+                <td>[[${localmember.zipCode}]]</td>
             </tr>
         </th:block>
         </tbody>
-        <tfoot>
-        <tr>
-            <td></td>
-        </tr>
-        </tfoot>
     </table>
-    <script>
-        var table = new Tabulator("#localmember-table",
-            {
-                columns: [ //set column definitions for imported table data
-                    {title: "Address", formatter: "html"},
-                    {title: "Name",  formatter: "html", sorter: function (a, b) {
-                            var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
-                            var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
-                            return textA.localeCompare(textB);
-                        }
-                    }]
-            });
-    </script>
 </section>

@@ -14,6 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin")
+/**
+ *  We do some validation and hop around to be sure all data is validate and/or set
+ *  the following pages are hit in order:
+ *  /admin/login <- show the page with extra shortcode field
+ *  /index  <- do stuff for the specific application; pending on if localmember is required
+ *    /application/start <- if we do not have any localmember requirment
+ *    /application/userpreferences <- if we do have a localmember requirment
+ * /
+ */
 public class LoginController {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -46,6 +55,7 @@ public class LoginController {
         return AutorisationUtils.getCurrentMember().getApplicationRedirect();
     }
 
+
     @GetMapping("/resetpassword")
     String resetPassword(Model model) {
         model.addAttribute("userId", AutorisationUtils.getCurrentUserId());
@@ -53,7 +63,7 @@ public class LoginController {
     }
 
     @PostMapping("/resetpassword")
-    String resetPassword(PasswordForm form, Model model) {
+    String resetPassword(ResetPasswordForm form, Model model) {
         if (form.password.equals(form.password2) && AutorisationUtils.getCurrentUserId().toString().equals(form.id())) {
             model.addAttribute("error", "not correct");
             return "/admin-module/resetpassword";
@@ -78,7 +88,7 @@ public class LoginController {
         return "admin-module/error";
     }
 
-    record PasswordForm(String id, String password, String password2) {
+    record ResetPasswordForm(String id, String password, String password2) {
     }
 
 }

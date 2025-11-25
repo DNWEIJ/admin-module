@@ -1,9 +1,9 @@
 package dwe.holding.admin.security;
 
-import ch.qos.logback.core.joran.spi.HttpUtil;
 import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
@@ -34,7 +34,7 @@ public class TenantAccessDecisionVoter {
      * The vote determines if access is granted: using url and submit button. The
      * derived technical function name is created using the url and submit
      * button.. The following steps are performed in sequence: - Check if
-     * authorisation is needed - Check if the url is valid - Check if it is a
+     * authorization is needed - Check if the url is valid - Check if it is a
      * report
      */
 
@@ -45,9 +45,10 @@ public class TenantAccessDecisionVoter {
 
     public int vote(Authentication authentication, Object object) {
         // check for no security needed
-        HttpServletRequest request = ((RequestAuthorizationContext) object).getRequest();
-        String uri = request.getRequestURI();
+        final HttpServletRequest request = ((RequestAuthorizationContext) object).getRequest();
+        final String uri = request.getRequestURI();
         log.info("------------------>> vote called for uri=" + uri);
+
         if (uri.compareToIgnoreCase(request.getContextPath()) == 0) {
             return ACCESS_GRANTED;
         }
@@ -64,21 +65,22 @@ public class TenantAccessDecisionVoter {
 // *  POST  ->   /entity/{id}/entity      _save     <- Save the newly created entity as child of a parent
 // *  POST  ->   /entity                  _delete   <- Delete the entity
 // *  POST  ->   /entity/{id}/entity      _delete   <- Delete the entity as child of a parent
-// *
+// *  AJAX Calls:
+// *  DELETE  ->
 // ******************************************
 
-        HttpUtil.RequestMethod method = HttpUtil.RequestMethod.valueOf(request.getMethod());
+        HttpMethod method = HttpMethod.valueOf(request.getMethod());
         String last = getLastPart(uri);
 
         String authorizationAttribute = "";
-        if (method.equals(HttpUtil.RequestMethod.GET)) {
+        if (method.equals(HttpMethod.GET)) {
             if (last.equalsIgnoreCase(LIST)) {
                 authorizationAttribute = getPreviousBeforeLastPart(uri, "/list") + "_" + ATTRIBUTE_READ;
             } else {
                 authorizationAttribute = last + "_" + ATTRIBUTE_READ;
             }
         }
-        if (method.equals(HttpUtil.RequestMethod.POST)) {
+        if (method.equals(HttpMethod.POST)) {
             if (request.getParameter(ButtonConstants.PARAM_SAVE_NEW) != null || request.getParameter(ButtonConstants.PARAM_SAVE) != null) {
                 authorizationAttribute = last + "_" + ATTRIBUTE_CREATE;
             } else if (request.getParameter(ButtonConstants.PARAM_DELETE) != null) {
@@ -86,10 +88,14 @@ public class TenantAccessDecisionVoter {
             }
         }
 
+        if (method.equals(HttpMethod.DELETE)) {
+            authorizationAttribute = last + "_" + ATTRIBUTE_DELETE;
+        }
+
 
         int returnvalue = checkAuthorizationAttribute(authorizationAttribute, authentication.getAuthorities());
 
-        // running with always ACCESS_GRANTED
+// running with always ACCESS_GRANTED
 //        if (returnvalue == -1) {
 //            try {
 //                autorisationKeys.put(uri, authorizationAttribute);
@@ -108,7 +114,11 @@ public class TenantAccessDecisionVoter {
 //        return -1;
 
         if (returnvalue == -1) {
-            log.debug("TenantAccesDecisionVoter::" + " ACCESS_DENIED for uri=" + uri + "  authorizationAttribute=" + authorizationAttribute);
+            log.info(
+                    """
+                            { "method": "%s", "uri": "%s", "attribute": "%s" }
+                            """.formatted(method, uri, authorizationAttribute)
+            );
             return returnvalue;
         } else {
             Object principal = authentication.getDetails();

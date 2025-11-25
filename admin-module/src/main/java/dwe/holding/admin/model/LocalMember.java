@@ -26,6 +26,8 @@ public class LocalMember extends BaseBO {
     private String city;
     private String state;
     private String zipCode;
+    private String email;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, updatable = false)
     private Member member;

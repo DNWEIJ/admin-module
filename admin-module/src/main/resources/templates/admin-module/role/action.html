@@ -14,7 +14,7 @@
             <input id="id" name="role.id" th:value="${role.id}" type="hidden"/>
             <input id="version" name="role.version" th:value="${role.version}" type="hidden"/>
 
-            <th:block th:insert="~{fragments/elements/input::inputHtml('role.name','Role name', 'role.name', '1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('role.name','Role name', 'role.name', '1')}"></th:block>
         </fieldset>
         <hr/>
         <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${functions}, 'checkedFunctions', '2', 'Functions')}"></th:block>

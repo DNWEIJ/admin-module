@@ -51,10 +51,8 @@ public class RoleController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/role/action";
         }
-          Long roleId = processRole(form.checkedFunctions, form.role);
-
+        Long roleId = processRole(form.checkedFunctions, form.role);
         redirect.addFlashAttribute("message", "Role saved successfully!");
-
         return getRedirectFor(request, roleId, "redirect:/role");
     }
 

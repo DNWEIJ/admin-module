@@ -1,33 +1,36 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
 <head>
-    <title>Sub Member settings</title>
+    <title>Sub Member Settings</title>
 </head>
 <body>
 <section layout:fragment="content">
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmember/list')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmember/list')}"></th:block>
 
-<form action="/admin/localmember" method="post">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+    <form action="/admin/localmember" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
-    <fieldset class="grid" role="presentation">
-        <input id="id" name="id" th:value="${id}" type="hidden">
-        <input id="version" name="version" th:value="${version}" type="hidden">
-        <th:block th:insert="~{fragments/elements/input::t('name','Full name of clinic', 'localMemberName','1')}"></th:block>
-    </fieldset>
-    <!--    <fieldset class="grid" role="presentation">-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone1','Clinic phone', 'phone1','2')}" th:with="type='tel'"></th:block>-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('phone2','Second phone', 'phone2','3')}"></th:block>-->
-    <!--    </fieldset>-->
-    <!--    <fieldset role="presentation">-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address1','Addressline one', 'address1','4')}"></th:block>-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address2','Addressline two', 'address2','5')}"></th:block>-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('address3','Addressline three', 'address3','6')}"></th:block>-->
-    <!--    </fieldset>-->
-    <!--    <fieldset class="grid" role="presentation">-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('city','City', 'city','7')}"></th:block>-->
-    <!--        <th:block th:insert="~{fragments/elements/input::inputHtml('zipCode','Zipcode', 'zipCode','8')}"></th:block>-->
-    <!--    </fieldset>-->
-</form>
+        <fieldset class="grid">
+            <input id="id" name="id" th:value="${id}" type="hidden">
+            <input id="version" name="version" th:value="${version}" type="hidden">
+
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','localmember.name','localMemberName','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','localmember.email','email','2')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1','localmember.phone1','phone1','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2','localmember.phone2','phone2','4')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','localmember.address1','address1','5')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','localmember.address2','address2','6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3','localmember.address3','address3','7')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','localmember.city','city','8')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('state','localmember.state','state','8')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','localmember.zipCode','zipCode','10')}"></th:block>
+        </fieldset>
+    </form>
 </section>
+</body>
+</html>

@@ -4,11 +4,14 @@ server:
   port: 9001
 
 spring:
+  devtools:
+    restart:
+      enabled: false
   messages:
     basename: admin/messages
 
   datasource:
-    url: jdbc:mysql://localhost:3306/admin
+    url: jdbc:mysql://localhost:3306/salesconsult
     username: root
     password: root
   jpa:
@@ -30,6 +33,6 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
+    org.springframework.web: info
+    org.springframework.security: info
     org.hibernate.tool.schema: INFO

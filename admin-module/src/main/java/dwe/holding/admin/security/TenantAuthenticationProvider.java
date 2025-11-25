@@ -47,7 +47,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         failure
     }
 
-    protected TenantAuthenticationProvider.PasswordState validatePasswordChecks(String inputPassword, String dbPassword) {
+    TenantAuthenticationProvider.PasswordState validatePasswordChecks(String inputPassword, String dbPassword) {
 
         // No password entered?
         if (inputPassword == null || inputPassword.isEmpty()) {

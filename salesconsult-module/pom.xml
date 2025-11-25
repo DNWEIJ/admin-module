@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>salesconsult-module</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>salesconsult-module</name>
 
     <dependencies>
         <dependency>

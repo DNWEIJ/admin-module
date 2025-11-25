@@ -59,7 +59,7 @@ public class LocalMemberController {
     @GetMapping("/localmember/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
-        model.addAttribute("members", localMemberRepository.findAll());
+        model.addAttribute("localmembers", localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentMember().getId()));
         return "admin-module/localmember/list";
     }
 
