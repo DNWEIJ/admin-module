@@ -1,12 +1,6 @@
 package dwe.holding.salesconsult;
 
-import groovy.transform.Final;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.processing.SQL;
-import org.hibernate.tool.schema.internal.AbstractSchemaMigrator;
-import org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl;
-import org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase;
-import org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -15,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = {
-        "dwe.holding.admin.expose",
+        "dwe.holding.admin.*",
         "dwe.holding.customer.client",
         "dwe.holding.customer.lookup",
         "dwe.holding.customer.expose",

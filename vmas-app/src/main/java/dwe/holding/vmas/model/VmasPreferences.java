@@ -1,4 +1,4 @@
-package dwe.holding.vmas.preferences.model;
+package dwe.holding.vmas.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

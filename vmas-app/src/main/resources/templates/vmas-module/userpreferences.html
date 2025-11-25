@@ -1,0 +1,40 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+    <title>Functie lijst</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Function','/admin/function')}"></th:block>
+
+    <table id="show-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="function : ${functions}">
+            <tr>
+                <td><a th:href="@{'/admin/function/'+ ${function.id}}">[[${function.name}]]</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+        </tr>
+        </tfoot>
+    </table>
+    <script>
+        var table = new Tabulator("#show-table",
+            {
+                columns: [
+                    {title: "Name",  formatter: "html", sorter: function (a, b) {
+                            var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                            var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                            return textA.localeCompare(textB);
+                        }
+                    }]
+            });
+    </script>
+</section>

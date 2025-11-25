@@ -2,8 +2,8 @@ package dwe.holding.admin.security;
 
 
 import dwe.holding.admin.model.Member;
+import dwe.holding.admin.model.MetaUserPreferences;
 import dwe.holding.admin.model.User;
-import dwe.holding.admin.model.UserPreferences;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import org.springframework.security.core.Authentication;
@@ -80,8 +80,8 @@ public class AutorisationUtils {
         getCurrentUser().setUser(user);
     }
 
-    public static void setCurrentUserPref(UserPreferences userPreferences) {
-        getCurrentUser().setUserPref(userPreferences);
+    public static void setCurrentUserPref(MetaUserPreferences metaUserPreferences) {
+        getCurrentUser().setUserPref(metaUserPreferences);
     }
 
     public static String getCurrentUserJsonPref() {

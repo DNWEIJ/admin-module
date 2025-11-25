@@ -1,9 +1,9 @@
 package dwe.holding.admin.expose;
 
 import dwe.holding.admin.authorisation.user.UserRepository;
+import dwe.holding.admin.model.MetaUserPreferences;
 import dwe.holding.admin.model.User;
-import dwe.holding.admin.model.UserPreferences;
-import dwe.holding.admin.preferences.UserPreferencesRepository;
+import dwe.holding.admin.preferences.MetaUserPreferencesRepository;
 import dwe.holding.admin.security.AutorisationUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +13,9 @@ import java.util.Optional;
 @Service
 public class UserPreferencesService {
     private final UserRepository userRepository;
-    private final UserPreferencesRepository userPrefRepo;
+    private final MetaUserPreferencesRepository userPrefRepo;
 
-    public UserPreferencesService(UserRepository userRepository, UserPreferencesRepository userPrefRepo) {
+    public UserPreferencesService(UserRepository userRepository, MetaUserPreferencesRepository userPrefRepo) {
         this.userRepository = userRepository;
         this.userPrefRepo = userPrefRepo;
     }
@@ -27,20 +27,20 @@ public class UserPreferencesService {
         AutorisationUtils.setCurrentUser(savedUser);
 
         // update preferences
-        Optional<UserPreferences> optional = userPrefRepo.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
+        Optional<MetaUserPreferences> optional = userPrefRepo.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
 
-        UserPreferences userPreferences;
+        MetaUserPreferences metaUserPreferences;
         if (optional.isPresent()) {
-            userPreferences = optional.get();
-            userPreferences.setUserPreferencesJson(userPrefJson);
+            metaUserPreferences = optional.get();
+            metaUserPreferences.setUserPreferencesJson(userPrefJson);
         } else {
-            userPreferences = UserPreferences.builder()
+            metaUserPreferences = MetaUserPreferences.builder()
                     .userId(user.getId())
                     .memberId(user.getMember().getId())
                     .userPreferencesJson(userPrefJson)
                     .build();
         }
-        userPreferences = userPrefRepo.save(userPreferences);
-        AutorisationUtils.setCurrentUserPref(userPreferences);
+        metaUserPreferences = userPrefRepo.save(metaUserPreferences);
+        AutorisationUtils.setCurrentUserPref(metaUserPreferences);
     }
 }

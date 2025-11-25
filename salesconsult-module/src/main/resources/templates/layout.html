@@ -76,7 +76,7 @@
         </fieldset>
     </th:block>
 
-    <div th:replace="~{sales-module/navigation}"></div>
+    <div th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}" th:replace="~{navigation}"></div>
 
     <th:block id="content" layout:fragment="content"></th:block>
     <div id="modal-container"></div>

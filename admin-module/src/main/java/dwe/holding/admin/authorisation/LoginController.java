@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/admin")
 /**
- *  We do some validation and hop around to be sure all data is validate and/or set
+ *  We do some validation and hop around to be sure all data is validated and/or set
  *  the following pages are hit in order:
  *  /admin/login <- show the page with extra shortcode field
  *  /index  <- do stuff for the specific application; pending on if localmember is required
@@ -37,11 +37,6 @@ public class LoginController {
         return "admin-module/login";
     }
 
-    @GetMapping("/admin/index")
-    String indexAdminScreen(Model model) {
-        model.addAttribute("applicationName", "admin-module");
-        return "/admin-module/index";
-    }
 
     @GetMapping("/index")
     String indexScreen() {

@@ -9,7 +9,7 @@
             const rowCount = tableBody.rows.length;
             const input = newRow.querySelector("input");
             input.value = "";
-            input.name = `userPreferences.names[${rowCount}]`;
+            input.name = `metaUserPreferences.names[${rowCount}]`;
             tableBody.appendChild(newRow);
         }
 
@@ -60,7 +60,7 @@
                         <tr>
                             <td>
                                 <fieldset role="group">
-                                    <input name="userPreferences.names[0]" required="true" type="input" value="">
+                                    <input name="metaUserPreferences.names[0]" required="true" type="input" value="">
                                     <a data-tooltip="verwijder deze speler" data-placement="left" style="cursor: pointer" onclick="deleteLine(this)"><i class="fa fa-2x fa-user-minus" aria-hidden="true"></i></a>
                                 </fieldset>
                             </td>
@@ -71,7 +71,7 @@
                             <tr>
                                 <td>
                                     <fieldset role="group">
-                                        <input th:name="'userPreferences.names['+ ${cnt.index}+']'" required="true" type="input" th:value="${element}">
+                                        <input th:name="'metaUserPreferences.names['+ ${cnt.index}+']'" required="true" type="input" th:value="${element}">
                                         <a style="cursor: pointer" onclick="deleteLine(this)"><i class="fa fa-user-minus" aria-hidden="true"></i></a>
                                     </fieldset>
                                 </td>

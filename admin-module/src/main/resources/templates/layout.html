@@ -65,6 +65,7 @@
     </style>
 </th:block>
 <div class="container-fluid">
+
     <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
         <th:block th:if="${applicationView != null}">
             <div th:replace="~{${applicationView}+'/page/navigation'}"></div>

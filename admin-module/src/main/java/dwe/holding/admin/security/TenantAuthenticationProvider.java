@@ -3,9 +3,9 @@ package dwe.holding.admin.security;
 import dwe.holding.admin.authorisation.function_role.FunctionQueryCriteria;
 import dwe.holding.admin.model.Function;
 import dwe.holding.admin.model.IPSecurity;
+import dwe.holding.admin.model.MetaUserPreferences;
 import dwe.holding.admin.model.User;
-import dwe.holding.admin.model.UserPreferences;
-import dwe.holding.admin.preferences.UserPreferencesRepository;
+import dwe.holding.admin.preferences.MetaUserPreferencesRepository;
 import dwe.holding.admin.transactional.TranactionalUser;
 import dwe.holding.shared.model.type.YesNoEnum;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,12 +33,12 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final FunctionQueryCriteria functionQueryCriteria;
-    private final UserPreferencesRepository userPreferencesRepository;
+    private final MetaUserPreferencesRepository metaUserPreferencesRepository;
     private final TranactionalUser tranactionalUser;
 
-    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, UserPreferencesRepository userPreferencesRepository, TranactionalUser tranactionalUser) {
+    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, MetaUserPreferencesRepository metaUserPreferencesRepository, TranactionalUser tranactionalUser) {
         this.functionQueryCriteria = functionQueryCriteria;
-        this.userPreferencesRepository = userPreferencesRepository;
+        this.metaUserPreferencesRepository = metaUserPreferencesRepository;
         this.tranactionalUser = tranactionalUser;
     }
 
@@ -149,9 +149,9 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(),
                 true, true, true, true, getGrantedAuthoritiesFromRolAndFunction(user));
         adminUserDetails.setUser(user);
-        Optional<UserPreferences> optional = userPreferencesRepository.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
+        Optional<MetaUserPreferences> optional = metaUserPreferencesRepository.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
 
-        adminUserDetails.setUserPref(optional.orElse(new UserPreferences()));
+        adminUserDetails.setUserPref(optional.orElse(new MetaUserPreferences()));
         return adminUserDetails;
     }
 

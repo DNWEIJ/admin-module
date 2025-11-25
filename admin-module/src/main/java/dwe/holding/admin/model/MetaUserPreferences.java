@@ -15,10 +15,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @Getter
 @Setter
-public class UserPreferences extends TenantBaseBO {
+public class MetaUserPreferences extends TenantBaseBO {
     String userPreferencesJson = "{}";
       Long userId;
 
-    public UserPreferences() {
+    public MetaUserPreferences() {
     }
 }
