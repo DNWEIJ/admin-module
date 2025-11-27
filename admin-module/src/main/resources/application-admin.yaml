@@ -4,9 +4,6 @@ server:
   port: 9001
 
 spring:
-  devtools:
-    restart:
-      enabled: false
   messages:
     basename: admin/messages
 

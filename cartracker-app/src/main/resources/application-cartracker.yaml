@@ -6,6 +6,8 @@ server:
   port: 9000
 
 spring:
+  thymeleaf:
+    prefix: classpath*:/templates/
   servlet:
     multipart:
       max-file-size: 1GB
