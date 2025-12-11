@@ -2,10 +2,7 @@ package dwe.holding.salesconsult.consult.model;
 
 import dwe.holding.admin.model.base.TenantBaseBO;
 import dwe.holding.salesconsult.sales.model.Payment;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 
-@Entity(name = "CONSULT_PAYMENT_VISIT")
+@Table(name = "CONSULT_PAYMENT_VISIT")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

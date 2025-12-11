@@ -2,20 +2,37 @@ package dwe.holding.admin.expose;
 
 import dwe.holding.admin.authorisation.user.UserRepository;
 import dwe.holding.admin.model.User;
+import dwe.holding.admin.model.type.LanguagePrefEnum;
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public List<DoubleText> getStaffMembers(Long memberId) {
+        return userRepository.findByMember_idAndLoginEnabled(memberId, YesNoEnum.Yes)
+                .stream().map(rec -> new DoubleText(rec.getName(), rec.getName())).toList();
     }
 
-    public List<User> getStaffMembers(Long memberId) {
-        return userRepository.findByMember_idAndLoginEnabled(memberId, YesNoEnum.Yes);
+    public record DoubleText(String id, String name) {
+    }
+
+    public void save(Long localMemberId, LanguagePrefEnum language) {
+        User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
+        user.setMemberLocalId(localMemberId);
+        user.setLanguage(language);
+        userRepository.save(user);
+    }
+
+    public User setLocalMemberId(Long localMemberId) {
+        User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
+        user.setMemberLocalId(localMemberId);
+        return userRepository.save(user);
     }
 }

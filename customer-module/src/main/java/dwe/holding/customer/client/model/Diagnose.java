@@ -1,8 +1,8 @@
 package dwe.holding.customer.client.model;
 
 
-import dwe.holding.customer.client.model.lookup.LookupDiagnose;
 import dwe.holding.admin.model.base.MemberBaseBO;
+import dwe.holding.customer.client.model.lookup.LookupDiagnose;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -11,7 +11,8 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "CUSTOMER_DIAGNOSE")
+@Table(name = "CUSTOMER_DIAGNOSE")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

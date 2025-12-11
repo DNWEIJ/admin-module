@@ -25,7 +25,7 @@ public class NotePurposeLookupController {
 
     @GetMapping("lookup/notepurposes")
     String list(Model model) {
-        model.addAttribute("notepurposes", notePurposeLookupRepository.getByMemberId(77L)); // todo replace with
+        model.addAttribute("notepurposes", notePurposeLookupRepository.getByMemberId(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "notepurpose");
         return "customer-module/lookup/notepurposes/list";
     }
@@ -40,7 +40,7 @@ public class NotePurposeLookupController {
     @GetMapping("lookup/notepurpose/{notePurposeId}")
     String editRecord(@PathVariable Long notePurposeId, Model model) {
         LookupNotePurpose notePurposes = notePurposeLookupRepository.findById(notePurposeId).orElseThrow();
-        model.addAttribute("notepurpose", notePurposes.getMemberId().equals(77L) ? notePurposes : new LookupNotePurpose());
+        model.addAttribute("notepurpose", notePurposes.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? notePurposes : new LookupNotePurpose());
         model.addAttribute("activeMenu", "notepurpose");
         ; //AutorisationUtils.getCurrentUserMid()
         return "customer-module/lookup/notepurposes/action";
@@ -57,7 +57,7 @@ public class NotePurposeLookupController {
             );
         } else {
             LookupNotePurpose notePurpose = notePurposeLookupRepository.findById(formNotePurpose.getId()).orElseThrow();
-            if (notePurpose.getMemberId().equals(77L) ) { //AutorisationUtils.getCurrentUserMid())) {
+            if (notePurpose.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ) {
                 notePurpose.setPreDefinedPurpose(formNotePurpose.getPreDefinedPurpose());
                 notePurposeLookupRepository.save(notePurpose);
             } else {

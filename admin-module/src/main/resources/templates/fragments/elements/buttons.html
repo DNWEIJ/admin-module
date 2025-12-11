@@ -1,12 +1,10 @@
 <th:block th:fragment="saveAndNewButtons">
     <fieldset class="grid" role="group">
-        <input name="_save" type="submit" value="Opslaan">
-        <input name="_saveandnew" type="submit" value="Opslaan en Nieuw">
+        <input name="_save" type="submit" th:value="#{label.buttons.save}">
+        <input name="_saveandnew" type="submit" th:value="#{label.buttons.saveandnew}">
     </fieldset>
 </th:block>
 
 <th:block th:fragment="saveButtons()">
-    <fieldset class="grid" role="group">
-        <input name="_save" type="submit" value="Opslaan">
-    </fieldset>
+    <input name="_save" type="submit" th:value="#{label.buttons.save}">
 </th:block>

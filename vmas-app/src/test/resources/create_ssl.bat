@@ -1,0 +1,1 @@
+keytool -genkeypair -alias springboot-ssl  -keyalg RSA -keysize 2048  -storetype PKCS12  -keystore springboot-ssl.p12  -validity 3650

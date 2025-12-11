@@ -10,12 +10,13 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
-@Table(name = "ADMIN_MEMBER"
-)
+@Table(name = "ADMIN_MEMBER")
 @Entity
 @SuperBuilder
 @AllArgsConstructor
@@ -23,14 +24,13 @@ import java.util.Set;
 @Setter
 @Getter
 public class Member extends BaseBO {
-    // TODO Add application reference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member")
     @Builder.Default
-    private Set<LocalMember> localMembers = new HashSet<>(0);
+    private List<LocalMember> localMembers = new ArrayList<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     @Builder.Default
-    private Set<User> users = new HashSet<>(0);
+    private List<User> users = new ArrayList<>(0);
     @Column(nullable = false)
     @NotEmpty
     private String name;

@@ -11,16 +11,22 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED;
 import static org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults;
@@ -43,17 +49,32 @@ public class SecurityConfigLocal {
         authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/admin/index"));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/admin/login?error=true"));
 
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
+
+        RequestMatcher publicEndpoints = request -> {
+            String req = request.getRequestURI();
+            return req.startsWith("/admin/login") ||
+                    req.startsWith("/admin/logout") ||
+                    req.startsWith("/admin/error") ||
+                    req.startsWith("/lib/") ||
+                    req.startsWith("/images/");
+        };
+
+        // Composite AuthorizationManager
+        AuthorizationManager<RequestAuthorizationContext> compositeAuthManager =
+                (authenticationSupplier, context) -> {
+                    if (publicEndpoints.matches(context.getRequest())) {
+                        return new AuthorizationDecision(true); // permitAll
+                    }
+                    return adminAuthorizationManager.authorize(authenticationSupplier, context);
+                };
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(new CookieCsrfTokenRepository())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-                .authorizeHttpRequests(
-                        (requests) -> requests
-                                .requestMatchers("/admin/login", "/admin/error",
-                                        "/lib/**",
-                                        "/images/**"
-                                ).permitAll()
-                                .anyRequest().access(adminAuthorizationManager)
+
+                .authorizeHttpRequests(authz -> authz
+                        .anyRequest().access(compositeAuthManager)
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login")) // ⬅️ custom!
@@ -72,10 +93,8 @@ public class SecurityConfigLocal {
                                 .maxSessionsPreventsLogin(false)
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/admin/logout")
-                        .logoutSuccessUrl("/admin/login?logout=true")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .addLogoutHandler(clearSiteData)
                 )
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 

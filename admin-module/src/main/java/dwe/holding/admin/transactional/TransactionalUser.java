@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class TranactionalUser {
+public class TransactionalUser {
 
     private final UserRepository userRepository;
 
@@ -25,11 +25,13 @@ public class TranactionalUser {
     }
 
     @Transactional
-    public User getByIdLazy_RolesAndIpNumbers(Long id) {
+    public User getByIdLazy_LoadingAllData(Long id) {
         User user = userRepository.findById(id).get();
         user.setRoles(user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList());
         user.getIpNumbers().size();
         user.getMember().getShortCode();
+        user.getMember().getLocalMembers().size();
+        user.getMember().getLocalMembers().forEach(localMember -> localMember.getMemberLocalTaxs().size());
         return user;
     }
 

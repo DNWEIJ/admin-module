@@ -1,16 +1,21 @@
 package dwe.holding.admin.security;
 
 
+import dwe.holding.admin.model.LocalMember;
+import dwe.holding.admin.model.LocalMemberTax;
 import dwe.holding.admin.model.Member;
-import dwe.holding.admin.model.MetaUserPreferences;
 import dwe.holding.admin.model.User;
+import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
+import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Collection;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.
@@ -20,6 +25,11 @@ public class AutorisationUtils {
     protected AutorisationUtils() {
     }
 
+    // only replace the user, updates every other field automatically
+    public static void setCurrentUser(User user) {
+        getCurrentUserDetails().setUser(user);
+    }
+
     public static String getCurrentLocalMemberName() {
         return getCurrentMember().getLocalMembers().stream()
                 .filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst()
@@ -27,46 +37,94 @@ public class AutorisationUtils {
     }
 
     public static Member getCurrentMember() {
-        return getCurrentUser().getUser().getMember();
+        return getCurrentUserDetails().getUser().getMember();
     }
 
     public static Long getCurrentUserMid() {
-        return getCurrentUser().getUser().getMember().getId();
+        return getCurrentUserDetails().getUser().getMember().getId();
     }
 
     public static String getCurrentMemberPassword() {
-        return getCurrentUser().getUser().getMember().getPassword();
+        return getCurrentUserDetails().getUser().getMember().getPassword();
     }
 
     public static Long getCurrentUserId() {
-        return getCurrentUser().getUser().getId();
+        return getCurrentUserDetails().getUser().getId();
     }
 
     public static String getCurrentUserAccount() {
-        return getCurrentUser().getUser().getAccount();
+        return getCurrentUserDetails().getUser().getAccount();
     }
 
     public static Long getCurrentUserMlid() {
-        return getCurrentUser().getUser().getMemberLocalId();
+        return getCurrentUserDetails().getUser().getMemberLocalId();
     }
 
-    public static Long validateAndReturnLocalMemberId(Long localMemberId) {
-        return getCurrentMember().getLocalMembers().stream().
-                filter(f -> f.getId().equals(localMemberId))
-                .findFirst()
-                .orElseThrow()
-                .getId();
+    public static String getCurrentUserJsonPref() {
+        return getCurrentUserDetails().getUser().getMetaUserPreferences().getPreferencesJson();
     }
 
-    public static Collection<GrantedAuthority> getCurrentAuthorities() {
-        return getCurrentUser().getAuthorities();
+    public static boolean isNewUser() {
+        return getCurrentUserDetails().getUser().isChangePassword();
     }
 
-    private static AdminUserDetails getCurrentUser() {
+    public static boolean isLocalMemberRequired() {
+        return getCurrentUserDetails().getUser().getMember().getLocalMemberSelectRequired().equals(YesNoEnum.Yes);
+    }
+
+    public static boolean hasRole(String role) {
+        return getCurrentUserDetails().getUser().getRoles().contains(role);
+    }
+
+    public static boolean hasStatus(PersonnelStatusEnum status) {
+        return status.equals(getCurrentUserDetails().getUser().getPersonnelStatus());
+    }
+
+    public static boolean isLoggedIn() {
+        try {
+            return !getCurrentUserDetails().getUser().getRoles().isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static List<PresentationElement> getLocalMemberList() {
+        return AutorisationUtils.getCurrentMember().getLocalMembers()
+                .stream().map(f -> new PresentationElement(f.getId(), f.getLocalMemberName(), true))
+                .sorted(Comparator.comparing(PresentationElement::getName)).toList();
+    }
+
+    public static UserSettings getCurrentUserSettings() {
+        return new UserSettings(getCurrentUserMlid(), getCurrentUserDetails().getUser().getLanguage());
+    }
+
+    public static LocalMember getCurrentLocalMember() {
+        return getCurrentUserDetails().getUser().getMember().getLocalMembers().stream()
+                .filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow();
+    }
+
+    public static LocalMemberTax getVatPercentages(@NotNull LocalDate date) {
+
+        for (LocalMemberTax localTax : getCurrentLocalMember().getMemberLocalTaxs()) {
+            LocalDate startDate = localTax.getStartDate();
+            LocalDate endDate = localTax.getEndDate();
+            if ((date.isAfter(startDate) || date.equals(startDate)) && date.isBefore(endDate)) {
+                return localTax;
+            }
+        }
+        // should never happen, end date is set to 2999-12-31
+        throw new RuntimeException("No tax found for date " + date);
+    }
+
+
+    public record UserSettings(Long localMemberId, LanguagePrefEnum language) {
+    }
+
+    private static AdminUserDetails getCurrentUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
-            if (principal instanceof AdminUserDetails) {
+            if (principal instanceof dwe.holding.admin.security.AdminUserDetails) {
                 return (AdminUserDetails) principal;
             } else {
                 throw new RuntimeException("No principal found in security context");
@@ -75,50 +133,4 @@ public class AutorisationUtils {
             throw new RuntimeException("No authentication found in security context");
         }
     }
-
-    public static void setCurrentUser(User user) {
-        getCurrentUser().setUser(user);
-    }
-
-    public static void setCurrentUserPref(MetaUserPreferences metaUserPreferences) {
-        getCurrentUser().setUserPref(metaUserPreferences);
-    }
-
-    public static String getCurrentUserJsonPref() {
-        return getCurrentUser().getUserPref().getUserPreferencesJson();
-    }
-
-
-    public static boolean isNewUser() {
-        return getCurrentUser().getUser().isChangePassword();
-    }
-
-    public static boolean isLocalMemberRequired() {
-        return getCurrentUser().getUser().getMember().getLocalMemberSelectRequired().equals(YesNoEnum.Yes);
-    }
-
-    public static boolean hasRole(String role) {
-        return getCurrentUser().getUser().getRoles().contains(role);
-    }
-
-    public static boolean hasStatus(PersonnelStatusEnum status) {
-        return status.equals(getCurrentUser().getUser().getPersonnelStatus());
-    }
-
-
-    public static boolean isLoggedIn() {
-        try {
-            return !getCurrentUser().getUser().getRoles().isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public static void setInfoObject(InformationObject informationObject) {
-     // TODO:    getCurrentUser().setInformationObject(informationObject);
-    }
-    public static InformationObject getInfoObject() {
-        return getCurrentUser().getInformationObject();
-    }
-
 }

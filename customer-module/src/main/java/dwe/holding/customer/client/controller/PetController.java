@@ -117,13 +117,13 @@ public class PetController {
         model.addAttribute("sexTypeList", SexTypeEnum.getWebList());
         model.addAttribute("customerId", customerId);
         model.addAttribute("pet", pet);
-        model.addAttribute("speciesList", lookupSpeciesRepository.getList(77L) // TODO replace by AutorisationUtils.getCurrentUserMid()
+        model.addAttribute("speciesList", lookupSpeciesRepository.getList(AutorisationUtils.getCurrentUserMid()) // TODO replace by AutorisationUtils.getCurrentUserMid()
                 .stream().map(
                         f -> new PresentationElement(f.getId(), f.getSpecies(), true)
                 )
                 .sorted(Comparator.comparing(PresentationElement::getName)).toList()
         );
-        model.addAttribute("breedList", lookupBreedsRepository.getList(77L) // TODO replace by AutorisationUtils.getCurrentUserMid()
+        model.addAttribute("breedList", lookupBreedsRepository.getList(AutorisationUtils.getCurrentUserMid()) // TODO replace by AutorisationUtils.getCurrentUserMid()
                 .stream().map(
                         f -> new PresentationElement(f.getId(), f.getBreed(), true)
                 )

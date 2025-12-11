@@ -1,5 +1,6 @@
 package dwe.holding.supplyinventory.controller;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.LookupCostingCategory;
 import dwe.holding.supplyinventory.model.projection.CostingProjection;
@@ -32,7 +33,7 @@ public class CostingSearchController {
     public String searchLookupCostingDropdown(Model model) {
 
         if (costing == null || costing.isEmpty()) {
-            costing = lookupCostingCategoryRepository.findByMemberIdOrderByCategory(77L).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
+            costing = lookupCostingCategoryRepository.findByMemberIdOrderByCategory(AutorisationUtils.getCurrentUserMid()).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
         }
         model.addAttribute("lookupCostings", costing);
         return "supplies-module/fragments/costing/selectcosting";
@@ -41,7 +42,7 @@ public class CostingSearchController {
     @PostMapping("/costing/search/costing/dropdown/found/costing")
     public String searchCostingForDropDown(Long categoryId, Model model) {
         StringBuilder sb = new StringBuilder();
-        costingRepository.findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(categoryId, 77L).forEach(costingProj -> { //AutorisationUtils.getCurrentUserMid()
+        costingRepository.findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(categoryId, AutorisationUtils.getCurrentUserMid()).forEach(costingProj -> {
             sb.append("<option data-has-batch=\"").append(costingProj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
                     .append("\" data-id=\"").append(costingProj.id())
                     .append("\" data-nomenclature=\"").append(costingProj.nomenclature())
@@ -66,9 +67,9 @@ public class CostingSearchController {
         List<CostingProjection> list;
         try {
             Long.parseLong(searchCriteria);
-            list = costingRepository.getCostingProjectionsWhenSearchCriteriaIsNumeric(searchCriteria, 77L); // AutorisationUtils.getCurrentMemberId()
+            list = costingRepository.getCostingProjectionsWhenSearchCriteriaIsNumeric(searchCriteria, AutorisationUtils.getCurrentUserMid());
         } catch (NumberFormatException e) {
-            list = costingRepository.getCostingOnNomenclature(searchCriteria, 77L); // AutorisationUtils.getCurrentMemberId()
+            list = costingRepository.getCostingOnNomenclature(searchCriteria, AutorisationUtils.getCurrentUserMid());
         }
         model.addAttribute("flatData", wrap(list.stream().map(str -> getOption(str, pattern)).toList()));
         return "fragments/elements/flatData";

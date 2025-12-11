@@ -1,16 +1,21 @@
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_member.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_user.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_member.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_localmember.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_localmember_tax.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_localmember_pref.sql
 
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_customer.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_pet.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_user.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_user_pref.sql
 
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookupspecies.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookupbreeds.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookupnotepurpose.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookuppurpose.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookupdiagnoses.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookuproom.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_lookuplocation.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_customer.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_pet.sql
 
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_notes.sql
-"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot salesconsult < .\copy_reminder.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookupspecies.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookupbreeds.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookupnotepurpose.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookuppurpose.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookupdiagnoses.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookuproom.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookuplocation.sql
+
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_notes.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_reminder.sql

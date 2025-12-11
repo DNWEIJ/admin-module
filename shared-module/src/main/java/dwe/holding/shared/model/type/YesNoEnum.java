@@ -1,6 +1,8 @@
 package dwe.holding.shared.model.type;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -9,6 +11,8 @@ import java.util.List;
 /**
  * Object representation of a Yes No object.
  * Can be overridden with the database information (language-specific) for this domain.
+ *
+ * This enum is also used in preferences settings that are stored as json (userPreferences localMemberPreferences etc) hence the json annotations
  */
 @Getter
 public enum YesNoEnum {
@@ -16,6 +20,7 @@ public enum YesNoEnum {
     Yes("Y", "label.yesno.yes", 1),
     No("N", "label.yesno.no", 2);
 
+    @JsonValue
     private final String databaseField;
     private final String label;
     private final int order;
@@ -34,6 +39,7 @@ public enum YesNoEnum {
         throw new IllegalArgumentException();
     }
 
+    @JsonCreator
     public static YesNoEnum getEnumFromDbField(String value) {
         if (value == null)
             throw new IllegalArgumentException("Null value in db for YesNoEnum");
@@ -42,13 +48,13 @@ public enum YesNoEnum {
         throw new IllegalArgumentException();
     }
 
-    public static YesNoEnum setEnum(String value) {
-        if (value == null)
-            throw new IllegalArgumentException();
-        for (YesNoEnum anEnum : values())
-            if (value.equalsIgnoreCase(anEnum.getDatabaseField())) return anEnum;
-        throw new IllegalArgumentException();
-    }
+//    public static YesNoEnum setEnum(String value) {
+//        if (value == null)
+//            throw new IllegalArgumentException();
+//        for (YesNoEnum anEnum : values())
+//            if (value.equalsIgnoreCase(anEnum.getDatabaseField())) return anEnum;
+//        throw new IllegalArgumentException();
+//    }
 
     public static List<YesNoEnum> getWebList() {
         return Arrays.stream(YesNoEnum.values()).sorted(new YesNoEnumComparator()).toList();

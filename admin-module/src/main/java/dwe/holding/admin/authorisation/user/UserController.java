@@ -11,7 +11,7 @@ import dwe.holding.admin.model.base.ToString;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.admin.transactional.TranactionalUser;
+import dwe.holding.admin.transactional.TransactionalUser;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,14 +44,14 @@ public class UserController {
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final MemberRepository memberRepository;
-    private final TranactionalUser tranactionalUser;
+    private final TransactionalUser transactionalUser;
 
 
-    public UserController(UserRoleRepository userRoleRepository, RoleRepository roleRepository, MemberRepository memberRepository, TranactionalUser tranactionalUser) {
+    public UserController(UserRoleRepository userRoleRepository, RoleRepository roleRepository, MemberRepository memberRepository, TransactionalUser transactionalUser) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.memberRepository = memberRepository;
-        this.tranactionalUser = tranactionalUser;
+        this.transactionalUser = transactionalUser;
     }
 
     @PostMapping("/user")
@@ -76,14 +76,14 @@ public class UserController {
     @GetMapping("/user/{id}")
     String showEditScreen(@PathVariable @NotNull Long id, Model model) {
         model.addAttribute("action", "Edit");
-        setModelData(model, tranactionalUser.getByIdLazy_RolesAndIpNumbers(id));
+        setModelData(model, transactionalUser.getByIdLazy_LoadingAllData(id));
         return "admin-module/user/action";
     }
 
     @GetMapping("/user/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
-        model.addAttribute("users", tranactionalUser.findAll());
+        model.addAttribute("users", transactionalUser.findAll());
         return "admin-module/user/list";
     }
 
@@ -128,7 +128,7 @@ public class UserController {
         if (formUser.isNew()) {
             formUser.setPassword(AutorisationUtils.getCurrentMemberPassword());
             formUser.setMember(AutorisationUtils.getCurrentMember());
-            user = tranactionalUser.save(formUser);
+            user = transactionalUser.save(formUser);
         } else {
             user = formUser;
         }
@@ -167,7 +167,7 @@ public class UserController {
         }
 
         userRoleRepository.saveAllAndFlush(user.getUserRoles());
-        tranactionalUser.save(user);
+        transactionalUser.save(user);
         return user.getId();
     }
 

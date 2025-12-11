@@ -1,5 +1,6 @@
 package dwe.holding.supplyinventory.expose;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.supplyinventory.mapper.CostingMapper;
 import dwe.holding.supplyinventory.model.*;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
@@ -66,19 +67,15 @@ public class CostingService {
     }
 
     public void createBatchNumberIfNotExisting(Long id, String batchNumber) {
-        Optional<CostingBatchNumber> cbnOptional = costingBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(id, 77L, 90l, batchNumber); // TODO AutorisationUtils
+        Optional<CostingBatchNumber> cbnOptional = costingBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(id, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid(), batchNumber);
         if (cbnOptional.isEmpty()) {
-            costingBatchNumberRepository.save(CostingBatchNumber.builder().costingId(id).memberId(77L).localMemberId(90l).batchNumber(batchNumber).build());
+            costingBatchNumberRepository.save(CostingBatchNumber.builder().costingId(id).localMemberId(AutorisationUtils.getCurrentUserMlid()).batchNumber(batchNumber).build());
         }
     }
 
-    /**
-     * TODO: Spillage registration isn't working due to NOT being able to start a new one when adding lineitems....
-     *  This needs to be looked at
-     */
     public void createOrUpdateSpillage(Long costingId, String spillageName, Long lineItemId) {
-        Costing costing = costingRepository.findByIdAndMemberId(costingId, 77L).orElseThrow(); // TODO: AutorisationUtils
-        CostingSpillage costingSpillage = costingSpillageRepository.findByNameAndMemberIdAndLocalMemberIdAndEndDateNotNull(spillageName, 77L, 90L); // todo AutorisationUtils
+        Costing costing = costingRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        CostingSpillage costingSpillage = costingSpillageRepository.findByNameAndMemberIdAndLocalMemberIdAndEndDateNotNull(spillageName, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid());
         if (costingSpillage == null) {
             costingSpillage = new CostingSpillage();
             costingSpillage.setCostingId(costing.getId());
@@ -106,6 +103,6 @@ public class CostingService {
     }
 
     public Map<Long, String>  getCategories() {
-        return lookupCostingCategoryRepository.findByMemberIdOrderByCategory(77L).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
+        return lookupCostingCategoryRepository.findByMemberIdOrderByCategory(AutorisationUtils.getCurrentUserMid()).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
     }
 }

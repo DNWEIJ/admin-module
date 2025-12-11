@@ -2,7 +2,6 @@
     <script th:inline="javascript">
         function addEventListenersForPetSelect() {
 
-            console.log("addEventListenersForPetSelect has been called");
             // Attach listener to all dropdowns starting with 'speciesList['  copy the purpose and check the checkbox
             document.querySelectorAll("select[id^='speciesList']").forEach(select => {
                 select.addEventListener("change", function () {
@@ -11,46 +10,122 @@
                     // Find matching input + checkbox
                     const purposeInput = document.getElementById(`formPet[${index}].purpose`);
                     const checkBox = document.getElementById(`formPet[${index}].checked`);
+                    const purposeSelect = document.getElementById(`speciesList[${index}].reason`);
 
-                    if (purposeInput) purposeInput.value = this.options[this.selectedIndex].text;
+                    if (purposeInput) purposeInput.value = purposeSelect.options[purposeSelect.selectedIndex].text;
                     if (checkBox) checkBox.checked = true;
+                    // now if we are creating an appointment, we need to handle the reason -> time setting
+                    const timeFromReasonSelect = document.getElementById(`formPet[${index}].timeNeeded`);
+                    if (timeFromReasonSelect) {
+                        timeFromReasonSelect.value =
+                            purposeSelect.options[purposeSelect.selectedIndex].dataset.element;
+                    }
                 });
             });
             // prevent submitting the form if no checkbox is checked
             document.getElementById("createForm").addEventListener("submit", function (e) {
                 if (!document.querySelectorAll('input[type=checkbox]:checked').length) {
-                    alert( [[#{label.otc.pet.checkbox.error}]] )
+                    alert([[#{label.otc.pet.checkbox.error}]])
                     e.preventDefault();
                 }
             });
         }
+
         document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
     </script>
-    <form id="createForm" th:action="${postUrl}" method="post">
+    <th:block th:if="${postUrl != ''}">
+        <form id="createForm" th:action="${postUrl}" method="post">
+    </th:block>
+    <fieldset role="group">
+        <legend>[[#{label.otc.petList}]]</legend>
+        <table id="show-table" class="table-tight">
+            <thead>
+            <tr>
+                <th>[[#{label.otc.add}]]</th>
+                <th>[[#{label.otc.petName}]]</th>
+                <th th:if="${postUrl == ''}" th:text="#{label.visit.timeNeeded}"></th>
+                <th th:if="${postUrl == ''}" th:text="#{label.visit.vet}"></th>
+                <th th:if="${postUrl == ''}" th:text="#{label.visit.room}"></th>
+                <th>[[#{label.otc.reason}]]</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="pet, iStat : ${pets}">
+                <tr>
+                    <td>
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','','1')}"></th:block>
+                    </td>
+
+                    <td th:if="${showPetLink}"><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
+                    <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
+
+                    <td th:if="${postUrl == ''}">
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"></th:block>
+                    </td>
+                    <td th:if="${postUrl == ''}">
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', '', ${staffList}, true,'1')}"></th:block>
+                    </td>
+                    <td th:if="${postUrl == ''}">
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '', '', ${rooms}, true,'1')}"></th:block>
+                    </td>
+
+                    <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
+                    <td>
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithData('speciesList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'1')}" th:with="required=false"></th:block>
+                    </td>
+                    <td>
+                        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
+                                  th:with="required=false"></th:block>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </fieldset>
+    <details th:if="${deceasedPets.size() > 0}">
+        <summary>
+            [[#{label.otc.pet.deceased.showhide}]]
+        </summary>
         <fieldset role="group">
-            <legend>[[#{label.otc.petList}]]</legend>
-            <table id="show-table" class="table-tight">
+            <table id="show-deceased-table" class="table-tight" th:if="${deceasedPets.size() > 0}">
                 <thead>
                 <tr>
                     <th>[[#{label.otc.add}]]</th>
                     <th>[[#{label.otc.petName}]]</th>
+                    <th th:if="${postUrl == ''}" th:text="#{label.visit.timeNeeded}"></th>
+                    <th th:if="${postUrl == ''}" th:text="#{label.visit.vet}"></th>
+                    <th th:if="${postUrl == ''}" th:text="#{label.visit.room}"></th>
                     <th>[[#{label.otc.reason}]]</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="pet, iStat : ${pets}">
+                <th:block th:each="pet, iStat : ${deceasedPets}">
                     <tr>
                         <td>
-                            <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','','1')}"></th:block>
+                            <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${pets.size() + iStat.index} + '].checked','','','1')}"></th:block>
                         </td>
-                        <td th:if="${showPetLink}"><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
-                        <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
-                        <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
+                        <td th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
+
+
+                        <td th:if="${postUrl == ''}">
+                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"></th:block>
+                        </td>
+                        <td th:if="${postUrl == ''}">
+                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', '', ${staffList}, true,'1')}"></th:block>
+                        </td>
+                        <td th:if="${postUrl == ''}">
+                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '', '', ${rooms}, true,'1')}"></th:block>
+                        </td>
+
+                        <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                         <td>
-                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${iStat.index}+']', '', '', ${reasons}, true,'1')}" th:with="required=false"></th:block>
+                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${pets.size() + iStat.index}+']', '', '', ${reasons}, true,'1')}"
+                                      th:with="required=false"></th:block>
                         </td>
                         <td>
-                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+ ${pets.size() + iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
                                       th:with="required=false"></th:block>
                         </td>
                     </tr>
@@ -58,43 +133,11 @@
                 </tbody>
             </table>
         </fieldset>
-        <details th:if="${deceasedPets.size() > 0}">
-            <summary>
-                [[#{label.otc.pet.deceased.showhide}]]
-            </summary>
-            <fieldset role="group">
-                <table id="show-deceasd-table" class="table-tight" th:if="${deceasedPets.size() > 0}">
-                    <thead>
-                    <tr>
-                        <th>[[#{label.otc.add}]]</th>
-                        <th>[[#{label.otc.petName}]]</th>
-                        <th>[[#{label.otc.reason}]]</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <th:block th:each="pet, iStat : ${deceasedPets}">
-                        <tr>
-                            <td>
-                                <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${pets.size() + iStat.index} + '].checked','','','1')}"></th:block>
-                            </td>
-                            <td><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
-                            <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
-                            <td>
-                                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${pets.size() + iStat.index}+']', '', '', ${reasons}, true,'1')}"
-                                          th:with="required=false"></th:block>
-                            </td>
-                            <td>
-                                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+ ${pets.size() + iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
-                                          th:with="required=false"></th:block>
-                            </td>
-                        </tr>
-                    </th:block>
-                    </tbody>
-                </table>
-            </fieldset>
-        </details>
+    </details>
+    <th:block th:if="${postUrl != ''}">
         <fieldset role="group">
             <input type="submit" form="createForm" th:value="#{label.button.next}"/>
         </fieldset>
-    </form>
+        </form>
+    </th:block>
 </th:block>

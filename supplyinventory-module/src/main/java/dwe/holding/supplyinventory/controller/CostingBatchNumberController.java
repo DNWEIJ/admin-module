@@ -1,5 +1,6 @@
 package dwe.holding.supplyinventory.controller;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.supplyinventory.repository.CostingBatchNumberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ public class CostingBatchNumberController {
 
     @GetMapping("/costing/{costingId}/batchnumbers")
     String getBatchListHtmx(@PathVariable Long costingId, Model model) {
-        model.addAttribute("batchList", costingBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(costingId, 77L, 90L)); // TODO AutorisationUtils
+        model.addAttribute("batchList", costingBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(costingId, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid()));
         return "supplies-module/fragments/costing/batchlist";
     }
 }

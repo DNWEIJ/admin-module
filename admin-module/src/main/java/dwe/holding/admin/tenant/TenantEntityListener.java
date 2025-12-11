@@ -1,5 +1,6 @@
 package dwe.holding.admin.tenant;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class TenantEntityListener {
                     ReflectionUtils.makeAccessible(field);
                     Object current = ReflectionUtils.getField(field, entity);
                     if (current == null) {
-                        ReflectionUtils.setField(field, entity, 77L); // TODO AutorisationUtils.getCurrentUserMid());
+                        ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
                     }
                 });
     }

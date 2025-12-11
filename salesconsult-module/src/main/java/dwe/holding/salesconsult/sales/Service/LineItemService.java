@@ -1,7 +1,9 @@
 package dwe.holding.salesconsult.sales.Service;
 
+import dwe.holding.admin.model.LocalMemberTax;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.customer.client.model.Pet;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
@@ -17,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -26,6 +29,11 @@ public class LineItemService {
     private final LineItemRepository lineItemRepository;
     private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
+
+    @Transactional
+    public List<LineItem> createPricing(Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
+        return getLineItems(0L, costingId, amount, batchNumber, spillageName, 0L);
+    }
 
     @Transactional
     public void createOTC(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
@@ -46,6 +54,14 @@ public class LineItemService {
 
         Visit foundVisit = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get();
 
+        final List<LineItem> toBeSavedLineItems = getLineItems(app.getId(), costingId, amount, batchNumber, spillageName, foundVisit.getPet().getId());
+
+        List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
+        app.getLineItems().addAll(savedLineItems);
+        appointmentRepository.save(app);
+    }
+
+    private List<LineItem> getLineItems(Long  appointmentId, Long costingId, BigDecimal amount, String batchNumber, String spillageName, Long petId) {
         // do we need to add all grouping products?
         List<CostingPriceProjection> priceIncludingPromotions = costingService.getCorrectedPriceAndGroupingForCostingId(costingId);
 
@@ -61,17 +77,17 @@ public class LineItemService {
         List<LineItem> toBeSavedLineItems = new ArrayList<>();
         priceIncludingPromotions.forEach(cpp -> {
             // create the lineitem to save; fill it with the generic and reference stuff
-            LineItem newLineItem = LineItem.builder().appointmentId(
-                            app.getId())
-                    .petId(foundVisit.getPet().getId())
-                    .localMemberId(90L) // TODO: Autorisaton
+            LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
+            LineItem newLineItem = LineItem.builder().appointment(Appointment.builder().id(appointmentId).build())
+                    .pet(Pet.builder().id(petId).build())
+                    .localMemberId(AutorisationUtils.getCurrentUserMlid())
                     .processingFee(cpp.processingFee())
                     .taxForSellExTaxPrice(cpp.taxed())
                     .sellExTaxPrice(cpp.sellExTaxPrice())
                     .categoryId(cpp.lookupCostingCategory().getId())
                     .nomenclature(cpp.nomenclature())
-                    .taxGoodPercentage(new BigDecimal("21.00")) // TODO member
-                    .taxServicePercentage(new BigDecimal("9.00")) // TODO member
+                    .taxGoodPercentage(taxes.getTaxHigh())
+                    .taxServicePercentage(taxes.getTaxLow())
                     // calculations
                     .quantity(
                             getQuantity(amount, costingGroupList.get(costingId))
@@ -92,9 +108,7 @@ public class LineItemService {
             }
             toBeSavedLineItems.add(savedLineItem);
         });
-        List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
-        app.getLineItems().addAll(savedLineItems);
-        appointmentRepository.save(app);
+        return toBeSavedLineItems;
     }
 
     private BigDecimal getQuantity(BigDecimal amount, BigDecimal groupQuantity) {
@@ -106,5 +120,9 @@ public class LineItemService {
 
     public void delete(@NotNull Long lineItemId) {
         lineItemRepository.deleteById(lineItemId);
+    }
+
+    public List<LineItem> getLineItemsForPet(Long petId) {
+        return lineItemRepository.findByPet_IdAndMemberId(petId, AutorisationUtils.getCurrentUserMid());
     }
 }

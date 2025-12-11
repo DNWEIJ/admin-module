@@ -1,0 +1,63 @@
+package dwe.holding.salesconsult.sales.controller.price;
+
+import dwe.holding.salesconsult.sales.Service.LineItemService;
+import dwe.holding.salesconsult.sales.controller.SalesType;
+import dwe.holding.salesconsult.sales.model.LineItem;
+import dwe.holding.supplyinventory.expose.CostingService;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@RequestMapping("/sales")
+@Controller
+@AllArgsConstructor
+@SessionAttributes("lineItems")
+public class PriceSellController {
+    private final LineItemService lineItemService;
+    private final CostingService costingService;
+
+    @ModelAttribute("lineItems")
+    public List<LineItem> lineItems() {
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/price/sell")
+    String setupProductSell_InitialCall(Model model, @ModelAttribute("lineItems") List<LineItem> lineItems) {
+        model
+                .addAttribute("salesType", SalesType.PRICE_INFO)
+                .addAttribute("lineItems", lineItems);
+
+        return "sales-module/generic/productpage";
+    }
+
+    @PostMapping("/price/sell")
+    String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingAmount, String inputBatchNumber, String spillageName,
+                                          @ModelAttribute(value = "lineItems") List<LineItem> lineItems, Model model) {
+
+        lineItems.addAll(lineItemService.createPricing(inputCostingId, inputCostingAmount, inputBatchNumber, spillageName));
+
+        if (!lineItems.isEmpty()) {
+            model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
+        }
+        model
+                .addAttribute("salesType", SalesType.PRICE_INFO)
+                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("url", "/sales/price/sell/")
+                .addAttribute("allLineItems", lineItems);
+
+        return "sales-module/fragments/htmx/lineitemsoverview";
+    }
+
+    @DeleteMapping("/price/sell/{lineItemId}")
+    String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
+
+        model.addAttribute("lineItems", lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
+        return "redirect:/sales/price/sell/";
+    }
+}

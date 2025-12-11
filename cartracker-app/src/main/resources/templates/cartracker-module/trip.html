@@ -40,15 +40,12 @@
             </fieldset>
 
             <fieldset>
-
-                <label for="litersStr">Getankt?</label>
-                <input name="petrol" type="checkbox" role="switch"/>
+                <label for="petrol">Getankt?</label>
+                <input id="petrol" name="petrol" type="checkbox" role="switch" onchange="changeLitersRequired()"/>
             </fieldset>
             <fieldset>
-                <input name="litersStr" id="litersStr" type="number" placeholder="Liters"
-                        pattern="[09]*" aria-label="liters" min="0" />
-                <input name="AmountStr" id="amountStr" type="number" placeholder="amount (no '.' or ',')"
-                        pattern="[09]*" aria-label="amount" min="0" />
+                <input name="litersStr" id="litersStr" type="number" placeholder="Liters"  aria-label="liters" min="0" step="1"/>
+                <input name="AmountStr" id="amountStr" type="number" placeholder="amount (no '.' or ',')"  aria-label="amount" min="0" step="1"/>
 
             </fieldset>
             <fieldset>
@@ -65,9 +62,14 @@
 
             totalOfCar = parseInt(document.querySelector('input[name="carType"]:checked').nextElementSibling.innerHTML);
             kmsDriven = totalKmsDriven - totalOfCar
-            document.getElementById("km").setAttribute('value', (kmsDriven));
+            document.getElementById("km").value = kmsDriven;
             // set amount
             document.getElementById("bedrag").setAttribute('value', ("€ " + (kmsDriven * .10).toLocaleString()));
+        }
+
+        function changeLitersRequired() {
+            document.getElementById("petrol").onchange =
+                () => document.getElementById("litersStr").required = document.getElementById("petrol").checked;
         }
     </script>
 </section>

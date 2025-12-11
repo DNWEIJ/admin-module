@@ -3,7 +3,9 @@ package dwe.holding.admin.model;
 import dwe.holding.admin.model.base.BaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -17,7 +19,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Getter
 public class LocalMemberTax extends BaseBO {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

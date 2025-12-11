@@ -5,7 +5,9 @@
 <body>
 <section layout:fragment="content">
     <div class="overflow-auto">
+        <fieldset role="group" class="grid">
         <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
+        </fieldset>
         <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets}, ${'/sales/otc/search/' + customer.id}, true)}"></th:block>
     </div>
 </section>

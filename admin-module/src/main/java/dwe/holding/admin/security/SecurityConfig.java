@@ -2,6 +2,7 @@ package dwe.holding.admin.security;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -36,25 +37,28 @@ public class SecurityConfig {
     @Autowired
     private TenantAuthenticationProvider customAuthenticationProvider;
 
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, AdminAuthorizationManager adminAuthorizationManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, AdminAuthorizationManager adminAuthorizationManager) {
 
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
         authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/admin/login"));
-        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/admin/index"));
-        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler("/admin/login?error=true"));
+        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(contextPath + "/admin/index"));
+        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler(contextPath + "/admin/login?error=true"));
 
         HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
 
         RequestMatcher publicEndpoints = request -> {
             String req = request.getRequestURI();
-            return req.startsWith("/admin/login") ||
-                    req.startsWith("/admin/logout") ||
-                    req.startsWith("/admin/error") ||
-                    req.startsWith("/lib/") ||
-                    req.startsWith("/images/");
+            return req.startsWith(contextPath + "/admin/login") ||
+                    req.startsWith(contextPath + "/admin/logout") ||
+                    req.startsWith(contextPath + "/admin/error") ||
+                    req.startsWith(contextPath + "/lib/") ||
+                    req.startsWith(contextPath + "/images/");
         };
 
         // Composite AuthorizationManager
@@ -63,7 +67,7 @@ public class SecurityConfig {
                     if (publicEndpoints.matches(context.getRequest())) {
                         return new AuthorizationDecision(true); // permitAll
                     }
-                    return adminAuthorizationManager.check(authenticationSupplier, context);
+                    return adminAuthorizationManager.authorize(authenticationSupplier, context);
                 };
 
         http
@@ -75,9 +79,13 @@ public class SecurityConfig {
                         .anyRequest().access(compositeAuthManager)
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login"))
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
+//                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login?error=true"))
+                                .authenticationEntryPoint((req, resp, authException) -> {
+                                    resp.sendRedirect(contextPath + "/admin/login?error=true");
+                                })
+                                .accessDeniedHandler((req, res, e) -> res.sendRedirect(contextPath + "/admin/login")) // authenticated but forbidden
                 )
+
                 // required to persist the security context between requests
                 .securityContext(securityContext ->
                         securityContext

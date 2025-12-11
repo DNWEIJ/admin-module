@@ -1,7 +1,5 @@
 package dwe.holding.teammover.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dwe.holding.admin.authorisation.member.LocalMemberRepository;
 import dwe.holding.admin.expose.UserPreferencesService;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -12,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Comparator;
 
@@ -31,7 +30,7 @@ public class TeamMoverUserPrefController {
     }
 
     @GetMapping("/userpreferences")
-    String loadUserPreferences(Model model) throws JsonProcessingException {
+    String loadUserPreferences(Model model)  {
         model.addAttribute("localMembersList",
                 localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentUserMid())
                         .stream().map(
@@ -45,10 +44,10 @@ public class TeamMoverUserPrefController {
     }
 
     @PostMapping("/userpreferences")
-    String localMember(SettingsForm form) throws JsonProcessingException {
+    String localMember(SettingsForm form) {
         form.userPreferences.setNrOfTeamMembers(form.userPreferences.getNames().size());
 
-        userPreferencesService.storeAppPreferences(Long.parseLong(form.id), objectMapper.writeValueAsString(form.userPreferences));
+        userPreferencesService.storeAppPreferences(objectMapper.writeValueAsString(form.userPreferences));
         return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 

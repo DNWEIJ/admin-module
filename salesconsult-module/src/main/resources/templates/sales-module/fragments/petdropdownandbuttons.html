@@ -1,19 +1,21 @@
 <th:block th:fragment="petDropDownAndButtons(petsOnVisit, selectedPet, customer,appointment, extraContent)">
     <div>
         <form method="post">
+            <input th:id="csrfParameterName" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selectPetId','', 'selectedPet.id', ${petsOnVisit}, true,'900')}"></th:block>
         </form>
     </div>
     <div>
-
-        <input type="button" name="addPet" th:value="#{label.otc.sell.add.pet}"
+        <input type="button"  th:value="#{label.otc.sell.add.pet}"
                th:hx-get="'/sales/otc/search/'+ ${customer.id}+'/sell/'+ ${appointment.id}+'/addpet'"
                hx-target="#modal-container"
                hx-swap="innerHTML"
                hx-on::after-request="addEventListenersForPetSelect()"/>
     </div>
     <div>
-        <input type="button" name="_deletePet" th:value="#{label.otc.sell.delete}"
+        <input type="button" th:value="#{label.otc.sell.delete}"
+               hx-include="#csrfParameterName"
+               th:hx-confirm="#{label.otc.pet.delete.confirm}"
                th:hx-delete="'/sales/otc/search/'+ ${customer.id}+'/sell/'+ ${appointment.id}+'/' + ${selectedPet.id}"> <!-- returning hx-refresh header -->
     </div>
         <th:block th:replace="${extraContent}"></th:block>

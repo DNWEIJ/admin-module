@@ -10,7 +10,8 @@ import org.hibernate.annotations.Cascade;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "CUSTOMER_LOOKUP_SPECIES")
+@Table(name = "CUSTOMER_LOOKUP_SPECIES")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

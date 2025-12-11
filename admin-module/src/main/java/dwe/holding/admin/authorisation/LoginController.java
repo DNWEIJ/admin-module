@@ -26,10 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LoginController {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final UserRepository userRepository;
+    private final UserRepository localMemberRepository;
 
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginController(UserRepository localMemberRepository) {
+        this.localMemberRepository = localMemberRepository;
     }
 
     @GetMapping("/login")
@@ -44,7 +44,7 @@ public class LoginController {
             return "redirect:/admin/resetpassword";
         }
 
-        if (AutorisationUtils.isLocalMemberRequired() && AutorisationUtils.getCurrentUserMlid() == null) {
+        if (AutorisationUtils.isLocalMemberRequired() && (AutorisationUtils.getCurrentUserMlid() == 0 || AutorisationUtils.getCurrentUserMlid() == null)) {
             return "redirect:/" + AutorisationUtils.getCurrentMember().getApplicationName().toLowerCase() + "/userpreferences";
         }
         return AutorisationUtils.getCurrentMember().getApplicationRedirect();
@@ -63,10 +63,10 @@ public class LoginController {
             model.addAttribute("error", "not correct");
             return "/admin-module/resetpassword";
         } else {
-            User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).get();
+            User user = localMemberRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
             user.setPassword(passwordEncoder.encode(form.password));
             user.setChangePassword(false);
-            User savedUser = userRepository.save(user);
+            User savedUser = localMemberRepository.save(user);
             AutorisationUtils.setCurrentUser(savedUser);
             return "redirect:/admin/index";
         }

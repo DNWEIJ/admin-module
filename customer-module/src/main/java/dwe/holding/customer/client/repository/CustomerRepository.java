@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
@@ -36,7 +37,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     List<Customer> findByHomePhoneOrWorkPhoneContainingOrMobilePhoneContainingAndMemberIdOrderByLastNameAscFirstNameAsc(String homePhone, String workPhone, String mobilePhone, Long currentUserMid);
 
-    Customer findByIdAndMemberId(Long customerId, Long memberId);
+    Optional<Customer> findByIdAndMemberId(Long customerId, Long memberId);
 
     Customer findByPets_IdAndMemberId(Long patientId, long l);
 

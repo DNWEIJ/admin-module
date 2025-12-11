@@ -1,40 +1,53 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Functie lijst</title>
+    <title th:text="#{userpreferences.userpref}"></title>
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Function','/admin/function')}"></th:block>
-
-    <table id="show-table">
-        <thead>
-        <tr>
-            <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="function : ${functions}">
-            <tr>
-                <td><a th:href="@{'/admin/function/'+ ${function.id}}">[[${function.name}]]</a></td>
-            </tr>
-        </th:block>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td></td>
-        </tr>
-        </tfoot>
-    </table>
-    <script>
-        var table = new Tabulator("#show-table",
-            {
-                columns: [
-                    {title: "Name",  formatter: "html", sorter: function (a, b) {
-                            var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
-                            var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
-                            return textA.localeCompare(textB);
-                        }
-                    }]
-            });
-    </script>
+    <form action="/vmas/userpreferences" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <fieldset>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', 'user.localMemberId', ${localMembersList}, true,'1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','userpreferences.language', 'user.language', ${languageList}, true,'2')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('userPreferences.agendaVet1','userpreferences.agendavet1', 'userPreferences.agendaVet1', ${staffList}, true,'3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('userPreferences.agendaVet2','userpreferences.agendavet2', 'userPreferences.agendaVet2', ${staffList}, true,'4')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('userPreferences.agendaVet3','userpreferences.agendavet3', 'userPreferences.agendaVet3', ${staffList}, true,'5')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <legend th:text="#{userPreferences.customer}"></legend>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.searchCustStart','userpreferences.searchcuststart','userPreferences.searchCustStart', ${ynvaluesList}, true,'6')}"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.searchCustStreet','userpreferences.searchcuststreet','userPreferences.searchCustStreet', ${ynvaluesList}, true,'7')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <legend th:text="#{userPreferences.visit}"></legend>
+            <div>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitAppointmentList','userpreferences.visitappointmentlist', 'userPreferences.visitAppointmentList', ${ynvaluesList}, true,'8')}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitTotalVisit','userpreferences.visittotalvisit', 'userPreferences.visitTotalVisit', ${ynvaluesList}, true,'10')}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitAppointmentInfo','userpreferences.visitappointmentinfo', 'userPreferences.visitAppointmentInfo', ${ynvaluesList}, true,'12')}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitVisitInfo','userpreferences.visitvisitinfo', 'userPreferences.visitVisitInfo', ${ynvaluesList}, true,'14')}"></th:block>
+            </div>
+            <div>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitAnalyseInfo','userpreferences.visitanalyseinfo', 'userPreferences.visitAnalyseInfo', ${ynvaluesList}, true,'9')}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitComments','userpreferences.visitcomments', 'userPreferences.visitComments', ${ynvaluesList}, true,'11')}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitProducts','userpreferences.visitproducts', 'userPreferences.visitProducts', ${ynvaluesList}, true,'13')}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitDiagnoses','userpreferences.visitdiagnoses', 'userPreferences.visitDiagnoses', ${ynvaluesList}, true,'15')}"></th:block>
+            </div>
+        </fieldset>
+        <fieldset role="group">
+            <a role="button" class='secondary' href="/admin/resetpassword" th:text="#{userPreferences.resetpassword}"></a>
+            <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
+        </fieldset>
+    </form>
 </section>

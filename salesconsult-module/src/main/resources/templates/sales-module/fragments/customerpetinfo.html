@@ -38,26 +38,22 @@
                     <div class="center" th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' ('+ ${pet.age}+')'"></div>
                 </th:block>
             </th:block>
+
             <th:block th:if="${pet != null}">
-                <table class="table-tight">
-                    <tr class="center">
-                        <td>I:</td>
-                        <td th:text="#{__${pet.insured.label}__}"></td>
-                        <td th:text="(${pet.insuredBy}?: '')"></td>
-                    </tr>
-                    <tr class="center" th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''">
-                        <td>D:</td>
-                        <td th:text="#{__${pet.gpwarning.label}__}"></td>
-                        <td th:text="(${pet.gpwarningDescription}?: '')"></td>
-                    </tr>
-                    <tr class="center" th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''">
-                        <td>A:</td>
-                        <td th:text="#{__${pet.allergies.label}__}"></td>
-                        <td th:text="(${pet.allergiesDescription}?: '')"></td>
-                    </tr>
-                </table>
+                <div class="center"
+                     th:classappend="${pet.insured.label == 'label.yesno.yes'} ? ' red-text' : ''"
+                     th:text="'I: ' + #{__${pet.insured.label}__}+ (${pet.insuredBy} != null ? ' (' + ${pet.insuredBy} + ')' : '')">
+                </div>
+
+                <div class="center"
+                     th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''"
+                     th:text="'D: '+ #{__${pet.gpwarning.label}__} + (${pet.gpwarningDescription} != null ? ' (' + ${pet.gpwarningDescription} + ')' : '')">
+                </div>
+                <div class="center"
+                     th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''"
+                     th:text="'A: '+ #{__${pet.allergies.label}__} + (${pet.allergiesDescription} != null ? ' (' + ${pet.allergiesDescription} + ')' : '')">
+                </div>
             </th:block>
-            </table>
         </div>
     </div>
 </th:block>

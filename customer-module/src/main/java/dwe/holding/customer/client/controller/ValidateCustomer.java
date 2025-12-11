@@ -16,18 +16,11 @@ public class ValidateCustomer {
     public boolean isInvalid(Long customerId, RedirectAttributes redirect) {
         Customer customer = customerRepository.findById(customerId).orElseThrow();
 
-        if (
-                // todo un comment
-//                customer.getId().equals(
-        //        ((CustomerInformationHolder.CustomerInfo) AutorisationUtils.getInfoObject().getInformation()).customerId())
-  //              &&
-                (customer.getMemberId().equals(77L))  // TODO autorisationUtils.
-        ) {
+        if (customer.getMemberId().equals(AutorisationUtils.getCurrentUserMid())) {
             return false;
         } else {
             // error -> invalid
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
-            AutorisationUtils.setInfoObject(null);
             return true;
         }
     }

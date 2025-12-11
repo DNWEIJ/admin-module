@@ -1,0 +1,16 @@
+<th:block th:fragment="dateTimeLocationSelect()">
+    <fieldset role="group" class="grid">
+        <legend>[[#{label.visit.details}]]</legend>
+        <div class="lower">
+            <div class="field">
+                <input id="appointment.visitDateTime" name="appointment.visitDateTime" required tabindex="1" type="datetime-local" autocomplete="off"
+                       th:value="${#temporals.format(appointment.visitDateTime, 'yyyy-MM-dd''T''HH:mm')}">
+                <label th:for="appointment.visitDateTime" th:utext="#{visit.header.visitDate}"></label>
+            </div>
+        </div>
+        <div>
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('appointment.localMemberId','userpreferences.clinic', 'appointment.localMemberId', ${localMembersList}, true,'1')}"
+                  th:with="dataOnchange='this.form.submit();'"></th:block>
+        </div>
+    </fieldset>
+</th:block>

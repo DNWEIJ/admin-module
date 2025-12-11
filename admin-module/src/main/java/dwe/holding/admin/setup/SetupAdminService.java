@@ -7,16 +7,12 @@ import dwe.holding.admin.authorisation.function_role.UserRoleRepository;
 import dwe.holding.admin.authorisation.member.MemberRepository;
 import dwe.holding.admin.authorisation.user.UserRepository;
 import dwe.holding.admin.model.*;
-import dwe.holding.admin.model.type.LanguagePrefEnum;
-import dwe.holding.admin.model.type.PersonnelStatusEnum;
-import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -26,15 +22,15 @@ public class SetupAdminService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final UserRepository userRepository;
+    private final UserRepository localMemberRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public SetupAdminService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupAdminService(MemberRepository memberRepository, UserRepository localMemberRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
-        this.userRepository = userRepository;
+        this.localMemberRepository = localMemberRepository;
         this.functionRepository = functionRepository;
         this.roleRepository = roleRepository;
         this.functionRoleRepository = functionRoleRepository;
@@ -43,8 +39,7 @@ public class SetupAdminService {
 
     @Transactional
     public   Long init() {
-        if (functionRepository.findAll().isEmpty()) {
-//        if (memberRepository.findAll().isEmpty()) {
+        if (functionRepository.findAll().isEmpty() || memberRepository.findAll().isEmpty()) {
 //            log.info("MigrationAdminService:: member");
 //            String password = passwordEncoder.encode("pas!");
 //
@@ -109,6 +104,7 @@ public class SetupAdminService {
                             Function.builder().name("INDEX_READ").build(),
                             Function.builder().name("SETLOCALMEMBER_READ").build(),
                             Function.builder().name("LOGOUT_READ").build(),
+                            Function.builder().name("ERROR_READ").build(),
 
                             Function.builder().name("USERPREFERENCES_CREATE").build(),
                             Function.builder().name("RESETPASSWORD_CREATE").build(),
@@ -152,7 +148,7 @@ public class SetupAdminService {
                             .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleDefault).build())
                             .toList()
             );
-            User user = userRepository.findByAccount("daniel").stream().filter(usr -> usr.getMember().getId().equals(77L)).findFirst().get();
+            User user = localMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMember().getId().equals(77L)).findFirst().get();
             log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
             userRoleRepository.saveAllAndFlush(
                     List.of(

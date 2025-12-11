@@ -2,7 +2,6 @@ package dwe.holding.customer.client.controller;
 
 
 import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.customer.CustomerInformationHolder;
 import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
@@ -38,8 +37,6 @@ public class CustomerController {
     String newRecord(Model model) {
         model.addAttribute("form", new CustomerForm(true, false, false, false));
         model.addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
-        // TODO: Activate!!
-        AutorisationUtils.setInfoObject(null);
         setModel(model);
         return "customer-module/customer/action";
     }
@@ -54,9 +51,7 @@ public class CustomerController {
         Customer customer = customerRepository.findById(id).get();
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
-
-        AutorisationUtils.setInfoObject(new CustomerInformationHolder(new CustomerInformationHolder.CustomerInfo(customer.getCustomerNameWithId(), customer.getId())));
-        return "customer-module/customer/action";
+         return "customer-module/customer/action";
     }
 
     @PostMapping("/customer")
@@ -66,6 +61,7 @@ public class CustomerController {
             return "redirect:/customer/customer";
         }
 
+        // TODO add if postcode lastname exists already
         if (customerForm.isNew()) {
             Customer savedCustomer = customerRepository.save(
                     Customer.builder()
@@ -89,7 +85,7 @@ public class CustomerController {
             return "redirect:/customer/customer/" + savedCustomer.getId();
         } else {
             Customer customer = customerRepository.findById(customerForm.getId()).get();
-            if (!customer.getMemberId().equals(77L)) { // TODO autorisationUtils.
+            if (!customer.getMemberId().equals(AutorisationUtils.getCurrentUserMid())) {
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");
                 return "redirect:/customer/customer";
             }
@@ -99,7 +95,7 @@ public class CustomerController {
         }
     }
 
-    @PostMapping("/search/customer")
+    @GetMapping("/search/customer")
     /**
      * Search for a customer via htmx:
      *   SearchCriteria can start with an I/i to indicate a search on Id.
@@ -132,34 +128,34 @@ public class CustomerController {
         Pattern pattern = Pattern.compile(escapedSearch, Pattern.CASE_INSENSITIVE);
 
         if (startLastName) {
-            listCustomers.addAll(customerRepository.getCustomerStartLastName(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+            listCustomers.addAll(customerRepository.getCustomerStartLastName(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         } else {
-            listCustomers.addAll(customerRepository.getCustomerSomewhereLastName(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+            listCustomers.addAll(customerRepository.getCustomerSomewhereLastName(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         }
         if (includeStreetName) {
-            listCustomers.addAll(customerRepository.findByAddressLineContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+            listCustomers.addAll(customerRepository.findByAddressLineContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         }
         if (includeFirstTel) {
-            listCustomers.addAll(customerRepository.findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+            listCustomers.addAll(customerRepository.findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f, pattern)
                     ).toList()
             );
         }
         if (includePet) {
-            listCustomers.addAll(customerRepository.findByPet(searchCriteria, 77L) // AutorisationUtils.getCurrentUserMid())
+            listCustomers.addAll(customerRepository.findByPet(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
                             f -> getOption(f.customer(), pattern, f.pet())
                     ).toList()
@@ -203,11 +199,11 @@ public class CustomerController {
         if (pet == null) {
             return "";
         } else {
-        return " - "
-             + pet.getNameWithDeceased()
-             + (pet.getChipTattooId() != null && !pet.getChipTattooId().isEmpty() ?  " - " + pet.getChipTattooId() : "")
-             + (pet.getPassportNumber() != null && !pet.getPassportNumber().isEmpty() ?  " - " + pet.getPassportNumber() : "")
-                ;
+            return " - "
+                    + pet.getNameWithDeceased()
+                    + (pet.getChipTattooId() != null && !pet.getChipTattooId().isEmpty() ? " - " + pet.getChipTattooId() : "")
+                    + (pet.getPassportNumber() != null && !pet.getPassportNumber().isEmpty() ? " - " + pet.getPassportNumber() : "")
+                    ;
         }
 
     }

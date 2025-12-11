@@ -1,34 +1,47 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Login</title>
+    <title th:text="#{login.title}"></title>
 </head>
 <body>
 <section layout:fragment="content">
-<main class="container" style="max-width:600px">
-    <article>
-        <header><h2>Please sign in</h2></header>
-        <div th:if="${param.error}">
-            <p style="color:red;">Invalid username, password or short code</p>
-        </div>
-        <div th:unless="${param.error}">
-            <div th:if="${param.notLoggedIn}">
-                <p style="color:red;">You are not logged in yet, please do so...</p>
+    <main class="container" style="max-width:600px">
+        <article>
+            <header><h2 th:text="#{login.signin}"></h2></header>
+            <div th:if="${param.error}">
+                <p id="errorText" style="color:red;" th:text="#{login.invalid}"></p>
             </div>
-        </div>
-        <form method="post" th:action="@{/admin/login}">
-            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-            <fieldset>
-                <input id="id" name="id" th:value="${userId}" type="hidden">
-                <th:block autofocus th:insert="~{fragments/elements/input::inputHtml('username','Username', 'account', '1')}" th:with="required=false"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('password','Password', 'password', '2')}" th:with="type='password', required=false"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('shortCode','Short code', 'shortCode','3ó')}" th:with="required=false"></th:block>
-            </fieldset>
-            <fieldset class="grid" role="group">
-                <button name="_save" type="submit">Sign in</button>
-            </fieldset>
-        </form>
-    </article>
-</main>
+            <p style="color:red; display: none" id="capslock-warning">WARNING! Caps lock is ON.</p>
+            <form method="post" th:action="@{/admin/login}">
+                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                <fieldset>
+                    <input id="id" name="id" th:value="${userId}" type="hidden">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('username', 'login.username', 'account', '1')}" th:with="required=false"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('password', 'login.password', 'password', '2')}" th:with="type='password', required=false"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','login.shortcode', 'shortCode','3')}" th:with="required=false"></th:block>
+                </fieldset>
+                <fieldset class="grid" role="group">
+                    <button name="_save" type="submit" th:text="#{login.button.signin}"></button>
+                </fieldset>
+            </form>
+        </article>
+    </main>
+    <script>
+        // Get the input field
+        var input = document.getElementById("password");
+        // Get the warning text element
+        var text = document.getElementById("capslock-warning");
+
+        // When the user presses any key on the keyboard, run the function
+        input.addEventListener("keyup", function (event) {
+            // If "caps lock" is pressed, display the warning text
+            if (event.getModifierState("CapsLock")) {
+                text.style.display = "block";
+            } else {
+                text.style.display = "none";
+            }
+        });
+
+    </script>
 </section>
 </body>
 </html>

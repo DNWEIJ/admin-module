@@ -11,5 +11,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
     List<User> findByAccount(String account);
 
+    // todo: NO OTHER JUST VETS AND ASSISTANCES
     List<User> findByMember_idAndLoginEnabled(Long memberId, YesNoEnum enabled);
 }

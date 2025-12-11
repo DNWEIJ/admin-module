@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity(name = "CUSTOMER_LOOKUP_BREEDS")
+@Table(name = "CUSTOMER_LOOKUP_BREEDS")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

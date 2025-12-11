@@ -3,6 +3,7 @@ package dwe.holding.supplyinventory.model;
 import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 
-@Entity(name = "SUPPLY_LOOKUP_COSTING_CATEGORY")
+@Table(name = "SUPPLY_LOOKUP_COSTING_CATEGORY")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

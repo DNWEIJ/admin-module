@@ -1,5 +1,6 @@
-package dwe.holding.salesconsult.sales.controller;
+package dwe.holding.salesconsult.sales.controller.otc;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.controller.CustomerController;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
@@ -9,6 +10,7 @@ import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.InvoiceStatusEnum;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
+import dwe.holding.salesconsult.sales.controller.PetsForm;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
@@ -77,7 +79,7 @@ public class OTCSelectController {
                 .pickedUp(YesNoEnum.No)
                 .completed(YesNoEnum.No)
                 .visitDateTime(LocalDateTime.now())
-                .localMemberId(1L) // TODO AutorisationUtils.getCurrentUserMlid())
+                .localMemberId(AutorisationUtils.getCurrentUserMlid())
                 .build();
         appointment.setVisits(
                 pets.stream().map(formPet ->
@@ -87,7 +89,7 @@ public class OTCSelectController {
                                 .room("")
                                 .purpose(formPet.getPurpose() == null ? "" : formPet.getPurpose())
                                 .estimatedTimeInMinutes(5)
-                                .veterinarian("user") // AutorisationUtils.getCurrentUserAccount())
+                                .veterinarian(AutorisationUtils.getCurrentUserAccount())
                                 .status(VisitStatusEnum.WAITING)
                                 .sentToInsurance(YesNoEnum.No)
                                 .invoiceStatus(InvoiceStatusEnum.NEW)

@@ -1,5 +1,6 @@
 package dwe.holding.customer.lookup.controller;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.lookup.LookupPurpose;
 import dwe.holding.customer.lookup.repository.LookupPurposeRepository;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,7 @@ public class LookupPurposeController {
 
     @GetMapping("lookup/purposes")
     String list(Model model) {
-        model.addAttribute("purposes", lookupPurposeRepository.getByMemberIdOrderByDefinedPurpose(77L)); // todo replace with
+        model.addAttribute("purposes", lookupPurposeRepository.getByMemberIdOrderByDefinedPurpose(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "purpose");
         return "customer-module/lookup/purposes/list";
     }
@@ -39,9 +40,8 @@ public class LookupPurposeController {
     @GetMapping("lookup/purpose/{notePurposeId}")
     String editRecord(@PathVariable Long notePurposeId, Model model) {
         LookupPurpose notePurposes = lookupPurposeRepository.findById(notePurposeId).orElseThrow();
-        model.addAttribute("purpose", notePurposes.getMemberId().equals(77L) ? notePurposes : new LookupPurpose());
+        model.addAttribute("purpose", notePurposes.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? notePurposes : new LookupPurpose());
         model.addAttribute("activeMenu", "purpose");
-        ; //AutorisationUtils.getCurrentUserMid()
         return "customer-module/lookup/purposes/action";
     }
 
@@ -57,7 +57,7 @@ public class LookupPurposeController {
             );
         } else {
             LookupPurpose notePurpose = lookupPurposeRepository.findById(formNotePurpose.getId()).orElseThrow();
-            if (notePurpose.getMemberId().equals(77L) ) { // TODO AutorisationUtils.getCurrentUserMid())) {
+            if (notePurpose.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ) {
                 notePurpose.setDefinedPurpose(formNotePurpose.getDefinedPurpose());
                 notePurpose.setTimeInMinutes(formNotePurpose.getTimeInMinutes());
                 lookupPurposeRepository.save(notePurpose);

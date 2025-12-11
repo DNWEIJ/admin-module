@@ -10,9 +10,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Table(name = "CONSULT_APPOINTMENT")
@@ -49,7 +47,7 @@ public class Appointment extends TenantBaseBO {
     @Builder.Default
     private Set<Visit> visits = new HashSet<>(0);
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "appointmentId")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "appointment")
     @Builder.Default
     private Set<LineItem> lineItems = new HashSet<>(0);
 
@@ -66,12 +64,6 @@ public class Appointment extends TenantBaseBO {
         return pickedUp.equals(YesNoEnum.Yes);
     }
 
-    @Transient
-    public List<LineItem> getLineItems(Long petId) {
-        return lineItems.stream().filter(lineItem -> lineItem.getPetId().equals(petId))
-                .sorted(Comparator.comparing(LineItem::getId))
-                .toList();
-    }
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "unresolved")
 //    @Builder.Default
 //    private Set<Diagnose> diagnoses = new HashSet<>(0);

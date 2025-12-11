@@ -3,6 +3,7 @@ package dwe.holding.supplyinventory.model;
 import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
-@Entity(name = "SUPPLY_COSTING_GROUP")
+@Table(name = "SUPPLY_COSTING_GROUP")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

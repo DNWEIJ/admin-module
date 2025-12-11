@@ -11,7 +11,7 @@
 
     <packaging>jar</packaging>
     <artifactId>cartracker-app</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.12</version>
     <name>cartracker-app</name>
     <description>master pom for car tracker application</description>
 
@@ -72,4 +72,12 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

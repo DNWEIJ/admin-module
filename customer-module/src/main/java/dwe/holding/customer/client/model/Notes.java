@@ -12,7 +12,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@Entity(name = "CUSTOMER_NOTES")
+@Table(name = "CUSTOMER_NOTES")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

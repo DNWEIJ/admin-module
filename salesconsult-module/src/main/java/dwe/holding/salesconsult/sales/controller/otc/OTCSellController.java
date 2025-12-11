@@ -1,11 +1,13 @@
-package dwe.holding.salesconsult.sales.controller;
+package dwe.holding.salesconsult.sales.controller.otc;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
+import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.supplyinventory.expose.CostingService;
@@ -58,7 +60,7 @@ public class OTCSellController {
                 .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && pet.deceased()))
                 .addAttribute("url", "/sales/otc/search/" + customer.id() + "/sell/" + app.getId() + "/" + selectedPet.getId() + "/");
         updateModel(model, petId, app);
-        return "sales-module/otc/productpage";
+        return "sales-module/generic/productpage";
     }
 
     @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
@@ -72,7 +74,7 @@ public class OTCSellController {
             return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
         }
         app.getVisits().removeIf(visit -> visit.getPet().getId().equals(petId));
-        app.getLineItems().removeIf(lineItem -> lineItem.getPetId().equals(petId));
+        app.getLineItems().removeIf(lineItem -> lineItem.getPet().getId().equals(petId));
         appointmentRepository.save(app);
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
@@ -85,9 +87,10 @@ public class OTCSellController {
 
         lineItemService.delete(lineItemId);
 
-        Appointment newApp = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
-        updateModel(model, petId, newApp);
+        Appointment newApp = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+
         model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
+        updateModel(model, petId, newApp);
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
@@ -101,7 +104,7 @@ public class OTCSellController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
         }
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
+        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         lineItemService.createOTC(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
         updateModel(model, petId, app);
         model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
@@ -110,7 +113,7 @@ public class OTCSellController {
 
 
     private Appointment getAndValidateAppointment(Long appointmentId, RedirectAttributes redirect) {
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
+        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (app.isCancelled() || app.iscompleted()) {
             redirect.addFlashAttribute("message", "Appointment is cancelled or completed.");
             return null;
@@ -119,11 +122,13 @@ public class OTCSellController {
     }
 
     private void updateModel(Model model, Long petId, Appointment app) {
-        List<LineItem> lineItems = app.getLineItems(petId);
+        List<LineItem> lineItems = lineItemService.getLineItemsForPet(petId);
         model.addAttribute("allLineItems", lineItems);
         if (!lineItems.isEmpty()) {
             model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
         }
-        model.addAttribute("categoryNames", costingService.getCategories());
+        model.addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("salesType", SalesType.OTC);
+
     }
 }

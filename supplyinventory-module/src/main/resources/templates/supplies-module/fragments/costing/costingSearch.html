@@ -1,7 +1,8 @@
 <th:block th:fragment="costingSearch(saveButton)">
     <script th:inline="javascript">
-        const selectedPetId = /*[[${selectedPet.id}]]*/ 0;
+        const messageNoCostingSelected = /*[[#{label.costing.search.nocostingselected}]]*/ "";
     </script>
+
     <script>
         let baseUrl
         let selectedIndex = -1
@@ -37,13 +38,13 @@
                 } else {
                     selectedField = Array.from(getAllItems()).filter(li => li.classList.contains("selected"))[0]
                     if (selectedField === undefined) {
-                        alert("select a costing")
+                        alert(messageNoCostingSelected)
                         return
                     } else {
                         selectedFieldDataSet = selectedField.dataset
                     }
                 }
-                // we already setting the url, since we will loose the selected field test on hx-get being set instead
+                // we're already setting the url, since we will lose the selected field test on hx-get being set instead
                 let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
                 costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedFieldDataSet.id + '/batchnumbers')
 
@@ -238,7 +239,7 @@
 
     <form id="costingSearchForm" hx-post="" hx-swap="none">
         <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
-
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <fieldset>
             <div class="gridSearchCostingWithCheck">
                 <!--                    <svg width="36px" height="36px" align="center">-->

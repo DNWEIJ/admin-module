@@ -27,9 +27,9 @@ public class SetupSuppliesService {
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
-    private final UserRepository userRepository;
+    private final UserRepository localMemberRepository;
 
-    public SetupSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, UserRepository userRepository) {
+    public SetupSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, UserRepository localMemberRepository) {
         this.suppliesRepository = suppliesRepository;
         this.memberRepository = memberRepository;
         this.distributorRepository = distributorRepository;
@@ -37,7 +37,7 @@ public class SetupSuppliesService {
         this.roleRepository = roleRepository;
         this.functionRoleRepository = functionRoleRepository;
         this.userRoleRepository = userRoleRepository;
-        this.userRepository = userRepository;
+        this.localMemberRepository = localMemberRepository;
     }
 
     @Transactional
@@ -71,7 +71,7 @@ public class SetupSuppliesService {
                             .toList()
             );
 
-            User user = userRepository.findByAccount("daniel").stream().filter(u -> u.getMember().getId().equals(memberId)).findFirst().orElseThrow();
+            User user = localMemberRepository.findByAccount("daniel").stream().filter(u -> u.getMember().getId().equals(memberId)).findFirst().orElseThrow();
             userRoleRepository.saveAllAndFlush(
                     List.of(
                             UserRole.builder().role(roleSupplies).user(user).build()

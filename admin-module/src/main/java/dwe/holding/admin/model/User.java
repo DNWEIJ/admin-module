@@ -63,8 +63,10 @@ public class User extends BaseBO {
     @JoinColumn(nullable = false)
     @Builder.Default
     private Member member = new Member();
-
     private   Long memberLocalId;
+
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private MetaUserPreferences metaUserPreferences;
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")

@@ -1,5 +1,6 @@
 package dwe.holding.salesconsult.sales.controller;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.controller.ValidateCustomer;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.salesconsult.sales.model.Payment;
@@ -36,14 +37,10 @@ public class PaymentController {
     @PostMapping("/customer/{customerId}/payment")
     String newRecord(@PathVariable Long customerId, Payment paymentForm, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-//     TODO when AutorisationUtls is working
-//        if (!customerId.equals(AutorisationUtils.getCustomerinfo().customerId())) {
-//            return "redirect:/customer";
-//  todo  add message       }
 
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (paymentForm.isNew()) {
-            Customer customer = customerRepository.findById(customerId).get();
-            if (!customer.getMemberId().equals(77L)) { // TODO autorisationUtils.
+            if (!customer.getMemberId().equals(AutorisationUtils.getCurrentUserMid())) {
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");
                 return "redirect:/customer/customer";
             }
@@ -58,21 +55,16 @@ public class PaymentController {
                             .customer(customer)
                             .build()
             );
-            // TODO fix payment
-          //  customer.getPayments().add(savedPayment);
             customerRepository.save(customer);
             redirect.addFlashAttribute("message","label.saved" );
             return "redirect:/customer/customer/" + customer.getId() + "/payments";
         } else {
-            Payment payment = paymentRepository.findById(paymentForm.getId()).get();
-//            if ( // validate
-//                    !payment.getCustomer().getId().equals(
-//                            ((CustomerInformation) AutorisationUtils.getCustomerinfo().getInformation()).customerId())
-//                            || !payment.getMemberId().equals(AutorisationUtils.getCurrentUserMid())
-//            ) {
-//                redirect.addFlashAttribute("message", "Something went wrong. Please try again");
-//                return "redirect:/customer/" + ((CustomerInformation) AutorisationUtils.getCustomerinfo().getInformation()).customerId() + "/payments";
-//            }
+            Payment payment = paymentRepository.findById(paymentForm.getId()).orElseThrow();
+            if ( !payment.getCustomer().getId().equals(customer.getId()) ) {
+                log.error("Staff {} tried to edit payment {} (customer {}) of another customer {}", AutorisationUtils.getCurrentUserAccount(), payment.getId(),payment.getCustomer().getId(), customer.getId());
+                redirect.addFlashAttribute("message", "Something went wrong. Please try again");
+                return "redirect:/vmas/index";
+            }
             payment.setPaymentDate(paymentForm.getPaymentDate());
             payment.setMethod(paymentForm.getMethod());
             payment.setAmount(paymentForm.getAmount());

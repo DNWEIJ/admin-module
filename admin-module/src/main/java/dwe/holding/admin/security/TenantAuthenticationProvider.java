@@ -3,10 +3,8 @@ package dwe.holding.admin.security;
 import dwe.holding.admin.authorisation.function_role.FunctionQueryCriteria;
 import dwe.holding.admin.model.Function;
 import dwe.holding.admin.model.IPSecurity;
-import dwe.holding.admin.model.MetaUserPreferences;
 import dwe.holding.admin.model.User;
-import dwe.holding.admin.preferences.MetaUserPreferencesRepository;
-import dwe.holding.admin.transactional.TranactionalUser;
+import dwe.holding.admin.transactional.TransactionalUser;
 import dwe.holding.shared.model.type.YesNoEnum;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +23,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
@@ -33,13 +30,11 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final FunctionQueryCriteria functionQueryCriteria;
-    private final MetaUserPreferencesRepository metaUserPreferencesRepository;
-    private final TranactionalUser tranactionalUser;
+    private final TransactionalUser transactionalUser;
 
-    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, MetaUserPreferencesRepository metaUserPreferencesRepository, TranactionalUser tranactionalUser) {
+    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, TransactionalUser transactionalUser) {
         this.functionQueryCriteria = functionQueryCriteria;
-        this.metaUserPreferencesRepository = metaUserPreferencesRepository;
-        this.tranactionalUser = tranactionalUser;
+        this.transactionalUser = transactionalUser;
     }
 
     enum PasswordState {
@@ -55,7 +50,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         }
 
         if (!passwordEncoder.matches(inputPassword, dbPassword)) {
-            // maybe we have an old md5, if so change to new bcrypt
+            // maybe we have an old md5, if so, change to new bcrypt
             if (LegacyMd5Encoder.matches(inputPassword, dbPassword)) {
                 return PasswordState.succesAndUpdate;
             } else {
@@ -78,7 +73,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        List<User> users = tranactionalUser.getByAccount(usernameAndShortCode[0]);
+        List<User> users = transactionalUser.getByAccount(usernameAndShortCode[0]);
 
         if (users.isEmpty()) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
@@ -90,7 +85,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        User user = tranactionalUser.getByIdLazy_RolesAndIpNumbers(usersList.getFirst().getId());
+        User user = transactionalUser.getByIdLazy_LoadingAllData(usersList.getFirst().getId());
 
         PasswordState state = validatePasswordChecks(authentication.getCredentials().toString(), user.getPassword());
         if (state.equals(PasswordState.failure)) {
@@ -98,7 +93,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         }
         if (state.equals(PasswordState.succesAndUpdate)) {
             user.setPassword(passwordEncoder.encode(authentication.getCredentials().toString()));
-            user = tranactionalUser.save(user);
+            user = transactionalUser.save(user);
         }
 
         if (user.getMember().getPassword().equals(user.getPassword())) {
@@ -113,7 +108,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         // determine if the user is enabled or not
         if (YesNoEnum.No.equals(user.getLoginEnabled())) {
             throw new BadCredentialsException(
-                    messages.getMessage("TenantAuthenticationProvider.login_enabled", "Unfortunalty, you have been disabled. Please contact your internal administrator."));
+                    messages.getMessage("TenantAuthenticationProvider.login_enabled", "Unfortunately, you have been disabled. Please contact your internal administrator."));
         }
 
         // TODO rewrite to stream maybe?        //  check the ipnumbers, if they are set.
@@ -128,8 +123,8 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
                 }
             }
             if (check_ip) {
-                throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipnumber",
-                        "You are using the application from an unauthorized IPNumber location. Please contact your internal administrator."));
+                throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipNumber",
+                        "You are using the application from an unauthorized IpNumber location. Please contact your internal administrator."));
             }
 
         }
@@ -142,16 +137,13 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             } else {
                 user.setNumberOfVisits(user.getNumberOfVisits() + 1);
             }
-            tranactionalUser.save(user);
+            transactionalUser.save(user);
         }
 
         // create details
         AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(),
                 true, true, true, true, getGrantedAuthoritiesFromRolAndFunction(user));
         adminUserDetails.setUser(user);
-        Optional<MetaUserPreferences> optional = metaUserPreferencesRepository.findByUserIdAndMemberIdAndLocalMemberId(user.getId(), user.getMember().getId(), user.getMemberLocalId());
-
-        adminUserDetails.setUserPref(optional.orElse(new MetaUserPreferences()));
         return adminUserDetails;
     }
 

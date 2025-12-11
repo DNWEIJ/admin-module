@@ -1,8 +1,8 @@
 package dwe.holding.salesconsult.sales.model;
 
-import dwe.holding.salesconsult.consult.model.PaymentVisit;
-import dwe.holding.customer.client.model.Customer;
 import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.customer.client.model.Customer;
+import dwe.holding.salesconsult.consult.model.PaymentVisit;
 import dwe.holding.shared.model.converter.PaymentMethodEnumConverter;
 import dwe.holding.shared.model.type.PaymentMethodEnum;
 import jakarta.persistence.*;
@@ -14,7 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@Entity(name = "SALES_PAYMENT")
+@Table(name = "SALES_PAYMENT")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

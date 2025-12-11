@@ -14,7 +14,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
-@Entity(name = "SUPPLY_COSTING")
+@Table(name = "SUPPLY_COSTING")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

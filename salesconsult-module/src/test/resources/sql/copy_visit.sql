@@ -1,4 +1,4 @@
-INSERT INTO salesconsult.consult_visit
+INSERT INTO consult_visit
 (id,
  version,
  member_id,

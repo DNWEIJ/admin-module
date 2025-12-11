@@ -1,7 +1,9 @@
 package dwe.holding.customer.client.model.order;
 
 import dwe.holding.admin.model.base.TenantBaseBO;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@Entity(name = "CUSTOMER_ESTIMATE")
+@Table(name = "CUSTOMER_ESTIMATE")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

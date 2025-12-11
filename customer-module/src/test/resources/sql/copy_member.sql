@@ -19,7 +19,7 @@
 SELECT MEMBER_ID,
        VERSION,
        'Y',
-       'app_name',
+       'vmas',
        'redirect',
        'view',
        'Y',

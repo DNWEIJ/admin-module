@@ -1,5 +1,6 @@
-package dwe.holding.salesconsult.sales.controller;
+package dwe.holding.salesconsult.sales.controller.otc;
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.controller.CustomerController;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
@@ -7,6 +8,7 @@ import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.InvoiceStatusEnum;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
+import dwe.holding.salesconsult.sales.controller.PetsForm;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.constraints.NotNull;
@@ -35,7 +37,7 @@ public class OTCHtmxController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
         }
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
+        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         // validate appointment
         if (app.isCancelled() || app.iscompleted()) {
@@ -43,7 +45,6 @@ public class OTCHtmxController {
             return "redirect:/sales/otc/search/";
         }
 
-        // prepare model info
         List<Long> petOnVisit = app.getVisits().stream().map(visit -> visit.getPet().getId()).toList();
         model.addAttribute("customerId", customer.id())
                 .addAttribute("appointmentId", app.getId())
@@ -63,7 +64,7 @@ public class OTCHtmxController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
         }
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, 77L).orElseThrow(); // AutorisationUtuls
+        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         app.getVisits().addAll(
                 petsForm.getFormPet().stream().filter(pet -> pet.getChecked() != null).map(formPet ->
@@ -73,7 +74,7 @@ public class OTCHtmxController {
                                 .room("")
                                 .purpose(formPet.getPurpose() == null ? "" : formPet.getPurpose())
                                 .estimatedTimeInMinutes(5)
-                                .veterinarian("user") // AutorisationUtils.getCurrentUserAccount())
+                                .veterinarian(AutorisationUtils.getCurrentUserAccount())
                                 .status(VisitStatusEnum.WAITING)
                                 .sentToInsurance(YesNoEnum.No)
                                 .invoiceStatus(InvoiceStatusEnum.NEW)

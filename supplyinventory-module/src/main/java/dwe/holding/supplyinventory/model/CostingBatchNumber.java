@@ -3,6 +3,7 @@ package dwe.holding.supplyinventory.model;
 import dwe.holding.admin.model.base.TenantBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@Entity(name = "SUPPLY_COSTING_BATCH_NUMBER")
+@Table(name = "SUPPLY_COSTING_BATCH_NUMBER")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor

@@ -2,11 +2,10 @@ package dwe.holding.salesconsult.sales.model;
 
 
 import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.customer.client.model.Pet;
+import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,11 +25,15 @@ import java.math.RoundingMode;
 @Getter
 @Setter
 public class LineItem extends TenantBaseBO {
-    @NotNull
-    private Long appointmentId;
 
-    @NotNull
-    private Long petId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id", insertable = false, updatable = false)
+    private Appointment appointment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id", insertable = false, updatable = false)
+    private Pet pet;
+
 
     @NotNull
     private Long categoryId;

@@ -14,7 +14,8 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Entity(name = "CUSTOMER_REMINDER")
+@Table(name = "CUSTOMER_REMINDER")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -26,7 +26,7 @@ public class RoomLookupController {
 
     @GetMapping("lookup/rooms")
     String list(Model model) {
-        model.addAttribute("rooms", roomLookupRepository.getByMemberIdOrderByRoom(77L)); // todo replace with
+        model.addAttribute("rooms", roomLookupRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "room");
         return "customer-module/lookup/rooms/list";
     }
@@ -41,7 +41,7 @@ public class RoomLookupController {
     @GetMapping("lookup/room/{roomId}")
     String editRecord(@PathVariable Long roomId, Model model) {
         LookupRoom rooms = roomLookupRepository.findById(roomId).orElseThrow();
-        model.addAttribute("room", rooms.getMemberId().equals(77L) ? rooms : new LookupRoom());
+        model.addAttribute("room", rooms.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? rooms : new LookupRoom());
         model.addAttribute("activeMenu", "room");
         ; //AutorisationUtils.getCurrentUserMid()
         return "customer-module/lookup/rooms/action";

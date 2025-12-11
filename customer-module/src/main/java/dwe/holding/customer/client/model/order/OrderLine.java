@@ -1,16 +1,18 @@
 package dwe.holding.customer.client.model.order;
 
 import dwe.holding.admin.model.base.TenantBaseBO;
-
 import dwe.holding.shared.model.type.TaxedTypeEnum;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity(name = "CUSTOMER_ORDERLINE")
+@Table(name = "CUSTOMER_ORDERLINE")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

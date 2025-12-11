@@ -1,11 +1,8 @@
 package dwe.holding.customer.client.model.lookup;
 
-import dwe.holding.customer.client.model.Diagnose;
 import dwe.holding.admin.model.base.MemberBaseBO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import dwe.holding.customer.client.model.Diagnose;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +11,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "CUSTOMER_LOOKUP_DIAGNOSE")
+@Table(name = "CUSTOMER_LOOKUP_DIAGNOSE")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

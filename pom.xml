@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
+        <version>4.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dwe.holding.generic</groupId>
@@ -39,7 +39,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
-                <version>3.1.1</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -68,7 +68,8 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-devtools</artifactId>
-                <version>3.5.6</version>
+                <version>4.0.0</version>
+                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>

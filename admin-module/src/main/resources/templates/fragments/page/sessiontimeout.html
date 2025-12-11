@@ -1,0 +1,75 @@
+<div id="session-warning" style="
+    display:none;
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:300px;
+    background:white;
+    border:1px solid #ccc;
+    padding:15px;
+    border-radius:8px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+    z-index:99999;
+">
+    <p>Your session will expire soon...</p>
+
+    <div style="width:100%; background:#eee; height:20px; border-radius:5px;">
+        <div id="session-progress" style="
+            height:100%;
+            width:100%;
+            background:blue;
+            border-radius:5px;
+            transition:width 1s linear, background 0.3s;
+        "></div>
+    </div>
+
+    <p style="text-align:center; margin-top:8px;">
+        <span id="session-countdown">30</span> seconds left
+    </p>
+</div>
+<script th:inline="javascript">
+    // Time before expiration where the warning appears (30 seconds)
+    const warningSeconds = 30;
+
+    const sessionTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 0;
+    // Calculate when to fire the warning
+    const warningTime = (sessionTimeoutInSeconds - warningSeconds) * 1000;
+
+    setTimeout(() => {
+        startSessionCountdown();
+    }, warningTime);
+
+    function startSessionCountdown() {
+        let timeLeft = warningSeconds;
+        const warningBox = document.getElementById("session-warning");
+        const progressBar = document.getElementById("session-progress");
+        const countdownLabel = document.getElementById("session-countdown");
+
+        warningBox.style.display = "block";
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownLabel.textContent = timeLeft;
+
+            // Update progress bar width
+            const widthPercent = (timeLeft / warningSeconds) * 100;
+            progressBar.style.width = widthPercent + "%";
+
+            // Change colors
+            if (timeLeft <= 10) {
+                progressBar.style.background = "red";
+            } else if (timeLeft <= 20) {
+                progressBar.style.background = "orange";
+            } else {
+                progressBar.style.background = "blue";
+            }
+
+            // Time is up → redirect
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                window.location.href = "/admin/login";
+            }
+
+        }, 1000);
+    }
+</script>

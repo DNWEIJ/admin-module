@@ -14,8 +14,8 @@ INSERT INTO admin_localmember
  added_by,
  added_on,
  last_edited_by,
- last_edited_on)
-
+ last_edited_on
+ )
 SELECT MEMBERLOCAL_ID,
        VERSION,
        MEMBER_ID,
@@ -32,4 +32,4 @@ SELECT MEMBERLOCAL_ID,
        ADDED_ON,
        LAST_EDITED_BY,
        LAST_EDITED_ON
-FROM vmas.thau_memberlocal
+FROM vmas.thau_memberlocal where MEMBER_ID = 77;

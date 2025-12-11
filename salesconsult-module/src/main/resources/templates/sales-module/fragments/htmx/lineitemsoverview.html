@@ -3,10 +3,11 @@
        th:hx-confirm="#{label.otc.sell.delete.confirm}"
        hx-target="closest tr"
        hx-swap="outerHTML swap:1s">
+<input th:id="csrfParameterName" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
 <th:block th:each="lineitem : ${allLineItems}">
     <tr>
-        <td class="center" th:hx-delete="${url+lineitem.id}">
-            <a>
+        <td class="center">
+            <a href="" th:hx-delete="${url+lineitem.id}" hx-include="#csrfParameterName">
                 <svg width="32px" height="32px">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>

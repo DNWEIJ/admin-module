@@ -1,0 +1,25 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.visit}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="overflow-auto">
+        <fieldset role="group" class="grid">
+            <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
+        </fieldset>
+        <form id="createForm" method="post">
+            <fieldset>
+                <th:block th:insert="~{consult-module/fragments/datetimelocation::dateTimeLocationSelect()}"></th:block>
+            </fieldset>
+            <fieldset>
+            <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets}, '', true)}"></th:block>
+            </fieldset>
+
+            <fieldset role="group">
+                <input type="submit" form="createForm" th:value="#{label.button.next}"/>
+            </fieldset>
+        </form>
+</section>
+</body>
+</html>

@@ -4,34 +4,34 @@
         fill: currentColor;
         color: #aaa;
         transition: color 0.3s ease;
+        transition: color 0.3s ease;
         vertical-align: middle;
     }
 
     a:hover .icon,
     a:hover svg {
-        color: #222;
+        color: black;
     }
 </style>
-
 <nav role="menu">
     <label data-role="burger"><input id="nav_checkbox" type="checkbox"/></label>
     <ul role="menuitem">
         <li>
-            <a href="/a/b" data-tooltip="New appointment" data-placement="right">
+            <a href="/consult/visit/search" data-tooltip="New appointment" data-placement="right">
                 <svg width="48" height="48" aria-label="New appointment">
                     <use href="/lib/images/newAppointment.svg"></use>
                 </svg>
             </a>
         </li>
         <li>
-            <a href="/a/b" data-tooltip="OTC" data-placement="bottom">
+            <a href="/sales/otc/search" data-tooltip="OTC" data-placement="bottom">
                 <svg width="48" height="48" aria-label="OTC">
                     <use href="/lib/images/OTC.svg"></use>
                 </svg>
             </a>
         </li>
         <li>
-            <a href="/a/b" data-tooltip="Price Information" data-placement="bottom">
+            <a href="/sales/price/sell" data-tooltip="Price Information" data-placement="bottom">
                 <svg width="48" height="48" aria-label="Price information">
                     <use href="/lib/images/priceInformation.svg"></use>
                 </svg>
@@ -79,7 +79,7 @@
             <details class="dropdown">
                 <summary>User</summary>
                 <ul>
-                    <li><a href="/logout">Logout</a></li>
+                    <li><a href="/admin/logout">Logout</a></li>
                 </ul>
             </details>
         </li>

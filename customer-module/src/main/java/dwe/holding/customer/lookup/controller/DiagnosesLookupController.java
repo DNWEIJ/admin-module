@@ -25,7 +25,7 @@ public class DiagnosesLookupController {
 
     @GetMapping("lookup/diagnosis")
     String list(Model model) {
-        model.addAttribute("diagnoses", diagnosesLookupRepository.getByMemberId(77L)); // todo replace with
+        model.addAttribute("diagnoses", diagnosesLookupRepository.getByMemberId(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "diagnosis");
         return "customer-module/lookup/diagnosis/list";
     }
@@ -40,7 +40,7 @@ public class DiagnosesLookupController {
     @GetMapping("lookup/diagnose/{diagnosesId}")
     String editRecord(@PathVariable Long diagnosesId, Model model) {
         LookupDiagnose diagnoses = diagnosesLookupRepository.findById(diagnosesId).orElseThrow();
-        model.addAttribute("lookupDiagnosis", diagnoses.getMemberId().equals(77L) ? diagnoses : new LookupDiagnose());
+        model.addAttribute("lookupDiagnosis", diagnoses.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? diagnoses : new LookupDiagnose());
         ; //AutorisationUtils.getCurrentUserMid()
         model.addAttribute("activeMenu", "diagnosis");
         return "customer-module/lookup/diagnosis/action";

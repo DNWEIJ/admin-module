@@ -12,7 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ControllerExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public String handleConstraintViolation(RuntimeException ex, RedirectAttributes redirectAttributes) {
-        log.error("Error occurred", ex.getCause());
+        log.error("Error occurred: ", ex);
+
         redirectAttributes.addFlashAttribute("globalError", "Something went wrong!");
         return "redirect:/admin/login";
     }

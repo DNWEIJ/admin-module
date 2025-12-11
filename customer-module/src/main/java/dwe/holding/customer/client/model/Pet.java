@@ -1,8 +1,8 @@
 package dwe.holding.customer.client.model;
 
+import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.customer.client.model.converter.SexTypeConverter;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
-import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
@@ -15,7 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 // , uniqueConstraints = @UniqueConstraint(name = "uk_parent_name", columnNames = "NAME"))
-@Entity(name = "CUSTOMER_PET")
+@Table(name = "CUSTOMER_PET")
+@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -80,9 +80,10 @@
     </script>
     <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
     <div class="gridSearchCustomerWithCheck">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <div class="holder">
             <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}"
-                   hx-post="/customer/search/customer"
+                   hx-get="/customer/search/customer"
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
                    hx-indicator=".htmx-indicator"
@@ -101,7 +102,6 @@
             <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','5')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
         </div>
         <div role="group">
-            <input class="secondary" name="_advancedsearch" type="button" th:value="#{label.button.advancedsearch}"/>
             <input class="secondary" name="_reset" type="button" th:value="#{label.button.reset}"   onclick="window.location.href=window.location.origin + '/customer/customer'"/>
             <input th:if="${saveButton}" name="_save" type="submit" th:value="#{label.button.save}" form="createForm"/>
         </div>

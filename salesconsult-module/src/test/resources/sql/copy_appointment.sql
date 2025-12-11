@@ -1,4 +1,4 @@
-INSERT INTO salesconsult.consult_appointment
+INSERT INTO consult_appointment
 (id,
  version,
  member_id,

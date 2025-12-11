@@ -25,7 +25,7 @@ public class SpeciesLookupController {
 
     @GetMapping("lookup/species")
     String list(Model model) {
-        model.addAttribute("species", speciesLookupRepository.getByMemberId(77L)); // todo replace with
+        model.addAttribute("species", speciesLookupRepository.getByMemberId(AutorisationUtils.getCurrentUserMid())); // todo replace with
         model.addAttribute("activeMenu", "specy");
         return "customer-module/lookup/species/list";
     }
@@ -40,9 +40,9 @@ public class SpeciesLookupController {
     @GetMapping("lookup/specy/{specyId}")
     String editRecord(@PathVariable Long specyId, Model model) {
         LookupSpecies species = speciesLookupRepository.findById(specyId).orElseThrow();
-        model.addAttribute("specy", species.getMemberId().equals(77L) ? species : new LookupSpecies());
+        model.addAttribute("specy", species.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? species : new LookupSpecies());
         model.addAttribute("activeMenu", "specy");
-        // AutorisationUtils.getCurrentUserMid()
+
         return "customer-module/lookup/species/action";
     }
 
@@ -57,7 +57,7 @@ public class SpeciesLookupController {
             );
         } else {
             LookupSpecies specy = speciesLookupRepository.findById(formSpecy.getId()).orElseThrow();
-            if (specy.getMemberId().equals(77L) ) { //AutorisationUtils.getCurrentUserMid())) {
+            if (specy.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ) { //AutorisationUtils.getCurrentUserMid())) {
                 specy.setSpecies(formSpecy.getSpecies());
                 speciesLookupRepository.save(specy);
             } else {

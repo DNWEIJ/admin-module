@@ -1,7 +1,5 @@
 package dwe.holding.teammover.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dwe.holding.teammover.model.type.DriveOptionEnum;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.teammover.model.Driver;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tools.jackson.databind.ObjectMapper;
 
 
 @Controller
@@ -49,7 +48,7 @@ public class DriverController {
 
 
     @GetMapping("/game/{id}/driver")
-    String showEditScreen(@PathVariable @NotNull Long id, Model model) throws JsonProcessingException {
+    String showEditScreen(@PathVariable @NotNull Long id, Model model)  {
         model.addAttribute("action", "Bewerk");
         Game game = gameRepository.findById(id).orElseThrow();
         model.addAttribute("game", game);
@@ -68,7 +67,7 @@ public class DriverController {
         return "teammover-module/driver/action";
     }
 
-    Driver newDriver(Long gameId) throws JsonProcessingException {
+    Driver newDriver(Long gameId) {
         return Driver.builder()
                 .accountName(AutorisationUtils.getCurrentUserAccount())
                 .game(Game.builder().id(gameId).build())

@@ -26,15 +26,15 @@ public class SetupService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final UserRepository userRepository;
+    private final UserRepository localMemberRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public SetupService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupService(MemberRepository memberRepository, UserRepository localMemberRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
-        this.userRepository = userRepository;
+        this.localMemberRepository = localMemberRepository;
         this.functionRepository = functionRepository;
         this.roleRepository = roleRepository;
         this.functionRoleRepository = functionRoleRepository;
@@ -64,7 +64,7 @@ public class SetupService {
                             .build()
             );
             log.info("MigrationAdminService:: user");
-            User user = userRepository.saveAndFlush(
+            User user = localMemberRepository.saveAndFlush(
                     User.builder()
                             .name("daniel")
                             .email("danielweijers@gmail.com")

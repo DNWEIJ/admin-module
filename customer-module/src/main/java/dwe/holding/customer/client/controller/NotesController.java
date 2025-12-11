@@ -1,15 +1,16 @@
 package dwe.holding.customer.client.controller;
 
+import dwe.holding.admin.expose.UserService;
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Notes;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.repository.NotesRepository;
 import dwe.holding.customer.client.repository.PetRepository;
-import dwe.holding.admin.expose.UserService;
+import dwe.holding.customer.lookup.repository.NotePurposeLookupRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.customer.lookup.repository.NotePurposeLookupRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -56,7 +57,7 @@ public class NotesController {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
 
         Customer customer = customerRepository.findById(customerId).orElseThrow();
-        model.addAttribute("note", Notes.builder().noteDate(LocalDate.now()).staffMember("daniel").build()); // TODO AutoriationUtils.GetCurrentUserName()));
+        model.addAttribute("note", Notes.builder().noteDate(LocalDate.now()).staffMember("daniel").build()); ;
         setModelOneRecord(model, customer);
 
         setModel(model, customer.getId());
@@ -112,8 +113,8 @@ public class NotesController {
     }
 
     private void setModelOneRecord(Model model, Customer customer) {
-        model.addAttribute("petsList", customer.getPets().stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList());
-        model.addAttribute("staffList", userService.getStaffMembers(77L).stream().map(rec -> new DoubleText(rec.getName(), rec.getName())).toList()); // TODO: AutorisationUtils.getCurrentUserMid());
-        model.addAttribute("purposeList", notePurposeLookupRepository.getByMemberId(77L).stream().map(rec -> new DoubleText(rec.getPreDefinedPurpose(), rec.getPreDefinedPurpose())).toList());
+        model.addAttribute("petsList", customer.getPets().stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList())
+                .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
+                .addAttribute("purposeList", notePurposeLookupRepository.getByMemberId(AutorisationUtils.getCurrentUserMid()).stream().map(rec -> new DoubleText(rec.getPreDefinedPurpose(), rec.getPreDefinedPurpose())).toList());
     }
 }

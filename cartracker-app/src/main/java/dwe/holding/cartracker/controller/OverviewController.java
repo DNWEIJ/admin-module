@@ -81,7 +81,7 @@ class OverviewController {
                 }
             }
 
-            if (trip.getLiters() != 0) {
+            if (trip.getAmount() >  0) {
                 sb.append(startTable.formatted((oddOreven++ % 2 == 0) ? "odd" : "even"));
                 sb.append(headerTable);
                 sb.append("<tbody>");
