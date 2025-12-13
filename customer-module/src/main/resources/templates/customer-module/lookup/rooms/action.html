@@ -9,7 +9,7 @@
             th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${room.id}, #{label.title.room},'/customer/lookup/rooms','')}"></th:block>
 
     <form id="createForm" action="/customer/lookup/room" method="post">
-        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <input id="id" name="id" th:value="${room.id}" type="hidden"/>
         <input id="version" name="version" th:value="${room.version}" type="hidden"/>
 

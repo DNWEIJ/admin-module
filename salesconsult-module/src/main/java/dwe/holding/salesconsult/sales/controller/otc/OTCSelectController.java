@@ -84,6 +84,8 @@ public class OTCSelectController {
         appointment.setVisits(
                 pets.stream().map(formPet ->
                         Visit.builder()
+                                .id(null)
+                                .version(null)
                                 .appointment(appointment)
                                 .pet(customerService.getPet(customerId, formPet.getId()))
                                 .room("")

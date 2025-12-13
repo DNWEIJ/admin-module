@@ -64,7 +64,7 @@ public class OTCSellController {
     }
 
     @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
-    ResponseEntity<?> deleteVisitFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
+    ResponseEntity<?> deleteVisitFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, RedirectAttributes redirect) {
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("HX-Refresh", "true");
 
@@ -122,7 +122,7 @@ public class OTCSellController {
     }
 
     private void updateModel(Model model, Long petId, Appointment app) {
-        List<LineItem> lineItems = lineItemService.getLineItemsForPet(petId);
+        List<LineItem> lineItems = lineItemService.getLineItemsForPet(petId, app.getId());
         model.addAttribute("allLineItems", lineItems);
         if (!lineItems.isEmpty()) {
             model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());

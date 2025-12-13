@@ -10,7 +10,7 @@
     <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer/')}"></div>
     <hr/>
     <form id="createForm" action="/customer/customer" method="post">
-        <!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <input id="id" name="id" th:value="${customer.id}" type="hidden"/>
         <input id="version" name="version" th:value="${customer.version}" type="hidden"/>
 
@@ -26,20 +26,6 @@
         </fieldset>
         <fieldset class="grid">
             <legend>
-                <th:block th:utext="#{customer.legend.contactInformation}"/>
-            </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','9')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('homePhone','customer.homePhone','customer.homePhone','10')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('mobilePhone','customer.mobilePhone','customer.mobilePhone','11')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('workPhone','customer.workPhone','customer.workPhone','12')}" th:with="required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', 'customer.status', ${statusList}, true,'13')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', 'customer.newsletter', ${ynvaluesList}, true,'14')}"
-                      th:with="required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <legend>
                 <th:block th:utext="#{customer.legend.addressInformation}"/>
             </legend>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','customer.address1','customer.address1','15')}" th:with="required=false"></th:block>
@@ -47,6 +33,20 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipCode','customer.zipCode','17')}"
                       th:with="pattern='^[1-9][0-9]{3}\s?[A-Z]{2}$', placeholder='XXXZZ'"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','customer.city','customer.city','18')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <legend>
+                <th:block th:utext="#{customer.legend.contactInformation}"/>
+            </legend>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','9')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('mobilePhone','customer.mobilePhone','customer.mobilePhone','11')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('homePhone','customer.homePhone','customer.homePhone','10')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('workPhone','customer.workPhone','customer.workPhone','12')}" th:with="required=false"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', 'customer.status', ${statusList}, true,'13')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', 'customer.newsletter', ${ynvaluesList}, true,'14')}"
+                      th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
             <legend>
@@ -69,10 +69,10 @@
 
 
         <fieldset class="grid">
-            <label for="customer.comments">
+            <legend>
                 <th:block th:utext="#{customer.comments}"/>
-                <textarea cols="110" id="customer.comments" name="customer.comments" rows="8" th:utext="${customer.comments}"></textarea>
-            </label>
+            </legend>
+            <textarea cols="110" id="customer.comments" name="customer.comments" rows="8" th:utext="${customer.comments}"></textarea>
         </fieldset>
     </form>
 

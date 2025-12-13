@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RequestMapping("/sales")
 @Controller
@@ -37,13 +38,17 @@ public class PriceSellController {
     }
 
     @PostMapping("/price/sell")
-    String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingAmount, String inputBatchNumber, String spillageName,
+    String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingAmount,
                                           @ModelAttribute(value = "lineItems") List<LineItem> lineItems, Model model) {
+        List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingAmount);
+        AtomicLong counter = new AtomicLong(lineItems.size() + 1);
+        list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
 
-        lineItems.addAll(lineItemService.createPricing(inputCostingId, inputCostingAmount, inputBatchNumber, spillageName));
+        lineItems.addAll(list);
 
         if (!lineItems.isEmpty()) {
             model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
+            model.addAttribute("totalVatAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
         }
         model
                 .addAttribute("salesType", SalesType.PRICE_INFO)

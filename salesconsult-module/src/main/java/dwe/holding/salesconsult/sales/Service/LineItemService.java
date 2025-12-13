@@ -31,14 +31,14 @@ public class LineItemService {
     private final AppointmentRepository appointmentRepository;
 
     @Transactional
-    public List<LineItem> createPricing(Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
-        return getLineItems(0L, costingId, amount, batchNumber, spillageName, 0L);
+    public List<LineItem> createPricing(Long costingId, BigDecimal amount) {
+        return getLineItems(Appointment.builder().id(0L).build(), costingId, amount, Pet.builder().id(0L).build());
     }
 
     @Transactional
     public void createOTC(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
 
-        // validate if we are allowed to add a line item
+        // validate if we are allowed to add a line item; Only VET can add after closed or canceled
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
             if (AutorisationUtils.hasStatus(PersonnelStatusEnum.Vet)) {
                 Set<Visit> set = app.getVisits();
@@ -54,18 +54,21 @@ public class LineItemService {
 
         Visit foundVisit = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get();
 
-        final List<LineItem> toBeSavedLineItems = getLineItems(app.getId(), costingId, amount, batchNumber, spillageName, foundVisit.getPet().getId());
+        final List<LineItem> toBeSavedLineItems = getLineItems(app, costingId, amount, batchNumber, spillageName, foundVisit.getPet());
 
         List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
         app.getLineItems().addAll(savedLineItems);
         appointmentRepository.save(app);
     }
+    private List<LineItem> getLineItems(Appointment appointment, Long costingId, BigDecimal amount, Pet pet) {
+        return getLineItems(appointment,  costingId,  amount, null, null,  pet);
+    }
 
-    private List<LineItem> getLineItems(Long  appointmentId, Long costingId, BigDecimal amount, String batchNumber, String spillageName, Long petId) {
+    private List<LineItem> getLineItems(Appointment appointment, Long costingId, BigDecimal amount, String batchNumber, String spillageName, Pet pet) {
         // do we need to add all grouping products?
         List<CostingPriceProjection> priceIncludingPromotions = costingService.getCorrectedPriceAndGroupingForCostingId(costingId);
 
-        // we need the quantity of the grouping to calculate
+        // we need the quantity of the grouping to be calculated
         Map<Long, BigDecimal> costingGroupList;
         if (priceIncludingPromotions.size() > 1) {
             costingGroupList = costingService.getGroupingsQuantity(costingId);
@@ -73,16 +76,16 @@ public class LineItemService {
             costingGroupList = Map.of();
         }
 
-        // create the lineitems on the invoice per costing
+        // create the lineItems on the invoice per costing
         List<LineItem> toBeSavedLineItems = new ArrayList<>();
         priceIncludingPromotions.forEach(cpp -> {
-            // create the lineitem to save; fill it with the generic and reference stuff
+            // create the lineItem to save; fill it with the generic and reference stuff
             LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
-            LineItem newLineItem = LineItem.builder().appointment(Appointment.builder().id(appointmentId).build())
-                    .pet(Pet.builder().id(petId).build())
+            LineItem newLineItem = LineItem.builder().appointment(appointment)
+                    .pet(pet)
                     .localMemberId(AutorisationUtils.getCurrentUserMlid())
                     .processingFee(cpp.processingFee())
-                    .taxForSellExTaxPrice(cpp.taxed())
+                    .taxedTypeEnum(cpp.taxed())
                     .sellExTaxPrice(cpp.sellExTaxPrice())
                     .categoryId(cpp.lookupCostingCategory().getId())
                     .nomenclature(cpp.nomenclature())
@@ -98,15 +101,21 @@ public class LineItemService {
             newLineItem.setTotal(newLineItem.calculateTotal(cpp.reductionPercentage()));
             newLineItem.setTaxPortionOfProcessingFeeService(newLineItem.calculateProcessingFeeServiceTax());
             newLineItem.setTaxPortionOfSell(newLineItem.calculateCostTaxPortion());
-            LineItem savedLineItem = lineItemRepository.save(newLineItem);
 
-            if (cpp.hasSpillage().equals(YesNoEnum.Yes)) {
-                costingService.createOrUpdateSpillage(cpp.id(), spillageName, savedLineItem.getId());
+
+            if (appointment.getId() == 0L) { // we are in pricing
+                toBeSavedLineItems.add(newLineItem);
+            } else {    // we are in OTC or Consult
+                LineItem savedLineItem = lineItemRepository.save(newLineItem);
+
+                if (cpp.hasSpillage().equals(YesNoEnum.Yes)) {
+                    costingService.createOrUpdateSpillage(cpp.id(), spillageName, savedLineItem.getId());
+                }
+                if (cpp.hasBatchNr().equals(YesNoEnum.Yes)) {
+                    costingService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
+                }
+                toBeSavedLineItems.add(savedLineItem);
             }
-            if (cpp.hasBatchNr().equals(YesNoEnum.Yes)) {
-                costingService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
-            }
-            toBeSavedLineItems.add(savedLineItem);
         });
         return toBeSavedLineItems;
     }
@@ -122,7 +131,7 @@ public class LineItemService {
         lineItemRepository.deleteById(lineItemId);
     }
 
-    public List<LineItem> getLineItemsForPet(Long petId) {
-        return lineItemRepository.findByPet_IdAndMemberId(petId, AutorisationUtils.getCurrentUserMid());
+    public List<LineItem> getLineItemsForPet(Long petId, Long appointmentId) {
+        return lineItemRepository.findByPet_IdAndAppointment_IdAndMemberId(petId, appointmentId, AutorisationUtils.getCurrentUserMid());
     }
 }

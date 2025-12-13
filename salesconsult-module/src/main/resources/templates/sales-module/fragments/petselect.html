@@ -1,4 +1,4 @@
-<th:block th:fragment="petSelect(pets, deceasedPets, postUrl, showPetLink)">
+<th:block th:fragment="petSelect(customer, pets, deceasedPets, postUrl, showPetLink, formName)">
     <script th:inline="javascript">
         function addEventListenersForPetSelect() {
 
@@ -22,16 +22,29 @@
                     }
                 });
             });
+            // add to staff and room to set checkbox
+            document.querySelectorAll("select[id^='formPet'][id$='.vet'], select[id^='formPet'][id$='.room']").forEach(select => {
+                select.addEventListener("change", function () {
+                    const index = this.id.match(/\[(\d+)\]/)[1]; // extract index number
+                    // Find checkbox
+                    const checkBox = document.getElementById(`formPet[${index}].checked`);
+                    if (checkBox) checkBox.checked = true;
+                })
+            })
+
             // prevent submitting the form if no checkbox is checked
-            document.getElementById("createForm").addEventListener("submit", function (e) {
+            document.getElementById([[${formName}]]).addEventListener("submit", function (e) {
                 if (!document.querySelectorAll('input[type=checkbox]:checked').length) {
+                    // @formatter:off
                     alert([[#{label.otc.pet.checkbox.error}]])
+                    // @formatter:on
                     e.preventDefault();
                 }
             });
         }
 
         document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
+
     </script>
     <th:block th:if="${postUrl != ''}">
         <form id="createForm" th:action="${postUrl}" method="post">
@@ -54,28 +67,30 @@
             <th:block th:each="pet, iStat : ${pets}">
                 <tr>
                     <td>
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','','1')}"></th:block>
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
                     </td>
-
-                    <td th:if="${showPetLink}"><a th:href="'/customer/pet/'+ ${pet.id}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></a></td>
+                    <td th:if="${showPetLink}"><a th:text="${pet.name} + ' (' + ${pet.species()} + ')'"
+                                                  th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}"
+                                                  hx-target="#content" hx-swap="innerHTML"></a></td>
                     <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
 
                     <td th:if="${postUrl == ''}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"></th:block>
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true, ${2+iStat.index})}"></th:block>
                     </td>
                     <td th:if="${postUrl == ''}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', '', ${staffList}, true,'1')}"></th:block>
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', '', ${staffList}, true, ${3+iStat.index})}"></th:block>
                     </td>
                     <td th:if="${postUrl == ''}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '', '', ${rooms}, true,'1')}"></th:block>
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '', '', ${rooms}, true,${4+iStat.index})}"></th:block>
                     </td>
 
                     <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                     <td>
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithData('speciesList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'1')}" th:with="required=false"></th:block>
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithData('speciesList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}"
+                                  th:with="required=false"></th:block>
                     </td>
                     <td>
-                        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
+                        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','-1')}"
                                   th:with="required=false"></th:block>
                     </td>
                 </tr>
@@ -136,7 +151,7 @@
     </details>
     <th:block th:if="${postUrl != ''}">
         <fieldset role="group">
-            <input type="submit" form="createForm" th:value="#{label.button.next}"/>
+            <input type="submit" th:form="${formName}" th:value="#{label.button.next}"/>
         </fieldset>
         </form>
     </th:block>

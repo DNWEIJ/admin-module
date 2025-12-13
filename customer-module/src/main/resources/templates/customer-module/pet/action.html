@@ -5,57 +5,8 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${pet.id}, #{label.title.pet},'/customer/customer/'+ ${customerId}+ '/pets', ${customerInformation})}"></th:block>
-
-    <form id="createForm"  th:action="'/customer/customer/'+${customerId}+ '/pet'" method="post">
-<!--        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>-->
-        <input id="id" name="id" th:value="${pet.id}" type="hidden"/>
-        <input id="version" name="version" th:value="${pet.version}" type="hidden"/>
-
-        <fieldset class="grid">
-            <legend>Patient</legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','pet.name','pet.name','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('birthday','pet.birthday','pet.birthday','2')}" th:with="type='date',required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('idealWeight','pet.idealWeight','pet.idealWeight','3')}" th:with="required=false"></th:block>
-
-        </fieldset>
-        <fieldset class="grid">
-            todo: add htmx from species to breed
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'pet.species', 'pet.species', ${speciesList}, true,'4')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'pet.breed', 'pet.breed', ${breedList}, true,'5')}" th:with="required=false"></th:block>
-
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sex','pet.sex', 'pet.sex', ${sexTypeList}, true,'6')}"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <legend>Information</legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('briefDescription','pet.briefDescription','pet.briefDescription','7')}" th:with="required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('allergies','pet.allergies', 'pet.allergies', ${ynvaluesList}, true,'8')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('insured','pet.insured', 'pet.insured', ${ynvaluesList}, true,'9')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('gpwarning','pet.gpwarning', 'pet.gpwarning', ${ynvaluesList}, true,'10')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deceased','pet.deceased', 'pet.deceased', ${ynvaluesList}, true,'11')}" th:with="required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('allergiesDescription','pet.allergiesDescription','pet.allergiesDescription','12')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('insuredBy','pet.insuredBy','pet.insuredBy','13')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('deceasedDate','pet.deceasedDate','pet.deceasedDate','14')}" th:with="type='date',required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('gpwarningDescription','pet.gpwarningDescription','pet.gpwarningDescription','15')}" th:with="required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('passportNumber','pet.passportNumber','pet.passportNumber','16')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipTattooId','pet.chipTattooId','pet.chipTattooId','17')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipDate','pet.chipDate','pet.chipDate','18')}" th:with="type='date', required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <label for="pet.comments">
-                <th:block th:utext="#{pet.comments}"/>
-                <textarea cols="110" id="pet.comments" name="pet.comments" rows="8" tab="19" th:utext="${pet.comments}"></textarea>
-            </label>
-        </fieldset>
-    </form>
+    <th:block th:insert="~{customer-module/pet/petform::petForm('/customer/customer/'+${customerId}+ '/pet')}"></th:block>
     <th:block th:insert="~{fragments/elements/audit::audit('pet.addedBy','pet.addedOn', 'pet.lastEditedBy', 'pet.lastEditedOn')}"></th:block>
 </section>
 </body>

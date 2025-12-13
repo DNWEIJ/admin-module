@@ -1,0 +1,17 @@
+<dialog id="pets-modal" open>
+    <!-- HX-Trigger-After-Settle::-->
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev" data-target="pets-modal" onclick="toggleModal(event)"></button>
+        </header>
+        <p>
+            <th:block th:insert="~{customer-module/pet/petform::petForm(${'/consult/visit/customer/'+ customerId + '/addpet'})}"></th:block>
+        </p>
+        <footer>
+            <fieldset class="grid">
+            <input type="submit" form="createForm" th:value="#{label.button.save}"/>
+            <input type="button" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+</dialog>

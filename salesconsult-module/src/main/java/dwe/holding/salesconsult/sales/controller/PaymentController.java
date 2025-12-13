@@ -3,9 +3,8 @@ package dwe.holding.salesconsult.sales.controller;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.controller.ValidateCustomer;
 import dwe.holding.customer.client.model.Customer;
-import dwe.holding.salesconsult.sales.model.Payment;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.salesconsult.sales.repository.PaymentRepository;
+import dwe.holding.salesconsult.sales.model.Payment;
 import dwe.holding.salesconsult.sales.repository.PaymentRepository;
 import dwe.holding.shared.model.type.PaymentMethodEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -21,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping(path = "/sales")
 @Slf4j
 public class PaymentController {
     private final PaymentRepository paymentRepository;

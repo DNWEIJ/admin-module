@@ -1,6 +1,7 @@
 <th:block th:fragment="costingSearch(saveButton)">
     <script th:inline="javascript">
         const messageNoCostingSelected = /*[[#{label.costing.search.nocostingselected}]]*/ "";
+        const isPriceInfo =   /*[[${salesType.isPriceInfo}]]*/ false;
     </script>
 
     <script>
@@ -9,11 +10,11 @@
         let hxPostUrl
         let selectedFieldDataSet
 
-
-        function setView(checkbox) {
-            document.getElementById("holder-input").classList.toggle("hidden", checkbox.checked);
-            document.getElementById("holder-dropdown").classList.toggle("hidden", !checkbox.checked);
-        }
+        //
+        // function setView(checkbox) {
+        //     document.getElementById("holder-input").classList.toggle("hidden", checkbox.checked);
+        //     document.getElementById("holder-dropdown").classList.toggle("hidden", !checkbox.checked);
+        // }
 
         function updateToSelectedElement(listItems) {
             if (listItems.length === 0) return
@@ -44,10 +45,11 @@
                         selectedFieldDataSet = selectedField.dataset
                     }
                 }
-                // we're already setting the url, since we will lose the selected field test on hx-get being set instead
-                let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
-                costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedFieldDataSet.id + '/batchnumbers')
-
+                if (!isPriceInfo) {
+                    // we're already setting the url, since we will lose the selected field test on hx-get being set instead
+                    let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
+                    costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedFieldDataSet.id + '/batchnumbers')
+                }
                 // clean up
                 document.getElementById("costingFind").value = selectedFieldDataSet.nomenclature
                 document.getElementById("input-costingName").innerHTML = ""
@@ -60,7 +62,7 @@
 
 
             if (action === "costingAmount") {
-                if (selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
+                if (!isPriceInfo && selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
                     let element = document.getElementById("batchNumberForCosting")
                     let inputElement = document.getElementById("inputBatchNumber")
                     htmx.process(element)
@@ -76,7 +78,7 @@
                 }
             }
             if (action === "batch") {
-                if (selectedFieldDataSet !== undefined && selectedFieldDataSet.hasSpillage === 'true') {
+                if (!isPriceInfo && (selectedFieldDataSet !== undefined && selectedFieldDataSet.hasSpillage === 'true')) {
                     let element = document.getElementById("spillageForCosting")
                     let inputElement = document.getElementById("inputSpillage")
                     htmx.process(element)
@@ -105,15 +107,15 @@
             selectedFieldDataSet = undefined
 
             document.getElementById("inputCostingAmount").value = ''
+            if (!isPriceInfo) {
+                var element = document.getElementById("inputBatchNumber")
+                element.value = ''
+                element.setAttribute("disabled", true)
 
-            var element = document.getElementById("inputBatchNumber")
-            element.value = ''
-            element.setAttribute("disabled", true)
-
-            element = document.getElementById("inputSpillage")
-            element.value = ''
-            element.setAttribute("disabled", true)
-
+                element = document.getElementById("inputSpillage")
+                element.value = ''
+                element.setAttribute("disabled", true)
+            }
             document.getElementById("inputCostingAmount").value = '1.0'
             document.getElementById("productsFromCategory").innerHTML = ""
 
@@ -196,37 +198,37 @@
                         break
                 }
             })
-
-            document.getElementById("inputBatchNumber").addEventListener("keydown", (event) => {
-                switch (event.key) {
-                    case "Enter":
-                    case "Tab":
-                        // we need to have a value
-                        if (event.currentTarget.value.trim() === "") {
-                            alert("add a batch number")
+            if (!isPriceInfo) {
+                document.getElementById("inputBatchNumber").addEventListener("keydown", (event) => {
+                    switch (event.key) {
+                        case "Enter":
+                        case "Tab":
+                            // we need to have a value
+                            if (event.currentTarget.value.trim() === "") {
+                                alert("add a batch number")
+                                break
+                            }
+                            executeAction("batch")
+                            event.preventDefault()
                             break
-                        }
-                        executeAction("batch")
-                        event.preventDefault()
-                        break
-                }
-            })
+                    }
+                })
 
-            document.getElementById("inputSpillage").addEventListener("keydown", (event) => {
-                switch (event.key) {
-                    case "Enter":
-                    case "Tab":
-                        // we need to have a value
-                        if (event.currentTarget.value.trim() === "") {
-                            alert("add a spillage identifier on this product")
+                document.getElementById("inputSpillage").addEventListener("keydown", (event) => {
+                    switch (event.key) {
+                        case "Enter":
+                        case "Tab":
+                            // we need to have a value
+                            if (event.currentTarget.value.trim() === "") {
+                                alert("add a spillage identifier on this product")
+                                break
+                            }
+                            executeAction("spillage")
+                            event.preventDefault()
                             break
-                        }
-                        executeAction("spillage")
-                        event.preventDefault()
-                        break
-                }
-            })
-
+                    }
+                })
+            }
             document.getElementById("productsFromCategory").addEventListener("change", function (event) {
                 executeAction("find")
                 event.preventDefault()
@@ -280,26 +282,28 @@
                     <input type="hidden" name="inputCostingId" id="inputCostingId"/>
                     <input id="inputCostingAmount" tabindex="2" name="inputCostingAmount" size="2" type="number" value="1.0" autocomplete="off">
                 </div>
-                <div id="costingBatchNumberContainer">
-                    <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
-                    <datalist id="batchNumberForCosting"
-                              hx-get="writtenByJavascript"
-                              hx-swap="innerHTML"
-                              hx-target="#batchNumberForCosting"
-                              hx-trigger="batchRequired"
-                              hx-include="#inputBatchNumber">
-                    </datalist>
-                </div>
-                <div id="costingSpillageContainer">
-                    <input list="spillageForCosting" id="inputSpillage" tabindex="4" name="inputSpillage" size="15" type="text" disabled="true"/>
-                    <datalist id="spillageForCosting"
-                              hx-get="writtenByJavascript"
-                              hx-swap="innerHTML"
-                              hx-target="#spillageForCosting"
-                              hx-trigger="spillageRequired"
-                              hx-include="#inputSpillage">
-                    </datalist>
-                </div>
+                <th:block th:if="${!salesType.isPriceInfo}">
+                    <div id="costingBatchNumberContainer">
+                        <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
+                        <datalist id="batchNumberForCosting"
+                                  hx-get="writtenByJavascript"
+                                  hx-swap="innerHTML"
+                                  hx-target="#batchNumberForCosting"
+                                  hx-trigger="batchRequired"
+                                  hx-include="#inputBatchNumber">
+                        </datalist>
+                    </div>
+                    <div id="costingSpillageContainer">
+                        <input list="spillageForCosting" id="inputSpillage" tabindex="4" name="inputSpillage" size="15" type="text" disabled="true"/>
+                        <datalist id="spillageForCosting"
+                                  hx-get="writtenByJavascript"
+                                  hx-swap="innerHTML"
+                                  hx-target="#spillageForCosting"
+                                  hx-trigger="spillageRequired"
+                                  hx-include="#inputSpillage">
+                        </datalist>
+                    </div>
+                </th:block>
             </div>
         </fieldset>
     </form>

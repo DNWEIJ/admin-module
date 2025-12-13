@@ -70,7 +70,7 @@
     </script>
 </th:block>
 
-<div class="container-fluid">
+<div class="container-fluid wrapper">
     <th:block th:if="${errors != null and errors.size() > 0}">
         <fieldset>
             <legend>Errors</legend>
@@ -81,11 +81,14 @@
     </th:block>
 
     <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
-        <div th:replace="~{navigation}"></div>
+        <header>
+            <div th:replace="~{navigation}"></div>
+        </header>
     </th:block>
-
-    <th:block id="content" layout:fragment="content"></th:block>
-    <div id="modal-container"></div>
+    <main>
+        <th:block id="content" layout:fragment="content"></th:block>
+        <div id="modal-container"></div>
+    </main>
     <footer>
         <p>
             <th:block th:if="${applicationName != null}">
@@ -98,7 +101,6 @@
             <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
                 <a th:href="'/customer/preferences/user'" th:text="'loggedin User:' + ${T(dwe.holding.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
             </th:block>
-
             DWE Holding &copy;
         </p>
     </footer>

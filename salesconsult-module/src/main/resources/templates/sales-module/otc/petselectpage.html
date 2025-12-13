@@ -8,7 +8,7 @@
         <fieldset role="group" class="grid">
         <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
         </fieldset>
-        <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets}, ${'/sales/otc/search/' + customer.id}, true)}"></th:block>
+        <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, ${'/sales/otc/search/' + customer.id}, true, 'createForm')}"></th:block>
     </div>
 </section>
 </body>

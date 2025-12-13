@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping(path = "/consult")
 @Slf4j
-public class VisitCreateController {
+public class VisitController {
 
     private final MemberRepository memberRepository;
     private final VisitRepository visitRepository;
@@ -46,7 +46,7 @@ public class VisitCreateController {
     private final LineItemService lineItemService;
 
     @GetMapping("/visit/search")
-    String first_Start(Model model) {
+    String firstStepStart(Model model) {
         model.addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
 
@@ -54,7 +54,7 @@ public class VisitCreateController {
     }
 
     @GetMapping("/visit/search/{customerId}")
-    String second_CustomerFoundShowPetsAndDateTimeLoc(@PathVariable @NotNull Long customerId, Model model, RedirectAttributes redirect) {
+    String secondStepCustomerFoundShowPetsAndDateTimeAndLoc(@PathVariable @NotNull Long customerId, Model model, RedirectAttributes redirect) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         model.addAttribute("customer", customer)
@@ -68,35 +68,25 @@ public class VisitCreateController {
                 .addAttribute("rooms", roomLookupRepository.findByLocalMemberIdAndMemberId(AutorisationUtils.getCurrentUserMlid(), AutorisationUtils.getCurrentUserMid())
                         .stream().map(rec -> new PresentationElement(rec.getId(), rec.getRoom(), true)).toList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("timeList",IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList()
-                        )
+                .addAttribute("timeList", IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList()
+                )
         ;
         return "consult-module/visit/petanddateselectpage";
     }
 
     @PostMapping("/visit/search/{customerId}")
-    String third_PetFoundShowDateTime(@PathVariable @NotNull Long customerId, @ModelAttribute @NotNull PetsForm petsForm, Model model, RedirectAttributes redirect) {
+    String thirdStepPetFoundCreateAppointmentVisit(@PathVariable @NotNull Long customerId, @ModelAttribute @NotNull PetsForm petsForm, Model model, RedirectAttributes redirect) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         List<PetsForm.FormPet> pets = petsForm.getFormPet().stream().filter(pet -> pet.getChecked() != null).toList();
         if (customer == null || pets.isEmpty()) {
             model.addAttribute("message", "Something went wrong. Please try again");
             return "redirect:/visit/search/" + customerId;
         }
-        model
-                .addAttribute("appointment", Appointment.builder().visitDateTime(LocalDateTime.now()).localMemberId(AutorisationUtils.getCurrentUserMlid()).build())
-                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList());
-        return "consult-module/visit/datetimeselectpage";
-    }
-
-    @PostMapping("/visit/search/{customerId}/pets")
-    String fourth_DateTimeFoundShow___(@PathVariable Long customerId, @ModelAttribute PetsForm petsForm, Model model, RedirectAttributes redirect) {
-
-        Appointment app = new Appointment(); // saveOTC(pets, customerId);
-        // start consult for the first pet in the list...
-        return "redirect:/visit/" + app.getId() + "/" + app.getVisits().iterator().next().getPet().getId();
+        return "";
     }
 
 
+    // List visits from customer/customer
     @GetMapping("/customer/{customerId}/visits")
     String getVisitsForCustomer(@PathVariable Long customerId, Model model) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
@@ -118,7 +108,7 @@ public class VisitCreateController {
                 .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("petsOnVisit", visit.getAppointment().getVisits().stream().map(Visit::getPet).map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased()))
                         .sorted(Comparator.comparing(PresentationElement::getId)).toList())
-                .addAttribute("allLineItems", lineItemService.getLineItemsForPet(visit.getPet().getId()))
+                .addAttribute("allLineItems", lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()))
 
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("rooms", customerService.getRoomList())

@@ -38,7 +38,7 @@ public class CustomerService {
     }
 
     public List<LookupSpecies> getSpecies() {
-        return lookupSpeciesRepository.getList(AutorisationUtils.getCurrentUserMid());
+        return lookupSpeciesRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L));
     }
 
     public List<LookupPurpose> getReasons() {

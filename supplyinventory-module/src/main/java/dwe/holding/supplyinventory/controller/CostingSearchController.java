@@ -33,7 +33,7 @@ public class CostingSearchController {
     public String searchLookupCostingDropdown(Model model) {
 
         if (costing == null || costing.isEmpty()) {
-            costing = lookupCostingCategoryRepository.findByMemberIdOrderByCategory(AutorisationUtils.getCurrentUserMid()).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
+            costing = lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(),-1)).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
         }
         model.addAttribute("lookupCostings", costing);
         return "supplies-module/fragments/costing/selectcosting";

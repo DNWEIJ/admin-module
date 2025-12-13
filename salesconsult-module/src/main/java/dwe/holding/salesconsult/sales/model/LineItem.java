@@ -27,13 +27,10 @@ import java.math.RoundingMode;
 public class LineItem extends TenantBaseBO {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id", insertable = false, updatable = false)
     private Appointment appointment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id", insertable = false, updatable = false)
     private Pet pet;
-
 
     @NotNull
     private Long categoryId;
@@ -48,7 +45,7 @@ public class LineItem extends TenantBaseBO {
     BigDecimal quantity;
 
     @NotNull
-    private TaxedTypeEnum taxForSellExTaxPrice;
+    private TaxedTypeEnum taxedTypeEnum;
     @Column(precision = 38, scale = 4)
     private
     BigDecimal taxGoodPercentage;
@@ -77,10 +74,10 @@ public class LineItem extends TenantBaseBO {
         BigDecimal hundred = new BigDecimal("100.0");
         BigDecimal goodTax = new BigDecimal("0.0");
 
-        if (TaxedTypeEnum.GOOD.equals(taxForSellExTaxPrice)) {
+        if (TaxedTypeEnum.GOOD.equals(taxedTypeEnum)) {
             goodTax = getTaxGoodPercentage().divide(hundred, 4, RoundingMode.HALF_UP);
         }
-        if (TaxedTypeEnum.SERVICE.equals(taxForSellExTaxPrice)) {
+        if (TaxedTypeEnum.SERVICE.equals(taxedTypeEnum)) {
             goodTax = getTaxServicePercentage().divide(hundred, 4, RoundingMode.HALF_UP);
         }
 

@@ -8,16 +8,26 @@
         <fieldset role="group" class="grid">
             <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
         </fieldset>
-        <form id="createForm" method="post">
+        <form id="createVisitForm" method="post" action="/consult/visit/create">
             <fieldset>
                 <th:block th:insert="~{consult-module/fragments/datetimelocation::dateTimeLocationSelect()}"></th:block>
             </fieldset>
             <fieldset>
-            <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${pets}, ${deceasedPets}, '', true)}"></th:block>
+            <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, '', true, 'createVisitForm')}"></th:block>
             </fieldset>
 
-            <fieldset role="group">
-                <input type="submit" form="createForm" th:value="#{label.button.next}"/>
+            <fieldset role="group" class="grid">
+                <div>
+                <input type="button"  th:value="#{label.otc.sell.add.pet}"
+                    th:hx-get="'/customer/customer/'+ ${customer.id} + '/pet'"
+                           hx-target="#modal-container"
+                           hx-swap="innerHTML"
+                           hx-on::after-request="addEventListenersForPetSelect()"
+                    />
+                </div>
+                <div>
+                <input type="submit" form="createVisitForm" th:value="#{label.button.next}"/>
+            </div>
             </fieldset>
         </form>
 </section>

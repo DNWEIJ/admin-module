@@ -47,7 +47,7 @@ public class NotesController {
     @GetMapping("/customer/{customerId}/notes")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        model.addAttribute("notes", notesRepository.getByCustomerId(customerId));
+        model.addAttribute("notes", notesRepository.findByPet_Customer_IdOrderByNoteDateDesc(customerId));
         setModel(model, customerId);
         return "customer-module/notes/list";
     }

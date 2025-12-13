@@ -32,14 +32,15 @@
 </th:block>
 </tbody>
 <tfoot>
+<tr></tr>
 <tr>
     <th></th>
     <th class="left"></th>
     <th class="left"></th>
     <th class="right"></th>
     <th class="right"></th>
-    <th class="right"></th>
     <th class="right" th:text="#{label.otc.sell.total}"></th>
+    <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalVatAmount})}"></th:block>
     <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalAmount})}"></th:block>
     <th class="right"></th>
 </tr>

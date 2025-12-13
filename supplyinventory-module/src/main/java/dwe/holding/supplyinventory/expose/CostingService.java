@@ -103,6 +103,6 @@ public class CostingService {
     }
 
     public Map<Long, String>  getCategories() {
-        return lookupCostingCategoryRepository.findByMemberIdOrderByCategory(AutorisationUtils.getCurrentUserMid()).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
+        return lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1L)).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
     }
 }

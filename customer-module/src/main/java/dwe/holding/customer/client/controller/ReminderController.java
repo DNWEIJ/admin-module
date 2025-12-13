@@ -9,7 +9,6 @@ import dwe.holding.shared.model.frontend.PresentationElement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,32 +24,33 @@ public class ReminderController {
     private final ReminderRepository reminderRepository;
     private final PetRepository petRepository;
     private final ValidateCustomer validateCustomer;
-    private final PersistenceManagedTypes persistenceManagedTypes;
 
-    public ReminderController(ReminderRepository reminderRepository, PetRepository petRepository, ValidateCustomer validateCustomer, PersistenceManagedTypes persistenceManagedTypes) {
+    public ReminderController(ReminderRepository reminderRepository, PetRepository petRepository, ValidateCustomer validateCustomer) {
         this.reminderRepository = reminderRepository;
-
         this.petRepository = petRepository;
         this.validateCustomer = validateCustomer;
-        this.persistenceManagedTypes = persistenceManagedTypes;
     }
 
     @GetMapping("/customer/{customerId}/reminders")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        model.addAttribute("reminders", reminderRepository.getByCustomerId(customerId));
+        model.addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customerId));
+        model.addAttribute("activeMenu", "reminders");
         return "customer-module/reminder/list";
     }
 
     @GetMapping("/customer/{customerId}/reminder")
     String newRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+        if (validateCustomer.isInvalid(customerId, redirect))
+            return "redirect:/customer/customer";
+
         model.addAttribute("reminder", Reminder.builder().pet(new Pet()).build());
         model.addAttribute("petsList",
                 petRepository.findByCustomer_IdOrderByDeceasedAsc(customerId)
                         .stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList()
         );
         model.addAttribute("costingReminderList", "");
+        model.addAttribute("activeMenu", "reminders");
 //      <query name="costingReminders">
 //          select new  nl.achtiiacht.framework.util.ReferenceList(cst.id, cst.rnomenclature)
 //          from Costing as cst where cst.mid = ? and cst.rnomenclature is not null  and cst.rnomenclature is not empty

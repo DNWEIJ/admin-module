@@ -104,7 +104,6 @@ public class AutorisationUtils {
     }
 
     public static LocalMemberTax getVatPercentages(@NotNull LocalDate date) {
-
         for (LocalMemberTax localTax : getCurrentLocalMember().getMemberLocalTaxs()) {
             LocalDate startDate = localTax.getStartDate();
             LocalDate endDate = localTax.getEndDate();
@@ -116,6 +115,13 @@ public class AutorisationUtils {
         throw new RuntimeException("No tax found for date " + date);
     }
 
+    public static void setTempGenericStorage(String str) {
+        getCurrentUserDetails().setTempGenericStorage(str);
+    }
+
+    public static String getTempGenericStorage() {
+        return getCurrentUserDetails().getTempGenericStorage();
+    }
 
     public record UserSettings(Long localMemberId, LanguagePrefEnum language) {
     }

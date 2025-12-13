@@ -51,7 +51,8 @@ public class CustomerController {
         Customer customer = customerRepository.findById(id).get();
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
-         return "customer-module/customer/action";
+        AutorisationUtils.setTempGenericStorage(customer.getCustomerNameWithId()); // is used for all specific customer related pages
+        return "customer-module/customer/action";
     }
 
     @PostMapping("/customer")
@@ -161,7 +162,6 @@ public class CustomerController {
                     ).toList()
             );
         }
-        log.info("found customers:" + listCustomers.size());
         return listCustomers;
     }
 
