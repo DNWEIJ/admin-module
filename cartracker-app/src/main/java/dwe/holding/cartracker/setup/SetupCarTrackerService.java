@@ -1,13 +1,19 @@
 package dwe.holding.cartracker.setup;
 
-import dwe.holding.admin.authorisation.function_role.FunctionRepository;
-import dwe.holding.admin.authorisation.function_role.FunctionRoleRepository;
-import dwe.holding.admin.authorisation.function_role.RoleRepository;
-import dwe.holding.admin.authorisation.function_role.UserRoleRepository;
-import dwe.holding.admin.authorisation.member.LocalMemberRepository;
-import dwe.holding.admin.authorisation.member.MemberRepository;
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.*;
+import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
+import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
+import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
+import dwe.holding.admin.model.notenant.Function;
+import dwe.holding.admin.model.notenant.FunctionRole;
+import dwe.holding.admin.model.notenant.Member;
+import dwe.holding.admin.model.tenant.LocalMember;
+import dwe.holding.admin.model.tenant.Role;
+import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -70,7 +76,7 @@ public class SetupCarTrackerService {
             LocalMember localMember = localMemberRepository.saveAndFlush(
                     LocalMember.builder()
                             .localMemberName("CAR")
-                            .member(member).build()
+                            .memberId(member.getId()).build()
             );
             log.info("SetupCarTrackerService:: user");
             User daniel = userRepository.saveAndFlush(
@@ -84,7 +90,7 @@ public class SetupCarTrackerService {
                             .personnelStatus(PersonnelStatusEnum.Other)
                             .loginEnabled(YesNoEnum.Yes)
                             .member(member)
-                            .memberLocalId(localMember.getId())
+                            .localMemberId(localMember.getId())
                             .build()
             );
             User maria = userRepository.saveAndFlush(
@@ -98,7 +104,7 @@ public class SetupCarTrackerService {
                             .personnelStatus(PersonnelStatusEnum.Other)
                             .loginEnabled(YesNoEnum.Yes)
                             .member(member)
-                            .memberLocalId(localMember.getId())
+                            .localMemberId(localMember.getId())
                             .build()
             );
             User suus = userRepository.saveAndFlush(
@@ -112,7 +118,7 @@ public class SetupCarTrackerService {
                             .personnelStatus(PersonnelStatusEnum.Other)
                             .loginEnabled(YesNoEnum.Yes)
                             .member(member)
-                            .memberLocalId(localMember.getId())
+                            .localMemberId(localMember.getId())
                             .build()
             );
             Role defaultRole = roleRepository.getRoleByName("DEFAULT");
@@ -144,7 +150,7 @@ public class SetupCarTrackerService {
             log.info("SetupCarTrackerService:: start creating the connection between function and role..");
             functionRoleRepository.saveAllAndFlush(
                     listFuncDefault.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(userRole).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(userRole.getId()).build())
                             .toList()
             );
 

@@ -1,7 +1,7 @@
 package dwe.holding.teammover.setup;
 
-import dwe.holding.admin.authorisation.member.LocalMemberRepository;
-import dwe.holding.admin.authorisation.member.MemberRepository;
+import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
+import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
 import dwe.holding.teammover.model.Game;
 import dwe.holding.teammover.repository.GameRepository;
 import jakarta.transaction.Transactional;

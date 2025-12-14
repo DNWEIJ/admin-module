@@ -1,6 +1,6 @@
 package dwe.holding.admin.preferences;
 
-import dwe.holding.admin.model.MetaLocalMemberPreferences;
+import dwe.holding.admin.model.tenant.MetaLocalMemberPreferences;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

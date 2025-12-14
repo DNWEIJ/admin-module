@@ -1,13 +1,19 @@
 package dwe.holding.teammover.setup;
 
-import dwe.holding.admin.authorisation.function_role.FunctionRepository;
-import dwe.holding.admin.authorisation.function_role.FunctionRoleRepository;
-import dwe.holding.admin.authorisation.function_role.RoleRepository;
-import dwe.holding.admin.authorisation.function_role.UserRoleRepository;
-import dwe.holding.admin.authorisation.member.LocalMemberRepository;
-import dwe.holding.admin.authorisation.member.MemberRepository;
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.*;
+import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
+import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
+import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
+import dwe.holding.admin.model.notenant.Function;
+import dwe.holding.admin.model.notenant.FunctionRole;
+import dwe.holding.admin.model.notenant.Member;
+import dwe.holding.admin.model.tenant.LocalMember;
+import dwe.holding.admin.model.tenant.Role;
+import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -67,8 +73,8 @@ public class SetupTeamMoverAdminService {
             log.info("MigrationTeamMoverAdminService:: localMember: the teams");
             List<LocalMember> localMembers = localMemberRepository.saveAllAndFlush(
                     List.of(
-                            LocalMember.builder().localMemberName("GO12-2").member(member).build(),
-                            LocalMember.builder().localMemberName("GO12-1").member(member).build()
+                            LocalMember.builder().localMemberName("GO12-2").memberId(member.getId()).build(),
+                            LocalMember.builder().localMemberName("GO12-1").memberId(member.getId()).build()
                     )
             );
 
@@ -100,9 +106,9 @@ public class SetupTeamMoverAdminService {
                     listFunc.stream()
                             .map(func -> {
                                 if (func.getName().equalsIgnoreCase("GAME_CREATE")) {
-                                    return FunctionRole.builder().function(func).role(plannerRole).build();
+                                    return FunctionRole.builder().functionId(func.getId()).roleId(plannerRole.getId()).build();
                                 }
-                                return FunctionRole.builder().function(func).role(teammoverRole).build();
+                                return FunctionRole.builder().functionId(func.getId()).roleId(teammoverRole.getId()).build();
                             })
                             .toList()
             );

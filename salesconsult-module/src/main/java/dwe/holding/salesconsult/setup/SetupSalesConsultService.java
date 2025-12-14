@@ -1,11 +1,11 @@
 package dwe.holding.salesconsult.setup;
 
-import dwe.holding.admin.authorisation.function_role.FunctionRepository;
-import dwe.holding.admin.authorisation.function_role.FunctionRoleRepository;
-import dwe.holding.admin.authorisation.function_role.RoleRepository;
-import dwe.holding.admin.model.Function;
-import dwe.holding.admin.model.FunctionRole;
-import dwe.holding.admin.model.Role;
+import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
+import dwe.holding.admin.model.notenant.Function;
+import dwe.holding.admin.model.notenant.FunctionRole;
+import dwe.holding.admin.model.tenant.Role;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class SetupSalesConsultService {
             Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SALESCONSULT_READ")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncRead.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleSuperAdmin).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).build())
                             .toList()
             );
             return 77L;

@@ -1,7 +1,7 @@
 package dwe.holding.admin.expose;
 
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.User;
+import dwe.holding.admin.authorisation.tenant.user.UserRepository;
+import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -25,14 +25,14 @@ public class UserService {
 
     public void save(Long localMemberId, LanguagePrefEnum language) {
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
-        user.setMemberLocalId(localMemberId);
+        user.setLocalMemberId(localMemberId);
         user.setLanguage(language);
         userRepository.save(user);
     }
 
     public User setLocalMemberId(Long localMemberId) {
         User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
-        user.setMemberLocalId(localMemberId);
+        user.setLocalMemberId(localMemberId);
         return userRepository.save(user);
     }
 }

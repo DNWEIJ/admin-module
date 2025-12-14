@@ -1,12 +1,16 @@
 package dwe.holding.supplyinventory.setup;
 
-import dwe.holding.admin.authorisation.function_role.FunctionRepository;
-import dwe.holding.admin.authorisation.function_role.FunctionRoleRepository;
-import dwe.holding.admin.authorisation.function_role.RoleRepository;
-import dwe.holding.admin.authorisation.function_role.UserRoleRepository;
-import dwe.holding.admin.authorisation.member.MemberRepository;
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.*;
+import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
+import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
+import dwe.holding.admin.model.notenant.Function;
+import dwe.holding.admin.model.notenant.FunctionRole;
+import dwe.holding.admin.model.tenant.Role;
+import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.model.Supplies;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
@@ -67,7 +71,7 @@ public class SetupSuppliesService {
             Role roleSupplies = listRoles.stream().filter(r -> r.getName().equals("SUPPLIES")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFunc.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().function(func).role(roleSupplies).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSupplies.getId()).build())
                             .toList()
             );
 

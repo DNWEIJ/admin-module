@@ -1,9 +1,8 @@
 package dwe.holding.admin.expose;
 
-import dwe.holding.admin.authorisation.member.LocalMemberRepository;
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.LocalMember;
-import dwe.holding.admin.model.MetaLocalMemberPreferences;
+import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
+import dwe.holding.admin.model.tenant.LocalMember;
+import dwe.holding.admin.model.tenant.MetaLocalMemberPreferences;
 import dwe.holding.admin.preferences.MetaLocalMemberPreferencesRepository;
 import dwe.holding.admin.security.AutorisationUtils;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class LocalMemberPreferencesService {
     public void storeAppPreferences(String userPrefJson) {
         LocalMember localMember = localMemberRepository.findById(AutorisationUtils.getCurrentUserMlid()).get();
         // update preferences
-        Optional<MetaLocalMemberPreferences> optional = localMemberPrefRepository.findByLocalMemberIdAndMemberId(localMember.getId(), localMember.getMember().getId());
+        Optional<MetaLocalMemberPreferences> optional = localMemberPrefRepository.findByLocalMemberIdAndMemberId(localMember.getId(), localMember.getMemberId());
 
         MetaLocalMemberPreferences metaLocalMemberPreferences;
         if (optional.isPresent()) {

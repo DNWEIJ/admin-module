@@ -1,10 +1,19 @@
+app:
+  datasource:
+    global:
+      jdbc-url: jdbc:mysql://localhost:3306/new_vmas
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    tenant:
+      jdbc-url: jdbc:mysql://localhost:3306/new_vmas
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
 spring:
   messages:
     basename: admin.messages, shared.messages, customer.messages, lookup.messages,  supplyinventory.messages, sales.messages, consult.messages, vmas.messages
-  datasource:
-    url: jdbc:mysql://localhost:3306/new_vmas
-    username: root
-    password: root
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
@@ -13,19 +22,18 @@ spring:
     generate-ddl: true
     database: mysql
     properties:
-      hibernate:
-        generate-ddl: no
-        show_sql: false
-        use_sql_comments: false
-        format_sql: false
-        use_jdbc_metadata_defaults: false
+      generate-ddl: no
+      show_sql: false
+      use_sql_comments: false
+      format_sql: false
+      use_jdbc_metadata_defaults: false
 
-#    properties:
-#      hibernate:
-#        show_sql: false
-#        use_sql_comments: false
-#        format_sql: false
-#        use_jdbc_metadata_defaults: false
+  #    properties:
+  #      hibernate:
+  #        show_sql: false
+  #        use_sql_comments: false
+  #        format_sql: false
+  #        use_jdbc_metadata_defaults: false
   ssl:
     bundle:
       jks:
@@ -53,7 +61,7 @@ server:
   servlet:
     session:
       timeout: 15m
-#    context-path: /gwz-vmas
+  #    context-path: /gwz-vmas
 
   http2:
     enabled: true

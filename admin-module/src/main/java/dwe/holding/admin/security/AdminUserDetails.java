@@ -1,6 +1,6 @@
 package dwe.holding.admin.security;
 
-import dwe.holding.admin.model.User;
+import dwe.holding.admin.model.tenant.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;

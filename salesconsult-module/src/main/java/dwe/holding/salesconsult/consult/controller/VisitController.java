@@ -1,8 +1,8 @@
 package dwe.holding.salesconsult.consult.controller;
 
-import dwe.holding.admin.authorisation.member.MemberRepository;
+import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.expose.UserService;
-import dwe.holding.admin.model.LocalMember;
+import dwe.holding.admin.model.tenant.LocalMember;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.controller.CustomerController;
 import dwe.holding.customer.client.model.Customer;

@@ -1,10 +1,10 @@
 package dwe.holding.admin.security;
 
 
-import dwe.holding.admin.model.LocalMember;
-import dwe.holding.admin.model.LocalMemberTax;
-import dwe.holding.admin.model.Member;
-import dwe.holding.admin.model.User;
+import dwe.holding.admin.model.notenant.Member;
+import dwe.holding.admin.model.tenant.LocalMember;
+import dwe.holding.admin.model.tenant.LocalMemberTax;
+import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -57,7 +57,7 @@ public class AutorisationUtils {
     }
 
     public static Long getCurrentUserMlid() {
-        return getCurrentUserDetails().getUser().getMemberLocalId();
+        return getCurrentUserDetails().getUser().getLocalMemberId();
     }
 
     public static String getCurrentUserJsonPref() {

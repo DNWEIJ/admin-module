@@ -1,8 +1,8 @@
 package dwe.holding.cartracker.setup;
 
 
-import dwe.holding.admin.authorisation.member.MemberRepository;
-import dwe.holding.admin.model.Member;
+import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
+import dwe.holding.admin.model.notenant.Member;
 import dwe.holding.cartracker.migration.repository.OldCarRepository;
 import dwe.holding.cartracker.migration.repository.OldDriveRepository;
 import dwe.holding.cartracker.model.Car;

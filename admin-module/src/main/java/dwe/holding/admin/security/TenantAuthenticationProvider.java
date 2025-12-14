@@ -1,10 +1,9 @@
 package dwe.holding.admin.security;
 
-import dwe.holding.admin.authorisation.function_role.FunctionQueryCriteria;
-import dwe.holding.admin.model.Function;
-import dwe.holding.admin.model.IPSecurity;
-import dwe.holding.admin.model.User;
-import dwe.holding.admin.transactional.TransactionalUser;
+import dwe.holding.admin.model.notenant.Function;
+import dwe.holding.admin.model.tenant.IPSecurity;
+import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.transactional.TransactionalUserService;
 import dwe.holding.shared.model.type.YesNoEnum;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,11 +29,11 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final FunctionQueryCriteria functionQueryCriteria;
-    private final TransactionalUser transactionalUser;
+    private final TransactionalUserService transactionalUserService;
 
-    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, TransactionalUser transactionalUser) {
+    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, TransactionalUserService transactionalUserService) {
         this.functionQueryCriteria = functionQueryCriteria;
-        this.transactionalUser = transactionalUser;
+        this.transactionalUserService = transactionalUserService;
     }
 
     enum PasswordState {
@@ -73,7 +72,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        List<User> users = transactionalUser.getByAccount(usernameAndShortCode[0]);
+        List<User> users = transactionalUserService.getByAccount(usernameAndShortCode[0]);
 
         if (users.isEmpty()) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
@@ -85,7 +84,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        User user = transactionalUser.getByIdLazy_LoadingAllData(usersList.getFirst().getId());
+        User user = transactionalUserService.getByIdLazy_LoadingAllData(usersList.getFirst().getId());
 
         PasswordState state = validatePasswordChecks(authentication.getCredentials().toString(), user.getPassword());
         if (state.equals(PasswordState.failure)) {
@@ -93,7 +92,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         }
         if (state.equals(PasswordState.succesAndUpdate)) {
             user.setPassword(passwordEncoder.encode(authentication.getCredentials().toString()));
-            user = transactionalUser.save(user);
+            user = transactionalUserService.save(user);
         }
 
         if (user.getMember().getPassword().equals(user.getPassword())) {
@@ -137,7 +136,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             } else {
                 user.setNumberOfVisits(user.getNumberOfVisits() + 1);
             }
-            transactionalUser.save(user);
+            transactionalUserService.save(user);
         }
 
         // create details

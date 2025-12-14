@@ -21,6 +21,7 @@ public class TenantEntityListener {
     @PrePersist
     @PreUpdate
     public void setTenant(Object entity) {
+        Long tenantId = AutorisationUtils.getCurrentUserMid();
         if (entity == null) return;
 
         List<Field> tenantFields = TENANT_FIELDS_CACHE.computeIfAbsent(
@@ -34,7 +35,7 @@ public class TenantEntityListener {
                     ReflectionUtils.makeAccessible(field);
                     Object current = ReflectionUtils.getField(field, entity);
                     if (current == null) {
-                        ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
+                        ReflectionUtils.setField(field, entity, tenantId);
                     }
                 });
     }

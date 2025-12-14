@@ -1,8 +1,8 @@
 package dwe.holding.admin.expose;
 
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.MetaUserPreferences;
-import dwe.holding.admin.model.User;
+import dwe.holding.admin.authorisation.tenant.user.UserRepository;
+import dwe.holding.admin.model.tenant.MetaUserPreferences;
+import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.security.AutorisationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

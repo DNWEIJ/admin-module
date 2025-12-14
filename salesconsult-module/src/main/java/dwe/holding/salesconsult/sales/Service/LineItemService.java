@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.sales.Service;
 
-import dwe.holding.admin.model.LocalMemberTax;
+import dwe.holding.admin.model.tenant.LocalMemberTax;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;

@@ -1,9 +1,9 @@
 package dwe.holding.teammover.controller;
 
-import dwe.holding.admin.authorisation.member.LocalMemberRepository;
+import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
 import dwe.holding.admin.expose.UserPreferencesService;
-import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +32,7 @@ public class TeamMoverUserPrefController {
     @GetMapping("/userpreferences")
     String loadUserPreferences(Model model)  {
         model.addAttribute("localMembersList",
-                localMemberRepository.findByMember_Id(AutorisationUtils.getCurrentUserMid())
+                localMemberRepository.findByMemberId(AutorisationUtils.getCurrentUserMid())
                         .stream().map(
                                 f -> new PresentationElement(f.getId(), f.getLocalMemberName(), true)
                         )

@@ -1,7 +1,7 @@
 package dwe.holding.admin.authorisation;
 
-import dwe.holding.admin.authorisation.user.UserRepository;
-import dwe.holding.admin.model.User;
+import dwe.holding.admin.authorisation.tenant.user.UserRepository;
+import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.security.AutorisationUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
