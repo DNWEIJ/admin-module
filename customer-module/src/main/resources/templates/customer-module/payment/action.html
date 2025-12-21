@@ -24,7 +24,7 @@
 
         <fieldset class="grid">
             <legend>[[#{label.payment.details}]]</legend>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method','payment.method', ${payMethodsList}, true,'1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method',${payment.method}, ${payMethodsList}, true,'1')}"></th:block>
         </fieldset>
         <fieldset class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','payment.amount','2')}"  th:with="pattern='^\d+([.]\d{1,2})?$'"></th:block>

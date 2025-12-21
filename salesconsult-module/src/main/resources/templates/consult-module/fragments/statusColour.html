@@ -1,0 +1,84 @@
+<th:block th:fragment="statusColour()">
+    <style>
+        .statusColour {
+            position: fixed;
+            opacity: 1;
+            top: -1.5em;
+            height: 1.5em;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            align-self: center;
+            z-index: 99999; /* make sure it beats all others */
+            color: dimgrey;
+            text-align: center;
+            background: lightsteelblue;
+        }
+
+        #fade-in {
+            height: 1.5em;
+            opacity: 0;
+            top: -1.5em;
+            left: 0;
+            transition: all .3s ease;
+        }
+
+        #fade-in.show {
+            top: 0;
+            left: 0;
+            opacity: 1;
+            height: 1.7em;
+        }
+    </style>
+    <div id="statusColour" style="display: block">
+        <table style="width:100%">
+            <tbody>
+            <tr>
+                <td>Planned</td>
+                <td>Waiting</td>
+                <td colspan="3">Consult</td>
+                <td>Ready for Checkout</td>
+                <td>Ready to Pay</td>
+                <td>Finished</td>
+                <td>Canceled</td>
+                <td>Completed</td>
+            </tr>
+            <tr>
+                <td style="background-color:#99CCFF">&nbsp;</td>
+                <td style="background-color:#00B8FF"></td>
+                <td colspan="3" style="background-color:#00FF00"></td>
+                <td style="background-color:#FFFF00"></td>
+                <td style="background-color:#FF950E"></td>
+                <td style="background-color:#FF3333"></td>
+                <td style="background-color:#9999FF"></td>
+                <td style="background-color:#0A640A"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Intake</td>
+                <td>Operation</td>
+                <td>Recovery</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td></td>
+                <td style="background-color:#00CCCC">&nbsp;</td>
+                <td style="background-color:#00AE00"></td>
+                <td style="background-color:#E6E64C"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>

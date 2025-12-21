@@ -39,6 +39,7 @@ public class TransactionalUserService {
         Member member = memberRepository.findById(user.getMemberId()).orElseThrow();
         user.setMember(member);
         user.getMember().setLocalMembers(localMemberRepository.findByMemberId(member.getId()));
+        user.getMetaUserPreferences()   ;
         return user;
     }
 

@@ -33,7 +33,7 @@ public class AdminApplication implements CommandLineRunner {
         return () -> {
             if (SecurityContextHolder.getContext() == null || SecurityContextHolder.getContext().getAuthentication() == null) {
                 log.error("NO username for auditor aware");
-                return Optional.ofNullable("startupData");
+                return Optional.ofNullable("system");
             } else {
                 return Optional.ofNullable(AutorisationUtils.getCurrentUserAccount());
             }

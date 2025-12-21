@@ -1,6 +1,6 @@
-package dwe.holding.customer.client.model.lookup;
+package dwe.holding.salesconsult.consult.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "CUSTOMER_LOOKUP_ROOM")
+import java.io.Serializable;
+
+@Table(name = "CONSULT_LOOKUP_DIAGNOSE")
 @Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class LookupRoom extends TenantBaseBO {
-    @NotEmpty
+public class LookupDiagnose extends MemberBaseBO implements Serializable {
     @Column(nullable = false)
-    private String room;
+    @NotEmpty
+    private String nomenclature;
 }

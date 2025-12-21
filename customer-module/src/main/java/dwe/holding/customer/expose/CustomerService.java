@@ -2,14 +2,9 @@ package dwe.holding.customer.expose;
 
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.mapper.CustomerMapper;
-import dwe.holding.customer.client.model.lookup.LookupPurpose;
-import dwe.holding.customer.client.model.lookup.LookupSpecies;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.customer.client.repository.LookupSpeciesRepository;
-import dwe.holding.customer.lookup.repository.LookupPurposeRepository;
-import dwe.holding.customer.lookup.repository.RoomLookupRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +19,6 @@ import java.util.Optional;
 @Slf4j
 public class CustomerService {
     private final CustomerRepository customerRepository;
-    private final LookupSpeciesRepository lookupSpeciesRepository;
-    private final LookupPurposeRepository lookupPurposeRepository;
-    private final RoomLookupRepository roomLookupRepository;
 
     private final CustomerMapper customerMapper;
 
@@ -35,14 +27,6 @@ public class CustomerService {
         return customerMapper.toCustomer(
                 customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow()
         );
-    }
-
-    public List<LookupSpecies> getSpecies() {
-        return lookupSpeciesRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L));
-    }
-
-    public List<LookupPurpose> getReasons() {
-        return lookupPurposeRepository.getByMemberIdOrderByDefinedPurpose(AutorisationUtils.getCurrentUserMid());
     }
 
     public Customer searchCustomerFromPet(Long patientId) {
@@ -55,14 +39,6 @@ public class CustomerService {
         dwe.holding.customer.client.model.Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Optional<dwe.holding.customer.client.model.Pet> pet = customer.getPets().stream().filter(custPet -> custPet.getId().equals(petId)).findFirst();
         return pet.orElseThrow();
-    }
-
-    public List<DoubleText> getRoomList() {
-        return roomLookupRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid())
-                .stream().map(rec -> new DoubleText(rec.getRoom(), rec.getRoom())).toList();
-    }
-
-    public record DoubleText(String id, String name) {
     }
 
     public record Customer(

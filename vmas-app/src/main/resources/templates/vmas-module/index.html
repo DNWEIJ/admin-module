@@ -7,7 +7,7 @@
     <article class="text-align-center">
     <form action="/vmas/index" method="post">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', 'localMemberId', ${localMembersList}, true,'1')}"  th:with="dataOnchange='this.form.submit();'"></th:block>
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"  th:with="dataOnchange='this.form.submit();'"></th:block>
     </form>
     <H1>Press F11 to enable full screen mode. F11 again to return.</H1>
     <H3>Select an option from the menu</H3>

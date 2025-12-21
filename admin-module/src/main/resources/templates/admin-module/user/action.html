@@ -21,15 +21,15 @@
 
         <fieldset class="grid" role="presentation">
             <legend th:utext="#{user.settings}"></legend>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','user.loginEnabled', 'user.loginEnabled', ${ynvaluesList}, true,'5')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','user.language', 'user.language', ${languagePrefList}, true,'6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','user.loginEnabled', ${user.loginEnabled}, ${ynvaluesList}, true,'5')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','user.language', ${user.language}, ${languagePrefList}, true,'6')}"></th:block>
             <th:block
                     th:if="${applicationName != null and applicationName != 'teammover'}"
-                    th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','user.personnelStatus', 'user.personnelStatus', ${personnelStatusList}, true,'7')}">
+                    th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','user.personnelStatus', ${user.personnelStatus}, ${personnelStatusList}, true,'7')}">
             </th:block>
             <th:block
                     th:if="${isSuperAdmin}"
-                    th:insert="~{fragments/elements/dropdown::dbDropdown('member','user.member', 'user.member.id', ${membersList}, true,'8')}">
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('member','user.member', ${user.member.id}, ${membersList}, true,'8')}">
             </th:block>
         </fieldset>
         <hr/>

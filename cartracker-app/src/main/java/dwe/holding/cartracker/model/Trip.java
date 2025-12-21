@@ -2,7 +2,10 @@ package dwe.holding.cartracker.model;
 
 
 import dwe.holding.admin.model.base.TenantBaseBO;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +37,8 @@ public class Trip extends TenantBaseBO {
     int liters;
     @Column(name="amount",columnDefinition = "integer default 0")
     int amount;
+    @Column(name="paid",columnDefinition = "bit default 0")
+    boolean isPaid;
 
     public LocalDate getDriveDateLocalDate() {
         DateTimeFormatter daterFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

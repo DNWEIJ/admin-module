@@ -1,6 +1,7 @@
 package dwe.holding.salesconsult.sales.controller.price;
 
 import dwe.holding.salesconsult.sales.Service.LineItemService;
+import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.supplyinventory.expose.CostingService;
@@ -32,8 +33,15 @@ public class PriceSellController {
     String setupProductSell_InitialCall(Model model, @ModelAttribute("lineItems") List<LineItem> lineItems) {
         model
                 .addAttribute("salesType", SalesType.PRICE_INFO)
-                .addAttribute("lineItems", lineItems);
+                .addAttribute("lineItems", new ArrayList<>());
+        return "sales-module/generic/productpage";
+    }
 
+    @GetMapping("/price/sell/more")
+    String setupProductSell_RepeatableCall(Model model, @ModelAttribute("lineItems") List<LineItem> lineItems) {
+        model
+                .addAttribute("salesType", SalesType.PRICE_INFO)
+                .addAttribute("lineItems", lineItems);
         return "sales-module/generic/productpage";
     }
 
@@ -45,24 +53,18 @@ public class PriceSellController {
         list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
 
         lineItems.addAll(list);
-
-        if (!lineItems.isEmpty()) {
-            model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
-            model.addAttribute("totalVatAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
-        }
+        ModelHelper.updateLineItemsInModel(model, lineItems);
         model
                 .addAttribute("salesType", SalesType.PRICE_INFO)
                 .addAttribute("categoryNames", costingService.getCategories())
-                .addAttribute("url", "/sales/price/sell/")
-                .addAttribute("allLineItems", lineItems);
+                .addAttribute("url", "/sales/price/sell/");
 
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
     @DeleteMapping("/price/sell/{lineItemId}")
     String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
-
         model.addAttribute("lineItems", lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
-        return "redirect:/sales/price/sell/";
+        return "redirect:/sales/price/sell/more";
     }
 }

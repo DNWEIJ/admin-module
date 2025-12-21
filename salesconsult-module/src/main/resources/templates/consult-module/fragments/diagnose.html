@@ -1,0 +1,38 @@
+<th:block th:fragment="diagnose()">
+    <table class="table-tight">
+        <thead>
+        <tr>
+            <th></th>
+            <th class="left" th:text="#{label.diagnose}"></th>
+            <th class="left" th:text="#{label.location}"></th>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <div id="diagnoseTableReplaceHtmx">
+            <th:include th:replace="~{consult-module/fragments/htmx/diagnoselocationoverview}"></th:include>
+        </div>
+    </table>
+    <form id="diagnoseForm" th:hx-post="'/consult/visit/'+${visit.id}+'/diagnose'"
+          hx-target="#diagnoseTableReplaceHtmx">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <fieldset class="grid">
+            <label for="ownDiagnoses">
+                <input role="switch" id="ownDiagnoses" name="ownDiagnoses" type="checkbox"
+                       hx-get="/consult/visit/diagnose"
+                       hx-trigger="change"
+                       hx-target="#diagnoseDropdownReplacedViaHtmx"
+                       hx-vals="js:{ownDiagnoses: this.checked}"
+                       autocomplete="off">
+                <span class="no-break">select own?</span>
+            </label>
+            <script src="/js/dropdown.js" type="text/javascript"></script>
+            <span id="diagnoseDropdownReplacedViaHtmx">
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdownAutocomplete('diagnoseDropdown','','', ${diagnoses}, true, '')}"></th:block>
+                </span>
+
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdownAutocomplete('locationDropdown','','', ${locations}, true, '')}"></th:block>
+            <button type="submit" name="_save" class="button-secondary">Add</button>
+        </fieldset>
+    </form>
+</th:block>

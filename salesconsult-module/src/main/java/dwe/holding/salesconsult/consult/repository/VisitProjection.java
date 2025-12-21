@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public record VisitProjection (
     Long id,
-    String petName,
+    Long petId,
     Long appointmentId,
     @Value("#{target.appointment.OTC}")
     YesNoEnum appointmentOTC,

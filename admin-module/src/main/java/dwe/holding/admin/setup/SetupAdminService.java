@@ -129,30 +129,30 @@ public class SetupAdminService {
             Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SUPER_ADMIN")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncSuperAdmin.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).memberId(77L).build())
                             .toList()
             );
 
             Role roleAdminCreate = listRole.stream().filter(r -> r.getName().equals("ADMIN_CREATE")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncAdmin.stream().filter(f -> f.getName().contains("CREATE"))
-                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminCreate.getId()).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminCreate.getId()).memberId(77L).build())
                             .toList()
             );
             Role roleAdminRead = listRole.stream().filter(r -> r.getName().equals("ADMIN_READ")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncAdmin.stream().filter(f -> f.getName().contains("READ"))
-                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminRead.getId()).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminRead.getId()).memberId(77L).build())
                             .toList()
             );
 
             Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncDefault.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleDefault.getId()).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleDefault.getId()).memberId(77L).build())
                             .toList()
             );
-            User user = localMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMember().getId().equals(77L)).findFirst().get();
+            User user = localMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().get();
             log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
             userRoleRepository.saveAllAndFlush(
                     List.of(
@@ -219,27 +219,27 @@ public class SetupAdminService {
         Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SUPER_ADMIN")).findFirst().get();
         functionRoleRepository.saveAllAndFlush(
                 listFuncSuperAdmin.stream()
-                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).build())
+                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).memberId(77L).build())
                         .toList()
         );
 
         Role roleAdminCreate = listRole.stream().filter(r -> r.getName().equals("ADMIN_CREATE")).findFirst().get();
         functionRoleRepository.saveAllAndFlush(
                 listFuncAdmin.stream().filter(f -> f.getName().contains("CREATE"))
-                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminCreate.getId()).build())
+                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminCreate.getId()).memberId(77L).build())
                         .toList()
         );
         Role roleAdminRead = listRole.stream().filter(r -> r.getName().equals("ADMIN_READ")).findFirst().get();
         functionRoleRepository.saveAllAndFlush(
                 listFuncAdmin.stream().filter(f -> f.getName().contains("READ"))
-                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminRead.getId()).build())
+                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleAdminRead.getId()).memberId(77L).build())
                         .toList()
         );
 
         Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
         functionRoleRepository.saveAllAndFlush(
                 listFuncDefault.stream()
-                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleDefault.getId()).build())
+                        .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleDefault.getId()).memberId(77L).build())
                         .toList()
         );
 

@@ -9,6 +9,7 @@
 <section layout:fragment="content">
     <h3 th:if="${salesType.isOtc}"       th:text="#{label.title.otc}"></h3>
     <h3 th:if="${salesType.isPriceInfo}" th:text="#{label.title.priceinfo}"></h3>
+    <h3 th:if="${salesType.isVisit}"  th:text="#{label.title.visit}"></h3>
     <h3 th:if="${salesType.isEstimate}"  th:text="#{label.title.estimate}"></h3>
     <block th:if="${!salesType.isPriceInfo}">
         <fieldset role="group" class="grid">
@@ -22,10 +23,11 @@
         <hr/>
     </block>
     <block th:if="${salesType.isPriceInfo}">
-        <div style="height: 2em">&nbsp;</div>
+        <div style="height: 1rem">&nbsp;</div>
     </block>
     <fieldset role="group" class="grid">
         <legend th:text="#{label.otc.legend.lineitems}"></legend>
+
         <table class="table-tight">
             <thead>
             <tr>
@@ -38,7 +40,7 @@
                 <th class="right" th:text="#{label.otc.sell.taxed}"></th>
                 <th class="right" th:text="#{label.otc.sell.total}"></th>
                 <th class="center">
-                    <svg width="32px" height="32px">
+                    <svg class="svg-icon">
                         <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
                     </svg>
                 </th>

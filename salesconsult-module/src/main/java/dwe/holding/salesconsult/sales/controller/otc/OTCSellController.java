@@ -8,7 +8,6 @@ import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
-import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +25,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateLineItemsInModel;
 
 @RequestMapping("/sales")
 @Controller
@@ -105,7 +106,7 @@ public class OTCSellController {
             return "redirect:/sales/otc/search/";
         }
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        lineItemService.createOTC(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
+        lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
         updateModel(model, petId, app);
         model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
         return "sales-module/fragments/htmx/lineitemsoverview";
@@ -122,12 +123,10 @@ public class OTCSellController {
     }
 
     private void updateModel(Model model, Long petId, Appointment app) {
-        List<LineItem> lineItems = lineItemService.getLineItemsForPet(petId, app.getId());
-        model.addAttribute("allLineItems", lineItems);
-        if (!lineItems.isEmpty()) {
-            model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
-        }
-        model.addAttribute("categoryNames", costingService.getCategories())
+
+        updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, app.getId()));
+        model
+                .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("salesType", SalesType.OTC);
 
     }

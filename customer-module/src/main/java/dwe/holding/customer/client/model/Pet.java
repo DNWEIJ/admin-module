@@ -66,9 +66,6 @@ public class Pet extends MemberBaseBO {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pet")
-    @Builder.Default
-    private Set<Diagnose> diagnoses = new HashSet<>(0);
     // TODO
 //    /**
 //     *  Visits belonging to this Patients (Pets).
@@ -92,11 +89,19 @@ public class Pet extends MemberBaseBO {
         return (deceased.name().equals(YesNoEnum.No.name())) ? getName() : getName() + " &dagger;";
     }
 
+    public String getNameWithDeceasedAndDate() {
+        return deceased.equals(YesNoEnum.Yes) ?
+                getNameWithDeceased() + " (" + getDeceasedDate() + ")" : getNameWithDeceased();
+    }
+
     @Transient
     // TODO make the years and month variables to be replaced in the string in the controller
     public String getAge() {
-        LocalDate today = LocalDate.now();
-        return getBirthday() == null ? "" : getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months";
+        if (deceased.equals(YesNoEnum.Yes)) {
+            return getBirthday() == null || getDeceasedDate() == null ? "" : getBirthday().until(deceasedDate).getYears() + " years " + getBirthday().until(deceasedDate).getMonths() + " months";
+        } else {
+            LocalDate today = LocalDate.now();
+            return getBirthday() == null ? "" : getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months";
+        }
     }
-
 }

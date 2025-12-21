@@ -9,7 +9,7 @@
             </div>
         </div>
         <div>
-        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('appointment.localMemberId','userpreferences.clinic', 'appointment.localMemberId', ${localMembersList}, true,'1')}"></th:block>
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('appointment.localMemberId','userpreferences.clinic', ${appointment.localMemberId}, ${localMembersList}, true,'1')}"></th:block>
         </div>
     </fieldset>
 </th:block>

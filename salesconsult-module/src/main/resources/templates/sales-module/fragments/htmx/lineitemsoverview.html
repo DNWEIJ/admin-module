@@ -8,22 +8,23 @@
     <tr>
         <td class="center">
             <a href="" th:hx-delete="${url+lineitem.id}" hx-include="#csrfParameterName">
-                <svg width="32px" height="32px">
+                <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>
             </a>
         </td>
         <td th:text="${lineitem.nomenclature}"></td>
-        <td th:text="${categoryNames.get(lineitem.categoryId)}"></td>
+        <td th:text="${categoryNames.get(lineitem.categoryId)}" class="desktop-only"></td>
+
         <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.quantity})}"></th:block>
 
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.sellExTaxPrice})}"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.processingFee})}"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.taxPortionOfSell + lineitem.taxPortionOfProcessingFeeService})}"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.sellExTaxPrice})}" th:with="deskTopOnly=true"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.processingFee})}" th:with="deskTopOnly=true"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.taxPortionOfSell + lineitem.taxPortionOfProcessingFeeService})}" th:with="deskTopOnly=true"></th:block>
         <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.total})}"></th:block>
         <td class="center">
-            <a th:if="${lineitem.hasPrintLabel}" href="">
-                <svg width="32px" height="32px">
+            <a class="desktop-only" th:if="${lineitem.hasPrintLabel}" href="">
+                <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
                 </svg>
             </a>
@@ -36,9 +37,9 @@
 <tr>
     <th></th>
     <th class="left"></th>
-    <th class="left"></th>
-    <th class="right"></th>
-    <th class="right"></th>
+    <th class="desktop-only left"></th>
+    <th class="desktop-only right"></th>
+    <th class="desktop-only right"></th>
     <th class="right" th:text="#{label.otc.sell.total}"></th>
     <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalVatAmount})}"></th:block>
     <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalAmount})}"></th:block>

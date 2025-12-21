@@ -71,7 +71,7 @@ public class SetupSuppliesService {
             Role roleSupplies = listRoles.stream().filter(r -> r.getName().equals("SUPPLIES")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFunc.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSupplies.getId()).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSupplies.getId()).memberId(77L).build())
                             .toList()
             );
 

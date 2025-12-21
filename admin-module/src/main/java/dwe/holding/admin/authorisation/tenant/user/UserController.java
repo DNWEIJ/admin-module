@@ -1,7 +1,7 @@
 package dwe.holding.admin.authorisation.tenant.user;
 
-import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
+import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.model.base.BaseBO;
 import dwe.holding.admin.model.base.ToString;
 import dwe.holding.admin.model.tenant.Role;
@@ -139,7 +139,7 @@ public class UserController {
         // initial so no data
         if (user.getUserRoles().isEmpty()) {
             checked.forEach(pf -> {
-                Role role = roleRepository.findById(pf.getId()).get();
+                Role role = roleRepository.findById(pf.getLongId()).get();
                 UserRole userRole = new UserRole(user, role);
                 user.getUserRoles().add(userRole);
                 role.getUserRoles().add(userRole);
@@ -159,7 +159,7 @@ public class UserController {
             // find th record to be added
             List<PresentationElement> pF = checked.stream().filter(a -> !currentFunctionIdsAdd.contains(a.getId())).toList();
             pF.forEach(pf -> {
-                        Role role = roleRepository.findById(pf.getId()).get();
+                        Role role = roleRepository.findById(pf.getLongId()).get();
                         user.getUserRoles().add(new UserRole(user, role));
                     }
             );

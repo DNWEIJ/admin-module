@@ -10,11 +10,11 @@
         let hxPostUrl
         let selectedFieldDataSet
 
-        //
-        // function setView(checkbox) {
-        //     document.getElementById("holder-input").classList.toggle("hidden", checkbox.checked);
-        //     document.getElementById("holder-dropdown").classList.toggle("hidden", !checkbox.checked);
-        // }
+        // used in checkbox -> hx-on::after-request="setView(this)"/>
+        function setView(checkbox) {
+            document.getElementById("holder-input").classList.toggle("hidden", checkbox.checked);
+            document.getElementById("holder-dropdown").classList.toggle("hidden", !checkbox.checked);
+        }
 
         function updateToSelectedElement(listItems) {
             if (listItems.length === 0) return
@@ -240,15 +240,13 @@
     </script>
 
     <form id="costingSearchForm" hx-post="" hx-swap="none">
-        <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <fieldset>
+
             <div class="gridSearchCostingWithCheck">
-                <!--                    <svg width="36px" height="36px" align="center">-->
-                <!--                        <use width="36px" height="36px" align="center" href="/lib/tabler-icons-3_35_0/icons/outline/search.svg"></use>-->
-                <!--                    </svg>-->
                 <div>
                     <label for="useDropDown">
+                        <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
                         <input id="useDropDown" tabindex="0" type="checkbox" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right" autocomplete="off"
                                hx-get="/costing/costing/search/costing/dropdown"
                                hx-trigger="click"
@@ -272,11 +270,15 @@
                 </div>
                 <div id="holder-dropdown" class="hidden">
                     <!-- options will be filled by hx-target -->
-                    <select name="categoryId" id="categoryList" hx-post="/costing/costing/search/costing/dropdown/found/costing" hx-target="#productsFromCategory" hx-swap="innerHTML">
-                    </select>
-                    <select tabindex="1" id="productsFromCategory">
-                        <option disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
-                    </select>
+                    <fieldset class="grid">
+                        <div><select name="categoryId" id="categoryList" hx-post="/costing/costing/search/costing/dropdown/found/costing" hx-target="#productsFromCategory" hx-swap="innerHTML">
+                        </select>
+                        </div>
+                        <div>
+                            <select tabindex="1" id="productsFromCategory">
+                                <option disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
+                            </select></div>
+                    </fieldset>
                 </div>
                 <div>
                     <input type="hidden" name="inputCostingId" id="inputCostingId"/>

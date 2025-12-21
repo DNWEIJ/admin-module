@@ -1,0 +1,16 @@
+<tbody>
+<input th:id="csrfParameterName" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+<th:block th:each="diagnose : ${allDiagnoses}">
+    <tr>
+        <td class="center">
+            <a href="" th:hx-delete="${url+diagnose.id}" hx-include="#csrfParameterName">
+                <svg class="svg-icon">
+                    <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
+                </svg>
+            </a>
+        </td>
+        <td th:text="${diagnose.diagnose}"></td>
+        <td th:text="${diagnose.location}"></td>
+    </tr>
+</th:block>
+</tbody>

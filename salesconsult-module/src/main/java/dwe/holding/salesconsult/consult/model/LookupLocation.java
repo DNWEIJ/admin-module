@@ -1,4 +1,4 @@
-package dwe.holding.customer.client.model.lookup;
+package dwe.holding.salesconsult.consult.model;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "CUSTOMER_LOOKUP_LOCATION")
+@Table(name = "CONSULT_LOOKUP_LOCATION")
 @Entity
     @SuperBuilder
     @NoArgsConstructor

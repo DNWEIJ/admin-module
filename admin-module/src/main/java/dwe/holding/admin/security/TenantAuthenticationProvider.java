@@ -1,5 +1,6 @@
 package dwe.holding.admin.security;
 
+import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
 import dwe.holding.admin.model.notenant.Function;
 import dwe.holding.admin.model.tenant.IPSecurity;
 import dwe.holding.admin.model.tenant.User;
@@ -28,12 +29,12 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private final FunctionQueryCriteria functionQueryCriteria;
     private final TransactionalUserService transactionalUserService;
+    private final FunctionRepository functionRepository;
 
-    public TenantAuthenticationProvider(FunctionQueryCriteria functionQueryCriteria, TransactionalUserService transactionalUserService) {
-        this.functionQueryCriteria = functionQueryCriteria;
+    public TenantAuthenticationProvider(TransactionalUserService transactionalUserService, FunctionRepository functionRepository) {
         this.transactionalUserService = transactionalUserService;
+        this.functionRepository = functionRepository;
     }
 
     enum PasswordState {
@@ -61,7 +62,20 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        // moved to the retrieveUser in order to be able to update the user for the password md5 to bcrypt
+        // update status
+        AdminUserDetails adminUser  = (AdminUserDetails) userDetails;
+        User user = adminUser.getUser();
+
+        LocalDate now = LocalDate.now();
+        if (user.getLastVisitDate() == null || !now.equals(user.getLastVisitDate())) {
+            user.setLastVisitDate(now);
+            if (user.getNumberOfVisits() == null) {
+                user.setNumberOfVisits(1L);
+            } else {
+                user.setNumberOfVisits(user.getNumberOfVisits() + 1);
+            }
+            transactionalUserService.save(user);
+        }
     }
 
     @Override
@@ -127,17 +141,6 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             }
 
         }
-        // update status
-        LocalDate now = LocalDate.now();
-        if (user.getLastVisitDate() == null || !now.equals(user.getLastVisitDate())) {
-            user.setLastVisitDate(now);
-            if (user.getNumberOfVisits() == null) {
-                user.setNumberOfVisits(1L);
-            } else {
-                user.setNumberOfVisits(user.getNumberOfVisits() + 1);
-            }
-            transactionalUserService.save(user);
-        }
 
         // create details
         AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(),
@@ -149,7 +152,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
     Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromRolAndFunction(User user) {
 
         if (user.getUserRoles() != null) {
-            List<Function> functionList = functionQueryCriteria.process(user.getId());
+            List<Function> functionList =  functionRepository.getAllFunctionsForUser(user.getId());
             GrantedAuthority[] grantedAuthorities = new GrantedAuthority[functionList.size()];
 
             int grantedAuthorityIndex = 0;

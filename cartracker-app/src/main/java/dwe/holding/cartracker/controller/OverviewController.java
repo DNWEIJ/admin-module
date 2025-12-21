@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -22,11 +20,8 @@ class OverviewController {
 
     final DriveService driveService;
     final CarService carService;
-    String startTable = """
-            <details class="collapsable-table">
-            <summary>Click to open or close</summary>
-            <table class="table-tight %s" id="table">
-            """;
+    static final String SETTLED = "<span>Settled</span>";
+
     String headerTable = """
             <thead>
             <tr><td>Daan</td><td>Suus</td><td>Maria&nbsp;&nbsp;&nbsp;</td><td>Tot Km</td><td>Ltrs</td><td>€</td><td>Paid</td></tr>
@@ -44,6 +39,14 @@ class OverviewController {
         this.driveService = driveService;
         this.carService = carService;
     }
+
+    @GetMapping("/trip/alluser/tank/{tripId}/pay")
+    @ResponseBody
+    public String updateToPaidHtmx(@PathVariable Long tripId) {
+        driveService.saveRecordForPaid(tripId);
+        return SETTLED;
+    }
+
 
     @GetMapping("/trip/alluser/tank")
     public String getCarListTank(Model model) {
@@ -81,8 +84,10 @@ class OverviewController {
                 }
             }
 
-            if (trip.getAmount() >  0) {
-                sb.append(startTable.formatted((oddOreven++ % 2 == 0) ? "odd" : "even"));
+            if (trip.getAmount() > 0) {
+                sb.append(
+                        startCollapsableTable(oddOreven++, trip.isPaid(), trip.getId())
+                );
                 sb.append(headerTable);
                 sb.append("<tbody>");
                 double totalAmount = trip.getAmount() * 1.0 / 100;
@@ -127,11 +132,13 @@ class OverviewController {
                 sb.append(footerTable);
             }
         }
-        sb.append(startTable.formatted((oddOreven % 2 == 0) ? "odd" : "even"));
+        sb.append(
+                startCollapsableTable(oddOreven, false, 0L)
+        );
         sb.append(headerTable);
         sb.append(dataRowTable.formatted("left over:", "", "", "", "", "", ""));
-        sb.append(dataRowTable.formatted(totalVW_Daniel, totalVW_Suzanne, totalVW_Maria,"", "VW", "", ""));
-        sb.append(dataRowTable.formatted(totalT_Daniel, totalT_Suzanne, totalT_Maria,"", "Toyota", "", ""));
+        sb.append(dataRowTable.formatted(totalVW_Daniel, totalVW_Suzanne, totalVW_Maria, "", "VW", "", ""));
+        sb.append(dataRowTable.formatted(totalT_Daniel, totalT_Suzanne, totalT_Maria, "", "Toyota", "", ""));
         sb.append("</tbody>");
         sb.append(footerTable);
 
@@ -203,5 +210,32 @@ class OverviewController {
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<String> handleNotFound(IllegalArgumentException e) {
         return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
+    public static String startCollapsableTable(int oddOreven, boolean isPaid, Long tripId) {
+        if (tripId == 0) return """
+                <details class="collapsable-table"><summary>Click to open or close</summary><table class="table-tight %1$s" id="table">
+                """.formatted( (oddOreven % 2 == 0) ? "odd" : "even");
+
+        String updateElement = """
+                <a id="payment_%1$s"
+                   hx-get="/cartracker/trip/alluser/tank/%1$s/pay"
+                   hx-trigger="click"
+                   hx-target="#payment_%1$s"
+                   hx-swap="outerHTML"
+                   hx-confirm="Has the payment been shettled?"
+                   onclick="event.stopPropagation()">
+                   Settle payment?
+                </a>
+                """.formatted(tripId);
+
+        return """
+                <details class="collapsable-table"><summary class="%1$s">Click to open or close %2$s</summary><table class="table-tight  %3$s" id="table">
+                """.formatted(
+                isPaid ? "paid" : "unpaid",
+                isPaid ? SETTLED : updateElement,
+                ((oddOreven % 2 == 0) ? "odd" : "even")
+        );
     }
 }

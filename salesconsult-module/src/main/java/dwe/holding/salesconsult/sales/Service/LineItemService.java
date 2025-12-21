@@ -36,7 +36,7 @@ public class LineItemService {
     }
 
     @Transactional
-    public void createOTC(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
+    public void createOtcLineItem(Appointment app, Long petId, Long costingId, BigDecimal amount, String batchNumber, String spillageName) {
 
         // validate if we are allowed to add a line item; Only VET can add after closed or canceled
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
@@ -83,7 +83,6 @@ public class LineItemService {
             LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
             LineItem newLineItem = LineItem.builder().appointment(appointment)
                     .pet(pet)
-                    .localMemberId(AutorisationUtils.getCurrentUserMlid())
                     .processingFee(cpp.processingFee())
                     .taxedTypeEnum(cpp.taxed())
                     .sellExTaxPrice(cpp.sellExTaxPrice())

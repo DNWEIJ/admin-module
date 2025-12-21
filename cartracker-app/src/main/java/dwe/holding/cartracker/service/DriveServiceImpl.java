@@ -1,6 +1,7 @@
 package dwe.holding.cartracker.service;
 
 
+import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.cartracker.model.Trip;
 import dwe.holding.cartracker.repository.DriveRepository;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-  
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,8 +21,21 @@ public class DriveServiceImpl implements DriveService {
         this.driveRepository = driveRepository;
     }
 
-    public   Long saveRecord(Trip car) {
+    public   Long saveRecordForPaid(Trip car) {
+        car.setMemberId(AutorisationUtils.getCurrentUserMid());
+        car.setLocalMemberId(AutorisationUtils.getCurrentUserMid());
         return driveRepository.save(car).getId();
+    }
+
+    public Long saveRecordForPaid(Long tripId) {
+        Trip trip = driveRepository.findByIdAndMemberId(tripId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        trip.setPaid(true);
+        return driveRepository.save(trip).getId();
+    }
+
+    @Override
+    public Trip getTripById(Long id) {
+        return driveRepository.findByIdAndMemberId(id, AutorisationUtils.getCurrentUserMid()).orElseThrow();
     }
 
     @Override
@@ -45,7 +58,7 @@ public class DriveServiceImpl implements DriveService {
     }
 
     @Override
-    public String getHtmlStringOf(  Long id) {
+    public String getHtmlStringOf(Long id) {
         Optional<Trip> car = driveRepository.findById(id);
         return (car.isPresent()) ? car.get().toHtmlString() : "";
     }

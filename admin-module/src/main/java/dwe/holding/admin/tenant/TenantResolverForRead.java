@@ -10,8 +10,8 @@ public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
     @Override
     public Long resolveCurrentTenantIdentifier() {
         if (AutorisationUtils.isLoggedIn()) {
-        return AutorisationUtils.getCurrentUserMid();
-    } else {
+            return AutorisationUtils.getCurrentUserMid();
+        } else {
             return 0L;
         }
     }

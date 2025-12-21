@@ -1,12 +1,11 @@
-package dwe.holding.customer.lookup.repository;
+package dwe.holding.salesconsult.consult.repository;
 
-import dwe.holding.customer.client.model.lookup.LookupRoom;
+import dwe.holding.salesconsult.consult.model.LookupRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
 import java.util.List;
 
-public interface RoomLookupRepository extends JpaRepository<LookupRoom, Long> {
+public interface LookupRoomRepository extends JpaRepository<LookupRoom, Long> {
     List<LookupRoom> getByMemberIdOrderByRoom(Long memberId);
 
     // todo move to id,name object

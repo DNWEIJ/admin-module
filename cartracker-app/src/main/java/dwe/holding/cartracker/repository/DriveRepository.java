@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-  
+import java.util.Optional;
+
 
 @Repository
 public interface DriveRepository extends JpaRepository<Trip,   Long> {
@@ -20,4 +21,6 @@ public interface DriveRepository extends JpaRepository<Trip,   Long> {
                 .and(Sort.by(Sort.Direction.ASC, "id"));
         return findAll(sortBy);
     }
+
+    Optional<Trip> findByIdAndMemberId(Long id, Long currentUserMid);
 }

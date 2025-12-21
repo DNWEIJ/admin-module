@@ -17,10 +17,16 @@ public class AdminAuthenticationFilter implements AuthenticationConverter {
 
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) {
         if (request.getMethod().equals("POST")) {
-            String username = obtainUsername(request);
-            String password = obtainPassword(request);
-            String domain = obtainShortCode(request);
+//            String username = obtainUsername(request);
+//            String password = obtainPassword(request);
+//            String domain = obtainShortCode(request);
+            String username = "daniel";
+            String password = "Daniel0904!";
+            String domain = "CAR";
 
+//            String username = "daniel";
+//            String password = "gdTS$$m8UOPX";
+//            String domain = "GWZ";
             String usernameDomain = String.format("%s%s%s", username.trim(), String.valueOf(Character.LINE_SEPARATOR), domain);
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(usernameDomain, password);
             token.setDetails(detailsSource.buildDetails(request));

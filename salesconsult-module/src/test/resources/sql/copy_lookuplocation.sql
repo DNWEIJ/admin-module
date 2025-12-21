@@ -1,5 +1,4 @@
- INSERT INTO customer_lookup_location
-
+ INSERT INTO consult_lookup_location
 (id,
  version,
  member_id,
@@ -10,11 +9,10 @@
  last_edited_on)
 select LOOKUPLOCATION_ID,
        VERSION,
-       77,
+       -1,
        NOMENCLATURE,
        'migration',
        now(),
        'migration',
        now()
-
 FROM vmas.lookuplocation

@@ -62,14 +62,19 @@ public class LoginController {
         if (form.password.equals(form.password2) && AutorisationUtils.getCurrentUserId().toString().equals(form.id())) {
             model.addAttribute("error", "not correct");
             return "/admin-module/resetpassword";
-        } else {
-            User user = localMemberRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
-            user.setPassword(passwordEncoder.encode(form.password));
-            user.setChangePassword(false);
-            User savedUser = localMemberRepository.save(user);
-            AutorisationUtils.setCurrentUser(savedUser);
-            return "redirect:/admin/index";
         }
+
+        User user = localMemberRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
+        if (!passwordEncoder.matches(form.currentPassword(), user.getPassword())){
+            model.addAttribute("error", "not correct");
+            return "/admin-module/resetpassword";
+        }
+        user.setPassword(passwordEncoder.encode(form.password));
+        user.setChangePassword(false);
+        User savedUser = localMemberRepository.save(user);
+        AutorisationUtils.setCurrentUser(savedUser);
+        return "redirect:/admin/index";
+
     }
 
     @GetMapping("/favicon.ico")
@@ -83,7 +88,7 @@ public class LoginController {
         return "admin-module/error";
     }
 
-    record ResetPasswordForm(String id, String password, String password2) {
+    record ResetPasswordForm(String id, String currentPassword, String password, String password2) {
     }
 
 }

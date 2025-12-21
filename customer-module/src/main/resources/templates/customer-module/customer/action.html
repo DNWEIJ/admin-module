@@ -44,8 +44,8 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('workPhone','customer.workPhone','customer.workPhone','12')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', 'customer.status', ${statusList}, true,'13')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', 'customer.newsletter', ${ynvaluesList}, true,'14')}"
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', ${customer.status}, ${statusList}, true,'13')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', ${customer.newsletter}, ${ynvaluesList}, true,'14')}"
                       th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">

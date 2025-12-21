@@ -1,7 +1,6 @@
 package dwe.holding.salesconsult.consult.repository;
 
 import dwe.holding.salesconsult.consult.model.Appointment;
-import dwe.holding.salesconsult.consult.model.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

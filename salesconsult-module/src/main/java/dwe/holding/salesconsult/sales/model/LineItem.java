@@ -1,7 +1,7 @@
 package dwe.holding.salesconsult.sales.model;
 
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
@@ -24,7 +24,7 @@ import java.math.RoundingMode;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LineItem extends TenantBaseBO {
+public class LineItem extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Appointment appointment;
@@ -34,6 +34,8 @@ public class LineItem extends TenantBaseBO {
 
     @NotNull
     private Long categoryId;
+    @NotNull
+    private Long costingId;
 
     @NotEmpty
     @Column(nullable = false)
@@ -85,7 +87,7 @@ public class LineItem extends TenantBaseBO {
         if (reduction != null) {
             //  realCost = realCost * (1 - reduction / 100);
             realCost = realCost.multiply(
-                    (( BigDecimal.ONE).subtract(
+                    ((BigDecimal.ONE).subtract(
                             reduction.divide(hundred, 4, RoundingMode.HALF_UP))
                     )
             );
@@ -100,7 +102,7 @@ public class LineItem extends TenantBaseBO {
                 processingFee
                         .add(
                                 processingFee.multiply(
-                                        taxServicePercentage.divide(BigDecimal.valueOf(100),4, RoundingMode.HALF_UP)
+                                        taxServicePercentage.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
                                 )
                         );
         // final result

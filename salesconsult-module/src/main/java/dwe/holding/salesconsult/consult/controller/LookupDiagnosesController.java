@@ -1,8 +1,8 @@
-package dwe.holding.customer.lookup.controller;
+package dwe.holding.salesconsult.consult.controller;
 
-import dwe.holding.customer.client.model.lookup.LookupDiagnose;
-import dwe.holding.customer.lookup.repository.DiagnosesLookupRepository;
 import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.salesconsult.consult.model.LookupDiagnose;
+import dwe.holding.salesconsult.consult.repository.LookupDiagnosesRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,16 +16,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(path = "/customer")
 @Slf4j
-public class DiagnosesLookupController {
-    private final DiagnosesLookupRepository diagnosesLookupRepository;
+public class LookupDiagnosesController {
+    private final LookupDiagnosesRepository lookupDiagnosesRepository;
 
-    public DiagnosesLookupController(DiagnosesLookupRepository diagnosesLookupRepository) {
-        this.diagnosesLookupRepository = diagnosesLookupRepository;
+    public LookupDiagnosesController(LookupDiagnosesRepository lookupDiagnosesRepository) {
+        this.lookupDiagnosesRepository = lookupDiagnosesRepository;
     }
 
     @GetMapping("lookup/diagnosis")
     String list(Model model) {
-        model.addAttribute("diagnoses", diagnosesLookupRepository.getByMemberId(AutorisationUtils.getCurrentUserMid()));
+        model.addAttribute("diagnoses", lookupDiagnosesRepository.getByMemberId(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "diagnosis");
         return "customer-module/lookup/diagnosis/list";
     }
@@ -39,7 +39,7 @@ public class DiagnosesLookupController {
 
     @GetMapping("lookup/diagnose/{diagnosesId}")
     String editRecord(@PathVariable Long diagnosesId, Model model) {
-        LookupDiagnose diagnoses = diagnosesLookupRepository.findById(diagnosesId).orElseThrow();
+        LookupDiagnose diagnoses = lookupDiagnosesRepository.findById(diagnosesId).orElseThrow();
         model.addAttribute("lookupDiagnosis", diagnoses.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? diagnoses : new LookupDiagnose());
         ; //AutorisationUtils.getCurrentUserMid()
         model.addAttribute("activeMenu", "diagnosis");
@@ -50,16 +50,16 @@ public class DiagnosesLookupController {
     @Transactional
     String saveRecord(LookupDiagnose formDiagnose, RedirectAttributes redirect) {
         if (formDiagnose.isNew()) {
-            diagnosesLookupRepository.save(
+            lookupDiagnosesRepository.save(
                     LookupDiagnose.builder()
                             .nomenclature(formDiagnose.getNomenclature())
                             .build()
             );
         } else {
-            LookupDiagnose diag = diagnosesLookupRepository.findById(formDiagnose.getId()).orElseThrow();
+            LookupDiagnose diag = lookupDiagnosesRepository.findById(formDiagnose.getId()).orElseThrow();
             if (diag.getMemberId().equals(AutorisationUtils.getCurrentUserMid())) {
                 diag.setNomenclature(formDiagnose.getNomenclature());
-                diagnosesLookupRepository.save(diag);
+                lookupDiagnosesRepository.save(diag);
             } else {
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             }

@@ -15,7 +15,7 @@
         <fieldset class="grid">
             <legend>[[#{label.reminder.info}]]</legend>
         </fieldset>
-        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('petId','label.reminder.petname', 'reminder.pet.id', ${petsList}, true,'1')}">
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('petId','label.reminder.petname', ${reminder.pet.id}, ${petsList}, true,'1')}">
         </th:block>
 
         <fieldset class="grid">

@@ -5,7 +5,7 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.visit},'/customer/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.visit},'', ${customerInformation})}"></th:block>
 
     <hr/>
 
@@ -21,12 +21,12 @@
         <tbody>
         <tr th:each="visit : ${visits}">
             <td>
-                <a th:href="'/consult/customer/'+ ${customerId} + '/visit/'+ ${visit.id}"
+                <a th:href="'/consult/visit/customer/'+ ${customerId} + '/visit/'+ ${visit.id}"
                    th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm')} + ${visit.appointmentOTC.label == 'label.yesno.yes' ? ' (OTC)':''}"></a>
             </td>
-            <td th:text="${visit.petName}"></td>
+            <td th:utext="${pets.get(visit.petId)}"></td>
             <td th:text="${visit.purpose}"></td>
-            <td th:text="${memberLocals.get(visit.appointmentLocalMemberId)}"></td>
+            <td th:text="${localMembersList.get(visit.appointmentLocalMemberId)}"></td>
         </tr>
         </tbody>
     </table>

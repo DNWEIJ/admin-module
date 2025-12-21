@@ -1,8 +1,8 @@
-package dwe.holding.customer.lookup.controller;
+package dwe.holding.salesconsult.consult.controller;
 
-import dwe.holding.customer.client.model.lookup.LookupRoom;
-import dwe.holding.customer.lookup.repository.RoomLookupRepository;
 import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.salesconsult.consult.model.LookupRoom;
+import dwe.holding.salesconsult.consult.repository.LookupRoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,16 +17,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(path = "/customer")
 @Slf4j
 // TODO: Move to admin module or shared-module? This isn't customer...
-public class RoomLookupController {
-    private final RoomLookupRepository roomLookupRepository;
+public class LookupRoomController {
+    private final LookupRoomRepository lookupRoomRepository;
 
-    public RoomLookupController(RoomLookupRepository roomLookupRepository) {
-        this.roomLookupRepository = roomLookupRepository;
+    public LookupRoomController(LookupRoomRepository lookupRoomRepository) {
+        this.lookupRoomRepository = lookupRoomRepository;
     }
 
     @GetMapping("lookup/rooms")
     String list(Model model) {
-        model.addAttribute("rooms", roomLookupRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid()));
+        model.addAttribute("rooms", lookupRoomRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "room");
         return "customer-module/lookup/rooms/list";
     }
@@ -40,7 +40,7 @@ public class RoomLookupController {
 
     @GetMapping("lookup/room/{roomId}")
     String editRecord(@PathVariable Long roomId, Model model) {
-        LookupRoom rooms = roomLookupRepository.findById(roomId).orElseThrow();
+        LookupRoom rooms = lookupRoomRepository.findById(roomId).orElseThrow();
         model.addAttribute("room", rooms.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? rooms : new LookupRoom());
         model.addAttribute("activeMenu", "room");
         ; //AutorisationUtils.getCurrentUserMid()
@@ -51,16 +51,16 @@ public class RoomLookupController {
     @Transactional
     String saveRecord(LookupRoom formRoom, RedirectAttributes redirect) {
         if (formRoom.isNew()) {
-            roomLookupRepository.save(
+            lookupRoomRepository.save(
                     LookupRoom.builder()
                             .room(formRoom.getRoom())
                             .build()
             );
         } else {
-            LookupRoom room = roomLookupRepository.findById(formRoom.getId()).orElseThrow();
+            LookupRoom room = lookupRoomRepository.findById(formRoom.getId()).orElseThrow();
             if (room.getMemberId().equals(AutorisationUtils.getCurrentUserMid())) {
                 room.setRoom(formRoom.getRoom());
-                roomLookupRepository.save(room);
+                lookupRoomRepository.save(room);
             } else {
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             }

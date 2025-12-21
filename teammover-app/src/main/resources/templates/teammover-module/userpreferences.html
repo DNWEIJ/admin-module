@@ -47,7 +47,7 @@
         <form action="/teammover/userpreferences" method="post">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <fieldset>
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', ${memberLocalId}, ${localMembersList}, true,'1')}"></th:block>
                 <!--                <th:block th:insert="~{fragments/elements/dropdown::dbDropdownMultiSelect('id', 'Selecteer het team', 'memberLocalId', ${localMembersList}, true,'1')}"></th:block>-->
             </fieldset>
             <fieldset>

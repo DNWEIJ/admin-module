@@ -29,7 +29,7 @@ public class SetupSalesConsultService {
 
     @Transactional
     public   Long init() {
-        if (functionRepository.findByName("sell_READ")) {
+        if (!functionRepository.findByName("sell_READ").isPresent()) {
             log.info("MigrationSalesConsultService:: general functions for SALES role");
             List<Function> listFuncRead = functionRepository.saveAllAndFlush(
                     List.of(
@@ -49,7 +49,7 @@ public class SetupSalesConsultService {
             Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SALESCONSULT_READ")).findFirst().get();
             functionRoleRepository.saveAllAndFlush(
                     listFuncRead.stream()
-                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).build())
+                            .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSuperAdmin.getId()).memberId(77L).build())
                             .toList()
             );
             return 77L;

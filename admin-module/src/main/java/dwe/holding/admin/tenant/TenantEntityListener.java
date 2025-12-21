@@ -21,6 +21,9 @@ public class TenantEntityListener {
     @PrePersist
     @PreUpdate
     public void setTenant(Object entity) {
+
+        if (AutorisationUtils.isLoggedIn() == false && entity.getClass().getName().equals("dwe.holding.admin.model.tenant.User")) return;
+
         Long tenantId = AutorisationUtils.getCurrentUserMid();
         if (entity == null) return;
 

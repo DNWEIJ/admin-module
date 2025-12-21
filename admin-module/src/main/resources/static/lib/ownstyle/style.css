@@ -37,8 +37,9 @@
     background-color: var(--pico-background-color);
     width: 100%;
     z-index: 999;
-    border: 1px solid black;
-    box-shadow: .1rem .1rem .3rem rgba(100, 0, 0, 0.85);
+    border-style: solid;
+    border-color: var(--pico-form-element-border-color);
+    border-radius: var(--pico-border-radius);
 }
 
 .ac_results li {
@@ -52,8 +53,8 @@
 }
 
 .ac_results li.selected {
-    background-color: darkblue;
-    color: white;
+    background-color: var(--pico-primary-background);
+    color: black;
 }
 
 .ac_results:empty {
@@ -77,7 +78,7 @@
     line-height: 1;
 }
 
-.table-tight tr:nth-child(even)  td {
+.table-tight tr:nth-child(even) td {
     background-color: var(--pico-dropdown-background-color);
 }
 
@@ -192,8 +193,8 @@ tbody tr.red-text td {
 /***********************************/
 fieldset {
     font-family: sans-serif;
-    border: .1rem solid var(--pico-muted-border-color);
-    border-radius: .1rem;
+    border: solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
     background-color: var(--pico-muted-border-color);
 }
 
@@ -202,11 +203,12 @@ fieldset legend {
     font-style: italic;
     font-weight: bold;
     border-radius: 1rem;
-    margin-left: 1rem;
-    margin-bottom: 1.3rem;
+    margin-left: 1.1rem;
+    margin-bottom: .3rem;
+    border-radius: var(--pico-border-radius);
+    padding: .2rem;
     background-color: var(--pico-muted-border-color);
 }
-
 
 /* Placeholder floats up in input CSS */
 :root {
@@ -223,7 +225,7 @@ fieldset legend {
 }
 
 .field input:focus {
-    box-shadow: 0 0 0 24px rgba(76, 126, 243, 0.08);
+    box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.08);
 }
 
 /* Label */
@@ -248,7 +250,14 @@ fieldset legend {
     z-index: 100;
 }
 
-/* keep footer stick  */
+.svg-icon {
+    width: 1.7rem;
+    height: 1.7rem;
+    fill: var(--pico-primary-underline);
+}
+
+/***********************************/
+/* keep footer stick to the bottom */
 html, body {
     height: 100%;
     margin: 0;
@@ -271,9 +280,6 @@ html, body {
     text-align: center;
     text-size-adjust: 60%;
 }
-
-
-
 
 
 /* miscellaneous */
@@ -300,8 +306,28 @@ html, body {
     font-weight: bold;
 }
 
-.lower{
+.lower {
     padding-top: 1.4rem;
+}
+
+/*summary::marker {*/
+/*    content: '⤴️ ';*/
+/*    font-size: 1.2rem;*/
+/*}*/
+
+/*details[open] summary::marker {*/
+/*    content: '⤴️ ';*/
+/*}*/
+
+html details summary {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.desktop-only {
+    display: none;
 }
 
 /* ***************************************** */
@@ -326,35 +352,39 @@ html, body {
 
 @media (min-width: 576px) {
     :root {
-        --pico-font-size: 87.5%;
+        --pico-font-size: 77.5%;
         /* Original: 106.25% */
     }
 }
 
 @media (min-width: 768px) {
     :root {
-        --pico-font-size: 87.5%;
+        --pico-font-size: 77.5%;
         /* Original: 112.5% */
+    }
+
+    .desktop-only {
+        display: table-cell;
     }
 }
 
 @media (min-width: 1024px) {
     :root {
-        --pico-font-size: 87.5%;
+        --pico-font-size: 77.5%;
         /* Original: 118.75% */
     }
 }
 
 @media (min-width: 1280px) {
     :root {
-        --pico-font-size: 87.5%;
+        --pico-font-size: 77.5%;
         /* Original: 125% */
     }
 }
 
 @media (min-width: 1536px) {
     :root {
-        --pico-font-size: 87.5%;
+        --pico-font-size: 77.5%;
         /* Original: 131.25% */
     }
 }
@@ -376,7 +406,7 @@ article {
     /* Original: var(--pico-border-radius) */
 }
 
-article>footer {
+article > footer {
     border-radius: calc(var(--pico-border-radius) * 2);
     /* Original: var(--pico-border-radius) */
 }

@@ -7,7 +7,7 @@
  language,
  last_visit_date,
  login_enabled,
- member_local_id,
+ local_member_id,
  name,
  number_of_visits,
  password,
@@ -17,7 +17,7 @@
  added_on,
  last_edited_by,
  last_edited_on)
-SELECT USER_ID,
+ SELECT USER_ID,
        VERSION,
        ACCOUNT,
        false,

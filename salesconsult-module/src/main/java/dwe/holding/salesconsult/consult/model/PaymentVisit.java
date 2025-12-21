@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.consult.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.salesconsult.sales.model.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PaymentVisit extends TenantBaseBO {
+public class PaymentVisit extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_id", nullable = false)

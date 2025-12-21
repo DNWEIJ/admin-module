@@ -8,7 +8,7 @@
         <fieldset role="group" class="grid">
             <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
         </fieldset>
-        <form id="createVisitForm" method="post" action="/consult/visit/create">
+        <form id="createVisitForm" method="post" th:action="'/consult/visit/customer/'+${customer.id}">
             <fieldset>
                 <th:block th:insert="~{consult-module/fragments/datetimelocation::dateTimeLocationSelect()}"></th:block>
             </fieldset>
@@ -26,7 +26,7 @@
                     />
                 </div>
                 <div>
-                <input type="submit" form="createVisitForm" th:value="#{label.button.next}"/>
+                <input type="submit"  name="_save" form="createVisitForm" th:value="#{label.button.next}"/>
             </div>
             </fieldset>
         </form>

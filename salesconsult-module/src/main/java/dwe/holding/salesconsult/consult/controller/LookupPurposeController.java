@@ -1,8 +1,8 @@
-package dwe.holding.customer.lookup.controller;
+package dwe.holding.salesconsult.consult.controller;
 
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.lookup.LookupPurpose;
-import dwe.holding.customer.lookup.repository.LookupPurposeRepository;
+import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
