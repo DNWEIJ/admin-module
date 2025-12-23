@@ -11,7 +11,7 @@
 
     <link href="/lib/pico/pico.blue.min.css" rel="stylesheet"/>
     <link href="/lib/tabulator/tabulator-materialize.css" rel="stylesheet"/>
-    <link href="/lib/toggle-switch/toggle-switch.css" rel="stylesheet"/>
+
 
     <link href="/lib/ownstyle/style.css" rel="stylesheet"/>
     <link href="/lib/ownstyle/hamburger.css" rel="stylesheet"/>
@@ -20,6 +20,10 @@
     <script src="/lib/tabulator/tabulator.js" type="text/javascript"></script>
     <script src="/lib/htmx/htmx.js" type="text/javascript"></script>
     <script src="/lib/pico/modal.js" type="text/javascript"></script>
+    <script th:src="@{/js/addcsrf.js}" type="text/javascript"></script>
+
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 <body>
 <noscript>This app is not going to fly without javascript</noscript>

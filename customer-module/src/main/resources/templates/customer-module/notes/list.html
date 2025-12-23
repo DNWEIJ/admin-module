@@ -22,7 +22,7 @@
             <tbody>
             <th:block th:each="note : ${notes}">
                 <tr>
-                    <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}">[[${note.pet.name}]]</a></td>
+                    <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}" th:utext="${note.pet.nameWithDeceased}"></a></td>
                     <td th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></td>
                     <td>[[${note.purpose}]]</td>
                     <td>

@@ -1,0 +1,12 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title th:text="#{${textLabel}}"></title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <h3 th:text="#{${textLabel}}"></h3>
+    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(false, ${url})}"></div>
+</section>
+</body>
+</html>

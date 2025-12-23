@@ -11,26 +11,27 @@
         <thead>
         <tr>
             <th>[[#{pet.name}]]</th>
-            <th>[[#{pet.species}]]</th>
+            <th class="desktop-only">[[#{pet.species}]]</th>
             <th>[[#{pet.breed}]]</th>
             <th>[[#{pet.sex}]]</th>
-            <th>[[#{pet.birthday}]]</th>
-            <th>[[#{pet.passportNumber}]]</th>
-            <th>[[#{pet.chipTattooId}]]</th>
-            <th>[[#{label.list.auditinfo}]]</th>
+            <th class="desktop-only">[[#{pet.birthday}]]</th>
+            <th class="desktop-only">[[#{pet.passportNumber}]]</th>
+            <th class="desktop-only">[[#{pet.chipTattooId}]]</th>
+            <th class="desktop-only">[[#{label.list.auditinfo}]]</th>
         </tr>
         </thead>
         <tbody>
         <th:block th:each="pet : ${pets}">
             <tr>
                 <td><a th:href="'/customer/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}"><span th:utext="${pet.nameWithDeceased}" th:remove="tag"></span></a></td>
-                <td>[[${pet.species}]]</td>
+                <td class="desktop-only">[[${pet.species}]]</td>
                 <td>[[${pet.breed}]]</td>
-                <td>[[#{${pet.sex.getLabel}}]]</td>
-                <td th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
-                <td>[[${pet.passportNumber}]]</td>
-                <td>[[${pet.chipTattooId}]]</td>
-                <td>
+                <td class="desktop-only">[[#{${pet.sex.getLabel}}]]</td>
+                <td class="mobile-only">[[${pet.sex.databaseField}]]</td>
+                <td  class="desktop-only"th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
+                <td class="desktop-only">[[${pet.passportNumber}]]</td>
+                <td class="desktop-only">[[${pet.chipTattooId}]]</td>
+                <td class="desktop-only">
                     <small th:data-tooltip="'Created by  '+${pet.addedBy}+' on ' +${#temporals.format(pet.addedOn, 'dd-MM-yy')}">
                         [[${pet.lastEditedBy}]] • [[${#temporals.format(pet.lastEditedOn, 'dd-MM-yy')}]]
                     </small>

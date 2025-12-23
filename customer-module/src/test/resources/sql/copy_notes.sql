@@ -1,4 +1,4 @@
- INSERT INTO customer_notes
+ INSERT INTO customer_note
 (id,
  version,
   member_id,

@@ -61,7 +61,7 @@ public class OTCSellController {
                 .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && pet.deceased()))
                 .addAttribute("url", "/sales/otc/search/" + customer.id() + "/sell/" + app.getId() + "/" + selectedPet.getId() + "/");
         updateModel(model, petId, app);
-        return "sales-module/generic/productpage";
+        return "salesconsult-generic-module/productpage";
     }
 
     @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")

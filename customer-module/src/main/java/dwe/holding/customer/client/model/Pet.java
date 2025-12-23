@@ -82,7 +82,7 @@ public class Pet extends MemberBaseBO {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pet")
     @Builder.Default
-    private Set<Notes> notepads = new HashSet<>(0);
+    private Set<Note> notepads = new HashSet<>(0);
 
     @Transient
     public String getNameWithDeceased() {

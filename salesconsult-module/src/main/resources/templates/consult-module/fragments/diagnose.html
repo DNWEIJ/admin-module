@@ -15,7 +15,7 @@
     </table>
     <form id="diagnoseForm" th:hx-post="'/consult/visit/'+${visit.id}+'/diagnose'"
           hx-target="#diagnoseTableReplaceHtmx">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <fieldset class="grid">
             <label for="ownDiagnoses">
                 <input role="switch" id="ownDiagnoses" name="ownDiagnoses" type="checkbox"

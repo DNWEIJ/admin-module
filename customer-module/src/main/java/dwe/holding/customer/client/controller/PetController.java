@@ -125,14 +125,16 @@ public class PetController {
     }
 
     @GetMapping("/customer/{customerId}/pet/{petId}")
-    String editRecord(@PathVariable Long customerId, @PathVariable Long petId, Model model, RedirectAttributes redirect) {
+    String editRecord(@PathVariable Long customerId, @PathVariable Long petId, Model model, RedirectAttributes redirect, HttpServletRequest request) {
 
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
 
         Pet pet = petRepository.findById(petId).orElseThrow();
         model.addAttribute("pet", pet.getCustomer().getId().equals(customerId) ? pet : new Pet());
         setModel(model, pet.getCustomer().getId(), pet);
-        return "customer-module/pet/action";
+        boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+        model.addAttribute("isHtmx",isHtmx);
+        return isHtmx ? "customer-module/pet/petformmodal" : "customer-module/pet/action";
     }
 
 
@@ -145,13 +147,13 @@ public class PetController {
         model.addAttribute("pet", pet);
         model.addAttribute("speciesList", lookupSpeciesRepository.findByMemberIdIn(listIds)
                 .stream().map(
-                        f -> new PresentationElement(f.getId(), f.getSpecies(), true)
+                        f -> new PresentationElement(f.getSpecies(), f.getSpecies())
                 )
                 .sorted(Comparator.comparing(PresentationElement::getName)).toList()
         );
         model.addAttribute("breedList", lookupBreedsRepository.findByMemberIdIn(listIds)
                 .stream().map(
-                        f -> new PresentationElement(f.getId(), f.getBreed(), true)
+                        f -> new PresentationElement(f.getBreed(), f.getBreed())
                 )
                 .sorted(Comparator.comparing(PresentationElement::getName)).toList()
 

@@ -26,7 +26,7 @@
             </td>
             <td th:utext="${pets.get(visit.petId)}"></td>
             <td th:text="${visit.purpose}"></td>
-            <td th:text="${localMembersList.get(visit.appointmentLocalMemberId)}"></td>
+            <td th:text="${localMembersList.get(visit.appointmentLocalMemberId.toString())}"></td>
         </tr>
         </tbody>
     </table>

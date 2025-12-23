@@ -30,10 +30,12 @@ public class OTCSelectController {
 
     @GetMapping("/otc/search")
     String first_SearchCustomer(Model model) {
-        model.addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
-                .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
-
-        return "sales-module/otc/searchpage";
+        model
+                .addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
+                .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
+                .addAttribute("textLabel", "label.title.otc")
+                .addAttribute("url", "/sales/otc/search/");
+        return "salesconsult-generic-module/customersearchpage";
     }
 
 

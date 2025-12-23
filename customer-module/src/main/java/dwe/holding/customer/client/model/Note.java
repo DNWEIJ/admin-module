@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Notes extends MemberBaseBO {
+public class Note extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pet_id", nullable = false)

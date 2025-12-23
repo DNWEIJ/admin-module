@@ -8,7 +8,7 @@
     <hr/>
     <form action="/teammover/game" method="post">
         <fieldset role="presentation">
-            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
             <input id="id" name="id" th:value="${game.id}" type="hidden">
             <input id="version" name="version" th:value="${game.version}" type="hidden">
             <th:block th:insert="~{fragments/elements/select::selectCheckBox('doWeNeedToDrive','Spelen we uit?','game.doWeNeedToDrive','1')}"></th:block>

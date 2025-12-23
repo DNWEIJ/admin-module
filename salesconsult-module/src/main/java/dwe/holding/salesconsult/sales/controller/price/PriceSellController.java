@@ -34,7 +34,7 @@ public class PriceSellController {
         model
                 .addAttribute("salesType", SalesType.PRICE_INFO)
                 .addAttribute("lineItems", new ArrayList<>());
-        return "sales-module/generic/productpage";
+        return "salesconsult-generic-module/productpage";
     }
 
     @GetMapping("/price/sell/more")
@@ -42,7 +42,7 @@ public class PriceSellController {
         model
                 .addAttribute("salesType", SalesType.PRICE_INFO)
                 .addAttribute("lineItems", lineItems);
-        return "sales-module/generic/productpage";
+        return "salesconsult-generic-module/productpage";
     }
 
     @PostMapping("/price/sell")

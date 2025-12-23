@@ -3,7 +3,7 @@
        th:hx-confirm="#{label.otc.sell.delete.confirm}"
        hx-target="closest tr"
        hx-swap="outerHTML swap:1s">
-<input th:id="csrfParameterName" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
 <th:block th:each="lineitem : ${allLineItems}">
     <tr>
         <td class="center">

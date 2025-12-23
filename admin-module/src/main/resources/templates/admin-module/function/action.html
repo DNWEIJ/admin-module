@@ -7,7 +7,7 @@
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${function.id}, 'Function','/admin/function/list')}"></th:block>
 
 <form action="/admin/function" method="post">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
     <fieldset class="grid" role="presentation">

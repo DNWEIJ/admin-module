@@ -80,7 +80,7 @@
     </script>
     <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
     <div class="gridSearchCustomerWithCheck">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <div class="holder">
             <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}"
                    hx-get="/customer/search/customer"
@@ -97,8 +97,6 @@
             <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','2')}" th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
             <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','3')}" th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
             <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','4')}" th:with="tooltip=#{label.tooltip.customer.firstel}"></th:block>
-        </div>
-        <div role="group">
             <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','5')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
         </div>
         <div role="group">

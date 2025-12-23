@@ -8,7 +8,7 @@
 <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Distributor','/supplies/distributor/list')}"></th:block>
 
 <form action="/user/preferences" method="post">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
     <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
     <input id="id" name="id" th:value="${distributor.id}" type="hidden">

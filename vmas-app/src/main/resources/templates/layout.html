@@ -5,26 +5,32 @@
     <meta content="width=device-width" name="viewport"/>
     <meta content="light dark" name="color-scheme">
 
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
     <title>Template title</title>
     <link th:href="@{/images/favicon.svg}" rel="icon" type="image/x-icon"/>
 
-<!--    <link th:href="@{/lib/pico/pico.blue.min.css}" rel="stylesheet"/>-->
     <link th:href="@{/lib/pico/pico.amber.min.css}" rel="stylesheet"/>
     <link th:href="@{/lib/pico/pico.colors.min.css}" rel="stylesheet"/>
-
     <link th:href="@{/lib/tabulator/tabulator-materialize.css}" rel="stylesheet"/>
-    <link th:href="@{/lib/toggle-switch/toggle-switch.css}" rel="stylesheet"/>
 
-    <link th:href="@{/lib/ownstyle/style.css}" rel="stylesheet"/>
     <link th:href="@{/lib/ownstyle/hamburger.css}" rel="stylesheet"/>
+    <link th:href="@{/lib/ownstyle/style.css}" rel="stylesheet"/>
 
     <!-- javascript -->
     <script th:src="@{/lib/tabulator/tabulator.js}" type="text/javascript"></script>
     <script th:src="@{/lib/htmx/htmx.js}" type="text/javascript"></script>
     <script th:src="@{/lib/pico/modal.js}" type="text/javascript"></script>
+    <script th:src="@{/lib/pico/themeswitcher.js}" type="text/javascript"></script>
+
+    <script th:src="@{/js/addcsrf.js}" type="text/javascript"></script>
+
 </head>
 <body>
+
 <noscript>This app is not going to fly without javascript</noscript>
+
 <!-- notification message with fadein fadeout -->
 <th:block th:if="${message != null}">
     <div id="fade-in" class="box" th:text="#{${message}}"></div>
@@ -61,12 +67,12 @@
         }
     </style>
     <script>
-        window.onload = function () {
+        document.addEventListener("DOMContentLoaded", () => {
             document.querySelector('#fade-in').classList.add('show');
             setTimeout(function () {
                 document.querySelector('#fade-in').classList.remove('show');
             }, 700)
-        }
+        });
     </script>
 </th:block>
 
@@ -87,7 +93,6 @@
     </th:block>
     <main>
         <th:block id="content" layout:fragment="content"></th:block>
-        <div id="modal-container"></div>
     </main>
     <footer>
         <p>
@@ -104,6 +109,7 @@
             DWE Holding &copy;
         </p>
     </footer>
+    <div id="modal-container"></div>
 </div>
 <div th:replace="~{/fragments/page/sessiontimeout}"></div>
 </body>

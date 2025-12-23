@@ -3,7 +3,7 @@ package dwe.holding.customer.client.controller;
 import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Customer;
-import dwe.holding.customer.client.model.Notes;
+import dwe.holding.customer.client.model.Note;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.repository.NotesRepository;
@@ -12,6 +12,7 @@ import dwe.holding.customer.lookup.repository.NotePurposeLookupRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,23 +27,14 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping(path = "/customer")
 @Slf4j
-public class NotesController {
+@AllArgsConstructor
+public class NoteController {
     private final NotesRepository notesRepository;
     private final UserService userService;
     private final ValidateCustomer validateCustomer;
     private final PetRepository petRepository;
     private final CustomerRepository customerRepository;
     private final NotePurposeLookupRepository notePurposeLookupRepository;
-
-    public NotesController(NotesRepository notesRepository, UserService userService, ValidateCustomer validateCustomer,
-                           PetRepository petRepository, CustomerRepository customerRepository, NotePurposeLookupRepository notePurposeLookupRepository) {
-        this.notesRepository = notesRepository;
-        this.userService = userService;
-        this.validateCustomer = validateCustomer;
-        this.petRepository = petRepository;
-        this.customerRepository = customerRepository;
-        this.notePurposeLookupRepository = notePurposeLookupRepository;
-    }
 
     @GetMapping("/customer/{customerId}/notes")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
@@ -57,7 +49,7 @@ public class NotesController {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
 
         Customer customer = customerRepository.findById(customerId).orElseThrow();
-        model.addAttribute("note", Notes.builder().noteDate(LocalDate.now()).staffMember("daniel").build()); ;
+        model.addAttribute("note", Note.builder().noteDate(LocalDate.now()).staffMember("daniel").build()); ;
         setModelOneRecord(model, customer);
 
         setModel(model, customer.getId());
@@ -69,8 +61,8 @@ public class NotesController {
     @Transactional
     String editRecord(@PathVariable Long customerId, @PathVariable Long notesId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        Notes note = notesRepository.findById(notesId).orElseThrow();
-        model.addAttribute("note", note.getPet().getCustomer().getId().equals(customerId) ? note : new Notes());
+        Note note = notesRepository.findById(notesId).orElseThrow();
+        model.addAttribute("note", note.getPet().getCustomer().getId().equals(customerId) ? note : new Note());
         setModelOneRecord(model, note.getPet().getCustomer());
         setModel(model, note.getPet().getCustomer().getId());
         return "customer-module/notes/action";
@@ -78,7 +70,7 @@ public class NotesController {
 
     @PostMapping("/customer/{customerId}/note")
     @Transactional
-    String saveRecord(@PathVariable Long customerId, Notes formNote, Model model, RedirectAttributes redirect) {
+    String saveRecord(@PathVariable Long customerId, Note formNote, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
 
         Pet pet = petRepository.findById(formNote.getPet().getId()).orElseThrow();
@@ -89,7 +81,7 @@ public class NotesController {
 
         if (formNote.isNew()) {
             notesRepository.save(
-                    Notes.builder().note(formNote.getNote())
+                    Note.builder().note(formNote.getNote())
                             .noteDate(formNote.getNoteDate())
                             .pet(pet)
                             .purpose(formNote.getPurpose())

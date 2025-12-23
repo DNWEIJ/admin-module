@@ -40,11 +40,11 @@ public class HtmxVisitController {
     }
 
     @PostMapping("/visit/{visitId}/diagnose")
-    String saveDiagnose(@NotNull Long visitId, Model model, Long diagnoseDropdown_input, Long locationDropdown_input) {
+    String saveDiagnose(@PathVariable Long visitId, Model model, Long diagnoseDropdown_hidden, Long locationDropdown_hidden) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId);
         diagnoseRepository.save(Diagnose.builder()
-                .lookupDiagnose(LookupDiagnose.builder().id(diagnoseDropdown_input).build())
-                .lookupLocation(LookupLocation.builder().id(locationDropdown_input).build())
+                .lookupDiagnose(LookupDiagnose.builder().id(diagnoseDropdown_hidden).build())
+                .lookupLocation(LookupLocation.builder().id(locationDropdown_hidden).build())
                 .appointment(visit.getAppointment())
                 .petId(visit.getPet().getId())
                 .build()

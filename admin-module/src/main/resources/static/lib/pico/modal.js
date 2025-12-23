@@ -5,14 +5,6 @@
  * Copyright 2019-2024 - Licensed under MIT
  */
 
-// html example to open a modal:
-// <section id="modal">
-//     <h2>Modal</h2>
-//     <button className="contrast" data-target="modal-example" onClick="toggleModal(event)">
-//         Launch demo modal
-//     </button>
-// </section>
-
 // Config
 const isOpenClass = "modal-is-open";
 const openingClass = "modal-is-opening";

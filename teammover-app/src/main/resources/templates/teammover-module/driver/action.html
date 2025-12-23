@@ -45,7 +45,7 @@
     </fieldset>
 
     <form method="post" th:action="'/teammover/game/'+${driver.game.id}+'/driver'">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <input id="id" name="id" th:value="${driver.id}" type="hidden">
         <input id="version" name="version" th:value="${driver.version}" type="hidden">
         <input id="game.id" name="game.id" th:value="${driver.game.id}" type="hidden"/>

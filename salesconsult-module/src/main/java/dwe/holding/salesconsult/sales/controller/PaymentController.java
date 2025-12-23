@@ -80,7 +80,7 @@ public class PaymentController {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
         model.addAttribute("payments", paymentRepository.findByCustomer_IdOrderByPaymentDateDesc(customerId));
         setModel(model, customerId);
-        return "customer-module/payment/list";
+        return "sales-module/payment/list";
     }
 
     @GetMapping("/customer/{customerId}/payment")
@@ -93,7 +93,7 @@ public class PaymentController {
                         .amount(0.0)
                         .build());
         setModel(model, customerId);
-        return "customer-module/payment/action";
+        return "sales-module/payment/action";
     }
 
     @GetMapping("/customer/{customerId}/payment/{paymentId}")
@@ -102,7 +102,7 @@ public class PaymentController {
         Payment payment = paymentRepository.findById(paymentId).get();
         model.addAttribute("payment", payment.getCustomer().getId().equals(customerId) ? payment : new Payment());
         setModel(model, payment.getCustomer().getId());
-        return "customer-module/payment/action";
+        return "sales-module/payment/action";
     }
 
     void setModel(Model model, Long customerId) {

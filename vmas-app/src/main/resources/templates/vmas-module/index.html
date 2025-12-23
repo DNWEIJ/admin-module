@@ -6,13 +6,16 @@
 <section layout:fragment="content">
     <article class="text-align-center">
     <form action="/vmas/index" method="post">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"  th:with="dataOnchange='this.form.submit();'"></th:block>
     </form>
-    <H1>Press F11 to enable full screen mode. F11 again to return.</H1>
-    <H3>Select an option from the menu</H3>
+    <H1 class="desktop-only">Press F11 to enable full screen mode. F11 again to return.</H1>
     <br/>
-    <p><b>Clinic Notifications:</b></p>
+    <p><b>Clinic Notification:</b></p>
     <p th:utext="${comment}"></p>
+    </article>
+    <article>TODO
+    <div> color switch</div>
+    <div> dark/light theme</div>
     </article>
 </section>

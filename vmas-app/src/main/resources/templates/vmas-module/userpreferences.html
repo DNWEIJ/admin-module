@@ -5,7 +5,7 @@
 <body>
 <section layout:fragment="content">
     <form action="/vmas/userpreferences" method="post">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <fieldset>
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${user.localMemberId}, ${localMembersList}, true,'1')}"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','userpreferences.language', ${user.language}, ${languageList}, true,'2')}"></th:block>

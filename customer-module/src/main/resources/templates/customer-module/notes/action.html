@@ -9,13 +9,12 @@
             th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${note.id}, #{label.title.notes},'/customer/customer/'+ ${customerId}+ '/notes', ${customerInformation})}"></th:block>
 
     <form id="createForm" th:action="'/customer/customer/'+${customerId}+'/note'" method="post">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <input id="id" name="id" th:value="${note.id}" type="hidden"/>
         <input id="version" name="version" th:value="${note.version}" type="hidden"/>
 
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('pet','label.notes.petname', ${note.id}, ${petsList}, true,'1')}"></th:block>
-
+        <fieldset>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('pet','label.notes.petname', ${note.pet.id}, ${petsList}, true,'1')}"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('staffMember','label.notes.personnel', ${note.staffMember}, ${staffList}, true,'1')}"></th:block>
         </fieldset>
 

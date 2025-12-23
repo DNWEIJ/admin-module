@@ -5,7 +5,7 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.payment},'/customer/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.payment},'/sales/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
 
 <hr/>
     <table class="table-tight" id="show-table">
@@ -25,7 +25,7 @@
         <tbody>
         <th:block th:each="payment : ${payments}">
             <tr>
-                <td><a th:href="'/customer/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
+                <td><a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
                 <td>[[${payment.localMemberId}]]</td>
                 <td>[[#{${payment.method.getLabel}}]]</td>
                 <td>[[${#numbers.formatCurrency(payment.amount)}]]</td>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Button Tabs Layout</title>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+        }
+
+        /* Tabs row */
+        .tab-row {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        /* Base tab button */
+        .tab-button {
+            padding: 12px 22px;
+            background: #2a9df4;
+            border: 1px solid #1f7fc8;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #ffffff;
+            transition: all 0.25s ease;
+            margin-right: 2px;
+        }
+
+        /* Hover */
+        .tab-button:hover {
+            background: #1f7fc8;
+        }
+
+        /* Active / selected tab */
+        .tab-button.active,
+        .tab-button:focus-visible {
+            background: #ffffff;
+            color: #2a9df4;
+            border-color: #ffffff;
+            z-index: 2;
+            box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.25);
+            outline: none;
+        }
+
+        /* Content panel */
+        .tab-content {
+            background: #ffffff;
+            color: #222;
+            border-radius: 0 12px 12px 12px;
+            padding: 24px;
+            min-height: 140px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            position: relative;
+            top: -1px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Reusable Button Tabs</h2>
+
+<div class="tab-row">
+    <button class="tab-button active" type="button">
+        Neon Blue
+    </button>
+    <button class="tab-button" type="button">
+        Electric Purple
+    </button>
+    <button class="tab-button" type="button">
+        Mint Green
+    </button>
+    <button class="tab-button" type="button">
+        Sunset Coral
+    </button>
+</div>
+
+<div class="tab-content">
+    Content goes here — controlled by your backend, JS, or template logic.
+</div>
+
+</body>
+</html>

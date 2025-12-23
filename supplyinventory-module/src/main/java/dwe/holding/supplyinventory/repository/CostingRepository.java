@@ -4,6 +4,7 @@ import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.Costing;
 import dwe.holding.supplyinventory.model.projection.CostingProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +27,11 @@ public interface CostingRepository extends JpaRepository<Costing, Long> {
     List<CostingProjection> findByNomenclatureContainsAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no);
 
     List<CostingProjection> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long currentUserMid);
+
+    @Query("""
+            SELECT DISTINCT c.reminderNomenclature
+            FROM Costing c
+            WHERE c.memberId = :memberId order by c.reminderNomenclature
+            """)
+    List<String> getReminderNomenclature(Long memberId);
 }

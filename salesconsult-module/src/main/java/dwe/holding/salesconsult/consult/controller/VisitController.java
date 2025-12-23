@@ -57,8 +57,10 @@ public class VisitController {
     @GetMapping("/visit/search")
     String firstStepStart(Model model) {
         model.addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
-                .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
-        return "/consult-module/visit/searchCustomer";
+                .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
+                        .addAttribute("textLabel", "label.title.visit")
+                .addAttribute("url", "/consult/visit/search/");
+        return "/salesconsult-generic-module/customersearchpage";
     }
 
     @GetMapping("/visit/search/{customerId}")
@@ -102,7 +104,8 @@ public class VisitController {
                 .addAttribute("customerId", customer.id())
                 .addAttribute("pets", customer.pets().stream().collect(Collectors.toMap(p -> p.id(), p -> p.deceased() ? p.name() + " &dagger;" : p.name())))
                 .addAttribute("visits", visitRepository.findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(AutorisationUtils.getCurrentUserMid(), customer.pets().stream().map(CustomerService.Pet::id).toList()))
-                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList().stream().collect(Collectors.toMap(PresentationElement::getId, PresentationElement::getName)));
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList().stream().collect(Collectors.toMap(PresentationElement::getId, PresentationElement::getName)))
+                .addAttribute("activeMenu", "visits");
         return "consult-module/visit/list";
     }
 

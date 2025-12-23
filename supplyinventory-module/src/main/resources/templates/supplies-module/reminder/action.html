@@ -5,22 +5,23 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${reminder.id}, #{label.title.reminder},'/customer/customer/'+ ${customerId}+ '/reminders', ${customerInformation})}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${reminder.id}, #{label.title.reminder},'/supplies/customer/'+ ${customerId}+ '/reminders', ${customerInformation})}"></th:block>
 
 
-    <form id="createForm" th:action="'/customer/customer/'+${customerId}+ '/reminder'" method="post">
+    <form id="createForm" th:action="'/supplies/customer/'+${customerId}+ '/reminder'" method="post">
         <input id="id" name="reminder.id" th:value="${reminder.id}" type="hidden"/>
         <input id="version" name="reminder.version" th:value="${reminder.version}" type="hidden"/>
 
         <fieldset class="grid">
             <legend>[[#{label.reminder.info}]]</legend>
-        </fieldset>
+
         <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('petId','label.reminder.petname', ${reminder.pet.id}, ${petsList}, true,'1')}">
         </th:block>
+        </fieldset>
 
         <fieldset class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('reminder.dueDate','label.reminder.duedate','reminder.dueDate','2')}" th:with="type='date'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('reminder.reminder','label.reminder.reminder','reminder.reminder','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('reminder.reminder','label.reminder.reminder', ${reminder.reminder}, ${costingReminderList}, true,'3')}">
         </fieldset>
     </form>
     <th:block th:insert="~{fragments/elements/audit::audit('reminder.addedBy','reminder.addedOn', 'reminder.lastEditedBy', 'reminder.lastEditedOn')}"></th:block>

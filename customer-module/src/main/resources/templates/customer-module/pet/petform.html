@@ -1,6 +1,6 @@
 <th:block th:fragment="petForm(url)">
     <form id="createForm" th:action="${url}" method="post">
-        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <input id="id" name="id" th:value="${pet.id}" type="hidden"/>
         <input id="version" name="version" th:value="${pet.version}" type="hidden"/>
         <input id="isHtmx" name="isHtmx" th:value="${isHtmx}" type="hidden"/>
@@ -14,8 +14,8 @@
         </fieldset>
         <fieldset class="grid">
             todo: add htmx from species to breed
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'pet.species', ${pet.species}, ${speciesList}, true,'4')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'pet.breed', ${pet.breed}, ${breedList}, true,'5')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('species', 'pet.species', ${pet.species}, ${speciesList}, true,'4')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('breed', 'pet.breed', ${pet.breed}, ${breedList}, true,'5')}" th:with="required=false"></th:block>
 
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sex','pet.sex', ${pet.sex}, ${sexTypeList}, true,'6')}"></th:block>
         </fieldset>
@@ -34,19 +34,17 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('allergiesDescription','pet.allergiesDescription','pet.allergiesDescription','12')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('insuredBy','pet.insuredBy','pet.insuredBy','13')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('gpwarningDescription','pet.gpwarningDescription','pet.gpwarningDescription','15')}" th:with="required=false"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('passportNumber','pet.passportNumber','pet.passportNumber','16')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('deceasedDate','pet.deceasedDate','pet.deceasedDate','14')}" th:with="type='date',required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('passportNumber','pet.passportNumber','pet.passportNumber','16')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipTattooId','pet.chipTattooId','pet.chipTattooId','17')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipDate','pet.chipDate','pet.chipDate','18')}" th:with="type='date', required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
             <label for="pet.comments">
                 <th:block th:utext="#{pet.comments}"/>
-                <textarea cols="110" id="pet.comments" name="pet.comments" rows="8" tab="19" th:utext="${pet.comments}"></textarea>
+                <textarea cols="110" id="pet.comments" name="comments" rows="8" tab="19" th:utext="${pet.comments}"></textarea>
             </label>
         </fieldset>
     </form>

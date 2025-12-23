@@ -1,13 +1,17 @@
-package dwe.holding.customer.client.controller;
+package dwe.holding.supplyinventory.controller;
 
+import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.customer.client.controller.ValidateCustomer;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
 import dwe.holding.customer.client.repository.PetRepository;
-import dwe.holding.customer.client.repository.ReminderRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.supplyinventory.repository.CostingRepository;
+import dwe.holding.supplyinventory.repository.ReminderRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,25 +22,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping(path = "/supplies")
 @Slf4j
+@AllArgsConstructor
 public class ReminderController {
     private final ReminderRepository reminderRepository;
     private final PetRepository petRepository;
     private final ValidateCustomer validateCustomer;
-
-    public ReminderController(ReminderRepository reminderRepository, PetRepository petRepository, ValidateCustomer validateCustomer) {
-        this.reminderRepository = reminderRepository;
-        this.petRepository = petRepository;
-        this.validateCustomer = validateCustomer;
-    }
+    private final CostingRepository costingRepository;
 
     @GetMapping("/customer/{customerId}/reminders")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
         model.addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customerId));
         model.addAttribute("activeMenu", "reminders");
-        return "customer-module/reminder/list";
+        return "supplies-module/reminder/list";
     }
 
     @GetMapping("/customer/{customerId}/reminder")
@@ -49,14 +49,11 @@ public class ReminderController {
                 petRepository.findByCustomer_IdOrderByDeceasedAsc(customerId)
                         .stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList()
         );
-        model.addAttribute("costingReminderList", "");
+        model.addAttribute("costingReminderList", costingRepository.getReminderNomenclature(AutorisationUtils.getCurrentUserMid())
+                .stream().map(nomenclature -> new PresentationElement(nomenclature, nomenclature)).toList());
         model.addAttribute("activeMenu", "reminders");
-//      <query name="costingReminders">
-//          select new  nl.achtiiacht.framework.util.ReferenceList(cst.id, cst.rnomenclature)
-//          from Costing as cst where cst.mid = ? and cst.rnomenclature is not null  and cst.rnomenclature is not empty
-//          group by cst.rnomenclature order by cst.rnomenclature desc
-//      </query>
-        return "customer-module/reminder/action";
+
+        return "supplies-module/reminder/action";
     }
 
 
@@ -66,7 +63,7 @@ public class ReminderController {
         Pet pet = petRepository.findById(formReminder.getPet().getId()).orElseThrow();
         if (!pet.getCustomer().getId().equals(customerId)) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
-            return "redirect:/customer/customer/" + customerId + "/reminders";
+            return "redirect:/supplies/customer/" + customerId + "/reminders";
         }
 
         if (formReminder.isNew()) {
@@ -81,7 +78,7 @@ public class ReminderController {
             Reminder savedReminder = reminderRepository.save(formReminder);
             pet.getReminders().add(savedReminder);
         }
-        return "redirect:/customer/customer/" + customerId + "/reminders";
+        return "redirect:/supplies/customer/" + customerId + "/reminders";
     }
 
     @GetMapping("/customer/{customerId}/reminder/{reminderId}")
@@ -89,9 +86,11 @@ public class ReminderController {
     String editRecord(@PathVariable Long customerId, @PathVariable Long reminderId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
         Reminder reminder = reminderRepository.findById(reminderId).orElseThrow();
-        model.addAttribute("reminder", reminder.getPet().getCustomer().getId().equals(customerId) ? reminder : new Reminder());
+        model.addAttribute("reminder", reminder);
+        model.addAttribute("costingReminderList", costingRepository.getReminderNomenclature(AutorisationUtils.getCurrentUserMid())
+                .stream().filter(costing -> (costing==null || costing.isEmpty())).map(nomenclature -> new PresentationElement(nomenclature, nomenclature)).toList());
         setModel(model, reminder.getPet().getCustomer());
-        return "customer-module/reminder/action";
+        return "supplies-module/reminder/action";
     }
 
     void setModel(Model model, Customer customer) {

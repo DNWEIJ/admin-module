@@ -34,11 +34,10 @@
 .ac_results {
     position: relative;
     overflow: hidden;
-    background-color: var(--pico-background-color);
+
     width: 100%;
     z-index: 999;
-    border-style: solid;
-    border-color: var(--pico-form-element-border-color);
+    border: 1px solid var(--pico-form-element-border-color);
     border-radius: var(--pico-border-radius);
 }
 
@@ -199,15 +198,16 @@ fieldset {
 }
 
 fieldset legend {
-    font-size: 110%;
+    font-size: 105%;
     font-style: italic;
     font-weight: bold;
     border-radius: 1rem;
-    margin-left: 1.1rem;
-    margin-bottom: .3rem;
+    margin-left: 8rem;
+    margin-bottom: .7rem;
     border-radius: var(--pico-border-radius);
     padding: .2rem;
     background-color: var(--pico-muted-border-color);
+    border-color: var(--pico-color);
 }
 
 /* Placeholder floats up in input CSS */
@@ -270,6 +270,7 @@ html, body {
 }
 
 .wrapper main {
+    margin-top: .5rem;
     flex: 1; /* Pushes footer to the bottom */
 }
 
@@ -279,6 +280,7 @@ html, body {
     padding: 1rem;
     text-align: center;
     text-size-adjust: 60%;
+    border-radius: var(--pico-border-radius);
 }
 
 
@@ -330,10 +332,20 @@ html details summary {
     display: none;
 }
 
+.mobile-only {
+    display: table-cell;
+}
+input[type="button"],
+input[type="submit"],
+[role="button"] {
+    padding: var(--pico-button-padding, 0.5rem 1rem);
+}
+
 /* ***************************************** */
 /** pico specific scaling issues for an app **/
 /* ***************************************** */
 :root {
+    --pico-button-padding: 0.35rem 0.2rem;
     --pico-typography-spacing-vertical: .5rem;
     --pico-spacing: 0.5rem;
 
@@ -365,6 +377,9 @@ html details summary {
 
     .desktop-only {
         display: table-cell;
+    }
+    .mobile-only {
+        display: none;
     }
 }
 
@@ -409,4 +424,14 @@ article {
 article > footer {
     border-radius: calc(var(--pico-border-radius) * 2);
     /* Original: var(--pico-border-radius) */
+}
+
+[data-tooltip]:focus::after,
+[data-tooltip]:focus::before {
+    opacity: 0 !important;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+    opacity: 1 !important;
 }

@@ -1,4 +1,4 @@
-package dwe.holding.customer.client.repository;
+package dwe.holding.supplyinventory.repository;
 
 import dwe.holding.customer.client.model.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;

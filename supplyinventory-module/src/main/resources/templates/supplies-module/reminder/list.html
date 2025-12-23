@@ -5,7 +5,7 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.reminder},'/customer/customer/'+ ${customerId} + '/reminder', ${customerInformation})}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.reminder},'/supplies/customer/'+ ${customerId} + '/reminder', ${customerInformation})}"></th:block>
 
     <hr/>
     <table class="table-tight" id="show-table">
@@ -17,11 +17,11 @@
             <th>[[#{label.reminder.reminder}]]</th>
             <th>[[#{label.list.auditinfo}]]</th>
         </tr>
-         </thead>
+        </thead>
         <tbody>
         <th:block th:each="reminder : ${reminders}">
             <tr>
-                <td><a th:href="'/customer/customer/'+ ${customerId}+ '/reminder/'+ ${reminder.id}">[[${reminder.pet.nameWithDeceased}]]</a></td>
+                <td><a th:href="'/supplies/customer/'+ ${customerId}+ '/reminder/'+ ${reminder.id}" th:utext="${reminder.pet.nameWithDeceased}"></a></td>
                 <td th:text="${#temporals.format(reminder.dueDate, 'dd-MM-yyyy')}"></td>
                 <td>[[${reminder.reminder}]]</td>
                 <td>
