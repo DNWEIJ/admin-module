@@ -23,7 +23,7 @@
             <th:block th:insert="~{fragments/elements/input::inputHtml('barcode','Barcode','product.barcode','3')}"></th:block>
 
             <th:block th:insert="~{fragments/elements/input::inputHtml('cost','Cost','product.cost','4')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('processingFee','Processing Fee','product.processingFee','5')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtml('processingFee','Processing Fee','product.processingFeeExTax','5')}"></th:block>
             <th:block th:insert="~{fragments/elements/select::selectHtml('taxed','Taxed Item','product.taxed',${taxTypes})}"></th:block>
             <th:block th:insert="~{fragments/elements/select::selectHtml('batch','Batch','product.batch',${batchOptions})}"></th:block>
 

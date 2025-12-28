@@ -1,7 +1,7 @@
 package dwe.holding.teammover.controller;
 
 import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
-import dwe.holding.admin.expose.UserPreferencesService;
+import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
@@ -20,12 +20,12 @@ import java.util.Comparator;
 public class TeamMoverUserPrefController {
 
     private final LocalMemberRepository localMemberRepository;
-    private final UserPreferencesService userPreferencesService;
+    private final UserService userService;
     private final ObjectMapper objectMapper;
 
-    public TeamMoverUserPrefController(LocalMemberRepository localMemberRepository, UserPreferencesService userPreferencesService, ObjectMapper objectMapper) {
+    public TeamMoverUserPrefController(LocalMemberRepository localMemberRepository, UserService userService, ObjectMapper objectMapper) {
         this.localMemberRepository = localMemberRepository;
-        this.userPreferencesService = userPreferencesService;
+        this.userService = userService;
         this.objectMapper = objectMapper;
     }
 
@@ -47,7 +47,7 @@ public class TeamMoverUserPrefController {
     String localMember(SettingsForm form) {
         form.userPreferences.setNrOfTeamMembers(form.userPreferences.getNames().size());
 
-        userPreferencesService.storeAppPreferences(objectMapper.writeValueAsString(form.userPreferences));
+        userService.saveUserSettings(objectMapper.writeValueAsString(form.userPreferences));
         return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 

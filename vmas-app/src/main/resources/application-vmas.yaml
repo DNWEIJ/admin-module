@@ -23,7 +23,7 @@ spring:
     database: mysql
     properties:
       generate-ddl: no
-      show_sql: false
+      show_sql: true
       use_sql_comments: false
       format_sql: false
       use_jdbc_metadata_defaults: false

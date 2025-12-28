@@ -30,9 +30,12 @@ public class LineItemService {
     private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
 
-    @Transactional
-    public List<LineItem> createPricing(Long costingId, BigDecimal amount) {
+    public List<LineItem> createPricing(@NotNull Long costingId, @NotNull BigDecimal amount) {
         return getLineItems(Appointment.builder().id(0L).build(), costingId, amount, Pet.builder().id(0L).build());
+    }
+
+    public List<LineItem> createEstimateLineItem(@NotNull Long costingId, @NotNull BigDecimal amount, @NotNull Pet pet) {
+        return getLineItems(Appointment.builder().id(0L).build(), costingId, amount, pet);
     }
 
     @Transactional
@@ -60,8 +63,19 @@ public class LineItemService {
         app.getLineItems().addAll(savedLineItems);
         appointmentRepository.save(app);
     }
+
+
+    public void delete(@NotNull Long lineItemId) {
+        lineItemRepository.deleteById(lineItemId);
+    }
+
+    public List<LineItem> getLineItemsForPet(Long petId, Long appointmentId) {
+        return lineItemRepository.findByPet_IdAndAppointment_IdAndMemberId(petId, appointmentId, AutorisationUtils.getCurrentUserMid());
+    }
+
+
     private List<LineItem> getLineItems(Appointment appointment, Long costingId, BigDecimal amount, Pet pet) {
-        return getLineItems(appointment,  costingId,  amount, null, null,  pet);
+        return getLineItems(appointment, costingId, amount, null, null, pet);
     }
 
     private List<LineItem> getLineItems(Appointment appointment, Long costingId, BigDecimal amount, String batchNumber, String spillageName, Pet pet) {
@@ -83,10 +97,11 @@ public class LineItemService {
             LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
             LineItem newLineItem = LineItem.builder().appointment(appointment)
                     .pet(pet)
-                    .processingFee(cpp.processingFee())
+                    .processingFeeExTax(cpp.processingFeeExTax())
                     .taxedTypeEnum(cpp.taxed())
-                    .sellExTaxPrice(cpp.sellExTaxPrice())
+                    .salesPriceExTax(cpp.salesPriceExTax())
                     .categoryId(cpp.lookupCostingCategory().getId())
+                    .costingId(cpp.id())
                     .nomenclature(cpp.nomenclature())
                     .taxGoodPercentage(taxes.getTaxHigh())
                     .taxServicePercentage(taxes.getTaxLow())
@@ -97,12 +112,12 @@ public class LineItemService {
                     .hasPrintLabel(cpp.prescriptionLabel() != null && !cpp.prescriptionLabel().isEmpty())
                     .build();
 
-            newLineItem.setTotal(newLineItem.calculateTotal(cpp.reductionPercentage()));
+            newLineItem.setTotalIncTax(newLineItem.calculateTotal(cpp.reductionPercentage()));
             newLineItem.setTaxPortionOfProcessingFeeService(newLineItem.calculateProcessingFeeServiceTax());
-            newLineItem.setTaxPortionOfSell(newLineItem.calculateCostTaxPortion());
+            newLineItem.setTaxPortionOfProduct(newLineItem.calculateCostTaxPortion());
 
 
-            if (appointment.getId() == 0L) { // we are in pricing
+            if (appointment.getId() == 0L) { // we are in pricing or estimate
                 toBeSavedLineItems.add(newLineItem);
             } else {    // we are in OTC or Consult
                 LineItem savedLineItem = lineItemRepository.save(newLineItem);
@@ -124,13 +139,5 @@ public class LineItemService {
             return amount;
         }
         return amount.multiply(groupQuantity);
-    }
-
-    public void delete(@NotNull Long lineItemId) {
-        lineItemRepository.deleteById(lineItemId);
-    }
-
-    public List<LineItem> getLineItemsForPet(Long petId, Long appointmentId) {
-        return lineItemRepository.findByPet_IdAndAppointment_IdAndMemberId(petId, appointmentId, AutorisationUtils.getCurrentUserMid());
     }
 }

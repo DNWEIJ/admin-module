@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Wrapper to retrieve the String Security context user. Wrapper will handle validation and throws an exception if needs be.
@@ -92,6 +94,11 @@ public class AutorisationUtils {
         return AutorisationUtils.getCurrentMember().getLocalMembers()
                 .stream().map(f -> new PresentationElement(f.getId(), f.getLocalMemberName(), true))
                 .sorted(Comparator.comparing(PresentationElement::getName)).toList();
+    }
+
+    public static Map<Long, String> getLocalMemberMap() {
+        return AutorisationUtils.getCurrentMember().getLocalMembers()
+                .stream().collect(Collectors.toMap(LocalMember::getId, LocalMember::getLocalMemberName));
     }
 
     public static UserSettings getCurrentUserSettings() {

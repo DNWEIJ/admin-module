@@ -5,17 +5,37 @@
 <body>
 <section layout:fragment="content">
     <article class="text-align-center">
-    <form action="/vmas/index" method="post">
+        <form action="/vmas/index" method="post">
 
-        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"  th:with="dataOnchange='this.form.submit();'"></th:block>
-    </form>
-    <H1 class="desktop-only">Press F11 to enable full screen mode. F11 again to return.</H1>
-    <br/>
-    <p><b>Clinic Notification:</b></p>
-    <p th:utext="${comment}"></p>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"
+                      th:with="dataOnchange='this.form.submit();'"></th:block>
+        </form>
+        <H1 class="desktop-only">Press F11 to enable full screen mode. F11 again to return.</H1>
+        <br/>
+        <p><b>Clinic Notification:</b></p>
+        <p th:utext="${comment}"></p>
     </article>
     <article>TODO
-    <div> color switch</div>
-    <div> dark/light theme</div>
+        <ul>
+            <li><h1> Migration</h1></li>
+            <li>sql file: sales_line_item estime line item, set costingId and print flag</li>
+
+            <li><h1> Error handling</h1></li>
+            <li>add LastPageIntercepter and ErrorHandler to redirect with error</li>
+            <li>See if we can rollback batchnumber and spillage on delete</li>
+
+            <li><h1> Financials</h1></li>
+            <li>save lineitem in visit postLineItem</li>
+            <li>set appointment total ex_tax, total_service_tax, total_goods_tax</li>
+            <li>use appointment to calculate balance and other financials</li>
+
+            <li><h1> Front end</h1></li>
+            <li> fix action.html note</li>
+
+            <li><h1> Front end: Nice to have</h1></li>
+            <li>color switch</li>
+            <li>dark/light theme</li>
+            <li>Scaling font</li>
+        </ul>
     </article>
 </section>

@@ -7,7 +7,7 @@
 <th:block th:each="lineitem : ${allLineItems}">
     <tr>
         <td class="center">
-            <a href="" th:hx-delete="${url+lineitem.id}" hx-include="#csrfParameterName">
+            <a href="" th:if="${!(appointment.isCancelled || appointment.iscompleted)}" th:hx-delete="${url+lineitem.id}" hx-include="#csrfParameterName">
                 <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>
@@ -15,13 +15,11 @@
         </td>
         <td th:text="${lineitem.nomenclature}"></td>
         <td th:text="${categoryNames.get(lineitem.categoryId)}" class="desktop-only"></td>
-
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.quantity})}"></th:block>
-
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.sellExTaxPrice})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.processingFee})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.taxPortionOfSell + lineitem.taxPortionOfProcessingFeeService})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.total})}"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.quantity})}" th:with="deskTopOnly=false"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.salesPriceExTax})}" th:with="deskTopOnly=true"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.processingFeeExTax})}" th:with="deskTopOnly=true"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.taxPortionOfProduct + lineitem.taxPortionOfProcessingFeeService})}" th:with="deskTopOnly=true"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.totalIncTax})}" th:with="deskTopOnly=false"></th:block>
         <td class="center">
             <a class="desktop-only" th:if="${lineitem.hasPrintLabel}" href="">
                 <svg class="svg-icon">
@@ -41,8 +39,8 @@
     <th class="desktop-only right"></th>
     <th class="desktop-only right"></th>
     <th class="right" th:text="#{label.otc.sell.total}"></th>
-    <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalVatAmount})}"></th:block>
-    <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalAmount})}"></th:block>
+    <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalVatAmount})}" th:with="deskTopOnly=true"></th:block>
+    <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalAmount})}" th:with="deskTopOnly=false"></th:block>
     <th class="right"></th>
 </tr>
 </tfoot>

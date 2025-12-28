@@ -1,4 +1,4 @@
-INSERT INTO sales_line_item
+INSERT INTO new_vmas.sales_line_item
 (id,
  version,
  member_id,
@@ -9,11 +9,11 @@ INSERT INTO sales_line_item
  tax_good_percentage,
  tax_service_percentage,
  taxed_type_enum,
- sell_ex_tax_price,
- processing_fee,
+ sales_price_ex_tax,
+ processing_fee_ex_tax,
  tax_portion_of_processing_fee_service,
- tax_portion_of_sell,
- total,
+ tax_portion_of_product,
+ total_inc_tax,
  has_print_label,
  appointment_id,
  pet_id,

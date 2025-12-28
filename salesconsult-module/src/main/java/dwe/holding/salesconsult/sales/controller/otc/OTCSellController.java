@@ -97,9 +97,9 @@ public class OTCSellController {
 
     // TODO do we need to add version ?
     @PostMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
-    String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId,
-                                          @NotNull BigDecimal inputCostingAmount, String inputBatchNumber, Long inputCostingId, String spillageName,
-                                          Model model, RedirectAttributes redirect) {
+    String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @PathVariable Long appointmentId, @PathVariable Long petId,
+                                          @NotNull BigDecimal inputCostingAmount, @NotNull Long inputCostingId,
+                                          String inputBatchNumber, String spillageName, Model model, RedirectAttributes redirect) {
         CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
         if (!customer.id().equals(customerId)) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");

@@ -42,7 +42,7 @@ public class CostingPricePromotion extends MemberBaseBO {
     @NotNull
     @Column(nullable = false, precision = 38, scale = 4)
     private
-    BigDecimal sellExTaxPrice;
+    BigDecimal salesPriceExTax;
 
     @NotNull
     @Column(nullable = false, precision = 38, scale = 4)

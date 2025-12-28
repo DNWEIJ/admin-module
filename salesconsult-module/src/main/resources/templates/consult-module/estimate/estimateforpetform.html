@@ -1,0 +1,13 @@
+<div class="form">
+    <input name="id" th:value="${estimateForPet.id}" type="hidden"/>
+    <input name="version" th:value="${estimateForPet.version}" type="hidden"/>
+    <input name="pet.id" th:value="${estimateForPet.pet.id}" type="hidden"/>
+    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','estimateforpet.purpose', 'estimateForPet.purpose','1')}"></th:block>
+    <fieldset class="grid">
+        <label for="comments">
+            <th:block th:utext="#{estimateforpet.comments}"/>
+            <textarea cols="110" id="comments" name="comments" rows="8" tab="19" th:utext="${estimateForPet.comments}"></textarea>
+        </label>
+    </fieldset>
+    <button name="_save" type="submit" form="estimateForm" th:text="#{label.button.save}"></button>
+</div>

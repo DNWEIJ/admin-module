@@ -66,7 +66,7 @@ public class User extends TenantBaseBO {
     private Member member = new Member();
 
 
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private MetaUserPreferences metaUserPreferences;
 
     @Builder.Default

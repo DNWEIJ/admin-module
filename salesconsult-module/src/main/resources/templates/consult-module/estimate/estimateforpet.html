@@ -1,0 +1,34 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.estimate}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
+
+    <fieldset class="no-background">
+    <div th:text="${#temporals.format(estimateForPet.estimate.estimateDate, 'dd-MM-yyyy')}"></div>
+    </fieldset>
+<fieldset >
+    <form id="estimateForm"
+          th:hx-post="'/consult/customer/'+${customerId}+ '/estimateforpet'"
+          hx-target="#estimateFormFields"
+          hx-swap="innerHTML"
+          th:data-saved-msg="#{label.saved}"
+          hx-on:htmx:before-request="messageDisplay(this.dataset.savedMsg)">
+
+    <span id="estimateFormFields">
+            <th:include th:replace="~{consult-module/estimate/estimateforpetform}"></th:include>
+        </span>
+    </form>
+</fieldset>
+
+    <table class="table-tight">
+        <thead>
+        <!-- head -->
+        <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
+        <!-- body and footer -->
+        <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
+    </table>
+    <div id="replacePartForCostingSearch" th:include="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
+</section>

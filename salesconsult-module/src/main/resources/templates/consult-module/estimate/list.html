@@ -1,0 +1,44 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.estimate}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.estimate},'/consult/customer/'+ ${customerId}+'/estimate', ${customerInformation})}"></th:block>
+    <hr/>
+    <table class="table-tight" id="visit-table">
+        <thead>
+        <tr>
+            <th th:text="#{estimate.header.action}"></th>
+            <th th:text="#{estimate.header.petName}"></th>
+            <th th:text="#{estimate.header.estimateDate}"></th>
+            <th th:text="#{estimate.header.purpose}"></th>
+            <th th:text="#{estimate.header.total}"></th>
+            <th th:text="#{estimate.header.Transfer}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="estimateForPet : ${estimates}">
+            <td>
+                <a href="" th:alt="#{estimate.transfer.print}">
+                    <svg class="svg-icon">
+                        <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
+                    </svg>
+                </a>
+                <a th:if="${estimateForPet.canEdit}" href="" th:alt="#{estimate.transfer.alt}">
+                    <svg class="svg-icon">
+                        <use href="/lib/tabler-icons-3_35_0/icons/outline/transfer.svg"></use>
+                    </svg>
+                </a>
+            <td>
+                <a th:href="'/consult/customer/'+ ${customerId} + '/estimate/'+ ${estimateForPet.id} + '/'+ ${estimateForPet.petId}" th:utext="${pets.get(estimateForPet.petId)}"></a>
+            </td>
+            <td th:text="${#temporals.format(estimateForPet.estimateDate, 'dd-MM-yyyy')}"></td>
+            <td th:text="${estimateForPet.purpose}"></td>
+            <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${estimateForPet.totalAmount})}"></th:block>
+            <td th:text="${#temporals.format(estimateForPet.transToVisit, 'dd-MM-yyyy')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>

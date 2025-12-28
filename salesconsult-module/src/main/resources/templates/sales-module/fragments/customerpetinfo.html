@@ -22,20 +22,26 @@
             </th:block>
 
             <th:block th:if="${pet != null}">
-                <div class="center">&nbsp;</div>
-                <div class="center"
-                     th:classappend="${pet.insured.label == 'label.yesno.yes'} ? ' red-text' : ''"
-                     th:text="'I: ' + #{__${pet.insured.label}__}+ (${pet.insuredBy} != null ? ' (' + ${pet.insuredBy} + ')' : '')">
+                <div>&nbsp;</div>
+                <div th:classappend="${pet.insured.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                    <span class="mono">I:</span>
+                    <span th:text="#{__${pet.insured.label}__}"></span>
+                    <span th:if="${pet.insuredBy != null}" th:text="' (' + ${pet.insuredBy} + ')'"></span>
                 </div>
-                <div class="center"
-                     th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''"
-                     th:text="'A: '+ #{__${pet.allergies.label}__} + (${pet.allergiesDescription} != null ? ' (' + ${pet.allergiesDescription} + ')' : '')">
+                <div
+                        th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                    <span class="mono">A:</span>
+                    <span th:text="#{__${pet.allergies.label}__}"></span>
+                    <span th:if="${pet.allergiesDescription != null}"
+                          th:text="' (' + ${pet.allergiesDescription} + ')'"></span>
                 </div>
-                <div class="center"
-                     th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''"
-                     th:text="'D: '+ #{__${pet.gpwarning.label}__} + (${pet.gpwarningDescription} != null ? ' (' + ${pet.gpwarningDescription} + ')' : '')">
+                <div th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                    <span class="mono">D:</span>
+                    <span th:text="#{__${pet.gpwarning.label}__}"></span>
+                    <span th:if="${pet.gpwarningDescription != null}"
+                          th:text="' (' + ${pet.gpwarningDescription} + ')'"></span>
                 </div>
-                <div class="center" th:text="#{pet.chipped} + ': '+  ${pet.chipTattooId} + ' - '+${#temporals.format(pet.chipDate, 'dd-MM-yyyy')}"></div>
+                <div th:text="#{pet.chipped} + ': '+  ${pet.chipTattooId ?: ''} + ' - ' + ${pet.chipDate != null ? #temporals.format(pet.chipDate, 'dd-MM-yyyy') : ''}"></div>
             </th:block>
         </div>
     </div>
@@ -43,29 +49,29 @@
 
 <th:block th:fragment="customerInfo">
     <th:block th:if="${customer != null}">
-        <h6 class="center" th:text="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ')'"></h6>
-        <div class="center"
-             th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
-             th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></div>
-        <div class="center" th:text="${customer.address2}+', '+ ${customer.address3}"></div>
-        <div class="center" th:text="${customer.homePhone}+', '+ ${customer.workPhone}+', '+ ${customer.mobilePhone}"></div>
+        <h6 th:text="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ')'"></h6>
+        <div
+                th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
+                th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></div>
+        <div th:text="${customer.address2}+', '+ ${customer.address3}"></div>
+        <div th:text="${customer.homePhone?:''}+', '+ ${customer.workPhone?:''}+', '+ ${customer.mobilePhone?:''}"></div>
     </th:block>
 </th:block>
 <th:block th:fragment="petInfo">
     <th:block th:if="${pet != null}">
-        <h6 class="center" th:utext="${pet.nameWithDeceasedAndDate} "></h6>
-        <div class="center" th:text="#{__${pet.sex.label}__}"></div>
-        <div class="center" th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' ('+ ${pet.age}+')'"></div>
-        <div class="center" th:text="${pet.idealWeight != null} ? #{pet.idealWeight} + ': ' + ${pet.idealWeight} : #{pet.idealWeight} + ': '"></div>
-        <div class="grid">
-            <div>
-                <a href="">History</a>
+        <h6 th:utext="${pet.nameWithDeceasedAndDate} "></h6>
+        <div th:text="#{__${pet.sex.label}__}"></div>
+        <div th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' ('+ ${pet.age}+')'"></div>
+        <div th:text="${pet.idealWeight != null} ? #{pet.idealWeight} + ': ' + ${pet.idealWeight} : #{pet.idealWeight} + ': '"></div>
+        <div class="grid" role="group">
+            <div role="button">
+                <span>History</span>
             </div>
-            <div>
-                <a href="">SOAP</a>
+            <div role="button">
+                <span>SOAP</span>
             </div>
-            <div>
-                <a href="">Add note</a>
+            <div role="button">
+                <span>Add note</span>
             </div>
         </div>
 

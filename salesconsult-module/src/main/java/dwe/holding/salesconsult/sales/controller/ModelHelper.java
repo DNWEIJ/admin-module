@@ -3,19 +3,20 @@ package dwe.holding.salesconsult.sales.controller;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.repository.*;
-import dwe.holding.salesconsult.sales.model.LineItem;
+import dwe.holding.salesconsult.sales.model.CostCalc;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 public class ModelHelper {
 
-    public static Model updateLineItemsInModel(Model model, List<LineItem> lineItems) {
+    public static Model updateLineItemsInModel(Model model, Collection<? extends CostCalc> lineItems) {
         if (!lineItems.isEmpty()) {
-            model.addAttribute("totalAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
-            model.addAttribute("totalVatAmount", lineItems.stream().map(LineItem::getTotal).reduce(BigDecimal::add).get());
+            model.addAttribute("totalAmount", lineItems.stream().map(CostCalc::getTotalIncTax).reduce(BigDecimal::add).get());
+            model.addAttribute("totalVatAmount", lineItems.stream().map(c -> c.getTaxPortionOfProduct().add(c.getTaxPortionOfProcessingFeeService())).reduce(BigDecimal::add).get());
         }
         model.addAttribute("allLineItems", lineItems);
         return model;

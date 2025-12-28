@@ -1,4 +1,4 @@
- INSERT INTO customer_lookup_room
+ INSERT INTO  consult_lookup_room
 (id,
  version,
  member_id,

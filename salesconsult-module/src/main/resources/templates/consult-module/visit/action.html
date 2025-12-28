@@ -4,7 +4,7 @@
 </head>
 <body>
 <section layout:fragment="content">
-<!--    <th:block th:insert="~{consult-module/fragments/statusColour::statusColour()}"></th:block>-->
+    <th:block th:insert="~{consult-module/fragments/statusColour::statusColour()}"></th:block>
 
     <fieldset class="grid">
         <div>
@@ -94,11 +94,13 @@
             <!-- body and footer -->
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
         </table>
-        <div th:if="${!appointment.isCancelled && !appointment.iscompleted}" id="replacePartForCostingSearch"
-             th:replace="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
+        <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
+             th:include="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
     </details>
+
     <details open>
+        <summary th:text="#{label.diagnose}"></summary>
         <summary th:if="${!appointment.isCancelled && !appointment.iscompleted}" th:text="#{label.consult.legend.diagnose}"></summary>
-        <div id="replaceDiagnose" th:replace="~{consult-module/fragments/diagnose::diagnose()}"></div>
+        <div id="replaceDiagnose" th:include="~{consult-module/fragments/diagnose::diagnose()}"></div>
     </details>
 </section>

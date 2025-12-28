@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Cascade;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,6 @@ import java.util.Set;
 @Setter
 public class LookupSpecies extends MemberBaseBO {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "species")
-    @Cascade({org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     @Builder.Default
     private Set<LookupBreeds> breeds = new HashSet<>(0);
     @NotEmpty

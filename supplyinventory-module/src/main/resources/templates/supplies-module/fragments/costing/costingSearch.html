@@ -1,7 +1,8 @@
 <th:block th:fragment="costingSearch(saveButton)">
     <script th:inline="javascript">
         const messageNoCostingSelected = /*[[#{label.costing.search.nocostingselected}]]*/ "";
-        const isPriceInfo =   /*[[${salesType.isPriceInfo}]]*/ false;
+        const isPriceInfo =   /*[[${salesType.isPriceInfo ?: false}]]*/ false;
+        const isEstimate =   /*[[${salesType.isEstimate ?: false}]]*/ false;
     </script>
 
     <script>
@@ -45,7 +46,7 @@
                         selectedFieldDataSet = selectedField.dataset
                     }
                 }
-                if (!isPriceInfo) {
+                if (!isPriceInfo &&!isEstimate) {
                     // we're already setting the url, since we will lose the selected field test on hx-get being set instead
                     let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
                     costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedFieldDataSet.id + '/batchnumbers')
@@ -62,7 +63,7 @@
 
 
             if (action === "costingAmount") {
-                if (!isPriceInfo && selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
+                if (!isPriceInfo && !isEstimate && selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
                     let element = document.getElementById("batchNumberForCosting")
                     let inputElement = document.getElementById("inputBatchNumber")
                     htmx.process(element)
@@ -78,7 +79,7 @@
                 }
             }
             if (action === "batch") {
-                if (!isPriceInfo && (selectedFieldDataSet !== undefined && selectedFieldDataSet.hasSpillage === 'true')) {
+                if (!isPriceInfo && !isEstimate && (selectedFieldDataSet !== undefined && selectedFieldDataSet.hasSpillage === 'true')) {
                     let element = document.getElementById("spillageForCosting")
                     let inputElement = document.getElementById("inputSpillage")
                     htmx.process(element)
@@ -107,7 +108,7 @@
             selectedFieldDataSet = undefined
 
             document.getElementById("inputCostingAmount").value = ''
-            if (!isPriceInfo) {
+            if (!isPriceInfo && !isEstimate) {
                 var element = document.getElementById("inputBatchNumber")
                 element.value = ''
                 element.setAttribute("disabled", true)
@@ -198,7 +199,7 @@
                         break
                 }
             })
-            if (!isPriceInfo) {
+            if (!isPriceInfo && !isEstimate) {
                 document.getElementById("inputBatchNumber").addEventListener("keydown", (event) => {
                     switch (event.key) {
                         case "Enter":
@@ -284,7 +285,7 @@
                     <input type="hidden" name="inputCostingId" id="inputCostingId"/>
                     <input id="inputCostingAmount" tabindex="2" name="inputCostingAmount" size="2" type="number" value="1.0" autocomplete="off">
                 </div>
-                <th:block th:if="${!salesType.isPriceInfo}">
+                <th:block th:if="${!salesType.isPriceInfo && !salesType.isEstimate}">
                     <div id="costingBatchNumberContainer">
                         <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
                         <datalist id="batchNumberForCosting"

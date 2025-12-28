@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pico UI Scale</title>
+
+    <!-- Pico.css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+
+    <style>
+        :root {
+            --ui-scale: 1;
+            font-size: calc(100% * var(--ui-scale));
+        }
+
+        .scale-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="container">
+    <div class="scale-controls">
+        <button id="zoom-out" class="secondary outline">−</button>
+        <button id="zoom-reset" class="secondary">Reset</button>
+        <button id="zoom-in" class="secondary outline">+</button>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>Pico UI Scaling</h1>
+    <p>
+        This text, buttons, and spacing will scale using the controls above.
+    </p>
+    <button>Example Button</button>
+    <input type="text" placeholder="Example input">
+</main>
+
+<script>
+    const root = document.documentElement;
+    const STEP = 0.1;
+    const MIN = 0.8;
+    const MAX = 1.4;
+
+    let scale = parseFloat(localStorage.getItem("ui-scale")) || 1;
+
+    function applyScale() {
+        root.style.setProperty("--ui-scale", scale.toFixed(2));
+        localStorage.setItem("ui-scale", scale.toFixed(2));
+    }
+
+    document.getElementById("zoom-in").addEventListener("click", () => {
+        scale = Math.min(MAX, scale + STEP);
+        applyScale();
+    });
+
+    document.getElementById("zoom-out").addEventListener("click", () => {
+        scale = Math.max(MIN, scale - STEP);
+        applyScale();
+    });
+
+    document.getElementById("zoom-reset").addEventListener("click", () => {
+        scale = 1;
+        applyScale();
+    });
+
+    applyScale();
+</script>
+
+</body>
+</html>

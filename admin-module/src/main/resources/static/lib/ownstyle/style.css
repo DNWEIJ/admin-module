@@ -1,11 +1,145 @@
-/* STYLING FOR SPECIFIC Elements OF THIS APP */
+/***********************************/
+/******* Genric definitions ********/
+/***********************************/
+fieldset {
+    font-family: sans-serif;
+    border: solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    background-color: var(--pico-muted-border-color);
+}
 
+fieldset legend {
+    font-size: 105%;
+    font-style: italic;
+    font-weight: bold;
+    border-radius: 1rem;
+    margin-left: 8rem;
+    margin-bottom: .7rem;
+    border-radius: var(--pico-border-radius);
+    padding: .2rem;
+    background-color: var(--pico-muted-border-color);
+    border-color: var(--pico-color);
+}
+
+/* ***************************************** */
+/** pico specific scaling issues for an app **/
+/* ***************************************** */
+
+/** Pending on the size of the screen, the will be overwritten in the @media queries */
+.desktop-only {
+    display: none;
+}
+
+.mobile-only {
+    display: table-cell;
+}
+
+:root {
+    --pico-button-padding: 0.35rem 0.2rem;
+    --pico-typography-spacing-vertical: .5rem;
+    --pico-spacing: 0.5rem;
+
+    --pico-font-family-sans-serif: Inter, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji);
+    --pico-font-size: 87.5%;
+    /* Original: 100% */
+    --pico-line-height: 1.25;
+    /* Original: 1.5 */
+    --pico-form-element-spacing-vertical: 0.5rem;
+    /* Original: 1rem */
+    --pico-form-element-spacing-horizontal: 1.0rem;
+    /* Original: 1.25rem */
+    --pico-border-radius: 0.375rem;
+    /* Original: 0.25rem */
+}
+
+@media (min-width: 576px) {
+    :root {
+        --pico-font-size: 77.5%;
+        /* Original: 106.25% */
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --pico-font-size: 77.5%;
+        /* Original: 112.5% */
+    }
+
+    .desktop-only {
+        display: table-cell;
+    }
+    .mobile-only {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --pico-font-size: 77.5%;
+        /* Original: 118.75% */
+    }
+}
+
+@media (min-width: 1280px) {
+    :root {
+        --pico-font-size: 77.5%;
+        /* Original: 125% */
+    }
+}
+
+@media (min-width: 1536px) {
+    :root {
+        --pico-font-size: 77.5%;
+        /* Original: 131.25% */
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    --pico-font-weight: 600;
+    /* Original: 700 */
+}
+
+article {
+    border: 1px solid var(--pico-muted-border-color);
+    /* Original doesn't have a border */
+    border-radius: calc(var(--pico-border-radius) * 2);
+    /* Original: var(--pico-border-radius) */
+}
+
+article > footer {
+    border-radius: calc(var(--pico-border-radius) * 2);
+    /* Original: var(--pico-border-radius) */
+}
+
+[data-tooltip]:focus::after,
+[data-tooltip]:focus::before {
+    opacity: 0 !important;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+    opacity: 1 !important;
+}
+
+
+
+
+
+
+
+/* STYLING FOR SPECIFIC Elements OF THIS APP */
 .hidden {
     display: none;
 }
 
-/* *********************** */
+/* *******************************************/
 /* dynamic search with search result window */
+/* *******************************************/
 .gridSearchCustomerWithCheck {
     display: grid;
     grid-template-columns: 3fr repeat(3, 0fr);
@@ -187,27 +321,8 @@ tbody tr.red-text td {
     align-self: center;
 }
 
-/***********************************/
-/******* Genric definitions ********/
-/***********************************/
-fieldset {
-    font-family: sans-serif;
-    border: solid var(--pico-muted-border-color);
-    border-radius: var(--pico-border-radius);
-    background-color: var(--pico-muted-border-color);
-}
-
-fieldset legend {
-    font-size: 105%;
-    font-style: italic;
-    font-weight: bold;
-    border-radius: 1rem;
-    margin-left: 8rem;
-    margin-bottom: .7rem;
-    border-radius: var(--pico-border-radius);
-    padding: .2rem;
-    background-color: var(--pico-muted-border-color);
-    border-color: var(--pico-color);
+.mono {
+    font-family: Consolas, Menlo, Monaco, "Roboto Mono", monospace;
 }
 
 /* Placeholder floats up in input CSS */
@@ -328,110 +443,8 @@ html details summary {
     font-weight: bold;
 }
 
-.desktop-only {
-    display: none;
-}
-
-.mobile-only {
-    display: table-cell;
-}
 input[type="button"],
 input[type="submit"],
 [role="button"] {
     padding: var(--pico-button-padding, 0.5rem 1rem);
-}
-
-/* ***************************************** */
-/** pico specific scaling issues for an app **/
-/* ***************************************** */
-:root {
-    --pico-button-padding: 0.35rem 0.2rem;
-    --pico-typography-spacing-vertical: .5rem;
-    --pico-spacing: 0.5rem;
-
-    --pico-font-family-sans-serif: Inter, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji);
-    --pico-font-size: 87.5%;
-    /* Original: 100% */
-    --pico-line-height: 1.25;
-    /* Original: 1.5 */
-    --pico-form-element-spacing-vertical: 0.5rem;
-    /* Original: 1rem */
-    --pico-form-element-spacing-horizontal: 1.0rem;
-    /* Original: 1.25rem */
-    --pico-border-radius: 0.375rem;
-    /* Original: 0.25rem */
-}
-
-@media (min-width: 576px) {
-    :root {
-        --pico-font-size: 77.5%;
-        /* Original: 106.25% */
-    }
-}
-
-@media (min-width: 768px) {
-    :root {
-        --pico-font-size: 77.5%;
-        /* Original: 112.5% */
-    }
-
-    .desktop-only {
-        display: table-cell;
-    }
-    .mobile-only {
-        display: none;
-    }
-}
-
-@media (min-width: 1024px) {
-    :root {
-        --pico-font-size: 77.5%;
-        /* Original: 118.75% */
-    }
-}
-
-@media (min-width: 1280px) {
-    :root {
-        --pico-font-size: 77.5%;
-        /* Original: 125% */
-    }
-}
-
-@media (min-width: 1536px) {
-    :root {
-        --pico-font-size: 77.5%;
-        /* Original: 131.25% */
-    }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    --pico-font-weight: 600;
-    /* Original: 700 */
-}
-
-article {
-    border: 1px solid var(--pico-muted-border-color);
-    /* Original doesn't have a border */
-    border-radius: calc(var(--pico-border-radius) * 2);
-    /* Original: var(--pico-border-radius) */
-}
-
-article > footer {
-    border-radius: calc(var(--pico-border-radius) * 2);
-    /* Original: var(--pico-border-radius) */
-}
-
-[data-tooltip]:focus::after,
-[data-tooltip]:focus::before {
-    opacity: 0 !important;
-}
-
-[data-tooltip]:hover::after,
-[data-tooltip]:hover::before {
-    opacity: 1 !important;
 }

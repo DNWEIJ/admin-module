@@ -2,15 +2,15 @@
     <script th:inline="javascript">
         function addEventListenersForPetSelect() {
 
-            // Attach listener to all dropdowns starting with 'speciesList['  copy the purpose and check the checkbox
-            document.querySelectorAll("select[id^='speciesList']").forEach(select => {
+            // Attach listener to all dropdowns starting with 'reasonList['  copy the purpose and check the checkbox
+            document.querySelectorAll("select[id^='reasonList']").forEach(select => {
                 select.addEventListener("change", function () {
                     const index = this.id.match(/\[(\d+)\]/)[1]; // extract index number
 
                     // Find matching input + checkbox
                     const purposeInput = document.getElementById(`formPet[${index}].purpose`);
                     const checkBox = document.getElementById(`formPet[${index}].checked`);
-                    const purposeSelect = document.getElementById(`speciesList[${index}].reason`);
+                    const purposeSelect = document.getElementById(`reasonList[${index}].reason`);
 
                     if (purposeInput) purposeInput.value = purposeSelect.options[purposeSelect.selectedIndex].text;
                     if (checkBox) checkBox.checked = true;
@@ -86,7 +86,7 @@
 
                     <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                     <td>
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithData('speciesList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}" th:with="required=false"></th:block>
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithData('reasonList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}" th:with="required=false"></th:block>
                     </td>
                     <td>
                         <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','-1')}" th:with="required=false"></th:block>
@@ -134,7 +134,7 @@
 
                         <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                         <td>
-                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesList['+${pets.size() + iStat.index}+']', '', '', ${reasons}, true,'1')}"
+                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('reasonList['+${pets.size() + iStat.index}+']', '', '', ${reasons}, true,'1')}"
                                       th:with="required=false"></th:block>
                         </td>
                         <td>

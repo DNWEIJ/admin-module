@@ -108,7 +108,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             user.setPassword(passwordEncoder.encode(authentication.getCredentials().toString()));
             user = transactionalUserService.save(user);
         }
-
+        // todo password on member is empty?
         if (user.getMember().getPassword().equals(user.getPassword())) {
             user.setChangePassword(true);
         }

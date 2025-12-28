@@ -22,9 +22,8 @@ public class TenantEntityListener {
     @PreUpdate
     public void setTenant(Object entity) {
 
-        if (AutorisationUtils.isLoggedIn() == false && entity.getClass().getName().equals("dwe.holding.admin.model.tenant.User")) return;
+        if (entity.getClass().getName().equals("dwe.holding.admin.model.tenant.User") && AutorisationUtils.isLoggedIn() == false) return;
 
-        Long tenantId = AutorisationUtils.getCurrentUserMid();
         if (entity == null) return;
 
         List<Field> tenantFields = TENANT_FIELDS_CACHE.computeIfAbsent(
@@ -38,7 +37,8 @@ public class TenantEntityListener {
                     ReflectionUtils.makeAccessible(field);
                     Object current = ReflectionUtils.getField(field, entity);
                     if (current == null) {
-                        ReflectionUtils.setField(field, entity, tenantId);
+                        // TODO remove the current check for null; always set it, but for now we need to survice the setup
+                        ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
                     }
                 });
     }

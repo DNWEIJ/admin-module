@@ -6,7 +6,7 @@ import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Note;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.customer.client.repository.NotesRepository;
+import dwe.holding.customer.client.repository.NoteRepository;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.lookup.repository.NotePurposeLookupRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -29,7 +29,7 @@ import java.time.LocalDate;
 @Slf4j
 @AllArgsConstructor
 public class NoteController {
-    private final NotesRepository notesRepository;
+    private final NoteRepository noteRepository;
     private final UserService userService;
     private final ValidateCustomer validateCustomer;
     private final PetRepository petRepository;
@@ -39,7 +39,7 @@ public class NoteController {
     @GetMapping("/customer/{customerId}/notes")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        model.addAttribute("notes", notesRepository.findByPet_Customer_IdOrderByNoteDateDesc(customerId));
+        model.addAttribute("notes", noteRepository.findByPet_Customer_IdOrderByNoteDateDesc(customerId));
         setModel(model, customerId);
         return "customer-module/notes/list";
     }
@@ -61,7 +61,7 @@ public class NoteController {
     @Transactional
     String editRecord(@PathVariable Long customerId, @PathVariable Long notesId, Model model, RedirectAttributes redirect) {
         if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        Note note = notesRepository.findById(notesId).orElseThrow();
+        Note note = noteRepository.findById(notesId).orElseThrow();
         model.addAttribute("note", note.getPet().getCustomer().getId().equals(customerId) ? note : new Note());
         setModelOneRecord(model, note.getPet().getCustomer());
         setModel(model, note.getPet().getCustomer().getId());
@@ -80,7 +80,7 @@ public class NoteController {
         }
 
         if (formNote.isNew()) {
-            notesRepository.save(
+            noteRepository.save(
                     Note.builder().note(formNote.getNote())
                             .noteDate(formNote.getNoteDate())
                             .pet(pet)
@@ -89,7 +89,7 @@ public class NoteController {
                             .build()
             );
         } else {
-            notesRepository.save(formNote);
+            noteRepository.save(formNote);
         }
         return "redirect:/customer/customer/" + customerId + "/notes";
     }

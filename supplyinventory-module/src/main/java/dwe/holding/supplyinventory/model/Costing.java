@@ -30,11 +30,11 @@ public class Costing extends MemberBaseBO {
     @Column(nullable = false)
     private String nomenclature;
     @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal sellExTaxPrice; //verkoop ex btw
+    private BigDecimal salesPriceExTax;
     @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal purchasePrice; // inkoop prijs / distributor price
+    private BigDecimal purchaseDistributorPrice;
     @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal processingFee;
+    private BigDecimal processingFeeExTax;
 
     private String distributor;
     private String distributorDescription;

@@ -28,9 +28,9 @@ SELECT
             'roomAgenda', PREF_ROOM_AGENDA,
             'rxlabel', pref_rxlabel,
             'mandatoryReason', MANDATORY_REASON,
-            'consultTextTemplate', CONSULT_TEXT_TEMPLATE,
-            'openingstimes', OPENINGSTIMES,
-            'sendoutAppointmentReminderMail', SENDOUT_APPOINTMENT_REMINDER_MAIL
+            'consultTextTemplate', CONSULT_TEXT_TEMPLATE
+        #             'openingstimes', OPENINGSTIMES,
+#            'sendoutAppointmentReminderMail', SENDOUT_APPOINTMENT_REMINDER_MAIL
     ) AS preferences_json
 FROM vmas.thau_memberlocal where MEMBER_ID = 77;
 

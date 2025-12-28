@@ -104,7 +104,7 @@ public class VisitController {
                 .addAttribute("customerId", customer.id())
                 .addAttribute("pets", customer.pets().stream().collect(Collectors.toMap(p -> p.id(), p -> p.deceased() ? p.name() + " &dagger;" : p.name())))
                 .addAttribute("visits", visitRepository.findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(AutorisationUtils.getCurrentUserMid(), customer.pets().stream().map(CustomerService.Pet::id).toList()))
-                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList().stream().collect(Collectors.toMap(PresentationElement::getId, PresentationElement::getName)))
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
                 .addAttribute("activeMenu", "visits");
         return "consult-module/visit/list";
     }
@@ -112,6 +112,27 @@ public class VisitController {
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}")
     String postLineItem() {
         return "";
+
+//
+//        // TODO do we need to add version ?
+//        @PostMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
+//        String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId,
+//                @NotNull BigDecimal inputCostingAmount, String inputBatchNumber, Long inputCostingId, String spillageName,
+//                Model model, RedirectAttributes redirect) {
+//            CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
+//            if (!customer.id().equals(customerId)) {
+//                redirect.addFlashAttribute("message", "Something went wrong. Please try again");
+//                return "redirect:/sales/otc/search/";
+//            }
+//            Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+//            lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
+//            updateModel(model, petId, app);
+//            model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
+//            return "sales-module/fragments/htmx/lineitemsoverview";
+//        }
+//
+
+
     }
 
     @GetMapping("/visit/customer/{customerId}/visit/{visitId}")

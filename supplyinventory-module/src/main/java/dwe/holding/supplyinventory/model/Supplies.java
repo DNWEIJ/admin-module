@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.util.Set;
 
@@ -59,7 +57,6 @@ public class Supplies extends MemberBaseBO {
 
     private Long barcode;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "supplies")
-    @Cascade({CascadeType.ALL, CascadeType.DELETE_ORPHAN})
     private Set<SuppliesLocal> suppliesLocals;
 
     //     private Set<Supplies2localsupdated> updateRecords = new HashSet<Supplies2localsupdated>(0);

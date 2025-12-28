@@ -13,8 +13,9 @@
             <th:include th:replace="~{consult-module/fragments/htmx/diagnoselocationoverview}"></th:include>
         </div>
     </table>
-    <form id="diagnoseForm" th:hx-post="'/consult/visit/'+${visit.id}+'/diagnose'"
-          hx-target="#diagnoseTableReplaceHtmx">
+    <form id="diagnoseForm"
+          th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
+          th:hx-post="'/consult/visit/'+${visit.id}+'/diagnose'" hx-target="#diagnoseTableReplaceHtmx">
 
         <fieldset class="grid">
             <label for="ownDiagnoses">

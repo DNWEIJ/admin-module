@@ -1,0 +1,51 @@
+<!-- notification message with fadein fadeout -->
+<div id="notification-message" class="box" th:text="${message != null} ? #{${message}} : ''"></div>
+<style>
+    .box {
+        /*TODO make colors match the pico color schema */
+        position: fixed;
+        opacity: 1;
+        top: -1.5em;
+        height: 1.5em;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        align-self: center;
+        z-index: 99999; /* make sure it beats all others */
+        color: dimgrey;
+        text-align: center;
+        background: lightsteelblue;
+    }
+
+    #notification-message {
+        height: 1.5em;
+        opacity: 0;
+        top: -1.5em;
+        left: 0;
+        transition: all .3s ease;
+    }
+
+    #notification-message.show {
+        top: 0;
+        left: 0;
+        opacity: 1;
+        height: 1.7em;
+    }
+</style>
+<script>
+    function messageDisplay(messageText) {
+        const element = document.querySelector('#notification-message')
+        if (messageText) element.textContent = messageText;
+        if (element.textContent.length !== 0) {
+            element.classList.add('show');
+            setTimeout(function () {
+                element.classList.remove('show');
+            }, 700)
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        messageDisplay();
+    });
+</script>

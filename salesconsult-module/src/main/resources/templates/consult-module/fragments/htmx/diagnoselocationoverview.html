@@ -3,7 +3,7 @@
 <th:block th:each="diagnose : ${allDiagnoses}">
     <tr>
         <td class="center">
-            <a href="" th:hx-delete="${url+diagnose.id}" hx-include="#csrfParameterName">
+            <a href="" th:if="${!(appointment.isCancelled || appointment.iscompleted)}" th:hx-delete="${url+diagnose.id}" hx-include="#csrfParameterName">
                 <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>

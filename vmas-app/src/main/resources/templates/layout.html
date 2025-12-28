@@ -31,51 +31,6 @@
 
 <noscript>This app is not going to fly without javascript</noscript>
 
-<!-- notification message with fadein fadeout -->
-<th:block th:if="${message != null}">
-    <div id="fade-in" class="box" th:text="#{${message}}"></div>
-    <style>
-        .box {
-            position: fixed;
-            opacity: 1;
-            top: -1.5em;
-            height: 1.5em;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            align-self: center;
-            z-index: 99999; /* make sure it beats all others */
-            color: dimgrey;
-            text-align: center;
-            background: lightsteelblue;
-        }
-
-        #fade-in {
-            height: 1.5em;
-            opacity: 0;
-            top: -1.5em;
-            left: 0;
-            transition: all .3s ease;
-        }
-
-        #fade-in.show {
-            top: 0;
-            left: 0;
-            opacity: 1;
-            height: 1.7em;
-        }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelector('#fade-in').classList.add('show');
-            setTimeout(function () {
-                document.querySelector('#fade-in').classList.remove('show');
-            }, 700)
-        });
-    </script>
-</th:block>
-
 <div class="container-fluid wrapper">
     <th:block th:if="${errors != null and errors.size() > 0}">
         <fieldset>
@@ -111,6 +66,7 @@
     </footer>
     <div id="modal-container"></div>
 </div>
-<div th:replace="~{/fragments/page/sessiontimeout}"></div>
+<div th:replace="~{/fragments/elements/sessiontimeout}"></div>
+<div th:replace="~{/fragments/elements/message}"></div>
 </body>
 </html>
