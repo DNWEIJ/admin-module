@@ -5,8 +5,7 @@
 <body>
 <section layout:fragment="content">
 
-    <form action="/cartracker/trip" method="post" name="car">
-
+    <form th:action="@{/cartracker/trip}" method="post" name="car">
         <fieldset>
             <label>
                 <input type="radio" name="person" th:value="${person}" th:text="${person}" checked aria-checked="true"/>

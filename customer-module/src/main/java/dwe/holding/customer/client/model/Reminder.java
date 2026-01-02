@@ -34,9 +34,7 @@ public class Reminder extends MemberBaseBO implements Serializable {
 
     @Column(nullable = false)
     @NotBlank
-    private String reminder;
+    private String reminderText;
 
-    @Column(nullable = false)
-    @NotNull
     private Long originatingAppointmentId;
 }

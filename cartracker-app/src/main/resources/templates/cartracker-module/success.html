@@ -11,7 +11,7 @@
         <img align="middle" th:src="@{${imagesrc}}" alt="happy"/>
         </center>
         <footer>
-            <form action="/cartracker/trip" method="GET">
+            <form th:action="@{/cartracker/trip}" method="GET">
                 <input type="submit" value="Another one?" >
             </form>
         </footer>

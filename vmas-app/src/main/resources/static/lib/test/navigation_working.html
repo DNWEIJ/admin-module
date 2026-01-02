@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Menu with User Icon Dropdown</title>
+    <style>
+        body { margin:0; font-family:Arial,sans-serif; }
+
+        .menu {
+            display:flex;
+            align-items:center;
+            width:100%;
+            padding:6px 16px;
+            background:#fafafa;
+            border-bottom:1px solid #ddd;
+            gap:10px;
+        }
+
+        /* LEFT ICONS */
+        .menu-left {
+            display:flex;
+            align-items:center;
+            gap:6px;
+            flex:1;
+        }
+
+        .menu-left .icons {
+            display:none;
+            font-size:28px;
+            line-height:1;
+        }
+
+        .menu-left .icons span {
+            margin-right:4px;
+        }
+
+        /* HIDDEN RADIOS */
+        input[type="radio"] { display:none; }
+
+        /* SHOW ICONS BASED ON RADIO CHECKED */
+        #dashboard:checked ~ .menu .menu-left .dashboard { display:flex; }
+        #settings:checked ~ .menu .menu-left .settings { display:flex; }
+        #profile:checked ~ .menu .menu-left .profile { display:flex; }
+
+        /* DROPDOWNS ON RIGHT */
+        .dropdown, .user-dropdown {
+            position:relative;
+            flex-shrink:0;
+            margin-right:16px; /* space from right edge */
+        }
+
+        .current {
+            padding:4px 8px;
+            background:#f0f0f0;
+            border-radius:4px;
+            cursor:pointer;
+            font-size:13px;
+            white-space:nowrap;
+            max-width:calc(100vw - 250px);
+            overflow:hidden;
+            text-overflow:ellipsis;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        /* DROPDOWN CONTENT */
+        .dropdown-content, .user-dropdown-content {
+            display:none;
+            position:absolute;
+            top:100%;
+            right:0;
+            background:#fff;
+            border:1px solid #ccc;
+            border-radius:4px;
+            min-width:140px;
+            z-index:10;
+        }
+
+        .dropdown:hover .dropdown-content,
+        .user-dropdown:hover .user-dropdown-content {
+            display:block;
+        }
+
+        .dropdown-content label,
+        .user-dropdown-content label {
+            display:block;
+            padding:6px 8px;
+            cursor:pointer;
+            font-size:13px;
+        }
+
+        .dropdown-content label:hover,
+        .user-dropdown-content label:hover {
+            background:#eee;
+        }
+
+        /* SHOW CURRENT LABEL */
+        #dashboard:checked ~ .menu .current::after { content:"Dashboard"; }
+        #settings:checked ~ .menu .current::after { content:"Settings"; }
+        #profile:checked ~ .menu .current::after { content:"Profile"; }
+
+    </style>
+</head>
+<body>
+
+<!-- RADIOS -->
+<input type="radio" name="menu" id="dashboard" checked>
+<input type="radio" name="menu" id="settings">
+<input type="radio" name="menu" id="profile">
+
+<div class="menu">
+
+    <!-- LEFT ICONS -->
+    <div class="menu-left">
+        <div class="icons dashboard"><span>📊</span><span>📈</span><span>📉</span></div>
+        <div class="icons settings"><span>⚙️</span><span>🔒</span><span>🛠️</span></div>
+        <div class="icons profile"><span>👤</span><span>✉️</span><span>📸</span></div>
+    </div>
+
+    <!-- MENU SELECTION DROPDOWN -->
+    <div class="dropdown">
+        <div class="current"></div>
+        <div class="dropdown-content">
+            <label for="dashboard">Dasyuboard</label>
+            <label for="settings">Settings</label>
+            <label for="profile">Profile</label>
+        </div>
+    </div>
+
+    <!-- USER ICON DROPDOWN -->
+    <div class="user-dropdown">
+        <div class="current">👤</div>
+        <div class="user-dropdown-content">
+            <label>Preferences</label>
+            <label>Logout</label>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

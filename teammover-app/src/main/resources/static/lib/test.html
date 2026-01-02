@@ -14,7 +14,7 @@
     <section id="content">
         <article>
             <header><h2>Gebruiker settings</h2></header>
-            <form action="/teammover/userpreferences" method="post">
+            <form th:action="@{/teammover/userpreferences}" method="post">
                 <input name="_csrf" value="b1db6776-7e4d-4e27-aa44-c9a3dc057115" type="hidden"/>
                 <fieldset>
                     <label for="id" value="Selecteer het team">Selecteer het team</label>

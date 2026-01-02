@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleNLWP(${game.id}, 'Wedstrijd','/teammover/game/list')}"></th:block>
     <hr/>
-    <form action="/teammover/game" method="post">
+    <form th:action="@{/teammover/game}" method="post">
         <fieldset role="presentation">
 
             <input id="id" name="id" th:value="${game.id}" type="hidden">

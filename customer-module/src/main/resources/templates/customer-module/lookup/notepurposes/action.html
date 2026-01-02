@@ -8,7 +8,7 @@
     <th:block
             th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${notepurpose.id}, #{label.title.purpose},'/customer/lookup/notepurposes','')}"></th:block>
 
-    <form id="createForm" action="/customer/lookup/notepurpose" method="post">
+    <form id="createForm" th:action="@{/customer/lookup/notepurpose}" method="post">
 
         <input id="id" name="id" th:value="${notepurpose.id}" type="hidden"/>
         <input id="version" name="version" th:value="${notepurpose.version}" type="hidden"/>

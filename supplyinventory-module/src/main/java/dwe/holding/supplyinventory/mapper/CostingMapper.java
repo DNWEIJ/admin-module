@@ -35,7 +35,12 @@ public interface CostingMapper {
                 costing.getTaxed(),
                 costingPricePromotion.getReductionPercentage(),
                 costing.getLookupCostingCategory(),
-                costing.getPrescriptionLabel()
+                costing.getPrescriptionLabel(),
+                costing.getAutoReminder(),
+                costing.getRRemovePendingRemindersContaining(),
+                costing.getReminderNomenclature(),
+                costing.getIntervalInWeeks(),
+                costing.getDeceasedPetPrompt()
         );
     }
 }

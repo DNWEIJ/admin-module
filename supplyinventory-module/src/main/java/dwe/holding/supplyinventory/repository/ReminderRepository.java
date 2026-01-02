@@ -9,4 +9,6 @@ import java.util.List;
 public interface ReminderRepository extends JpaRepository<Reminder, Long> {
 
     List<Reminder> findByPet_Customer_IdOrderByDueDateDesc(Long customerId);
+
+    void deleteAllByPet_IdAndReminderTextContainingIgnoreCase(Long petId, String nomenclature);
 }

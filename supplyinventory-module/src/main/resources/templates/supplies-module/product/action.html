@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${product.id}, 'Product','/product/list')}"></th:block>
 
-    <form action="/product" method="post">
+    <form th:action="@{/product}" method="post">
 
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 

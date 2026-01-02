@@ -44,7 +44,7 @@
 <section layout:fragment="content">
     <article>
         <header><h2>Gebruiker settings</h2></header>
-        <form action="/teammover/userpreferences" method="post">
+        <form th:action="@{/teammover/userpreferences}" method="post">
 
             <fieldset>
                 <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('id', 'Selecteer het team', ${memberLocalId}, ${localMembersList}, true,'1')}"></th:block>

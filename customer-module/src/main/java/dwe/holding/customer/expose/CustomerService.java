@@ -5,6 +5,7 @@ import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
 
     private final CustomerMapper customerMapper;
+    private final PetRepository petRepository;
 
     public Customer searchCustomer(Long customerId) {
 
@@ -39,6 +41,13 @@ public class CustomerService {
         dwe.holding.customer.client.model.Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Optional<dwe.holding.customer.client.model.Pet> pet = customer.getPets().stream().filter(custPet -> custPet.getId().equals(petId)).findFirst();
         return pet.orElseThrow();
+    }
+
+    public void updatePetDeceased(Long id) {
+        dwe.holding.customer.client.model.Pet pet = petRepository.findByIdAndMemberId(id, AutorisationUtils.getCurrentUserMid());
+        pet.setDeceased(YesNoEnum.Yes);
+        pet.setDeceasedDate(LocalDate.now());
+        petRepository.save(pet);
     }
 
     public record Customer(

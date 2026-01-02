@@ -57,7 +57,9 @@ public class Costing extends MemberBaseBO {
     @Convert(converter = TaxedTypeEnumConverter.class)
     private TaxedTypeEnum taxed;
 
-    private Short autoReminder;
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum autoReminder;
     private String reminderNomenclature;
     private Short intervalInWeeks;
     private String rRemovePendingRemindersContaining;

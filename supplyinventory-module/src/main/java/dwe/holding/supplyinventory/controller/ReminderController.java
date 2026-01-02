@@ -68,7 +68,7 @@ public class ReminderController {
 
         if (formReminder.isNew()) {
             reminderRepository.save(
-                    Reminder.builder().reminder(formReminder.getReminder())
+                    Reminder.builder().reminderText(formReminder.getReminderText())
                             .pet(pet)
                             .dueDate(formReminder.getDueDate())
                             .build()

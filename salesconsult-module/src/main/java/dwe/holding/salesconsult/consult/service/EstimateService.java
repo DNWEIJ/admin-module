@@ -31,7 +31,7 @@ public class EstimateService {
         return estimateForPetRepository.findByMemberIdAndPet_IdInOrderByEstimate_EstimateDateDesc(AutorisationUtils.getCurrentUserMid(), petIds)
                 .stream().map(efp ->
                         new EstimateForm(
-                                efp.getId(),
+                                efp.getEstimate().getId(),
                                 efp.getPet().getId(),
                                 efp.getEstimate().getEstimateDate(),
                                 efp.getPurpose(),

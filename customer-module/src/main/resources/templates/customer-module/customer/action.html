@@ -9,7 +9,7 @@
 
     <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer/')}"></div>
     <hr/>
-    <form id="createForm" action="/customer/customer" method="post">
+    <form id="createForm" th:action="@{/customer/customer}" method="post">
 
         <input id="id" name="id" th:value="${customer.id}" type="hidden"/>
         <input id="version" name="version" th:value="${customer.version}" type="hidden"/>

@@ -366,11 +366,19 @@ tbody tr.red-text td {
 }
 
 .svg-icon {
-    width: 1.7rem;
-    height: 1.7rem;
-    fill: var(--pico-primary-underline);
+    width: 3.7rem;
+    height: 3.7rem;
+    fill: var(--pico-form-element-active-border-color);
+    stroke-width: 1.25;
+    stroke: var(--pico-form-element-valid-border-color);
 }
-
+.svg-icon:hover {
+    width: 3.7rem;
+    height: 3.7rem;
+    stroke-width: 1.25;
+    fill: var(--pico-form-element-valid-border-color);
+    stroke: var(--pico-form-element-active-border-color);
+}
 /***********************************/
 /* keep footer stick to the bottom */
 html, body {

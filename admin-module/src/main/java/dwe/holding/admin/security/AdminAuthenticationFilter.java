@@ -19,7 +19,6 @@ public class AdminAuthenticationFilter implements AuthenticationConverter {
             String username = obtainUsername(request);
             String password = obtainPassword(request);
             String domain = obtainShortCode(request);
-
             String usernameDomain = String.format("%s%s%s", username.trim(), String.valueOf(Character.LINE_SEPARATOR), domain);
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(usernameDomain, password);
             token.setDetails(detailsSource.buildDetails(request));

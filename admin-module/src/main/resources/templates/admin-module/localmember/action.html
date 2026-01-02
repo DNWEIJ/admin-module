@@ -7,7 +7,7 @@
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmember/list')}"></th:block>
 
-    <form action="/admin/localmember" method="post">
+    <form th:action="@{/admin/localmember}" method="post">
 
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 

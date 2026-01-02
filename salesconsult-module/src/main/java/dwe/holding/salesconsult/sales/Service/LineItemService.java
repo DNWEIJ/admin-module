@@ -4,6 +4,8 @@ import dwe.holding.admin.model.tenant.LocalMemberTax;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
+import dwe.holding.customer.client.model.Reminder;
+import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
@@ -13,6 +15,7 @@ import dwe.holding.salesconsult.sales.repository.LineItemRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.CostingService;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
+import dwe.holding.supplyinventory.repository.ReminderRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,13 +32,15 @@ public class LineItemService {
     private final LineItemRepository lineItemRepository;
     private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
+    private final ReminderRepository reminderRepository;
+    private final CustomerService customerService;
 
     public List<LineItem> createPricing(@NotNull Long costingId, @NotNull BigDecimal amount) {
-        return getLineItems(Appointment.builder().id(0L).build(), costingId, amount, Pet.builder().id(0L).build());
+        return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, amount, Pet.builder().id(0L).build());
     }
 
     public List<LineItem> createEstimateLineItem(@NotNull Long costingId, @NotNull BigDecimal amount, @NotNull Pet pet) {
-        return getLineItems(Appointment.builder().id(0L).build(), costingId, amount, pet);
+        return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, amount, pet);
     }
 
     @Transactional
@@ -57,7 +62,7 @@ public class LineItemService {
 
         Visit foundVisit = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get();
 
-        final List<LineItem> toBeSavedLineItems = getLineItems(app, costingId, amount, batchNumber, spillageName, foundVisit.getPet());
+        final List<LineItem> toBeSavedLineItems = createLineItemsFromCosting(app, costingId, amount, batchNumber, spillageName, foundVisit.getPet());
 
         List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
         app.getLineItems().addAll(savedLineItems);
@@ -74,11 +79,11 @@ public class LineItemService {
     }
 
 
-    private List<LineItem> getLineItems(Appointment appointment, Long costingId, BigDecimal amount, Pet pet) {
-        return getLineItems(appointment, costingId, amount, null, null, pet);
+    private List<LineItem> createLineItemsFromCosting(Appointment appointment, Long costingId, BigDecimal amount, Pet pet) {
+        return createLineItemsFromCosting(appointment, costingId, amount, null, null, pet);
     }
 
-    private List<LineItem> getLineItems(Appointment appointment, Long costingId, BigDecimal amount, String batchNumber, String spillageName, Pet pet) {
+    private List<LineItem> createLineItemsFromCosting(Appointment appointment, Long costingId, BigDecimal amount, String batchNumber, String spillageName, Pet pet) {
         // do we need to add all grouping products?
         List<CostingPriceProjection> priceIncludingPromotions = costingService.getCorrectedPriceAndGroupingForCostingId(costingId);
 
@@ -128,6 +133,8 @@ public class LineItemService {
                 if (cpp.hasBatchNr().equals(YesNoEnum.Yes)) {
                     costingService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
                 }
+                // do extra stuff we need to do on costings....
+                doExtraStuff(cpp, pet, appointment);
                 toBeSavedLineItems.add(savedLineItem);
             }
         });
@@ -139,5 +146,28 @@ public class LineItemService {
             return amount;
         }
         return amount.multiply(groupQuantity);
+    }
+
+    private void doExtraStuff(CostingPriceProjection cpp, Pet pet, Appointment appointment) {
+        //update balance
+//        getUserSession().setCustomerBalance(getUserSession().getCustomerBalance() - l.getTotal());
+
+        // update reminder status
+        if (YesNoEnum.Yes.equals(cpp.autoReminder())) {
+            // clean up existing reminders
+            reminderRepository.deleteAllByPet_IdAndReminderTextContainingIgnoreCase(pet.getId(), cpp.rRemovePendingRemindersContaining());
+            reminderRepository.save(
+                    Reminder.builder()
+                            .reminderText(cpp.reminderNomenclature())
+                            .pet(pet)
+                            .dueDate(LocalDate.from(appointment.getVisitDateTime().plusWeeks(cpp.intervalInWeeks())))
+                            .originatingAppointmentId(appointment.getId())
+                            .build()
+            );
+        }
+        //update patient Deceased
+        if (YesNoEnum.Yes.equals(cpp.deceasedPetPrompt())) {
+            customerService.updatePetDeceased(pet.getId());
+        }
     }
 }

@@ -16,6 +16,11 @@ public record CostingPriceProjection(
         TaxedTypeEnum taxed,
         BigDecimal reductionPercentage,
         LookupCostingCategory lookupCostingCategory,
-        String prescriptionLabel
+        String prescriptionLabel,
+        YesNoEnum autoReminder,
+        String rRemovePendingRemindersContaining,
+        String reminderNomenclature,
+        Short intervalInWeeks,
+        YesNoEnum deceasedPetPrompt
 ) {
 }

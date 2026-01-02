@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minimal CSS Menu</title>
+    <style>
+        body { margin:0; font-family:Arial,sans-serif; }
+
+        .menu {
+            display:flex;
+            align-items:center;
+            width:100%;
+            padding:6px 16px;
+            background:#fafafa;
+            border-bottom:1px solid #ddd;
+            gap:10px;
+        }
+
+        .menu-left { display:flex; align-items:center; gap:6px; flex:1; }
+        .menu-left a { font-size:28px; margin-right:4px; text-decoration:none; }
+
+        /* DROPDOWN */
+        .dropdown, .user-dropdown {
+            position:relative;
+            flex-shrink:0;
+            margin-right:16px;
+        }
+
+        .dropdown .current, .user-dropdown .current {
+            padding:4px 8px;
+            background:#f0f0f0;
+            border-radius:4px;
+            cursor:pointer;
+            font-size:13px;
+            white-space:nowrap;
+            max-width:calc(100vw - 250px);
+            overflow:hidden;
+            text-overflow:ellipsis;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        /* Dropdown content */
+        .dropdown-content, .user-dropdown-content {
+            display:none;
+            position:absolute;
+            top:100%;
+            right:0;
+            background:#fff;
+            border:1px solid #ccc;
+            border-radius:4px;
+            min-width:140px;
+            z-index:10;
+        }
+
+        .dropdown:hover .dropdown-content,
+        .user-dropdown:hover .user-dropdown-content {
+            display:block;
+        }
+
+        /* Generic styling inside dropdown */
+        .dropdown-content > div,
+        .user-dropdown-content > label {
+            display:block;
+            padding:6px 8px;
+            cursor:pointer;
+            font-size:13px;
+        }
+
+        .dropdown-content > div:hover,
+        .user-dropdown-content > label:hover { background:#eee; }
+
+    </style>
+</head>
+<body>
+
+<div class="menu">
+
+    <!-- LEFT ICONS -->
+    <div class="menu-left"></div>
+
+    <!-- MENU DROPDOWN -->
+    <div class="dropdown">
+        <div class="current">Menu</div>
+        <div class="dropdown-content">
+            <div data-id="dashboard">
+                Dashboard
+                <div style="display:none;">
+                    <a href="/a/b">📊</a>
+                    <a href="/a/b">📈</a>
+                    <a href="/a/b">📉</a>
+                </div>
+            </div>
+            <div data-id="settings">
+                Settings
+                <div style="display:none;">
+                    <a href="/a/b">⚙️</a>
+                    <a href="/a/b">🔒</a>
+                    <a href="/a/b">🛠️</a>
+                </div>
+            </div>
+            <div data-id="profile">
+                Profile
+                <div style="display:none;">
+                    <a href="/a/b">👤</a>
+                    <a href="/a/b">✉️</a>
+                    <a href="/a/b">📸</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER DROPDOWN -->
+    <div class="user-dropdown">
+        <div class="current">👤</div>
+        <div class="user-dropdown-content">
+            <label>Preferences</label>
+            <label>Logout</label>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // References
+    const menuLeft = document.querySelector('.menu-left');
+    const current = document.querySelector('.dropdown .current');
+    const items = document.querySelectorAll('.dropdown-content > div');
+
+    // Show icons of selected menu
+    function selectMenu(item) {
+        menuLeft.innerHTML = '';
+        const icons = item.querySelector('div').cloneNode(true);
+        icons.style.display = 'flex';
+        icons.querySelectorAll('a').forEach(a => a.style.display='inline-block');
+        menuLeft.appendChild(icons);
+        current.textContent = item.firstChild.textContent.trim();
+    }
+
+    // Initialize first menu
+    selectMenu(items[0]);
+
+    // Click event
+    items.forEach(item => {
+        item.addEventListener('click', () => selectMenu(item));
+    });
+</script>
+
+</body>
+</html>

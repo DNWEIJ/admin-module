@@ -5,7 +5,7 @@
 <body>
 <section layout:fragment="content">
     <article class="text-align-center">
-        <form action="/vmas/index" method="post">
+        <form th:action="@{/vmas/index}" method="post">
 
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"
                       th:with="dataOnchange='this.form.submit();'"></th:block>
@@ -31,6 +31,7 @@
 
             <li><h1> Front end</h1></li>
             <li> fix action.html note</li>
+            <li> Costing search: also on short code</li>
 
             <li><h1> Front end: Nice to have</h1></li>
             <li>color switch</li>

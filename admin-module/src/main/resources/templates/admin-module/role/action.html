@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${role.id}, 'Role','/admin/role/list')}"></th:block>
 
-    <form action="/admin/role" method="post" name="form">
+    <form th:action="@{/admin/role}" method="post" name="form">
 
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
