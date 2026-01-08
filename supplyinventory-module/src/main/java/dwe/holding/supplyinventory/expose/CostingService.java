@@ -79,7 +79,7 @@ public class CostingService {
         if (costingSpillage == null) {
             costingSpillage = new CostingSpillage();
             costingSpillage.setCostingId(costing.getId());
-            costingSpillage.setPackageAmount(costing.getQuantityPerPackage());
+            costingSpillage.setPackageQuantity(costing.getQuantityPerPackage());
             costingSpillage.setStartDate(LocalDate.now());
             costingSpillageRepository.save(costingSpillage);
         }

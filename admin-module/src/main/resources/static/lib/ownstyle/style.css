@@ -127,11 +127,6 @@ article > footer {
 }
 
 
-
-
-
-
-
 /* STYLING FOR SPECIFIC Elements OF THIS APP */
 .hidden {
     display: none;
@@ -164,15 +159,24 @@ article > footer {
         grid-row-gap: .5rem;
     }
 }
-
-.ac_results {
+.ac_results_wrapper {
     position: relative;
-    overflow: hidden;
-
     width: 100%;
+}
+.ac_results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     z-index: 999;
+    background-color: var(--pico-background-color);
     border: 1px solid var(--pico-form-element-border-color);
     border-radius: var(--pico-border-radius);
+}
+
+.ac_results ul {
+    max-height: 50vh;   /* 50% of browser window height */
+    overflow-y: auto;
 }
 
 .ac_results li {
@@ -182,7 +186,8 @@ article > footer {
 }
 
 .ac_results li:nth-child(even) {
-    background-color: var(--pico-dropdown-background-color);
+    background-color:#f6f6f6;
+    color: black;
 }
 
 .ac_results li.selected {
@@ -194,6 +199,21 @@ article > footer {
     display: none;
 }
 
+.holder {
+    position: relative;
+}
+
+.htmx-indicator {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 0.85em;
+    color: var(--pico-muted-color);
+    opacity: 0;
+    z-index: 9999;
+}
 
 /* *********************** */
 /* narrow table definition */
@@ -325,7 +345,9 @@ tbody tr.red-text td {
     font-family: Consolas, Menlo, Monaco, "Roboto Mono", monospace;
 }
 
-/* Placeholder floats up in input CSS */
+/********************
+ *** Placeholder floats up in input CSS
+ *************************/
 :root {
     --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -373,12 +395,15 @@ tbody tr.red-text td {
     stroke: var(--pico-form-element-valid-border-color);
 }
 .svg-icon:hover {
-    width: 3.7rem;
-    height: 3.7rem;
-    stroke-width: 1.25;
     fill: var(--pico-form-element-valid-border-color);
     stroke: var(--pico-form-element-active-border-color);
 }
+
+.input-height-as-input-field {
+    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+}
+
+
 /***********************************/
 /* keep footer stick to the bottom */
 html, body {

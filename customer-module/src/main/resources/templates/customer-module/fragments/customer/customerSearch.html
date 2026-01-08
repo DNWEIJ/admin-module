@@ -78,26 +78,26 @@
             })
         })
     </script>
-    <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
+    <span>search on customer ID (I123456789) or on zipcode (PXXXX99)</span>
     <div class="gridSearchCustomerWithCheck">
-
-        <div class="holder">
-            <input tabindex="1" list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}"
+        <div id="holder" class="holder">
+            <input list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}" autofocus
                    hx-get="/customer/search/customer"
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
-                   hx-indicator=".htmx-indicator"
+                   hx-indicator="#searching-indicator"
                    hx-include="#startLastName, #includeStreetName, #includeFirstTel, #includePet"
                    autocomplete="off">
-            <div class="dropdown">
+            <span id="searching-indicator"  class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
+            <div class="ac_results_wrapper">
                 <div class="ac_results" id="input-customerName" hx-on::after-swap="attachMouseHandlers()"></div>
             </div>
         </div>
         <div role="group">
-            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','2')}" th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','3')}" th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','4')}" th:with="tooltip=#{label.tooltip.customer.firstel}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','5')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}" th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}" th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}" th:with="tooltip=#{label.tooltip.customer.firstel}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
         </div>
         <div role="group">
             <input class="secondary" name="_reset" type="button" th:value="#{label.button.reset}"   onclick="window.location.href=window.location.origin + '/customer/customer'"/>

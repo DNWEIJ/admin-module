@@ -26,6 +26,7 @@ public class CustomerPetModelAdvice {
     void modelAdvice(Model model) {
         try {
             model.addAttribute("customerInformation", AutorisationUtils.getTempGenericStorage());
+            model.addAttribute("selectedMenu", AutorisationUtils.getTempGenericStorage());
         } catch (Exception e) {
             // do nothing, user not yet logged in
         }

@@ -8,15 +8,14 @@
 
 
 <th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)"
-          th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}, pattern=${pattern}?:''">
+          th:with="type=${type}?:'text', required=${required}?:true, pattern=${pattern}?:'', onblur=${onblur}?:'' ">
     <div class="field">
-        <input th:id="${name}" th:name="${name}" placeholder=" " th:required="${required}"
+        <input th:id="${name}" th:name="${name}" placeholder="" th:required="${required}" th:attr="onblur=''+ ${onblur}"
                th:pattern="${pattern}" th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__ ?: ''}"
                autocomplete="off">
         <label th:for="${name}" th:utext="#{${label}}"></label>
     </div>
 </th:block>
-
 
 <th:block th:fragment="inputHtmlOptional(name, label, dbField, tabindex)"
           th:with="type=${type}?:'text'">

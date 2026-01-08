@@ -36,8 +36,9 @@ public class IndexController {
     String changeLocalmember(Long localMemberId, Model model, RedirectAttributes redirectAttributes) {
         // validate memeberID
         LocalMember localMember = AutorisationUtils.getCurrentMember().getLocalMembers().stream().filter(f -> f.getId().equals(localMemberId)).findFirst().orElseThrow();
+
         AutorisationUtils.setCurrentUser(userService.setLocalMemberId(localMember.getId()));
-        redirectAttributes.addFlashAttribute("message", "Successfully changed local member");
+        redirectAttributes.addFlashAttribute("message", "label.saved");
         return "redirect:/vmas/index";
     }
 

@@ -1,58 +1,65 @@
 <div id="session-warning" style="
     display:none;
     position:fixed;
-    bottom:20px;
-    right:20px;
-    width:300px;
+    bottom:2rem;
+    right:2rem;
+    width:30rem;
     background:white;
     border:1px solid #ccc;
-    padding:15px;
-    border-radius:8px;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
+    padding:1rem;
+    border-radius:12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
     z-index:99999;
 ">
-    <p>Your session will expire soon...</p>
-
+    <p th:text="#{session.willexpire}"></p>
     <div style="width:100%; background:#eee; height:20px; border-radius:5px;">
         <div id="session-progress" style="
             height:100%;
             width:100%;
             background:blue;
-            border-radius:5px;
+            border-radius:12px;
             transition:width 1s linear, background 0.3s;
         "></div>
     </div>
-
     <p style="text-align:center; margin-top:8px;">
-        <span id="session-countdown">30</span> seconds left
+        <span id="session-countdown">30</span><span th:text="' '+ #{session.seconds}"></span>
     </p>
+    <p class="text-align-center"><a role="button" hx-swap="none" hx-get="/admin/keepalive" hx-on="htmx:afterRequest:scheduleWarning();"><span th:text="#{session.keepalive}"></a></p>
 </div>
 <script th:inline="javascript">
-    // Time before expiration where the warning appears (30 seconds)
-    const warningSeconds = 30;
-
+    const userWarningSeconds = 30;
     const sessionTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 0;
-    // Calculate when to fire the warning
-    const warningTime = (sessionTimeoutInSeconds - warningSeconds) * 1000;
 
-    setTimeout(() => {
-        startSessionCountdown();
-    }, warningTime);
+    // Calculate when to fire the warning
+    const warningTimeInMill = (sessionTimeoutInSeconds - userWarningSeconds) * 1000;
+
+    // define global in order to be able to cancel the warning and reset timer after xhttp request
+    let warningTimeout;
+    let timer;
+
+    function scheduleWarning() {
+        clearTimeout(warningTimeout);
+        clearInterval(timer);
+        document.getElementById("session-warning").style.display = "none";
+        warningTimeout = setTimeout(() => {
+            startSessionCountdown();
+        }, warningTimeInMill);
+    }
 
     function startSessionCountdown() {
-        let timeLeft = warningSeconds;
+        let timeLeft = userWarningSeconds;
         const warningBox = document.getElementById("session-warning");
         const progressBar = document.getElementById("session-progress");
         const countdownLabel = document.getElementById("session-countdown");
 
         warningBox.style.display = "block";
 
-        const timer = setInterval(() => {
+        timer = setInterval(() => {
             timeLeft--;
             countdownLabel.textContent = timeLeft;
 
             // Update progress bar width
-            const widthPercent = (timeLeft / warningSeconds) * 100;
+            const widthPercent = (timeLeft / userWarningSeconds) * 100;
             progressBar.style.width = widthPercent + "%";
 
             // Change colors
@@ -72,4 +79,7 @@
 
         }, 1000);
     }
+
+    scheduleWarning();
+    document.body.addEventListener("htmx:afterRequest", scheduleWarning);
 </script>

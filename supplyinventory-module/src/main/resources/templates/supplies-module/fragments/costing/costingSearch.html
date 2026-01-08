@@ -46,7 +46,7 @@
                         selectedFieldDataSet = selectedField.dataset
                     }
                 }
-                if (!isPriceInfo &&!isEstimate) {
+                if (!isPriceInfo && !isEstimate) {
                     // we're already setting the url, since we will lose the selected field test on hx-get being set instead
                     let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
                     costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedFieldDataSet.id + '/batchnumbers')
@@ -56,7 +56,7 @@
                 document.getElementById("input-costingName").innerHTML = ""
                 document.getElementById("inputCostingId").value = selectedFieldDataSet.id
 
-                let element = document.getElementById("inputCostingAmount")
+                let element = document.getElementById("inputCostingQuantity")
                 element.focus()
                 element.select()
             }
@@ -107,7 +107,7 @@
             hxPostUrl = ''
             selectedFieldDataSet = undefined
 
-            document.getElementById("inputCostingAmount").value = ''
+            document.getElementById("inputCostingQuantity").value = ''
             if (!isPriceInfo && !isEstimate) {
                 var element = document.getElementById("inputBatchNumber")
                 element.value = ''
@@ -117,7 +117,7 @@
                 element.value = ''
                 element.setAttribute("disabled", true)
             }
-            document.getElementById("inputCostingAmount").value = '1.0'
+            document.getElementById("inputCostingQuantity").value = '1.0'
             document.getElementById("productsFromCategory").innerHTML = ""
 
             if (document.getElementById("holder-dropdown").classList.contains("hidden")) {
@@ -190,7 +190,7 @@
                 }
             })
 
-            document.getElementById("inputCostingAmount").addEventListener("keydown", (event) => {
+            document.getElementById("inputCostingQuantity").addEventListener("keydown", (event) => {
                 switch (event.key) {
                     case "Enter":
                     case "Tab":
@@ -241,13 +241,10 @@
     </script>
 
     <form id="costingSearchForm" hx-post="" hx-swap="none">
-
         <fieldset>
-
             <div class="gridSearchCostingWithCheck">
                 <div>
                     <label for="useDropDown">
-                        <span class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
                         <input id="useDropDown" tabindex="0" type="checkbox" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right" autocomplete="off"
                                hx-get="/costing/costing/search/costing/dropdown"
                                hx-trigger="click"
@@ -257,15 +254,17 @@
                         <span class="no-break"></span>
                     </label>
                 </div>
-                <div id="holder-input">
-                    <input tabindex="1" list="input-costingName" id="costingFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.costing.search.placeholder}"
+                <div id="holder-input" class="holder">
+                    <input list="input-costingName" id="costingFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.costing.search.placeholder}"
                            hx-post="/costing/search/costing"
                            hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                            hx-target="#input-costingName"
-                           hx-indicator=".htmx-indicator"
                            hx-swap="innerHTML"
-                           autocomplete="off">
-                    <div id="result-dropdown" class="dropdown">
+                           hx-indicator="#searching-indicator"
+                            autocomplete="off"
+                    >
+                    <span id="searching-indicator" class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
+                    <div class="ac_results_wrapper">
                         <div class="ac_results" id="input-costingName" hx-on::after-swap="attachMouseHandlersToAllItems()"></div>
                     </div>
                 </div>
@@ -283,7 +282,7 @@
                 </div>
                 <div>
                     <input type="hidden" name="inputCostingId" id="inputCostingId"/>
-                    <input id="inputCostingAmount" tabindex="2" name="inputCostingAmount" size="2" type="number" value="1.0" autocomplete="off">
+                    <input id="inputCostingQuantity" tabindex="2" name="inputCostingQuantity" size="2" type="number" value="1.0" autocomplete="off">
                 </div>
                 <th:block th:if="${!salesType.isPriceInfo && !salesType.isEstimate}">
                     <div id="costingBatchNumberContainer">
@@ -310,4 +309,13 @@
             </div>
         </fieldset>
     </form>
+    <script>
+        document.getElementById('costingFind').addEventListener('htmx:configRequest', function (evt) {
+            document.querySelector('.search-indicator').classList.add('visible');
+        });
+
+        document.getElementById('costingFind').addEventListener('htmx:afterRequest', function (evt) {
+            document.querySelector('.search-indicator').classList.remove('visible');
+        });
+    </script>
 </th:block>

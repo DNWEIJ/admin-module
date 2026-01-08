@@ -34,7 +34,7 @@ public class HtmxEstimateController {
 
     @PostMapping("/customer/{customerId}/estimate/{estimateId}/{petId}")
     String saveHtmxEstimateLineItem(@PathVariable Long customerId, @PathVariable Long estimateId, @PathVariable Long petId,
-                                    @NotNull BigDecimal inputCostingAmount, @NotNull Long inputCostingId, Model model, RedirectAttributes redirect) {
+                                    @NotNull BigDecimal inputCostingQuantity, @NotNull Long inputCostingId, Model model, RedirectAttributes redirect) {
         CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
         if (!customer.id().equals(customerId)) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
@@ -43,7 +43,7 @@ public class HtmxEstimateController {
         Estimate estimate = estimateService.getEstimate(estimateId, petId);
 
         estimateService.saveEstimateLineItems(lineItemMapper.toEstimateLineItemList(
-                        lineItemService.createEstimateLineItem(inputCostingId, inputCostingAmount, customerService.getPet(customerId, petId))
+                        lineItemService.createEstimateLineItem(inputCostingId, inputCostingQuantity, customerService.getPet(customerId, petId))
                         , estimate
                 )
         );

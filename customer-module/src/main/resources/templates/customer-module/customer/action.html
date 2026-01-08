@@ -18,52 +18,56 @@
             <legend>
                 <th:block th:utext="#{customer.legend.customerName}"/>
             </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('lastName','customer.lastName','customer.lastName','4')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('surname','customer.surname','customer.surName','5')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('firstName','customer.firstName','customer.firstName','6')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('middleInitial','customer.middleInitial','customer.middleInitial','7')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('title','customer.title','customer.title','8')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('lastName','customer.lastName','customer.lastName','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('surname','customer.surname','customer.surName','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('firstName','customer.firstName','customer.firstName','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('middleInitial','customer.middleInitial','customer.middleInitial','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('title','customer.title','customer.title','0')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.addressInformation}"/>
             </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','customer.address1','customer.address1','15')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','customer.address2','customer.address2','16')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipCode','customer.zipCode','17')}"
-                      th:with="pattern='^[1-9][0-9]{3}\s?[A-Z]{2}$', placeholder='XXXZZ'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','customer.city','customer.city','18')}"></th:block>
+            <button class="input-height-as-input-field"
+                    hx-get="/customer/search/customer/address"
+                    hx-target="#modal-container" hx-swap="innerHTML" hx-on="htmx:afterSwap: this.querySelector('#searchZipCode')?.focus()"
+                    th:text="#{customer.search.zipcode}"></button>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipcode','customer.zipCode','12')}"
+                      th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
+            </th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('street','customer.street','customer.city','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('streetNumber','customer.street.number','customer.streetNumber','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','customer.city','customer.city','0')}"></th:block>
         </fieldset>
+
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.contactInformation}"/>
             </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','9')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('mobilePhone','customer.mobilePhone','customer.mobilePhone','11')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('homePhone','customer.homePhone','customer.homePhone','10')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('workPhone','customer.workPhone','customer.workPhone','12')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('mobilePhone','customer.mobilePhone','customer.mobilePhone','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('homePhone','customer.homePhone','customer.homePhone','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('workPhone','customer.workPhone','customer.workPhone','0')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', ${customer.status}, ${statusList}, true,'13')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', ${customer.newsletter}, ${ynvaluesList}, true,'14')}"
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('status','customer.status', ${customer.status}, ${statusList}, true,'0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('newsletter','customer.newsletter', ${customer.newsletter}, ${ynvaluesList}, true,'0')}"
                       th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.emergencyInformation}"/>
             </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('emergencyContact','customer.emergencyContact','customer.emergencyContact','19')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('emergencyContactPhone','customer.emergencyContactPhone','customer.emergencyContactPhone','20')}"
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('emergencyContact','customer.emergencyContact','customer.emergencyContact','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('emergencyContactPhone','customer.emergencyContactPhone','customer.emergencyContactPhone','0')}"
                       th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.legend.otherInformation}"/>
             </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarian','customer.previousVeterinarian','customer.previousVeterinarian','21')}"
-                      th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarianPhone','customer.previousVeterinarianPhone','customer.previousVeterinarianPhone','22')}"
-                      th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarian','customer.previousVeterinarian','customer.previousVeterinarian','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarianPhone','customer.previousVeterinarianPhone','customer.previousVeterinarianPhone','0')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('ubn','customer.ubn','customer.ubn','23')}" th:with="required=false"></th:block>
         </fieldset>
 
@@ -77,6 +81,21 @@
     </form>
 
     <th:block th:insert="~{fragments/elements/audit::audit('customer.addedBy','customer.addedOn', 'customer.lastEditedBy', 'customer.lastEditedOn')}"></th:block>
+    <script>
+
+        customerFind
+        function copyInfoFromModalToForm() {
+            const el = document.getElementById("addressData");
+            if (!el) return;
+
+            const data = el.dataset;
+            document.getElementById('zipCode').value = data.zipcode;
+            document.getElementById('street').value = data.street;
+            document.getElementById('streetNumber').value = data.number;
+            document.getElementById('city').value = data.city;
+        }
+    </script>
+
 </section>
 </body>
 </html>

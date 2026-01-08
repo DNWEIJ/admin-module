@@ -1,7 +1,7 @@
 package dwe.holding.salesconsult.sales.controller.otc;
 
 import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.customer.client.controller.CustomerController;
+import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
@@ -26,6 +26,7 @@ public class OTCHtmxController {
     private final AppointmentVisitService appointmentVisitService;
     private final AppointmentRepository appointmentRepository;
     private final LookupPurposeRepository lookupPurposeRepository;
+    private final CustomerForm customerForm;
 
     @GetMapping("/otc/search/{customerId}/sell/{appointmentId}/addpet")
     String getModalAddPetHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId,
@@ -49,7 +50,8 @@ public class OTCHtmxController {
                 .addAttribute("appointmentId", app.getId())
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !pet.deceased()).filter(pet -> !petOnVisit.contains(pet.id())).toList())
                 .addAttribute("deceasedPets", customer.pets().stream().filter(CustomerService.Pet::deceased).filter(pet -> !petOnVisit.contains(pet.id())).toList())
-                .addAttribute("form", new CustomerController.CustomerForm(true, false, false, false));
+                // todo do we need this?
+                .addAttribute("form", customerForm);
         updateReasonsInModel(model, lookupPurposeRepository);
         return "sales-module/fragments/htmx/dialogaddpet";
     }
@@ -66,7 +68,7 @@ public class OTCHtmxController {
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         final Appointment savedApp = appointmentVisitService.addPetsToAppointment(customerId, pets, app);
-        // todo if visit fo somewhere else, this is for OTC
+        // todo if visit go somewhere else, this is for OTC
         return "redirect:/sales/otc/search/" + customerId + "/sell/" + appointmentId + '/' + savedApp.getVisits().stream().mapToLong(visit -> visit.getPet().getId()).max().orElseThrow();
     }
 }

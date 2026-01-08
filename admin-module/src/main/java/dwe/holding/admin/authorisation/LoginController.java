@@ -82,6 +82,11 @@ public class LoginController {
     void returnNoFavicon() {
     }
 
+    @GetMapping("/keepalive")
+    @ResponseBody
+    void returnNoAction() {
+    }
+
 
     @PostMapping("/error")
     String error() {
@@ -90,5 +95,4 @@ public class LoginController {
 
     record ResetPasswordForm(String id, String currentPassword, String password, String password2) {
     }
-
 }

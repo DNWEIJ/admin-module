@@ -1,0 +1,16 @@
+<th:block th:each="analyseItem : ${analyseItems}">
+    <tr>
+        <td>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}"></th:block>
+        </td>
+        <td th:text="${analyseItem.nomenclature}"></td>
+        <td>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}"></th:block>
+        </td>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${analyseItem.quantity})}" th:with="deskTopOnly=false"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${analyseItem.salesPriceExTax})}" th:with="deskTopOnly=true"></th:block>
+        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${analyseItem.totalIncTax})}" th:with="deskTopOnly=false"></th:block>
+
+        <td th:if="" th:text="${analyseItem.comment}"></td>
+    </tr>
+</th:block>

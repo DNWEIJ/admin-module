@@ -1,12 +1,13 @@
 package dwe.holding.customer.client.model;
 
+import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.customer.client.model.converter.CustomerStatusConverter;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
-import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -24,27 +25,26 @@ public class Customer extends MemberBaseBO {
 
     @NotEmpty
     @Column(nullable = false)
-    private String lastName;
-    @NotEmpty
-    @Column(nullable = false)
     private String firstName;
     private String surName;
+    @NotEmpty
+    @Column(nullable = false)
+    private String lastName;
     private String middleInitial;
-
     private String title;
     private String email;
-    private String address1;
+
+    private String extraAddressInfo;
     private String address2;
     private String address3;
 
-    private String addressLine;
-    @NotEmpty
-    @Column(nullable = false)
+    private String oldAddressInfo;
+
+    @Pattern(regexp = "^[1-9][0-9]{3}\\s?[A-Z]{2}$")
     private String zipCode;
-    @NotEmpty
-    @Column(nullable = false)
+    private String street;
+    private String streetNumber;
     private String city;
-    private String state;
 
     private String homePhone;
     private String workPhone;

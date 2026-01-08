@@ -7,6 +7,7 @@ import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.data.web.ProjectedPayload;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +47,9 @@ public class PriceSellController {
     }
 
     @PostMapping("/price/sell")
-    String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingAmount,
-                                          @ModelAttribute(value = "lineItems") List<LineItem> lineItems, Model model) {
-        List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingAmount);
+    String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingQuantity,
+                                          @ProjectedPayload @ModelAttribute(value = "lineItems") List<LineItem> lineItems, Model model) {
+        List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingQuantity);
         AtomicLong counter = new AtomicLong(lineItems.size() + 1);
         list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
 

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @Table(name = "CONSULT_ANALYSE")
 @Entity
 @SuperBuilder
@@ -31,5 +33,5 @@ public class Analyse extends MemberBaseBO {
     private Long lookupCostingCategoryId;
     @NotNull
     @Column(nullable = false)
-    private Double quantity;
+    private BigDecimal quantity;
 }

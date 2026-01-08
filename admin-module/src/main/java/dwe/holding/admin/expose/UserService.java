@@ -33,17 +33,16 @@ public class UserService {
     }
 
     public User setLocalMemberId(Long localMemberId) {
-        User user = userRepository.findById(AutorisationUtils.getCurrentUserId()).orElseThrow();
+        User user = userService.getByIdLazy_LoadingAllData(AutorisationUtils.getCurrentUserId());
         user.setLocalMemberId(localMemberId);
         return userRepository.save(user);
     }
 
     public void saveUserSettings(String userPrefJson) {
-        saveUserSettings(userPrefJson, 0L, null);
+        saveUserSettings(userPrefJson, 0L, null, null, null);
     }
 
-    public void saveUserSettings(String userPrefJson, Long localMemberId, LanguagePrefEnum language) {
-
+    public void saveUserSettings(String userPrefJson, Long localMemberId, LanguagePrefEnum language, String username, String email) {
         User user = userService.getByIdLazy_LoadingAllData(AutorisationUtils.getCurrentUserId());
         // update preferences
         if (user.getMetaUserPreferences() == null) {
@@ -57,6 +56,8 @@ public class UserService {
         }
         if (localMemberId != 0) user.setLocalMemberId(localMemberId);
         if (language != null) user.setLanguage(language);
+        if (username != null) user.setName(username);
+        if (email != null) user.setEmail(email);
         User savedUser = userRepository.save(user);
         AutorisationUtils.setCurrentUser(savedUser);
     }

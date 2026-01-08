@@ -42,7 +42,7 @@ public class OTCSellController {
     String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect);
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect,appointmentRepository);
         if (app == null) return "redirect:/sales/otc/search/";
 
         HashSet<Long> petsOnVisit = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
@@ -69,7 +69,7 @@ public class OTCSellController {
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("HX-Refresh", "true");
 
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect);
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect,appointmentRepository);
 
         if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
             return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
@@ -83,7 +83,7 @@ public class OTCSellController {
     @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}/{lineItemId}")
     String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
         // still allowed to delete line item?
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect);
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect,appointmentRepository);
         if (app == null) return "redirect:/sales/otc/search/";
 
         lineItemService.delete(lineItemId);
@@ -98,7 +98,7 @@ public class OTCSellController {
     // TODO do we need to add version ?
     @PostMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
     String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @PathVariable Long appointmentId, @PathVariable Long petId,
-                                          @NotNull BigDecimal inputCostingAmount, @NotNull Long inputCostingId,
+                                          @NotNull BigDecimal inputCostingQuantity, @NotNull Long inputCostingId,
                                           String inputBatchNumber, String spillageName, Model model, RedirectAttributes redirect) {
         CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
         if (!customer.id().equals(customerId)) {
@@ -106,14 +106,14 @@ public class OTCSellController {
             return "redirect:/sales/otc/search/";
         }
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
+        lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
         updateModel(model, petId, app);
         model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
 
-    private Appointment getAndValidateAppointment(Long appointmentId, RedirectAttributes redirect) {
+    private static Appointment getAndValidateAppointment(Long appointmentId, RedirectAttributes redirect, AppointmentRepository appointmentRepository) {
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (app.isCancelled() || app.iscompleted()) {
             redirect.addFlashAttribute("message", "Appointment is cancelled or completed.");

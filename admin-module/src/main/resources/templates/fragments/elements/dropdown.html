@@ -22,7 +22,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="dbDropdownWithData(name, label, dbFieldValue, list, required, tabindex)" th:with="dataOnChange=${dataOnchange}?:${dataOnchange}">
+<th:block th:fragment="dbDropdownWithDataElement(name, label, dbFieldValue, list, required, tabindex)" th:with="dataOnChange=${dataOnchange}?:${dataOnchange}">
     <th:block th:if="${list.size() > 0}">
         <th:block th:if="${label != ''}">
             <label th:for="${name}" th:value="${label}">[[#{${label}}]]

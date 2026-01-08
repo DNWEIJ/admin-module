@@ -41,10 +41,10 @@ public class VmasUserPreferencesController {
 
     @PostMapping("/userpreferences")
     String localMember(@Valid SettingsForm form) {
-        userService.saveUserSettings(objectMapper.writeValueAsString(form.userPreferences), form.localMemberId(), form.language());
+        userService.saveUserSettings(objectMapper.writeValueAsString(form.userPreferences), form.localMemberId(), form.language(), form.username(), form.email());
         return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 
-    record SettingsForm(Long localMemberId, LanguagePrefEnum language, VmasUserPreferences userPreferences) {
+    record SettingsForm(Long localMemberId, LanguagePrefEnum language, String username, String email, VmasUserPreferences userPreferences) {
     }
 }

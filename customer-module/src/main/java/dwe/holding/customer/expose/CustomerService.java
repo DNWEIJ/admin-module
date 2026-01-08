@@ -31,9 +31,9 @@ public class CustomerService {
         );
     }
 
-    public Customer searchCustomerFromPet(Long patientId) {
+    public Customer searchCustomerFromPet(Long petId) {
         return customerMapper.toCustomer(
-                customerRepository.findByPets_IdAndMemberId(patientId, AutorisationUtils.getCurrentUserMid())
+                customerRepository.findByPets_IdAndMemberId(petId, AutorisationUtils.getCurrentUserMid())
         );
     }
 

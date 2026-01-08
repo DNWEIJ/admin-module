@@ -4,7 +4,7 @@ INSERT INTO supply_costing_spillage
  costing_id,
  member_id,
  local_member_id,
- package_amount,
+ package_quantity,
  name,
  start_date,
  end_date,

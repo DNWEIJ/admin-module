@@ -12,18 +12,21 @@ app:
       driver-class-name: com.mysql.cj.jdbc.Driver
 
 spring:
+  thymeleaf:
+    cache: false  # TODO turn on for production
+
   messages:
     basename: admin.messages, shared.messages, customer.messages, lookup.messages,  supplyinventory.messages, sales.messages, consult.messages, vmas.messages
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
-    generate-ddl: true
+    show-sql: false
+    generate-ddl: false
     database: mysql
     properties:
       generate-ddl: no
-      show_sql: true
+      show_sql: false
       use_sql_comments: false
       format_sql: false
       use_jdbc_metadata_defaults: false
@@ -66,6 +69,7 @@ server:
   http2:
     enabled: true
   port: 8443
+  address: 0.0.0.0
   ssl:
     bundle: web-server
     client-auth: none

@@ -26,8 +26,6 @@ public class AdminAuthenticationFilter implements AuthenticationConverter {
         }
         return null;
     }
-
-
     protected String obtainPassword(HttpServletRequest request) {
         return request.getParameter("password");
     }

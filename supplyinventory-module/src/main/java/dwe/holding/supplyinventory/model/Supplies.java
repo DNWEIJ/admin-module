@@ -37,13 +37,13 @@ public class Supplies extends MemberBaseBO {
      */
     private Double minQuantity;
     /**
-     * When we order this product, what is the number to order? This is the package from the distributor.
+     * When we order this product, what is the houseNumber to order? This is the package from the distributor.
      * So multiply with quantityPerPackage to know how many items for sale are there.
      */
     private Double buyQuantity;
     private Double price;
     /**
-     * The number used by the distributor to identify the product.
+     * The houseNumber used by the distributor to identify the product.
      */
     private String itemNumber;
     /**

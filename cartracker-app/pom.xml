@@ -11,7 +11,7 @@
 
     <packaging>jar</packaging>
     <artifactId>cartracker-app</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.14</version>
     <name>cartracker-app</name>
     <description>master pom for car tracker application</description>
 

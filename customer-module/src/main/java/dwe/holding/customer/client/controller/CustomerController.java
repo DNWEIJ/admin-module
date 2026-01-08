@@ -2,11 +2,12 @@ package dwe.holding.customer.client.controller;
 
 
 import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
-import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.service.ZipCodeApi;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Controller
 @RequestMapping(path = "/customer")
 @AllArgsConstructor
@@ -32,10 +27,14 @@ import java.util.regex.Pattern;
 public class CustomerController {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final ZipCodeApi zipCodeApi;
+    private final CustomerForm customerForm;
 
     @GetMapping("/customer")
     String newRecord(Model model) {
-        model.addAttribute("form", new CustomerForm(true, false, false, false));
+        Long customerId = customerExists();
+        if (customerId > 0) return "redirect:/customer/customer/" + customerId;
+        model.addAttribute("form", customerForm);
         model.addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
         setModel(model);
         return "customer-module/customer/action";
@@ -47,7 +46,7 @@ public class CustomerController {
             return newRecord(model);
         }
         setModel(model);
-        model.addAttribute("form", new CustomerForm(true, false, false, false));
+        model.addAttribute("form", customerForm);
         Customer customer = customerRepository.findById(id).get();
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
@@ -62,7 +61,6 @@ public class CustomerController {
             return "redirect:/customer/customer";
         }
 
-        // TODO add if postcode lastname exists already
         if (customerForm.isNew()) {
             Customer savedCustomer = customerRepository.save(
                     Customer.builder()
@@ -73,8 +71,10 @@ public class CustomerController {
 
                             .status(customerForm.getStatus()).newsletter(customerForm.getNewsletter())
 
-                            .address1(customerForm.getAddress1()).address2(customerForm.getAddress2()).address3(customerForm.getAddress3())
-                            .addressLine(customerForm.getAddressLine()).zipCode(customerForm.getZipCode()).city(customerForm.getCity()).state(customerForm.getState())
+                            // TODO: Add conversion to the address1,2,3 to normal fields; in copy_sql_customer address2,3 split into
+                            .extraAddressInfo(customerForm.getExtraAddressInfo()).address2(customerForm.getAddress2()).address3(customerForm.getAddress3())
+                            .oldAddressInfo(customerForm.getOldAddressInfo())
+                            .zipCode(customerForm.getZipCode()).street(customerForm.getStreet()).streetNumber(customerForm.getStreetNumber()).city(customerForm.getCity())
 
                             .emergencyContact(customerForm.getEmergencyContact()).emergencyContactPhone(customerForm.getEmergencyContactPhone())
 
@@ -96,127 +96,15 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/search/customer")
-    /**
-     * Search for a customer via htmx:
-     *   SearchCriteria can start with an I/i to indicate a search on Id.
-     *   Two boolean fields to increase the search scope: startLastName and includeStreetName.
-     */
-    public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
-        if (searchCriteria == null || searchCriteria.isEmpty()) {
-            model.addAttribute("flatData", "");
-            model.addAttribute("form", new CustomerForm(startLastName, includeStreetName, includeFirstTel, includePet));
-        } else {
-            if (searchCriteria.toLowerCase().charAt(0) == 'i') {
-                // find on ID
-                Optional<Customer> maybeCustomer = customerRepository.findById(Long.parseLong(searchCriteria.substring(1)));
-                if (maybeCustomer.isPresent()) {
-                    model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), Pattern.compile(Pattern.quote(""), Pattern.CASE_INSENSITIVE)))));
-                    return "fragments/elements/flatData";
-                } else {
-                    model.addAttribute("flatData", wrap(List.of()));
-                }
-            }
-            model.addAttribute("flatData", wrap(getCustomers(searchCriteria, startLastName, includeStreetName, includeFirstTel, includePet)));
-        }
-        return "fragments/elements/flatData";
-    }
-
-    private List<String> getCustomers(String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
-        List<String> listCustomers = new ArrayList<>();
-
-        String escapedSearch = Pattern.quote(searchCriteria);
-        Pattern pattern = Pattern.compile(escapedSearch, Pattern.CASE_INSENSITIVE);
-
-        if (startLastName) {
-            listCustomers.addAll(customerRepository.getCustomerStartLastName(searchCriteria, AutorisationUtils.getCurrentUserMid())
-                    .stream().map(
-                            f -> getOption(f, pattern)
-                    ).toList()
-            );
-        } else {
-            listCustomers.addAll(customerRepository.getCustomerSomewhereLastName(searchCriteria, AutorisationUtils.getCurrentUserMid())
-                    .stream().map(
-                            f -> getOption(f, pattern)
-                    ).toList()
-            );
-        }
-        if (includeStreetName) {
-            listCustomers.addAll(customerRepository.findByAddressLineContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, AutorisationUtils.getCurrentUserMid())
-                    .stream().map(
-                            f -> getOption(f, pattern)
-                    ).toList()
-            );
-        }
-        if (includeFirstTel) {
-            listCustomers.addAll(customerRepository.findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, AutorisationUtils.getCurrentUserMid())
-                    .stream().map(
-                            f -> getOption(f, pattern)
-                    ).toList()
-            );
-        }
-        if (includePet) {
-            listCustomers.addAll(customerRepository.findByPet(searchCriteria, AutorisationUtils.getCurrentUserMid())
-                    .stream().map(
-                            f -> getOption(f.customer(), pattern, f.pet())
-                    ).toList()
-            );
-        }
-        return listCustomers;
-    }
-
-    private String wrap(List<String> listCustomers) {
-        return (listCustomers.size() > 0) ?
-                "<ul style=\"max-height: 180px; overflow: auto;\">" + String.join("", listCustomers) + "</ul>"
-                : "<ul style=\"max-height: 180px; overflow: auto;\">No record found</ul>";
-    }
-
-    private String getOption(Customer customer, Pattern pattern) {
-        return getOption(customer, pattern, null);
-    }
-
-    private String getOption(Customer customer, Pattern pattern, Pet pet) {
-        StringBuilder result = new StringBuilder();
-        Matcher matcher = pattern.matcher(customer.getLastName());
-        while (matcher.find()) {
-            String match = matcher.group();
-            matcher.appendReplacement(result, "<strong>" + match + "</strong>");
-        }
-        matcher.appendTail(result);
-        // must look like:  <li class="ac_even">♦<strong>van der Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
-        return "<li  data-id=" + customer.getId() + ">"
-                + (customer.getStatus().equals(CustomerStatusEnum.CLOSED) ? "&#9670;" : "")
-                + getStringText(customer.getSurName()) + result + ", "
-                + customer.getFirstName()
-                + " - " + getStringText(customer.getAddress2())
-                + " - " + customer.getZipCode()
-                + petDetails(pet)
-                + "</li>";
-    }
-
-
-    private String petDetails(Pet pet) {
-        if (pet == null) {
-            return "";
-        } else {
-            return " - "
-                    + pet.getNameWithDeceased()
-                    + (pet.getChipTattooId() != null && !pet.getChipTattooId().isEmpty() ? " - " + pet.getChipTattooId() : "")
-                    + (pet.getPassportNumber() != null && !pet.getPassportNumber().isEmpty() ? " - " + pet.getPassportNumber() : "")
-                    ;
-        }
-
-    }
-
-    private String getStringText(String stringText) {
-        return (stringText == null || stringText.isBlank()) ? "" : stringText + " ";
-    }
-
     private void setModel(Model model) {
         model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
         model.addAttribute("statusList", CustomerStatusEnum.getWebList());
     }
 
-    public record CustomerForm(boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
+    private Long customerExists() {
+        String customerId = AutorisationUtils.getTempGenericStorage();
+        return customerId.isEmpty() ? Long.valueOf(0)
+                : Long.valueOf(customerId.substring(customerId.lastIndexOf('(') + 1, customerId.lastIndexOf(')')).strip());
+
     }
 }

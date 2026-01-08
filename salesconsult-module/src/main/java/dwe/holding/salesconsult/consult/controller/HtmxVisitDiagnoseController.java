@@ -9,7 +9,6 @@ import dwe.holding.salesconsult.consult.repository.DiagnoseRepository;
 import dwe.holding.salesconsult.consult.repository.LookupDiagnosesRepository;
 import dwe.holding.salesconsult.consult.repository.LookupLocationRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,7 @@ import static dwe.holding.salesconsult.sales.controller.ModelHelper.*;
 @Controller
 @RequestMapping(path = "/consult")
 @Slf4j
-public class HtmxVisitController {
+public class HtmxVisitDiagnoseController {
     private final LookupDiagnosesRepository lookupDiagnosesRepository;
     private final LookupLocationRepository lookupLocationRepository;
     private final DiagnoseRepository diagnoseRepository;
@@ -41,7 +40,7 @@ public class HtmxVisitController {
 
     @PostMapping("/visit/{visitId}/diagnose")
     String saveDiagnose(@PathVariable Long visitId, Model model, Long diagnoseDropdown_hidden, Long locationDropdown_hidden) {
-        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId);
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         diagnoseRepository.save(Diagnose.builder()
                 .lookupDiagnose(LookupDiagnose.builder().id(diagnoseDropdown_hidden).build())
                 .lookupLocation(LookupLocation.builder().id(locationDropdown_hidden).build())
@@ -57,7 +56,7 @@ public class HtmxVisitController {
 
     @DeleteMapping("/visit/{visitId}/diagnose/{diagnoseId}")
     String DeleteDiagnose(Model model, @PathVariable Long visitId, @PathVariable Long diagnoseId) {
-        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId);
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         Diagnose diagnose = diagnoseRepository.findByIdAndPetIdAndAppointmentId(diagnoseId, visit.getPet().getId(), visit.getAppointment().getId()).orElseThrow();
         diagnoseRepository.delete(diagnose);
         updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());

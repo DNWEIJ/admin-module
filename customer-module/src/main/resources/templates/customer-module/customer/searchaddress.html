@@ -1,0 +1,38 @@
+<dialog id="address-search-modal" open xmlns="http://www.w3.org/1999/html">
+    <!-- HX-Trigger-After-Settle::-->
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev" data-target="address-search-modal" onclick="toggleModal(event)"></button>
+        </header>
+        <form hx-get="/customer/search/customer/address/{searchZipCode}/{searchHouseNumber}" hx-include="#searchZipCode, #searchHouseNumber"
+              hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
+            <fieldset class="grid">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchZipCode','customer.zipcode','','')}"
+                          th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
+                </th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber','customer.street.number','','')}"></th:block>
+                <input type="submit" th:value="#{label.button.search}"/>
+            </fieldset>
+        </form>
+        <form hx-get="/customer/search/customer/address/street/{searchStreet}/{searchCity}" hx-include="#searchStreet, #searchCity"
+              hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
+            <fieldset class="grid">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchStreet','customer.street','','')}">
+                </th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchCity','customer.city','','')}"></th:block>
+                <input type="submit" th:value="#{label.button.search}"/>
+            </fieldset>
+        </form>
+        <fieldset>
+            <div id="addressResult">
+                -- -- --
+            </div>
+        </fieldset>
+        <footer>
+            <fieldset class="grid">
+                <button data-target="address-search-modal" onclick="copyInfoFromModalToForm();toggleModal(event)" th:text="#{label.button.saveinform}"></button>
+                <input type="button" rel="prev" data-target="address-search-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+</dialog>

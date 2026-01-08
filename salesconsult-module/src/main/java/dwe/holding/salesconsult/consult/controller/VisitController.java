@@ -3,7 +3,7 @@ package dwe.holding.salesconsult.consult.controller;
 import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.preferences.LocalMemberPreferences;
 import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.customer.client.controller.CustomerController;
+import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.expose.CustomerService;
@@ -44,6 +44,7 @@ public class VisitController {
     private final LookupRoomRepository lookupRoomRepository;
     private final LookupPurposeRepository lookupPurposeRepository;
     private final AnalyseDescriptionRepository analyseDescriptionRepository;
+    private final AnalyseItemRepository analyseItemRepository;
     private final LookupDiagnosesRepository lookupDiagnosesRepository;
     private final LookupLocationRepository lookupLocationRepository;
     private final DiagnoseRepository diagnoseRepository;
@@ -55,10 +56,10 @@ public class VisitController {
     private final ObjectMapper objectMapper;
 
     @GetMapping("/visit/search")
-    String firstStepStart(Model model) {
-        model.addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
+    String firstStepCreateVisitFindCustomer(Model model) {
+        model.addAttribute("form", new CustomerForm(true, false, false, false))
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
-                        .addAttribute("textLabel", "label.title.visit")
+                .addAttribute("textLabel", "label.title.visit")
                 .addAttribute("url", "/consult/visit/search/");
         return "/salesconsult-generic-module/customersearchpage";
     }
@@ -69,9 +70,9 @@ public class VisitController {
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
         updateRoomsInModel(model, lookupRoomRepository);
         updateLocationsInModel(model, lookupLocationRepository);
-        updateDiagnosesInModel(model, lookupDiagnosesRepository,List.of(-1L));
+        updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
         model
-                .addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
+                .addAttribute("form", new CustomerForm(true, false, false, false))
                 .addAttribute("appointment", Appointment.builder().visitDateTime(LocalDateTime.now()).localMemberId(AutorisationUtils.getCurrentUserMlid()).build())
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
@@ -83,7 +84,7 @@ public class VisitController {
     }
 
     @PostMapping("/visit/customer/{customerId}")
-    String thirdStepPetFoundCreateAppointmentVisit(@NotNull @PathVariable Long customerId, @NotNull CreateVisitForm createForm, Model model) {
+    String thirdStepPetFoundCreateAppointmentAndVisit(@NotNull @PathVariable Long customerId, @NotNull CreateVisitForm createForm, Model model) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         List<AppointmentVisitService.CreatePet> pets = createForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked()).toList();
         if (customer == null || pets.isEmpty()) {
@@ -109,36 +110,10 @@ public class VisitController {
         return "consult-module/visit/list";
     }
 
-    @PostMapping("/visit/customer/{customerId}/visit/{visitId}")
-    String postLineItem() {
-        return "";
-
-//
-//        // TODO do we need to add version ?
-//        @PostMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
-//        String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId,
-//                @NotNull BigDecimal inputCostingAmount, String inputBatchNumber, Long inputCostingId, String spillageName,
-//                Model model, RedirectAttributes redirect) {
-//            CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
-//            if (!customer.id().equals(customerId)) {
-//                redirect.addFlashAttribute("message", "Something went wrong. Please try again");
-//                return "redirect:/sales/otc/search/";
-//            }
-//            Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-//            lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingAmount, inputBatchNumber, spillageName);
-//            updateModel(model, petId, app);
-//            model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
-//            return "sales-module/fragments/htmx/lineitemsoverview";
-//        }
-//
-
-
-    }
-
     @GetMapping("/visit/customer/{customerId}/visit/{visitId}")
     String editVisit(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Model model) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId);
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         LocalMemberPreferences pref = objectMapper.readValue(AutorisationUtils.getCurrentLocalMember().getMetaLocalMemberPreferences().getPreferencesJson(), LocalMemberPreferences.class);
 
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
@@ -146,7 +121,7 @@ public class VisitController {
         updateRoomsInModel(model, lookupRoomRepository);
         updateLocationsInModel(model, lookupLocationRepository);
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
-        updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(),visit.getAppointment().getId());
+        updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());
 
         model
                 .addAttribute("customer", customer)
@@ -161,7 +136,14 @@ public class VisitController {
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("url", "/sales/price/sell/");
+                .addAttribute("url", "/sales/price/sell/")
+                .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
+                .addAttribute("analyseItems", analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(
+                        AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId())
+                );
+//        for the view:
+//        'analyseItems' is filled initially by the saved version;
+//        if no records found, then the dropdown is displayed, and the selection is made to load the analyses that, after selecting, can be saved
         return "consult-module/visit/action";
     }
 

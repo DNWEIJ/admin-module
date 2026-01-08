@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.sales.controller.otc;
 
-import dwe.holding.customer.client.controller.CustomerController;
+import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.expose.CustomerService;
@@ -27,11 +27,12 @@ public class OTCSelectController {
     private final CustomerService customerService;
     private final AppointmentVisitService appointmentVisitService;
     private final LookupPurposeRepository lookupPurposeRepository;
+    private final CustomerForm customerForm;
 
     @GetMapping("/otc/search")
     String first_SearchCustomer(Model model) {
         model
-                .addAttribute("form", new CustomerController.CustomerForm(true, false, false, false))
+                .addAttribute("form", customerForm)
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
                 .addAttribute("textLabel", "label.title.otc")
                 .addAttribute("url", "/sales/otc/search/");
@@ -45,7 +46,8 @@ public class OTCSelectController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/ot/search";
         }
-        model.addAttribute("form", new CustomerController.CustomerForm(true, false, false, false));
+        // todo do we still need this?
+        model.addAttribute("form", customerForm);
         updateReasonsInModel(model, lookupPurposeRepository);
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
         return "sales-module/otc/petselectpage";

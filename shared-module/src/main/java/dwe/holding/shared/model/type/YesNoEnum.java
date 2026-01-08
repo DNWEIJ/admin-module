@@ -60,6 +60,10 @@ public enum YesNoEnum {
         return Arrays.stream(YesNoEnum.values()).sorted(new YesNoEnumComparator()).toList();
     }
 
+    public boolean booleanValue() {
+        return this == Yes;
+    }
+
     private static class YesNoEnumComparator implements java.util.Comparator<YesNoEnum> {
         @Override
         public int compare(YesNoEnum a, YesNoEnum b) {

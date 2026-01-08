@@ -15,8 +15,6 @@ public class AdminModelAdvice {
         try {
             model
                 .addAttribute("sessionTimeout", session.getMaxInactiveInterval())
-                .addAttribute("localMemberName", AutorisationUtils.getCurrentLocalMemberName())
-                .addAttribute("memberShortCode", AutorisationUtils.getCurrentMember().getShortCode())
                 .addAttribute("applicationView", AutorisationUtils.getCurrentMember().getApplicationView())
                 .addAttribute("applicationName", AutorisationUtils.getCurrentMember().getApplicationName());
         } catch (Exception e) {

@@ -102,7 +102,11 @@ public class AutorisationUtils {
     }
 
     public static UserSettings getCurrentUserSettings() {
-        return new UserSettings(getCurrentUserMlid(), getCurrentUserDetails().getUser().getLanguage());
+        return new UserSettings(getCurrentUserMlid(),
+                getCurrentUserDetails().getUser().getLanguage(),
+                getCurrentUserDetails().getUser().getName(),
+                getCurrentUserDetails().getUser().getEmail()
+        );
     }
 
     public static LocalMember getCurrentLocalMember() {
@@ -127,10 +131,10 @@ public class AutorisationUtils {
     }
 
     public static String getTempGenericStorage() {
-        return getCurrentUserDetails().getTempGenericStorage();
+        return getCurrentUserDetails().getTempGenericStorage() == null ? "" : getCurrentUserDetails().getTempGenericStorage();
     }
 
-    public record UserSettings(Long localMemberId, LanguagePrefEnum language) {
+    public record UserSettings(Long localMemberId, LanguagePrefEnum language, String username, String email) {
     }
 
     private static AdminUserDetails getCurrentUserDetails() {

@@ -30,7 +30,7 @@ public class CostingSpillage extends TenantBaseBO {
 
     @Column(nullable = false, precision = 38, scale = 4)
     private
-    BigDecimal packageAmount;
+    BigDecimal packageQuantity;
 
     @Column(nullable = false)
     private LocalDate startDate;
