@@ -38,5 +38,5 @@ public class Note extends MemberBaseBO {
 
     @Lob
     @NotNull
-    private String note;
+    private String textnote;
 }

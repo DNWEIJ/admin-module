@@ -1,0 +1,17 @@
+<!-- todo refne a bit -->
+<fieldset class="right-left-space">
+    <fieldset class="grid">
+        <span>invoice</span>
+        <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}" th:with="tooltip='invoice (checked) or receipt'"></th:block>
+        <span>receipt</span>
+    </fieldset>
+
+    <fieldset class="grid">
+        <span>&nbsp;&nbsp;per&nbsp;&nbsp;</span>
+        <th:block th:insert="~{fragments/elements/select::selectCheckBox('single','','','3')}" th:with="tooltip='pet (checked) or all'"></th:block>
+        <span>&nbsp;&nbsp;all&nbsp;&nbsp;</span>
+    </fieldset>
+    <fieldset class="grid">
+        <button class="button-secondary">Print</button>
+    </fieldset>
+</fieldset>

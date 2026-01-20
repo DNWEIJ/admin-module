@@ -6,7 +6,6 @@
 
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-
     <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer/')}"></div>
     <hr/>
     <form id="createForm" th:action="@{/customer/customer}" method="post">
@@ -35,7 +34,7 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipcode','customer.zipCode','12')}"
                       th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
             </th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('street','customer.street','customer.city','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('street','customer.street','customer.street','0')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('streetNumber','customer.street.number','customer.streetNumber','0')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','customer.city','customer.city','0')}"></th:block>
         </fieldset>
@@ -70,8 +69,6 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarianPhone','customer.previousVeterinarianPhone','customer.previousVeterinarianPhone','0')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('ubn','customer.ubn','customer.ubn','23')}" th:with="required=false"></th:block>
         </fieldset>
-
-
         <fieldset class="grid">
             <legend>
                 <th:block th:utext="#{customer.comments}"/>
@@ -82,8 +79,6 @@
 
     <th:block th:insert="~{fragments/elements/audit::audit('customer.addedBy','customer.addedOn', 'customer.lastEditedBy', 'customer.lastEditedOn')}"></th:block>
     <script>
-
-        customerFind
         function copyInfoFromModalToForm() {
             const el = document.getElementById("addressData");
             if (!el) return;
@@ -95,7 +90,6 @@
             document.getElementById('city').value = data.city;
         }
     </script>
-
 </section>
 </body>
 </html>

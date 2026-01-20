@@ -1,0 +1,43 @@
+<dialog id="datetime-modal" open>
+    <article>
+        <header style="height: 2rem">
+            <button aria-label="Close" rel="prev" data-target="datetime-modal" onclick="toggleModal(event)"></button>
+        </header>
+        <p id="datetime-modal-part">
+        <div class="notification-message text-align-center alert "
+             th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
+        <form th:hx-post="'/consult/visit/' +${visitId}+ '/reschedule'" th:hx-target="${target}" hx-swap="outerHTML" id="createForm">
+            <th:block th:insert="~{consult-module/fragments/datetimelocation::dateTimeLocationSelect()}"></th:block>
+        </form>
+        </p>
+        <footer>
+            <fieldset class="grid">
+                <input type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="datetime-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("datetime-modal")
+            closeModal(modal)
+            location.reload();
+        });
+
+        function messageDisplay(messageText) {
+            const element = document.querySelector('.notification-message')
+            if (messageText) element.textContent = messageText;
+            if (element.textContent.length !== 0) {
+                element.classList.add('show');
+                setTimeout(function () {
+                    element.classList.remove('show');
+                }, 1300)
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            messageDisplay();
+        });
+    </script>
+</dialog>

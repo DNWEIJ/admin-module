@@ -239,25 +239,30 @@
 
         })
     </script>
-
+<style>
+    /*checkbox in the middle*/
+    .gridSearchCostingWithCheck > div:first-child {
+        align-self: center;     /* vertical */
+        justify-self: center;   /* horizontal */
+    }
+</style>
     <form id="costingSearchForm" hx-post="" hx-swap="none">
         <fieldset>
             <div class="gridSearchCostingWithCheck">
                 <div>
                     <label for="useDropDown">
-                        <input id="useDropDown" tabindex="0" type="checkbox" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right" autocomplete="off"
+                        <input id="useDropDown" class="switch" role="switch" tabindex="0" type="checkbox" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right" autocomplete="off"
                                hx-get="/costing/costing/search/costing/dropdown"
                                hx-trigger="click"
                                hx-target="#categoryList"
                                hx-swap="innerHTML"
                                hx-on::after-request="setView(this)"/>
-                        <span class="no-break"></span>
                     </label>
                 </div>
                 <div id="holder-input" class="holder">
                     <input list="input-costingName" id="costingFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.costing.search.placeholder}"
                            hx-post="/costing/search/costing"
-                           hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
+                           hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter']"
                            hx-target="#input-costingName"
                            hx-swap="innerHTML"
                            hx-indicator="#searching-indicator"
@@ -311,11 +316,11 @@
     </form>
     <script>
         document.getElementById('costingFind').addEventListener('htmx:configRequest', function (evt) {
-            document.querySelector('.search-indicator').classList.add('visible');
+            document.querySelector('#searching-indicator').classList.add('visible');
         });
 
         document.getElementById('costingFind').addEventListener('htmx:afterRequest', function (evt) {
-            document.querySelector('.search-indicator').classList.remove('visible');
+            document.querySelector('#searching-indicator').classList.remove('visible');
         });
     </script>
 </th:block>

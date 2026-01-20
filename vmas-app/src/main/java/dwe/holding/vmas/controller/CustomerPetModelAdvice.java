@@ -6,6 +6,7 @@ import dwe.holding.customer.client.controller.CustomerController;
 import dwe.holding.customer.client.controller.NoteController;
 import dwe.holding.customer.client.controller.PetController;
 import dwe.holding.salesconsult.consult.controller.EstimateController;
+import dwe.holding.salesconsult.consult.controller.HtmxSoapHistoryController;
 import dwe.holding.salesconsult.consult.controller.VisitController;
 import dwe.holding.salesconsult.sales.controller.PaymentController;
 import dwe.holding.supplyinventory.controller.ReminderController;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
         NoteController.class,
         ReminderController.class,
         PaymentController.class,
-        EstimateController.class})
+        EstimateController.class,
+        HtmxSoapHistoryController.class})
 public class CustomerPetModelAdvice {
     @ModelAttribute
     void modelAdvice(Model model) {

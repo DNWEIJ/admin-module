@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+/**
+ * Keep track of the previous url, so we can go back to it if needed
+ */
 public class LastPageInterceptor implements HandlerInterceptor {
 
     @Override

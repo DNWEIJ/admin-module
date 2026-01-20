@@ -9,6 +9,7 @@ import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AppointmentVisitService {
     private final AppointmentRepository appointmentRepository;
+
     private final CustomerService customerService;
 
     public Appointment createAppointmentVisit(List<CreatePet> pets, Long customerId, SalesType salesType) {
@@ -72,6 +74,15 @@ public class AppointmentVisitService {
         Appointment savedApp = appointmentRepository.save(app);
         return savedApp;
     }
+
+    @Transactional
+    public void saveAppointment(Long appointmentId, LocalDateTime visitDateTime, Long localMemberId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow();
+        appointment.setVisitDateTime(visitDateTime);
+        appointment.setLocalMemberId(localMemberId);
+        appointmentRepository.save(appointment);
+    }
+
 
     public record CreatePet(@NotNull Long id, Boolean checked, String purpose, String timeNeeded, String vet, String room) {
         public CreatePet {

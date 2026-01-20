@@ -3,7 +3,7 @@
  version,
   member_id,
  note_date,
- note,
+ textnote,
  purpose,
  staff_member,
  pet_id,

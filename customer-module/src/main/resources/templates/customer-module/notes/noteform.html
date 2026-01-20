@@ -1,0 +1,29 @@
+<input id="id" name="id" th:value="${note.id}" type="hidden"/>
+<input id="version" name="version" th:value="${note.version}" type="hidden"/>
+
+<fieldset>
+    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('pet.id','label.notes.petname', ${note.pet.id}, ${petsList}, true,'1')}"></th:block>
+    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('staffMember','label.notes.personnel', ${note.staffMember}, ${staffList}, true,'1')}"></th:block>
+</fieldset>
+
+
+<fieldset class="grid">
+    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('noteDate','label.notes.notedate','note.noteDate','2')}" th:with="type='date'"></th:block>
+</fieldset>
+
+<th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selectOnChange','label.notes.purpose.select', ${note.purpose}, ${purposeList}, true,'1')}"></th:block>
+
+<fieldset class="grid">
+    <!-- on the modal, there is another purpose field, so we need to have a different id here -->
+    <input id="notepurpose" name="purpose" tabindex="3" type="text" autocomplete="off" required="required">
+</fieldset>
+<textarea cols="110" id="note" name="textnote" rows="8" required th:utext="${note.textnote}"></textarea>
+<script>
+    function setPurposeFillFromDropDown() {
+        console.log('setPurposeFillFromDropDown loading');
+        document.getElementById('selectOnChange').onchange = function () {
+            document.getElementById('notepurpose').value = this.options[this.selectedIndex].text;
+        }
+    }
+    setPurposeFillFromDropDown();
+</script>

@@ -9,7 +9,7 @@
     <table id="show-table">
         <thead>
         <tr>
-            <th>Name</th>
+            <th>[[#{function.name}]]</th>
         </tr>
         </thead>
         <tbody>
@@ -25,16 +25,4 @@
         </tr>
         </tfoot>
     </table>
-    <script>
-        var table = new Tabulator("#show-table",
-            {
-                columns: [
-                    {title: "Name",  formatter: "html", sorter: function (a, b) {
-                            var textA = a.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
-                            var textB = b.replace(/<[^>]*>?/gm, '').trim().toLowerCase();
-                            return textA.localeCompare(textB);
-                        }
-                    }]
-            });
-    </script>
 </section>

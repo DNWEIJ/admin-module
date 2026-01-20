@@ -11,4 +11,5 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
     List<VisitProjection> findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(Long memberId, List<Long> petId);
 
     Optional<Visit> findByMemberIdAndId(Long memberId, Long visitId);
+    List<Visit> findByMemberIdAndPet_Id(Long memberId, Long petId);
 }

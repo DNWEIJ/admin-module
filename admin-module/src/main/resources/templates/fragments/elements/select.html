@@ -23,11 +23,10 @@
                th:tabindex="${tabindex}" type="checkbox"/><span class="no-break">[[${label}]]</span></label>
 </th:block>
 
-<th:block th:fragment="checkBox(name, label, dbField, tabindex)" th:with="tooltip=${tooltip}?:''">
-    <label th:for="${name}">
+<th:block th:fragment="checkBox(name, label, dbField, tabindex)" th:with="tooltip=${tooltip}?:'', switch=${switch}?:'', placement=${placement}?${placement}:'left'">
+    <label th:for="${name}"   th:data-tooltip="${tooltip}" th:data-placement="${placement}">
         <input th:checked="${__${dbField}__ ?: false}"
-               th:data-tooltip="${tooltip}"
-               data-placement="left"
+                th:role="${switch}"
                th:id="${name}"
                th:name="${name}"
                th:tabindex="${tabindex}" type="checkbox"/>

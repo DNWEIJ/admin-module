@@ -2,22 +2,27 @@ package dwe.holding.salesconsult.consult.model.type;
 
 import lombok.Getter;
 
+import java.util.*;
+
 @Getter
 public enum VisitStatusEnum {
 
-    PLANNED("X", "label.visitstatus.planned", 0),
-    WAITING("W", "label.visitstatus.waiting", 1),
-    CONSULT("C", "label.visitstatus.consult", 2),
-    INTAKE("I", "label.visitstatus.intake", 3),
-    OPERATION("O", "label.visitstatus.operation", 4),
-    RECOVERY("R", "label.visitstatus.recovery", 5),
-    FINISHED_CONSULT("F", "label.visitstatus.finished_consult", 6),
-    PAYMENT("P", "label.visitstatus.payment", 7),
-    FINISHED("D", "label.visitstatus.finished", 8);
+    PLANNED("X", "label.visit.status.planned", 0),
+    WAITING("W", "label.visit.status.waiting", 1),
+    CONSULT("C", "label.visit.status.consult", 2),
+    INTAKE("I", "label.visit.status.intake", 3),
+    OPERATION("O", "label.visit.status.operation", 4),
+    RECOVERY("R", "label.visit.status.recovery", 5),
+    FINISHED_CONSULT("F", "label.visit.status.ready_for_checkout", 6),
+    PAYMENT("P", "label.visit.status.ready_to_pay", 7),
+    FINISHED("D", "label.visit.status.finished", 8);
 
     private final String databaseField;
     private final String label;
     private final int order;
+
+    private static final Map<VisitStatusEnum, Set<VisitStatusEnum>> NEXT = new EnumMap<>(VisitStatusEnum.class);
+    private static final Map<VisitStatusEnum, VisitStatusEnum> PREVIOUS = new EnumMap<>(VisitStatusEnum.class);
 
     VisitStatusEnum(String databaseField, String label, int order) {
         this.databaseField = databaseField;
@@ -25,19 +30,44 @@ public enum VisitStatusEnum {
         this.order = order;
     }
 
+    static {
+        for (VisitStatusEnum s : values()) {
+            NEXT.put(s, EnumSet.noneOf(VisitStatusEnum.class));
+        }
+
+        // flow definition
+        link(PLANNED, WAITING);
+
+        link(WAITING, CONSULT);
+        link(WAITING, INTAKE);
+
+        link(CONSULT, FINISHED_CONSULT);
+
+        link(INTAKE, OPERATION);
+        link(OPERATION, RECOVERY);
+        link(RECOVERY, FINISHED_CONSULT);
+
+        link(FINISHED_CONSULT, PAYMENT);
+        link(PAYMENT, FINISHED);
+    }
+
+    private static void link(VisitStatusEnum from, VisitStatusEnum to) {
+        NEXT.get(from).add(to);
+        PREVIOUS.put(to, from); // valid because each node has only one previous in this model
+    }
+
+    public Set<VisitStatusEnum> nextOptions() {
+        return Collections.unmodifiableSet(NEXT.get(this));
+    }
+
+    public Optional<VisitStatusEnum> previous() {
+        return Optional.ofNullable(PREVIOUS.get(this));
+    }
 
     public static java.util.List<VisitStatusEnum> getWebList() {
         return java.util.Arrays.stream(VisitStatusEnum.values())
                 .sorted(java.util.Comparator.comparingInt(VisitStatusEnum::getOrder))
                 .toList();
-    }
-
-    public static VisitStatusEnum getEnum(String value) {
-        if (value == null)
-            throw new IllegalArgumentException(value + " is not a valid VisitStatusEnum");
-        for (VisitStatusEnum anEnum : values())
-            if (value.equalsIgnoreCase(anEnum.name())) return anEnum;
-        throw new IllegalArgumentException(value + " is not a valid VisitStatusEnum");
     }
 
     public static VisitStatusEnum getEnumFromDbField(String value) {
@@ -49,8 +79,9 @@ public enum VisitStatusEnum {
     }
 
     public static boolean isOpen(VisitStatusEnum status) {
-        return status.equals(VisitStatusEnum.PAYMENT) || status.equals(VisitStatusEnum.FINISHED);
+        return !status.equals(VisitStatusEnum.FINISHED);
     }
+
     public static boolean isClosed(VisitStatusEnum status) {
         return !isOpen(status);
     }

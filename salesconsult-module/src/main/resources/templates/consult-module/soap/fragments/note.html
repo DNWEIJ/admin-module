@@ -1,0 +1,31 @@
+<th:block th:fragment="note(notes, visitDateTime, beforeVisit)">
+    <th:block th:each="note : ${notes}">
+
+        <th:block th:if="${beforeVisit and note.noteDate > visitDateTime.toLocalDate()}">
+            <th:block th:insert="~{consult-module/soap/fragments/note :: noteDetails(${note})}"></th:block>
+        </th:block>
+
+        <th:block th:if="${!beforeVisit and note.noteDate <= visitDateTime.toLocalDate()}">
+            <th:block th:insert="~{consult-module/soap/fragments/note :: noteDetails(${note})}"></th:block>
+        </th:block>
+    </th:block>
+</th:block>
+
+
+<th:block th:fragment="noteDetails(note)">
+    <details class="note" open>
+        <summary>
+            <strong>
+                <span th:text="#{label.soap.Notepad} + ': ' + ${#temporals.format(note.noteDate, 'dd-MM-yyyy')} + ' - ' + ${note.purpose}"></span>
+            </strong>
+        </summary>
+        <div>
+            <strong><span th:text="#{label.soap.Staff}"></span>:</strong>
+            <span th:text="${note.staffMember != null} ? ${note.staffMember} : ''"></span>
+        </div>
+        <div>
+            <strong><span th:text="#{label.soap.Comments}"></span>:</strong><br/>
+            <span th:text="${note.textnote != null} ? ${note.textnote} : ''"></span>
+        </div>
+    </details>
+</th:block>

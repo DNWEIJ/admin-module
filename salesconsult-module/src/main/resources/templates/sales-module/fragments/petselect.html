@@ -42,16 +42,14 @@
                 }
             });
         }
-
         document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
-
     </script>
     <th:block th:if="${postUrl != ''}">
         <form id="createForm" th:action="${postUrl}" method="post">
     </th:block>
     <fieldset role="group">
         <legend>[[#{label.otc.petList}]]</legend>
-        <table id="show-table" class="table-tight">
+        <table id="show-table" class="table-tight striped">
             <thead>
             <tr>
                 <th>[[#{label.otc.add}]]</th>
@@ -69,7 +67,8 @@
                     <td>
                         <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
                     </td>
-                    <td th:if="${showPetLink}"><a th:text="${pet.name} + ' (' + ${pet.species()} + ')'"
+                    <td th:if="${showPetLink}"><a href=""
+                                                  th:text="${pet.name} + ' (' + ${pet.species()} + ')'"
                                                   th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}"
                                                   hx-target="#modal-container" hx-swap="innerHTML"></a></td>
                     <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
@@ -101,7 +100,7 @@
             [[#{label.otc.pet.deceased.showhide}]]
         </summary>
         <fieldset role="group">
-            <table id="show-deceased-table" class="table-tight" th:if="${deceasedPets.size() > 0}">
+            <table id="show-deceased-table" class="table-tight striped" th:if="${deceasedPets.size() > 0}">
                 <thead>
                 <tr>
                     <th>[[#{label.otc.add}]]</th>

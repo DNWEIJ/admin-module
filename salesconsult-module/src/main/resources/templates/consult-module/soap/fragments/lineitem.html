@@ -1,0 +1,8 @@
+<th:block th:fragment="lineItem(lineItems)" xmlns:th="http://www.w3.org/1999/html">
+    <details class="lineitem" open th:if="${lineItems != null and !lineItems.isEmpty()}">
+        <summary th:text="#{label.soap.ProdServ} + ':'">Products/Services:</summary>
+        <th:block th:each="item : ${lineItems}">
+            <div th:text="${item.nomenclature + ' (' + #numbers.formatDecimal(item.quantity, 1, 2) + ')'}"></div>
+        </th:block>
+    </details>
+</th:block>

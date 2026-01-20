@@ -11,7 +11,6 @@ import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.lookup.repository.NotePurposeLookupRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -31,25 +30,27 @@ import java.time.LocalDate;
 public class NoteController {
     private final NoteRepository noteRepository;
     private final UserService userService;
-    private final ValidateCustomer validateCustomer;
     private final PetRepository petRepository;
     private final CustomerRepository customerRepository;
     private final NotePurposeLookupRepository notePurposeLookupRepository;
 
     @GetMapping("/customer/{customerId}/notes")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        model.addAttribute("notes", noteRepository.findByPet_Customer_IdOrderByNoteDateDesc(customerId));
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        model.addAttribute("notes", noteRepository.findByPet_Customer_IdOrderByNoteDateDesc(customer.getId()));
         setModel(model, customerId);
         return "customer-module/notes/list";
     }
 
     @GetMapping("/customer/{customerId}/note")
-    String newRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+    public String newNote(@PathVariable Long customerId, Model model) {
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        model.addAttribute("note",
+                Note.builder().
+                        noteDate(LocalDate.now())
+                        .staffMember(AutorisationUtils.getCurrentUserName())
+                        .pet(customer.getPets().iterator().next()).build());
 
-        Customer customer = customerRepository.findById(customerId).orElseThrow();
-        model.addAttribute("note", Note.builder().noteDate(LocalDate.now()).staffMember("daniel").build()); ;
         setModelOneRecord(model, customer);
 
         setModel(model, customer.getId());
@@ -58,33 +59,30 @@ public class NoteController {
 
 
     @GetMapping("/customer/{customerId}/notes/{notesId}")
-    @Transactional
     String editRecord(@PathVariable Long customerId, @PathVariable Long notesId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Note note = noteRepository.findById(notesId).orElseThrow();
-        model.addAttribute("note", note.getPet().getCustomer().getId().equals(customerId) ? note : new Note());
+        model.addAttribute("note", note.getPet().getCustomer().getId().equals(customer.getId()) ? note : new Note());
         setModelOneRecord(model, note.getPet().getCustomer());
         setModel(model, note.getPet().getCustomer().getId());
         return "customer-module/notes/action";
     }
 
     @PostMapping("/customer/{customerId}/note")
-    @Transactional
-    String saveRecord(@PathVariable Long customerId, Note formNote, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+    public String saveRecord(@PathVariable Long customerId, Note formNote, Model model, RedirectAttributes redirect) {
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         Pet pet = petRepository.findById(formNote.getPet().getId()).orElseThrow();
-        if (!pet.getCustomer().getId().equals(customerId)) {
+        if (!pet.getCustomer().getId().equals(customer.getId())) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/customer/customer/" + customerId + "/reminders";
         }
-
         if (formNote.isNew()) {
             noteRepository.save(
-                    Note.builder().note(formNote.getNote())
+                    Note.builder().textnote(formNote.getTextnote().trim())
                             .noteDate(formNote.getNoteDate())
                             .pet(pet)
-                            .purpose(formNote.getPurpose())
+                            .purpose(formNote.getPurpose().trim())
                             .staffMember(formNote.getStaffMember())
                             .build()
             );

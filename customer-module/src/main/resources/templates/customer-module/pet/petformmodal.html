@@ -1,18 +1,45 @@
 <dialog id="pets-modal" open>
     <!-- HX-Trigger-After-Settle::-->
     <article>
-        <header>
+        <header style="height: 2rem">
             <button aria-label="Close" rel="prev" data-target="pets-modal" onclick="toggleModal(event)"></button>
         </header>
-        <p>
-            <th:block th:insert="~{customer-module/pet/petform::petForm(${'/consult/visit/customer/'+ customerId + '/addpet'})}"></th:block>
+        <p id="modalPetFormPart">
+        <div class="notification-message text-align-center alert "
+             th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
+
+        <th:block th:insert="~{customer-module/pet/petform::petForm(${'/customer/customer/'+ customerId + '/pet' + (pet.id!=null? '/' + pet.id : '') }, '#pets-modal')}"></th:block>
         </p>
         <footer>
             <fieldset class="grid">
-            <input type="submit" form="createForm" th:value="#{label.button.save}"/>
-            <input type="button" data-target="pets-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
-                rel="prev"
+                <input type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="pets-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
             </fieldset>
         </footer>
     </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("pets-modal")
+            closeModal(modal)
+            location.reload();
+        });
+
+
+        function messageDisplay(messageText) {
+            const element = document.querySelector('.notification-message')
+            if (messageText) element.textContent = messageText;
+            if (element.textContent.length !== 0) {
+                element.classList.add('show');
+                setTimeout(function () {
+                    element.classList.remove('show');
+                }, 1300)
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            messageDisplay();
+        });
+
+    </script>
 </dialog>

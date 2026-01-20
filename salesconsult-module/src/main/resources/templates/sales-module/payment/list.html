@@ -7,7 +7,7 @@
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.payment},'/sales/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
     <hr/>
-    <table class="table-tight" id="show-table">
+    <table class="table-tight striped" id="show-table">
         <thead>
         <tr>
             <th>[[#{label.payment.paymentDate}]]</th>
@@ -25,15 +25,11 @@
         <th:block th:each="payment : ${payments}">
             <tr>
                 <td><a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
-                <td>[[${payment.localMemberId}]]</td>
+                <td th:text="${localMembersList.get(payment.localMemberId)}"></td>
                 <td>[[#{${payment.method.getLabel}}]]</td>
-                <td>[[${#numbers.formatCurrency(payment.amount)}]]</td>
+                <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${payment.amount})}"></th:block>
                 <td>[[${payment.referenceNumber}]]</td>
-                <td>
-                    <small th:data-tooltip="'Created by  '+${payment.addedBy}+' on ' +${#temporals.format(payment.addedOn, 'dd-MM-yy')}">
-                        [[${payment.lastEditedBy}]] • [[${#temporals.format(payment.lastEditedOn, 'dd-MM-yy')}]]
-                    </small>
-                </td>
+                <th:block th:insert="~{fragments/elements/audit::lastEditedByOn_td(${payment.addedBy},${payment.addedOn},${payment.lastEditedBy},${payment.lastEditedOn})}"></th:block>
             </tr>
         </th:block>
         </tbody>

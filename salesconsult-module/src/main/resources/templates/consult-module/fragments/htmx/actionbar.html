@@ -1,0 +1,55 @@
+<style>
+    .threecolumn-spread {
+        grid-template-columns: 10fr 17fr 10fr;
+    }
+    .column-wrapper {
+        position: relative;
+    }
+    .column-header {
+        padding: 0.5rem;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+        border: 1px solid;
+        background: var(--pico-background-color);
+    }
+    .column-content {
+        position: absolute;
+        top: 2.2rem;
+        left: 0;
+        right: 0;
+        display: none;
+        background: var(--pico-background-color);
+        z-index: 1000;
+    }
+    /* open on hover */
+    .column-wrapper:hover .column-content {
+        display: block;
+    }
+    /* also stay open when manually opened */
+    .column-wrapper.open .column-content {
+        display: block;
+    }
+</style>
+<div class="threecolumn-spread">
+    <div class="column-wrapper one">
+        <div class="column-header">Actions</div>
+        <div class="column-content">
+            <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitStatusButtons}"/>
+            <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitReactivateButtons}"/>
+        </div>
+    </div>
+    <div class="column-wrapper two">
+        <div class="column-header">Status</div>
+        <div class="column-content">
+            <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::openVisitStatus}"/>
+            <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::closedVisitStatus}"/>
+        </div>
+    </div>
+    <div class="column-wrapper three">
+        <div class="column-header">Print</div>
+        <div class="column-content">
+            <th:block th:insert="~{sales-module/fragments/htmx/printing}"/>
+        </div>
+    </div>
+</div>

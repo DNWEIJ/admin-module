@@ -1,13 +1,13 @@
 package dwe.holding.salesconsult.sales.controller;
 
 import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.customer.client.controller.ValidateCustomer;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.salesconsult.sales.model.Payment;
 import dwe.holding.salesconsult.sales.repository.PaymentRepository;
 import dwe.holding.shared.model.type.PaymentMethodEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,20 +22,13 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping(path = "/sales")
 @Slf4j
+@AllArgsConstructor
 public class PaymentController {
     private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
-    private final ValidateCustomer validateCustomer;
-
-    public PaymentController(PaymentRepository paymentRepository, CustomerRepository customerRepository, ValidateCustomer validateCustomer) {
-        this.paymentRepository = paymentRepository;
-        this.customerRepository = customerRepository;
-        this.validateCustomer = validateCustomer;
-    }
 
     @PostMapping("/customer/{customerId}/payment")
-    String newRecord(@PathVariable Long customerId, Payment paymentForm, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+    String newOrUpdateRecord(@PathVariable Long customerId, Payment paymentForm, RedirectAttributes redirect) {
 
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (paymentForm.isNew()) {
@@ -52,15 +45,16 @@ public class PaymentController {
                             .comments(paymentForm.getComments())
                             .referenceNumber(paymentForm.getReferenceNumber())
                             .customer(customer)
+                            .localMemberId(AutorisationUtils.getCurrentUserMid())
                             .build()
             );
             customerRepository.save(customer);
-            redirect.addFlashAttribute("message","label.saved" );
+            redirect.addFlashAttribute("message", "label.saved");
             return "redirect:/customer/customer/" + customer.getId() + "/payments";
         } else {
             Payment payment = paymentRepository.findById(paymentForm.getId()).orElseThrow();
-            if ( !payment.getCustomer().getId().equals(customer.getId()) ) {
-                log.error("Staff {} tried to edit payment {} (customer {}) of another customer {}", AutorisationUtils.getCurrentUserAccount(), payment.getId(),payment.getCustomer().getId(), customer.getId());
+            if (!payment.getCustomer().getId().equals(customer.getId())) {
+                log.error("Staff {} tried to edit payment {} (customer {}) of another customer {}", AutorisationUtils.getCurrentUserAccount(), payment.getId(), payment.getCustomer().getId(), customer.getId());
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");
                 return "redirect:/vmas/index";
             }
@@ -77,15 +71,17 @@ public class PaymentController {
 
     @GetMapping("/customer/{customerId}/payments")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
-        model.addAttribute("payments", paymentRepository.findByCustomer_IdOrderByPaymentDateDesc(customerId));
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        model
+                .addAttribute("payments", paymentRepository.findByCustomer_IdOrderByPaymentDateDesc(customer.getId()))
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap());
         setModel(model, customerId);
         return "sales-module/payment/list";
     }
 
     @GetMapping("/customer/{customerId}/payment")
-    String getRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+    public String getPaymentRecord(@PathVariable Long customerId, Model model) {
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         model.addAttribute("payment",
                 Payment.builder()
                         .method(PaymentMethodEnum.PIN)
@@ -98,7 +94,7 @@ public class PaymentController {
 
     @GetMapping("/customer/{customerId}/payment/{paymentId}")
     String editRecord(@PathVariable Long customerId, @PathVariable Long paymentId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Payment payment = paymentRepository.findById(paymentId).get();
         model.addAttribute("payment", payment.getCustomer().getId().equals(customerId) ? payment : new Payment());
         setModel(model, payment.getCustomer().getId());

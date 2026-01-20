@@ -32,6 +32,11 @@ public class HtmxCustomerController {
     private final ZipCodeApi zipCodeApi;
     private final MessageSource messageSource;
 
+
+    private final String foundCustomers = """
+            <ul>%s</ul>
+            """;
+
     private final String mainpart = """
             <div class="text-align-center" id="message">%s:</div>
             <div class="text-align-center" id="addressData" data-street="%s" data-number="%s" data-zipcode="%s" data-city="%s">%s</div>
@@ -53,20 +58,23 @@ public class HtmxCustomerController {
         ZipCodeApi.Address address = optionalAddress.get();
         if (address.street() == null && address.houseNumber() != null) {
             return mainpart.formatted(
-                    messageSource.getMessage("address.notfound", null, locale), "", "", "", "", "",
-                    address.houseNumber().isEmpty() ? "" : messageSource.getMessage("address.possible.numbers", null, locale) + ":<br/>" + wrap(List.of(address.houseNumber()))
+                    messageSource.getMessage("address.notfound", null, locale),
+                    "", "", "", "", "",
+                    address.houseNumber().isEmpty()
+                            ? ""
+                            : messageSource.getMessage("address.possible.numbers", null, locale) + ":<br/>" + wrap(List.of(address.houseNumber()), locale)
             );
         }
         return mainpart.formatted(
                 messageSource.getMessage("address.found", null, locale), address.street(), address.houseNumber(), address.zipCode(), address.city(), address.toString(),
-                wrap(IfCustomerRecordExists(zipCode, houseNumber))
+                wrap(IfCustomerRecordExists(zipCode, houseNumber), locale)
         );
     }
 
-    @GetMapping("/search/customer/address/street/{streetName}/{houseNumber}")
+    @GetMapping("/search/customer/address/street/{streetName}/{houseNumber}/{city}")
     @ResponseBody
-    public String searchAddressViaStreetHtmx(Model model, @PathVariable String houseNumber, @PathVariable String streetName, Locale locale) {
-        Optional<ZipCodeApi.Address> optionalAddress = zipCodeApi.getAddressViaStreet(streetName, houseNumber);
+    public String searchAddressViaStreetAndCityHtmx(Model model, @PathVariable String houseNumber, @PathVariable String streetName, @PathVariable String city, Locale locale) {
+        Optional<ZipCodeApi.Address> optionalAddress = zipCodeApi.getAddressViaStreetAndCity(streetName, houseNumber, city);
         if (optionalAddress.isEmpty()) {
             return mainpart.formatted(messageSource.getMessage("address.notfound", null, locale), "", "", "", "", "", "");
         }
@@ -74,18 +82,18 @@ public class HtmxCustomerController {
         if (address.street() == null && address.houseNumber() != null) {
             return mainpart.formatted(
                     messageSource.getMessage("address.notfound", null, locale), "", "", "", "", ""
-                    , messageSource.getMessage("address.possible.zipcodes", null, locale) + ":<br/>" + wrap(List.of(address.houseNumber()))
+                    , messageSource.getMessage("address.possible.numbers", null, locale) + ":<br/>" + wrap(List.of(address.houseNumber()), locale)
             );
         }
         return mainpart.formatted(
                 messageSource.getMessage("address.found", null, locale), address.street(), address.houseNumber(), address.zipCode(), address.city(),
-                address.toString(), wrap(IfCustomerRecordExists(address.zipCode(), address.houseNumber()))
+                address.toString(), wrap(IfCustomerRecordExists(address.zipCode(), address.houseNumber()), locale)
         );
     }
 
     private List<String> IfCustomerRecordExists(String zipCode, String houseNumber) {
         Pattern pattern = Pattern.compile(Pattern.quote(zipCode), Pattern.CASE_INSENSITIVE);
-        List<Customer> list = customerRepository.findByZipCodeIgnoreCaseAndMemberId(zipCode, AutorisationUtils.getCurrentUserMid());
+        List<Customer> list = customerRepository.findByZipCodeAndMemberId(zipCode, AutorisationUtils.getCurrentUserMid());
         return list.stream().filter(customer -> customer.getStreetNumber().contains(houseNumber)).map(f -> getOption(f, pattern)).toList();
     }
 
@@ -96,7 +104,7 @@ public class HtmxCustomerController {
      *   SearchCriteria can start with an P/p to indicate a search on zipCode.
      *   Two boolean fields to increase the search scope: startLastName and includeStreetName.
      */
-    public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
+    public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet, Locale locale) {
         if (searchCriteria == null || searchCriteria.isEmpty()) {
             model.addAttribute("flatData", "");
             model.addAttribute("form", new CustomerForm(startLastName, includeStreetName, includeFirstTel, includePet));
@@ -106,26 +114,38 @@ public class HtmxCustomerController {
                 // find on ID
                 Optional<Customer> maybeCustomer = customerRepository.findById(Long.parseLong(searchCriteria.substring(1)));
                 if (maybeCustomer.isPresent()) {
-                    model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), Pattern.compile(Pattern.quote(""), Pattern.CASE_INSENSITIVE)))));
+                    model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), Pattern.compile(Pattern.quote(""), Pattern.CASE_INSENSITIVE))), locale));
                     return "fragments/elements/flatData";
                 } else {
-                    model.addAttribute("flatData", wrap(List.of()));
+                    model.addAttribute("flatData", wrap(List.of(), locale));
                 }
             }
-            if (searchCriteria.toLowerCase().charAt(0) == 'p') {
+            if (searchCriteria.toLowerCase().charAt(0) == 'z') {
                 // find on zipCode
-                List<String> maybeCustomer = customerRepository.findByZipCodeIgnoreCaseAndMemberId(searchCriteria.substring(1).toUpperCase(), AutorisationUtils.getCurrentUserMid())
-                        .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern)
-                        ).toList();
+                List<String> maybeCustomer;
+                if (searchCriteria.contains(",")) {
+                    String[] searchCriteriaParts = searchCriteria.split(",");
+                    maybeCustomer = customerRepository.findByZipCodeAndStreetNumberStartingWithAndMemberId(
+                                    searchCriteriaParts[0].substring(1).toUpperCase(),
+                                    searchCriteriaParts[1],
+                                    AutorisationUtils.getCurrentUserMid()
+                            )
+                            .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern)
+                            ).toList();
+                } else {
+                    maybeCustomer = customerRepository.findByZipCodeAndMemberId(searchCriteria.substring(1).toUpperCase(), AutorisationUtils.getCurrentUserMid())
+                            .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern)
+                            ).toList();
+                }
                 if (!maybeCustomer.isEmpty()) {
-                    model.addAttribute("flatData", wrap(maybeCustomer));
+                    model.addAttribute("flatData", wrap(maybeCustomer, locale));
                     return "fragments/elements/flatData";
                 } else {
-                    model.addAttribute("flatData", wrap(List.of()));
+                    model.addAttribute("flatData", wrap(List.of(), locale));
                 }
             }
             // search other ways
-            model.addAttribute("flatData", wrap(getCustomers(searchCriteria, startLastName, includeStreetName, includeFirstTel, includePet)));
+            model.addAttribute("flatData", wrap(getCustomers(searchCriteria, startLastName, includeStreetName, includeFirstTel, includePet), locale));
         }
         return "fragments/elements/flatData";
     }
@@ -172,10 +192,11 @@ public class HtmxCustomerController {
         return listCustomers;
     }
 
-    private String wrap(List<String> listCustomers) {
+    private String wrap(List<String> listCustomers, Locale locale) {
         return (listCustomers.size() > 0) ?
-                "<ul>"  + String.join("", listCustomers) + "</ul>"
-                : "<ul>No customer found</ul>";
+                "<ul>" + String.join("", listCustomers) + "</ul>"
+                :
+                foundCustomers.formatted(messageSource.getMessage("customer.notfound", null, locale));
     }
 
     private String getOption(Customer customer, Pattern pattern) {

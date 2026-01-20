@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,10 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -34,17 +32,13 @@ import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
 @Validated
 @PreAuthorize("hasRole('SUPER_ADMIN')")
 @RequestMapping("/admin")
+@AllArgsConstructor
 public class RoleController {
     public static final int FOUR = 4;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final FunctionRepository functionRepository;
-
-    public RoleController(RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, FunctionRepository functionRepository) {
-        this.roleRepository = roleRepository;
-        this.functionRoleRepository = functionRoleRepository;
-        this.functionRepository = functionRepository;
-    }
+    private final PermissionMatrixService permissionMatrixService;
 
     @PostMapping("/role")
     String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
@@ -72,6 +66,7 @@ public class RoleController {
         return "admin-module/role/action";
     }
 
+
     @GetMapping("/role/list")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
@@ -81,10 +76,31 @@ public class RoleController {
 
     private void setModelData(Model model, Role role) {
         model.addAttribute("role", role);
-        model.addAttribute("functions", getAllFunctionsAndCheckedIfActive(role.getId()));
+        model.addAttribute("functions", getAllFunctionsAndCheckedIfActive(role.getId(), model));
+        model.addAttribute("roles", roleRepository.findAll()); // List<Role>
+        model.addAttribute("matrix", permissionMatrixService.buildMatrix()); // List<PermissionMatrixRow>
+
     }
 
-    private List<List<PresentationElement>> getAllFunctionsAndCheckedIfActive(Long roleId) {
+    @PostMapping("/roles/saveMatrix")
+    public String saveMatrix(@RequestParam Map<String, String> params) {
+
+        // Extract permissions map
+        params.forEach((key, value) -> {
+            // permissions[funcId][roleId]
+            if (key.startsWith("permissions")) {
+                String funcId = key.split("\\[")[1].replace("]", "");
+                String roleId = key.split("\\[")[2].replace("]", "");
+
+                // save mapping funcId ↔ roleId
+            }
+        });
+
+        return " :/roles";
+    }
+
+
+    private List<List<PresentationElement>> getAllFunctionsAndCheckedIfActive(Long roleId, Model model) {
         List<Function> functions = functionRepository.findAll();
         List<FunctionRole> functionsForRole = functionRoleRepository.findByRoleId(roleId);
         Map<Long, String> functionIds = functions.stream().collect(Collectors.toMap(Function::getId, Function::getName));
@@ -96,6 +112,7 @@ public class RoleController {
         List<PresentationElement> list = new ArrayList<>(functions.stream()
                 .map(f -> new PresentationElement(f.getId(), f.getName(), functionIdsChecked.containsKey(f.getId())))
                 .sorted(Comparator.comparing(PresentationElement::getName)).toList());
+        model.addAttribute("elements", list);
         List<List<PresentationElement>> groups = new ArrayList<>();
         for (int i = 0; i < list.size(); i += FOUR) {
             groups.add(list.subList(i, Math.min(i + FOUR, list.size())));
@@ -156,4 +173,5 @@ public class RoleController {
         Role role = new Role();
         List<PresentationElement> checkedFunctions = new ArrayList<>();
     }
+
 }

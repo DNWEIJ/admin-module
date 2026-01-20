@@ -1,10 +1,10 @@
 package dwe.holding.supplyinventory.controller;
 
 import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.customer.client.controller.ValidateCustomer;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
+import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.supplyinventory.repository.CostingRepository;
@@ -28,12 +28,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ReminderController {
     private final ReminderRepository reminderRepository;
     private final PetRepository petRepository;
-    private final ValidateCustomer validateCustomer;
     private final CostingRepository costingRepository;
+    private final CustomerRepository customerRepository;
 
     @GetMapping("/customer/{customerId}/reminders")
     String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
         model.addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customerId));
         model.addAttribute("activeMenu", "reminders");
         return "supplies-module/reminder/list";
@@ -41,9 +40,7 @@ public class ReminderController {
 
     @GetMapping("/customer/{customerId}/reminder")
     String newRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect))
-            return "redirect:/customer/customer";
-
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         model.addAttribute("reminder", Reminder.builder().pet(new Pet()).build());
         model.addAttribute("petsList",
                 petRepository.findByCustomer_IdOrderByDeceasedAsc(customerId)
@@ -59,9 +56,9 @@ public class ReminderController {
 
     @PostMapping("/customer/{customerId}/reminder")
     String saveRecord(@Valid Reminder formReminder, @PathVariable Long customerId, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Pet pet = petRepository.findById(formReminder.getPet().getId()).orElseThrow();
-        if (!pet.getCustomer().getId().equals(customerId)) {
+        if (!pet.getCustomer().getId().equals(customer.getId())) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/supplies/customer/" + customerId + "/reminders";
         }
@@ -84,7 +81,7 @@ public class ReminderController {
     @GetMapping("/customer/{customerId}/reminder/{reminderId}")
     @Transactional
     String editRecord(@PathVariable Long customerId, @PathVariable Long reminderId, Model model, RedirectAttributes redirect) {
-        if (validateCustomer.isInvalid(customerId, redirect)) return "redirect:/customer/customer";
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Reminder reminder = reminderRepository.findById(reminderId).orElseThrow();
         model.addAttribute("reminder", reminder);
         model.addAttribute("costingReminderList", costingRepository.getReminderNomenclature(AutorisationUtils.getCurrentUserMid())

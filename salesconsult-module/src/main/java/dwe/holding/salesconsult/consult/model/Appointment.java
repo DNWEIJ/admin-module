@@ -1,6 +1,7 @@
 package dwe.holding.salesconsult.consult.model;
 
 import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.customer.client.model.Note;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -51,6 +52,10 @@ public class Appointment extends TenantBaseBO {
     @Builder.Default
     private Set<LineItem> lineItems = new HashSet<>(0);
 
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "appointment")
+    @Builder.Default
+    private Set<Diagnose> diagnoses = new HashSet<>(0);
+
     @Transient
     public boolean isCancelled() {
        return cancelled.equals(YesNoEnum.Yes);
@@ -64,7 +69,11 @@ public class Appointment extends TenantBaseBO {
         return pickedUp.equals(YesNoEnum.Yes);
     }
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "unresolved")
-//    @Builder.Default
-//    private Set<Diagnose> diagnoses = new HashSet<>(0);
+    @Transient
+    // USED FOR SOAP
+    // notes are not related, just on datetime.
+    // we will add all notes on the appointment in history:
+    // Oldest appointment will contain all notes up and included to this appointment date (and removed from note list)
+    // The following appointment will conta all note up and included to this appointment date
+    private Set<Note> notes;
 }

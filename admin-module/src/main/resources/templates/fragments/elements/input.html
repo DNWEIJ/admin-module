@@ -1,16 +1,17 @@
 <th:block th:fragment="inputHtml(name, label, dbField, tabindex)"
-          th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}">
+          th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}, text=${text}?:${text}">
     <label th:for="${name}" th:text="${label}"></label>
     <input th:id="${name}" th:name="${name}" th:placeholder="${placeholder}" th:required="${required}"
            th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}"
+           th:text="${text}"
     autocomplete="off">
 </th:block>
 
 
 <th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)"
-          th:with="type=${type}?:'text', required=${required}?:true, pattern=${pattern}?:'', onblur=${onblur}?:'' ">
+          th:with="type=${type}?:'text', required=${required}?:true, pattern=${pattern}?:'', onblur=${onblur}?:'', autofocus=${shoulfFocus}?:false">
     <div class="field">
-        <input th:id="${name}" th:name="${name}" placeholder="" th:required="${required}" th:attr="onblur=''+ ${onblur}"
+        <input th:id="${name}" th:name="${name}" placeholder="" th:required="${required}" th:attr="onblur=''+ ${onblur}" th:autofocus="${shouldFocus}"
                th:pattern="${pattern}" th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__ ?: ''}"
                autocomplete="off">
         <label th:for="${name}" th:utext="#{${label}}"></label>

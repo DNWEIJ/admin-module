@@ -8,10 +8,25 @@
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <fieldset>
             <legend th:text="#{userpreferences.general}"></legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('username', 'userpreferences.username', 'user.username', '1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', 'userpreferences.email', 'user.email', '2')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId', 'userpreferences.clinic', ${user.localMemberId}, ${localMembersList}, true,'3')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language', 'userpreferences.language', ${user.language}, ${languageList}, true,'4')}"></th:block>
+            <fieldset class="grid">
+                <button>color theme</button>
+                <button>light/dark</button>
+       <select>
+           <option>auto</option>
+           <option>dark</option>
+           <option>light</option>
+       </select>
+
+            </fieldset>
+
+            <fieldset class="grid">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('username', 'userpreferences.username', 'user.username', '1')}"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', 'userpreferences.email', 'user.email', '2')}"></th:block>
+            </fieldset>
+            <fieldset class="grid">
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId', 'userpreferences.clinic', ${user.localMemberId}, ${localMembersList}, true,'3')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language', 'userpreferences.language', ${user.language}, ${languageList}, true,'4')}"></th:block>
+            </fieldset>
 
         </fieldset>
         <fieldset class="grid">
@@ -67,4 +82,5 @@
             <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
         </fieldset>
     </form>
+    <div th:replace="~{/fragments/elements/debug}"></div>
 </section>

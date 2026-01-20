@@ -13,4 +13,10 @@ public class CustomerForm {
     boolean includeFirstTel;
     boolean includePet;
 
+    public void updateForm(boolean startLastName, boolean includeStreet, boolean includeNameTelephone, boolean includePet) {
+        this.startLastName = startLastName;
+        this.includeStreetName = includeStreet;
+        this.includeFirstTel = includeNameTelephone;
+        this.includePet = includePet;
+    }
 }

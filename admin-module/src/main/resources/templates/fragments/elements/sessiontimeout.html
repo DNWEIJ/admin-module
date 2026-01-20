@@ -27,11 +27,11 @@
     <p class="text-align-center"><a role="button" hx-swap="none" hx-get="/admin/keepalive" hx-on="htmx:afterRequest:scheduleWarning();"><span th:text="#{session.keepalive}"></a></p>
 </div>
 <script th:inline="javascript">
-    const userWarningSeconds = 30;
+    const warningSecondsForUser = 30;
     const sessionTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 0;
 
     // Calculate when to fire the warning
-    const warningTimeInMill = (sessionTimeoutInSeconds - userWarningSeconds) * 1000;
+    const warningTimeInMill = (sessionTimeoutInSeconds - warningSecondsForUser) * 1000;
 
     // define global in order to be able to cancel the warning and reset timer after xhttp request
     let warningTimeout;
@@ -47,7 +47,7 @@
     }
 
     function startSessionCountdown() {
-        let timeLeft = userWarningSeconds;
+        let timeLeft = warningSecondsForUser;
         const warningBox = document.getElementById("session-warning");
         const progressBar = document.getElementById("session-progress");
         const countdownLabel = document.getElementById("session-countdown");
@@ -59,7 +59,7 @@
             countdownLabel.textContent = timeLeft;
 
             // Update progress bar width
-            const widthPercent = (timeLeft / userWarningSeconds) * 100;
+            const widthPercent = (timeLeft / warningSecondsForUser) * 100;
             progressBar.style.width = widthPercent + "%";
 
             // Change colors

@@ -1,0 +1,70 @@
+<div id="deviceInfo">Loading device info...</div>
+
+<script>
+    function getDeviceType(width) {
+        if (width < 768) return "Mobile";
+        if (width < 1024) return "Tablet";
+        return "Desktop/Laptop";
+    }
+
+    function getOrientation() {
+        return window.innerWidth > window.innerHeight ? "Landscape" : "Portrait";
+    }
+
+    function updateDeviceInfo() {
+        const info = {
+            viewport: `${window.innerWidth} × ${window.innerHeight}`,
+            screen: `${screen.width} × ${screen.height}`,
+            pixelRatio: window.devicePixelRatio,
+            orientation: getOrientation(),
+            deviceType: getDeviceType(window.innerWidth),
+            touch: ('ontouchstart' in window) || navigator.maxTouchPoints > 0
+        };
+
+        const el = document.getElementById("deviceInfo");
+        if (el) {
+            el.innerHTML = `
+        <strong>Device info</strong><br>
+        Viewport: ${info.viewport}<br>
+        Screen: ${info.screen}<br>
+        Pixel ratio: ${info.pixelRatio}<br>
+        Orientation: ${info.orientation}<br>
+        Type: ${info.deviceType}<br>
+        Touch: ${info.touch}
+      `;
+        }
+    }
+
+    window.addEventListener("resize", updateDeviceInfo);
+    window.addEventListener("orientationchange", updateDeviceInfo);
+    document.addEventListener("DOMContentLoaded", updateDeviceInfo);
+
+    // ✅ Remove after 10 seconds
+    setTimeout(() => {
+        const el = document.getElementById("deviceInfo");
+        if (el) el.remove();
+    }, 10000);
+</script>
+
+<style>
+    #deviceInfo {
+        position: fixed;
+        bottom: 12px;
+        left: 12px;
+        z-index: 99999;
+
+        background: rgba(0, 0, 0, 0.85);
+        color: #00ff9c;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.4;
+
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+
+        pointer-events: none;
+        user-select: none;
+    }
+</style>

@@ -1,0 +1,29 @@
+<dialog id="customer-note-modal" open>
+    <article>
+        <header style="height: 1.5rem">
+            <button aria-label="Close" rel="prev" data-target="customer-note-modal" onclick="toggleModal(event)"></button>
+        </header>
+        <p id="customer-note-modal-part">
+        <div class="notification-message text-align-center alert "
+             th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
+
+        <form th:hx-post="'/consult/visit/customer/'+${customerId}+'/pet/'+ ${petId}+ '/note'" th:hx-target="${target}" hx-swap="outerHTML" id="createForm">
+            <th:block th:insert="~{customer-module/notes/noteform}"></th:block>
+        </form>
+        </p>
+        <footer>
+            <fieldset class="grid">
+                <input type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="customer-note-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("customer-note-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

@@ -17,7 +17,6 @@
 
         </div>
         <div class="two">
-
         </div>
         <div class="three">
             <a role="button" class="outline" th:href="${link}" th:text="#{label.list}"></a>
@@ -26,4 +25,12 @@
             <input type="submit" form="createForm" th:value="#{label.button.save}"/>
         </div>
     </div>
+</th:block>
+
+<th:block th:fragment="lastEditedByOn_td(addedBy,addedOn,lastEditedBy,lastEditedOn)">
+<td class="desktop-only">
+    <small th:data-tooltip="#{label.audit.createby}+${addedBy}+#{label.audit.on}+${#temporals.format(addedOn, 'dd-MM-yy')}">
+        [[${lastEditedBy}]] • [[${#temporals.format(lastEditedOn, 'dd-MM-yy')}]]
+    </small>
+</td>
 </th:block>

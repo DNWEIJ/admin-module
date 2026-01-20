@@ -78,30 +78,50 @@
             })
         })
     </script>
-    <span>search on customer ID (I123456789) or on zipcode (PXXXX99)</span>
+    <span></span>
     <div class="gridSearchCustomerWithCheck">
         <div id="holder" class="holder">
-            <input list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.customer.search.placeholder}" autofocus
+            <input list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria"
+                   th:placeholder="#{label.customer.search.placeholder}" th:data-alternatetext="#{label.customer.search.explenation}" autofocus
                    hx-get="/customer/search/customer"
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
                    hx-indicator="#searching-indicator"
                    hx-include="#startLastName, #includeStreetName, #includeFirstTel, #includePet"
-                   autocomplete="off">
-            <span id="searching-indicator"  class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
+                   autocomplete="off"
+                   style="transition: opacity .4s;">
+            <span id="searching-indicator" class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
             <div class="ac_results_wrapper">
                 <div class="ac_results" id="input-customerName" hx-on::after-swap="attachMouseHandlers()"></div>
             </div>
         </div>
-        <div role="group">
-            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}" th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}" th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}" th:with="tooltip=#{label.tooltip.customer.firstel}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
+        <div class="checkbox-group">
+            <!-- using switch with tooltip needs adjustment of CSS -->
+            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}" th:with="tooltip=#{label.tooltip.customer.name}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}" th:with="tooltip=#{label.tooltip.customer.street}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}" th:with="tooltip=#{label.tooltip.customer.firstel}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}, switch='switch'"></th:block>
         </div>
         <div role="group">
-            <input class="secondary" name="_reset" type="button" th:value="#{label.button.reset}"   onclick="window.location.href=window.location.origin + '/customer/customer'"/>
+            <input class="secondary" name="_reset" type="button" th:value="#{label.button.reset}" onclick="window.location.href=window.location.origin + '/customer/customer?isNew=true'"/>
             <input th:if="${saveButton}" name="_save" type="submit" th:value="#{label.button.save}" form="createForm"/>
         </div>
     </div>
+    <script>
+        function alternatetextPlaceHolder() {
+            const input = document.getElementById('customerFind');
+            let count = 0;
+            const timer = setInterval(() => {
+                if (++count > 3) return clearInterval(timer);
+                input.style.opacity = 0;
+                setTimeout(() => {
+                    [input.placeholder, input.dataset.alternatetext] =
+                        [input.dataset.alternatetext, input.placeholder];
+                    input.style.opacity = 1;
+                }, 200);
+            }, 5000);
+        }
+        alternatetextPlaceHolder();
+    </script>
+
 </th:block>

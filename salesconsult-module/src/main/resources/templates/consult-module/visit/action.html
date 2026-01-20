@@ -4,48 +4,14 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{consult-module/fragments/statusColour::statusColour()}"></th:block>
-
     <details id="consultList" open>
         <summary>stuff</summary>
         <h1>TODO: afspraken volgorde lijst</h1>
     </details>
 
-
-    <details id="buttons" open>
-        <summary>translate buttons</summary>
-        <fieldset class="grid">
-            <div>
-                <button class="button-secondary">reschedule</button>
-                <button class="button-secondary">Cancel</button>
-                <button class="button-secondary">Complete</button>
-            </div>
-            <div>
-                <fieldset>
-                    <fieldset role="group">
-                        <span>invoice</span>
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}" th:with="tooltip='invoice (checked) or receipt'"></th:block>
-                        <span>receipt</span>
-                    </fieldset>
-
-                    <fieldset role="group">
-                        <span>&nbsp;&nbsp;per&nbsp;&nbsp;</span>
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('single','','','3')}" th:with="tooltip='pet (checked) or all'"></th:block>
-                        <span>&nbsp;&nbsp;all&nbsp;&nbsp;</span>
-                    </fieldset>
-                    <fieldset role="group">
-                        <button class="button-secondary">Print</button>
-                    </fieldset>
-                </fieldset>
-            </div>
-            <div>
-                <button class="button-secondary"></button>
-                <button class="button-secondary">Ready for checkout</button>
-                <button class="button-secondary">Ready to pay</button>
-            </div>
-        </fieldset>
-    </details>
-
+    <div id="actionbar">
+    <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
+    </div>
 
     <details id="customerpetinfo" open>
         <summary th:text="#{visit.customerinfo.title}"></summary>
@@ -57,29 +23,28 @@
             <input name="visit.id" th:value="${visit.id}" type="hidden"/>
             <input name="visit.version" th:value="${visit.version}" type="hidden"/>
             <fieldset class="grid">
-                <th:block th:with="extras=~{sales-module/fragments/extrabuttons::noneButtons}">
+                <!-- define extra buttons to add behind -->
+                <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapNoteButtons}">
                     <th:block
-                            th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${visit.pet}, ${customer}, ${appointment}, ${extras})}"></th:block>
+                            th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${visit.pet}, ${customer}, ${appointment}, ${extras},${visit.isOpen?false:true})}"></th:block>
                 </th:block>
-            </fieldset>
-            <fieldset class="grid" style="margin-top: 1rem">
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','visit.purpose','visit.purpose','1')}"></th:block>
             </fieldset>
             <fieldset class="grid">
                 <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('veterinarian','visit.staff',${visit.veterinarian}, ${staffList}, false, '3')}"></th:block>
                 <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('room','visit.room',${visit.room}, ${rooms}, false, '6')}"></th:block>
                 <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sentToInsurance','visit.insurance',${visit.sentToInsurance}, ${ynvaluesList}, false, '4')}"></th:block>
             </fieldset>
-
+            <fieldset class="grid" style="margin-top: 1rem">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','visit.purpose','visit.purpose','1')}"></th:block>
+            </fieldset>
             <fieldset class="grid">
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('weight','visit.weight','visit.weight','2')}" th:with="postfix='Kg',required=false"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('temperature','visit.temperature','visit.temperature','5')}" th:with="postfix='°C',required=false"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','7')}" th:with="postfix='mmol/L',required=false"></th:block>
             </fieldset>
-
             <th:block th:insert="~{/consult-module/fragments/templatelocalmemberpref::template('template', ${templates})}"></th:block>
-            <th:block th:insert="~{fragments/elements/audit::audit('visit.addedBy','visit.addedOn', 'visit.lastEditedBy', 'visit.lastEditedOn')}"></th:block>
             <button name="_save" type="submit" form="visitForm" th:text="#{label.button.save}"></button>
+            <th:block th:insert="~{fragments/elements/audit::audit('visit.addedBy','visit.addedOn', 'visit.lastEditedBy', 'visit.lastEditedOn')}"></th:block>
         </form>
     </details>
 
@@ -91,20 +56,18 @@
     <details id="lineitems" open>
         <summary th:text="#{label.otc.legend.lineitems}"></summary>
 
-        <table id="lineItemsTable" class="table-tight">
-            <thead>
+        <table id="lineItemsTable" class="table-tight striped">
             <!-- head -->
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
             <!-- body and footer -->
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
         </table>
         <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
-             th:include="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
+             th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
     </details>
 
     <details id="diagnose" open>
         <summary th:text="#{label.diagnose}"></summary>
-        <summary th:if="${!appointment.isCancelled && !appointment.iscompleted}" th:text="#{label.consult.legend.diagnose}"></summary>
-        <div id="replaceDiagnose" th:include="~{consult-module/fragments/diagnose::diagnose()}"></div>
+        <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>
     </details>
 </section>

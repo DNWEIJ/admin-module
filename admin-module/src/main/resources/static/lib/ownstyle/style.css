@@ -1,9 +1,9 @@
-/***********************************/
-/******* Genric definitions ********/
-/***********************************/
+/****************************************/
+/******* Genric HTML definitions ********/
+/****************************************/
 fieldset {
     font-family: sans-serif;
-    border: solid var(--pico-muted-border-color);
+    border: solid 1px var(--pico-muted-border-color);
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-muted-border-color);
 }
@@ -24,7 +24,6 @@ fieldset legend {
 /* ***************************************** */
 /** pico specific scaling issues for an app **/
 /* ***************************************** */
-
 /** Pending on the size of the screen, the will be overwritten in the @media queries */
 .desktop-only {
     display: none;
@@ -52,14 +51,22 @@ fieldset legend {
     /* Original: 0.25rem */
 }
 
-@media (min-width: 576px) {
+:root {
+    --pico-breakpoint-sm: 480px;
+    --pico-breakpoint-md: 600px;
+    --pico-breakpoint-lg: 900px;
+    --pico-breakpoint-xl: 1200px;
+    --pico-breakpoint-xxl: 1400px;
+}
+
+@media (min-width: 480px) {
     :root {
         --pico-font-size: 77.5%;
         /* Original: 106.25% */
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
     :root {
         --pico-font-size: 77.5%;
         /* Original: 112.5% */
@@ -73,21 +80,21 @@ fieldset legend {
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
     :root {
         --pico-font-size: 77.5%;
         /* Original: 118.75% */
     }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
     :root {
         --pico-font-size: 77.5%;
         /* Original: 125% */
     }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1400px) {
     :root {
         --pico-font-size: 77.5%;
         /* Original: 131.25% */
@@ -104,6 +111,9 @@ h6 {
     /* Original: 700 */
 }
 
+/**********************************/
+/***  Changing PicoCSS defaults ***/
+/**********************************/
 article {
     border: 1px solid var(--pico-muted-border-color);
     /* Original doesn't have a border */
@@ -116,24 +126,34 @@ article > footer {
     /* Original: var(--pico-border-radius) */
 }
 
-[data-tooltip]:focus::after,
-[data-tooltip]:focus::before {
-    opacity: 0 !important;
-}
-
-[data-tooltip]:hover::after,
-[data-tooltip]:hover::before {
-    opacity: 1 !important;
-}
-
-
 /* STYLING FOR SPECIFIC Elements OF THIS APP */
 .hidden {
     display: none;
 }
 
-/* *******************************************/
-/* dynamic search with search result window */
+
+/**************************************************************/
+/*  Ensure the cswitch (checkbox) is aligned in the middle    */
+/**************************************************************/
+[data-tooltip]:not(a,button,input,[role=button]) {
+    border-bottom: 0px;
+    text-decoration: none;
+    cursor: default;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.checkbox-group label {
+    display: inline-block;
+}
+
+/*********************************************/
+/* dynamic search with search result window  */
 /* *******************************************/
 .gridSearchCustomerWithCheck {
     display: grid;
@@ -159,10 +179,12 @@ article > footer {
         grid-row-gap: .5rem;
     }
 }
+
 .ac_results_wrapper {
     position: relative;
     width: 100%;
 }
+
 .ac_results {
     position: absolute;
     top: 100%;
@@ -175,7 +197,7 @@ article > footer {
 }
 
 .ac_results ul {
-    max-height: 50vh;   /* 50% of browser window height */
+    max-height: 50vh; /* 50% of browser window height */
     overflow-y: auto;
 }
 
@@ -186,7 +208,7 @@ article > footer {
 }
 
 .ac_results li:nth-child(even) {
-    background-color:#f6f6f6;
+    background-color: #f6f6f6;
     color: black;
 }
 
@@ -225,21 +247,15 @@ article > footer {
 
 .table-tight td,
 .table-tight th {
-    padding: .1rem .1rem .1rem .1rem;
+    padding-right: 0.05rem;
     margin: 0;
-    border-bottom: 1px solid lightgrey;
-    line-height: 1;
 }
 
+/* striping via picocss
 .table-tight tr:nth-child(even) td {
     background-color: var(--pico-dropdown-background-color);
 }
-
-.table-tight tr {
-    margin: 0;
-    padding: 0;
-    border: 1px black;
-}
+*/
 
 .table-tight footer {
     margin: .5rem;
@@ -254,6 +270,7 @@ tbody tr.red-text td {
 
 .table-tight .right {
     text-align: right;
+    padding-right: .4rem;
 }
 
 .table-tight .left {
@@ -264,9 +281,16 @@ tbody tr.red-text td {
     text-align: center;
 }
 
-
+/**** text alingment ****/
 .text-align-center {
     text-align: center;
+}
+.text-align-right {
+    text-align: right;
+}
+
+.text-align-left {
+    text-align: left;
 }
 
 /* ********************************************************** */
@@ -282,26 +306,30 @@ tbody tr.red-text td {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: 1fr;
-    gap: 1rem 1rem;
+    gap: .5rem .5rem;
     grid-template-areas:
     "one two three";
-    align-items: center;
+    align-items: stretch;
+}
+.threecolumn-spread > div > fieldset {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.threecolumn-spread .three {
+.threecolumn-spread.three {
     justify-self: end;
     grid-area: three;
     align-self: center;
-
 }
 
-.threecolumn-spread .two {
+.threecolumn-spread.two {
     grid-area: two;
     justify-self: center;
     align-self: center;
 }
 
-. threecolumn-spread .one {
+. threecolumn-spread.one {
     justify-self: start;
     align-self: center;
     grid-area: one;
@@ -316,26 +344,26 @@ tbody tr.red-text td {
     align-items: center;
 }
 
-.fourcolumn-spread .four {
+.fourcolumn-spread.four {
     grid-area: four;
     justify-self: end;
     align-self: center;
 }
 
-.fourcolumn-spread .three {
+.fourcolumn-spread.three {
     grid-area: three;
     justify-self: center;
     align-self: start;
-
 }
 
-.fourcolumn-spread .two {
+.fourcolumn-spread.two {
     grid-area: two;
     justify-self: center;
     align-self: center;
 }
 
-. fourcolumn-spread .one {
+
+. fourcolumn-spread.one {
     grid-area: one;
     justify-self: start;
     align-self: center;
@@ -387,16 +415,36 @@ tbody tr.red-text td {
     z-index: 100;
 }
 
-.svg-icon {
-    width: 3.7rem;
-    height: 3.7rem;
+.svg-header-icon {
+    fill: currentColor;
+    color: #aaa;
+    width: 3.0rem;
+    height: 3.0rem;
+    vertical-align: middle;
+    transition: color 0.3s ease;
+    transition: color 0.3s ease;
     fill: var(--pico-form-element-active-border-color);
-    stroke-width: 1.25;
+    stroke-width: 1.0;
     stroke: var(--pico-form-element-valid-border-color);
 }
-.svg-icon:hover {
-    fill: var(--pico-form-element-valid-border-color);
-    stroke: var(--pico-form-element-active-border-color);
+
+.svg-icon {
+    fill: currentColor;
+    transition: color 0.3s ease;
+    transition: color 0.3s ease;
+    vertical-align: middle;
+    width: 1.7rem;
+    height: 1.7rem;
+}
+
+.svg-icon:hover .svg-header-icon:hover {
+    color: green
+}
+
+.center-align-svg {
+    display: inline-flex;
+    align-items: center; /* vertical */
+    justify-content: center; /* horizontal */
 }
 
 .input-height-as-input-field {
@@ -404,8 +452,9 @@ tbody tr.red-text td {
 }
 
 
-/***********************************/
-/* keep footer stick to the bottom */
+/************************************************************/
+/* keep footer stick to the bottom when middle isn't filled */
+/************************************************************/
 html, body {
     height: 100%;
     margin: 0;
@@ -427,7 +476,6 @@ html, body {
     color: white;
     padding: 1rem;
     text-align: center;
-    text-size-adjust: 60%;
     border-radius: var(--pico-border-radius);
 }
 
@@ -460,15 +508,6 @@ html, body {
     padding-top: 1.4rem;
 }
 
-/*summary::marker {*/
-/*    content: '⤴️ ';*/
-/*    font-size: 1.2rem;*/
-/*}*/
-
-/*details[open] summary::marker {*/
-/*    content: '⤴️ ';*/
-/*}*/
-
 html details summary {
     margin-top: 1rem;
     font-size: 1.2rem;
@@ -476,8 +515,84 @@ html details summary {
     font-weight: bold;
 }
 
-input[type="button"],
-input[type="submit"],
-[role="button"] {
-    padding: var(--pico-button-padding, 0.5rem 1rem);
+
+/********************************************/
+/** PicoCSS alerting message                */
+/********************************************/
+.box {
+    /*TODO make colors match the pico color schema */
+    position: fixed;
+    right: 2rem;
+    width: 40rem;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 99999;
+    transition: all 0.5s ease;
+}
+.notification-message {
+    height: 3.5em;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.notification-message.show {
+    top: 2rem;
+    right: 2rem;
+    opacity: 1;
+    height: 3.5em;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+
+/* .alert base */
+.alert {
+    margin-bottom: var(--pico-spacing);
+    padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
+    border-radius: var(--pico-border-radius);
+    color: var(--pico-color);
+    background-color: var(--pico-background-color);
+    border: 1px solid var(--pico-background-color);
+
+    background-position: center left var(--pico-form-element-spacing-vertical);
+    padding-left: 3.0rem;
+    /*background-size: auto;*/
+}
+
+/* Danger */
+.alert-error {
+    background-color: #ffebee;
+    background-image: var(--pico-icon-invalid);
+    color: #b71c1c;
+}
+
+/* Warning */
+.alert-warning {
+    background-color: #fff8e1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23cc5900' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E");
+    color: #994400;
+}
+
+/* Success */
+.alert-success {
+    background-color:  #e8f5e9;
+    background-image: var(--pico-icon-valid);
+    color: #1b5e20;
+}
+
+[data-theme=light],
+:root:not([data-theme="dark"]) {
+    --pico-table-row-stripped-background-color: rgba(111, 120, 135, 0.05);
+}
+
+[data-theme="dark"] {
+    --pico-table-row-stripped-background-color: rgba(111, 120, 135, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color-scheme: dark;
+    }
 }

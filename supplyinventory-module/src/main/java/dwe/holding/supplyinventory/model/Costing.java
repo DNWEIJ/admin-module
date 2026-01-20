@@ -60,6 +60,7 @@ public class Costing extends MemberBaseBO {
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum autoReminder;
+
     private String reminderNomenclature;
     private Short intervalInWeeks;
     private String rRemovePendingRemindersContaining;

@@ -1,0 +1,72 @@
+<th:block th:fragment="openVisitStatus">
+    <th:block th:insert="~{consult-module/fragments/statusColour::statusColour()}"></th:block>
+    <fieldset id="updateVisitStatus" class="grid right-left-space">
+        <div>
+            <div class="text-align-center" th:text="#{label.visit.status.previous}">previous status</div>
+            <br/>
+            <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#actionbar" hx-swap="innerHTML">
+                <th:block th:if="${statusProgress.previous != null}">
+                    <input type="hidden" name="changeStatusTo" th:value="${statusProgress.previous}"/>
+                    <button type="submit" class="secondary " th:name="'_previous_'+${statusProgress.previous}" th:text="#{__${statusProgress.previous.label}__}"></button>
+                </th:block>
+            </form>
+        </div>
+        <div>
+            <a href="" aria-label="Close" rel="prev" data-target="statusColourDisplay" onclick="toggleModal(event)">
+                <div class="text-align-center" th:text="#{label.visit.status.current}">current status</div>
+            </a>
+            <br/>
+            <div class="text-align-center">
+                <mark><b th:text="#{__${statusProgress.current.label}__}"></b></mark>
+            </div>
+        </div>
+        <div>
+            <div class="text-align-center" th:text="#{label.visit.status.next}">next status</div>
+            <br/>
+            <th:block th:if="${statusProgress.next != null and #lists.size(statusProgress.next) > 0}">
+                <th:block th:each="n : ${statusProgress.next}">
+                    <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#actionbar" hx-swap="innerHTML">
+                        <input type="hidden" name="changeStatusTo" th:value="${n.name()}"/>
+                        <button type="submit" class="secondary " th:name="'_next_'+${n.name()}" th:text="#{__${n.label}__}"></button>
+                    </form>
+                </th:block>
+            </th:block>
+        </div>
+    </fieldset>
+</th:block>
+
+<th:block th:fragment="closedVisitStatus">
+    <fieldset id="updateVisitStatus" class="grid right-left-space">
+        <div>
+            <div class="text-align-center" th:text="#{label.visit.status.previous}">previous status</div>
+            <br/>
+            <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
+                <th:block th:if="${statusProgress.previous != null}">
+                    <input type="hidden" name="changeStatusTo" th:value="${statusProgress.previous}"/>
+                    <button disabled type="submit" class="secondary " th:name="'_previous_'+${statusProgress.previous}" th:text="#{__${statusProgress.previous.label}__}"></button>
+                </th:block>
+            </form>
+        </div>
+        <div>
+            <a href="" aria-label="Close" rel="prev" data-target="statusColourDisplay" onclick="toggleModal(event)">
+                <div class="text-align-center" th:text="#{label.visit.status.current}">current status</div>
+            </a>
+            <br/>
+            <div class="text-align-center">
+                <mark><b th:text="#{__${statusProgress.current.label}__}"></b></mark>
+            </div>
+        </div>
+        <div>
+            <div class="text-align-center" th:text="#{label.visit.status.next}">next status</div>
+            <br/>
+            <th:block th:if="${statusProgress.next != null and #lists.size(statusProgress.next) > 0}">
+                <th:block th:each="n : ${statusProgress.next}">
+                    <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
+                        <input type="hidden" name="changeStatusTo" th:value="${n.name()}"/>
+                        <button disabled type="submit" class="secondary " th:name="'_next_'+${n.name()}" th:text="#{__${n.label}__}"></button>
+                    </form>
+                </th:block>
+            </th:block>
+        </div>
+    </fieldset>
+</th:block>

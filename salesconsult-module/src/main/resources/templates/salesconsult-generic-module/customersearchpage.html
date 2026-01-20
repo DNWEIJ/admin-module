@@ -3,6 +3,12 @@
     <title th:text="#{${textLabel}}"></title>
 </head>
 <body>
+<div role="group" id="checkbox-group">
+    <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}" th:with="tooltip=#{label.tooltip.customer.name}"></th:block>
+    <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}" th:with="tooltip=#{label.tooltip.customer.street}"></th:block>
+    <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}" th:with="tooltip=#{label.tooltip.customer.firstel}"></th:block>
+    <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}"></th:block>
+</div>
 
 <section layout:fragment="content">
     <h3 th:text="#{${textLabel}}"></h3>

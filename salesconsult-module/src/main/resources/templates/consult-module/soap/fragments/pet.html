@@ -1,0 +1,86 @@
+<th:block th:fragment="Pet(pet)">
+    <style>
+        .pet-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 100%;
+        }
+
+        .pet-info-cell {
+
+        }
+    </style>
+    <div class="pet-info-grid">
+
+        <!-- Row 1 -->
+        <div>
+            <strong th:text="${pet.customer.customerName}"></strong>
+        </div>
+
+        <div>
+            <strong>
+                <span th:utext="${pet.getNameWithDeceased}"></span>
+                <span th:if="${(pet.species != null and !#strings.isEmpty(pet.species))
+                    or (pet.breed != null and !#strings.isEmpty(pet.breed))}">
+        (<span th:text="${pet.species ?: ''}"></span>,<span th:text="${pet.breed ?: ''}"></span>)
+      </span>
+            </strong>
+        </div>
+
+        <div>
+            <span th:text="|#{label.soap.Insured}: #{__${pet.insured.label}__} ${pet.insuredBy != null ? pet.insuredBy : ''}|"></span>
+        </div>
+
+
+        <!-- Row 2 -->
+        <div th:text="${pet.customer.address2 ?: ''}"></div>
+
+        <div th:text="#{__${pet.sex.label}__}"></div>
+
+        <div>
+            <span th:text="|#{label.soap.Allergies}: #{__${pet.allergies.label}__} ${pet.allergiesDescription != null ? pet.allergiesDescription : ''}|"></span>
+        </div>
+
+
+        <!-- Row 3 -->
+        <div th:text="${pet.customer.address3 ?: ''}"></div>
+
+        <div>
+            <span th:text="${pet.birthday != null ? #temporals.format(pet.birthday,'dd-MM-yyyy') : ''}"></span>
+            <span th:text="' ' + ${pet.getAge}"></span>
+        </div>
+
+        <div>
+            <span th:text="|#{pet.gpwarning}: #{__${pet.gpwarning.label}__} ${pet.gpwarningDescription != null ? pet.gpwarningDescription : ''}|"></span>
+        </div>
+
+
+        <!-- Row 4 -->
+        <div th:text="${pet.customer.email ?: ''}"></div>
+
+        <div>
+
+        </div>
+
+        <div>
+            <span th:text="|#{label.soap.chiptat}: ${pet.chipTattooId ?: ''}${pet.chipDate != null ? ' | ' + #temporals.format(pet.chipDate,'dd-MM-yyyy') : ''}|"></span>
+        </div>
+
+
+
+        <!-- Row 5 -->
+        <div>
+            <span th:text="${
+                (pet.customer.mobilePhone ?: '') +
+                (pet.customer.mobilePhone != null and !#strings.isEmpty(pet.customer.mobilePhone)
+                    and pet.customer.workPhone != null and !#strings.isEmpty(pet.customer.workPhone) ? ', ' : '') +
+                (pet.customer.workPhone ?: '') +
+                (pet.customer.workPhone != null and !#strings.isEmpty(pet.customer.workPhone)
+                    and pet.customer.homePhone != null and !#strings.isEmpty(pet.customer.homePhone) ? ', ' : '') +
+                (pet.customer.homePhone ?: '')
+            }"></span>
+        </div>
+        <div></div>
+        <div></div>
+    </div>
+</th:block>

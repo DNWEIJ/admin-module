@@ -21,7 +21,7 @@
         <tbody>
         <th:block th:each="localmember : ${localmembers}">
             <tr>
-                <td><a th:href="@{'/admin/localmember/'+ ${localmember.id}}">[[${localmember.name}]]</a></td>
+                <td><a th:href="@{'/admin/localmember/'+ ${localmember.id}}">[[${localmember.localMemberName}]]</a></td>
                 <td>[[${localmember.email}]]</td>
                 <td>[[${localmember.phone1}]]</td>
                 <td>[[${localmember.phone2}]]</td>

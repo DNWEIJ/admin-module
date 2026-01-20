@@ -39,6 +39,11 @@ public class Member extends BaseBO {
     @Column(nullable = false)
     private String shortCode;
 
+    // TODO fill with local member POC and set manually after migration
+    private String pointOfContact;
+    private String pointOfContactAddress;
+    private String pointOfContactEmailAddress;
+
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum active;

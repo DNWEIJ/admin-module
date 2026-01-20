@@ -3,14 +3,17 @@
     <title>[[#{label.title.pet}]]</title>
 </head>
 <body>
+
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.pet},'/customer/customer/'+ ${customerId}+ '/pet', ${customerInformation})}"></th:block>
     <hr/>
-    <table class="table-tight" id="show-table">
+    <table class="table-tight striped" id="show-table">
         <thead>
         <tr>
-            <th>[[#{pet.name}]]</th>
+            <th>Action</th>
+            <th class="filtering">[[#{pet.name}]]</th>
+            <th>[[#{pet.deceased}]]</th>
             <th class="desktop-only">[[#{pet.species}]]</th>
             <th>[[#{pet.breed}]]</th>
             <th>[[#{pet.sex}]]</th>
@@ -23,7 +26,9 @@
         <tbody>
         <th:block th:each="pet : ${pets}">
             <tr>
+                <td><a th:href="'/consult/visit/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}+'/soap'">SOAP</a></td>
                 <td><a th:href="'/customer/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}"><span th:utext="${pet.nameWithDeceased}" th:remove="tag"></span></a></td>
+                <td>[[${pet.deceased}]]</td>
                 <td class="desktop-only">[[${pet.species}]]</td>
                 <td>[[${pet.breed}]]</td>
                 <td class="desktop-only">[[#{${pet.sex.getLabel}}]]</td>
@@ -31,11 +36,7 @@
                 <td  class="desktop-only"th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
                 <td class="desktop-only">[[${pet.passportNumber}]]</td>
                 <td class="desktop-only">[[${pet.chipTattooId}]]</td>
-                <td class="desktop-only">
-                    <small th:data-tooltip="'Created by  '+${pet.addedBy}+' on ' +${#temporals.format(pet.addedOn, 'dd-MM-yy')}">
-                        [[${pet.lastEditedBy}]] • [[${#temporals.format(pet.lastEditedOn, 'dd-MM-yy')}]]
-                    </small>
-                </td>
+                <th:block th:insert="~{fragments/elements/audit::lastEditedByOn_td(${pet.addedBy},${pet.addedOn},${pet.lastEditedBy},${pet.lastEditedOn})}"></th:block>
             </tr>
         </th:block>
         </tbody>

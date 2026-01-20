@@ -1,0 +1,37 @@
+<th:block th:fragment="Soap(appointments)">
+    <div th:text="${extraComment?:''}"></div>
+    <style>
+        /* BEGIN Remove default triangle; speific for different browsers */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::marker {
+            content: "";
+        }
+        .visit {
+            margin-bottom: 0.5rem;
+        }
+
+        /* END Remove default triangle; speific for different browsers */
+    </style>
+    <div class="soap-data">
+        <hr/>
+        <strong style="font-size: 12px; text-align: center;">
+            <div>[[${clinic_name}]]<br/>[[${clinic_address}]]</div>
+        </strong>
+        <hr/>
+        <div th:text${localmemberName}></div>
+        <div th:text${localmemberAddress}></div>
+        <div th:replace="~{consult-module/soap/fragments/pet :: Pet(${pet}) }"></div>
+        <hr/>
+        <br/>
+        <th:block th:each="appointment : ${appointments}">
+            <th:block th:each="visit: ${appointment.visits}">
+                <th:block th:replace="~{consult-module/soap/fragments/note :: note(${appointment.notes}, ${appointment.visitDateTime}, true)}"></th:block>
+                <th:block th:replace="~{consult-module/soap/fragments/visit :: Visit(${visit}, ${memberLocals}) }" )></th:block>
+                <th:block th:replace="~{consult-module/soap/fragments/note :: note(${appointment.notes}, ${appointment.visitDateTime}, false) }"></th:block>
+            </th:block>
+        </th:block>
+    </div>
+</th:block>

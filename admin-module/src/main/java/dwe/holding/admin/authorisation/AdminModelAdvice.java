@@ -16,7 +16,8 @@ public class AdminModelAdvice {
             model
                 .addAttribute("sessionTimeout", session.getMaxInactiveInterval())
                 .addAttribute("applicationView", AutorisationUtils.getCurrentMember().getApplicationView())
-                .addAttribute("applicationName", AutorisationUtils.getCurrentMember().getApplicationName());
+                .addAttribute("applicationName", AutorisationUtils.getCurrentMember().getApplicationName())
+            .addAttribute("layoutType", "webLayout");
         } catch (Exception e) {
             // do nothing, user not yet logged in
         }

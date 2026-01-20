@@ -1,9 +1,8 @@
 <tbody>
-
 <th:block th:each="diagnose : ${allDiagnoses}">
     <tr>
         <td class="center">
-            <a href="" th:if="${!(appointment.isCancelled || appointment.iscompleted)}" th:hx-delete="${url+diagnose.id}" hx-include="#csrfParameterName">
+            <a href="" th:if="${(visit.isOpen)}" th:hx-delete="${url+diagnose.id}" hx-include="#csrfParameterName">
                 <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>
@@ -11,6 +10,13 @@
         </td>
         <td th:text="${diagnose.diagnose}"></td>
         <td th:text="${diagnose.location}"></td>
+    </tr>
+</th:block>
+<th:block th:if="${allDiagnoses == null or allDiagnoses.size == 0}">
+    <tr>
+        <td colspan="3" class="center">
+            <th:block th:text="#{label.not-found}"></th:block>
+        </td>
     </tr>
 </th:block>
 </tbody>

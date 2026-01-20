@@ -1,0 +1,59 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:th="http://www.w3.org/1999/html" layout:decorate="~{/layout.html}">
+<head>
+    <title>SOAP</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <style>
+        details.visit > :not(summary) {
+            margin-left: 1.5rem;
+        }
+
+        details.note > :not(summary) {
+            margin-left: 1.5rem;
+        }
+
+        .lineitem {
+            margin-top: .5rem;
+        }
+
+        summary {
+            font-weight: bold;
+            list-style: none;
+            cursor: default;
+        }
+    </style>
+    <script>
+        function printFromUrl(url, delay = 500) {
+            fetch(url, {
+                method: "POST",
+                body: new URLSearchParams(new FormData(document.getElementById("form")))
+            })
+                .then(response => response.text())
+                .then(html => {
+                    const printWindow = window.open();
+                    printWindow.document.write(html);
+                    printWindow.document.close();
+                    printWindow.onload = () => setTimeout(() => printWindow.print(), delay);
+                });
+        }
+    </script>
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.soap},'', ${customerInformation})}"></th:block>
+
+    <button th:onclick="'printFromUrl(\'/consult/visit/customer/' + ${customerId} + '/pet/' + ${petId} + '/soap\')'" th:text="#{label.button.print}"></button>
+
+    <button onclick="document.querySelectorAll('.visit , .note ').forEach(d => d.open = !d.open);">Toggle Open/Close</button>
+    <form id="form">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <label>[[#{label.soap.extracomments}]]
+            <textarea name="extra-comment" id="extra-comment"></textarea>
+        </label>
+    </form>
+    <div th:replace="~{consult-module/soap/fragments/soap::Soap(${appointments})}"></div>
+
+</section>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<th:block open th:fragment="Diagnose(diagnoses)">
+    <details th:if="${diagnoses != null and !diagnoses.isEmpty()}">
+        <summary th:text="#{label.soap.Diagnosis} + ':'">Diagnosis:</summary>
+        <ul>
+            <th:block th:each="diagnose : ${diagnoses}">
+                <li th:if="${diagnose.locations == null or diagnose.locations.isEmpty()}">
+                    <span th:text="${diagnose.detail.nomenclature}"></span>
+                </li>
+
+                <li th:each="location : ${diagnose.locations}" th:if="${diagnose.locations != null and !diagnose.locations.isEmpty()}">
+                    <span th:text="${diagnose.detail.nomenclature}"></span>
+                    <span> (</span>
+                    <span th:text="${location.lookupLocation.nomenclature}"></span>
+                    <span>)</span>
+                </li>
+            </th:block>
+        </ul>
+    </details>
+</th:block>

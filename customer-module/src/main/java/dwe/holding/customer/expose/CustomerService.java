@@ -25,10 +25,15 @@ public class CustomerService {
     private final PetRepository petRepository;
 
     public Customer searchCustomer(Long customerId) {
-
         return customerMapper.toCustomer(
                 customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow()
         );
+    }
+
+    public Customer searchCustomerAndPet(Long customerId, Long petId) {
+        Customer customer = customerMapper.toCustomer(customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow());
+        customer.pets.stream().filter(pet -> pet.id.equals(petId)).findFirst().orElseThrow();
+        return customer;
     }
 
     public Customer searchCustomerFromPet(Long petId) {

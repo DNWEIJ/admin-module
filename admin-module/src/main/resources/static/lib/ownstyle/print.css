@@ -1,0 +1,9 @@
+@media print {
+    button,
+    .controls,
+    #toolbar,
+    header,
+    footer {
+        display: none !important;
+    }
+}

@@ -17,15 +17,15 @@ public class ZipCodeApi {
     private final RestClient restClient = RestClient.create();
     private final ObjectMapper objectMapper;
 
-    public Optional<Address> getAddress(String postcode, String huisnummer) {
+    public Optional<Address> getAddress(String ZipCode, String houseNumber) {
         return
                 restClient.get()
                         .uri(uriBuilder -> uriBuilder
                                 .scheme("https")
                                 .host("openpostcode.nl")
                                 .path("/api/address")
-                                .queryParam("postcode", postcode)
-                                .queryParam("huisnummer", huisnummer)
+                                .queryParam("postcode", ZipCode)
+                                .queryParam("huisnummer", houseNumber)
                                 .build()
                         )
                         .exchange((req, res) -> {
@@ -44,7 +44,7 @@ public class ZipCodeApi {
                         });
     }
 
-    public Optional<Address> getAddressViaStreet(String streetName, String city) {
+    public Optional<Address> getAddressViaStreetAndCity(String streetName, String houseNumber,String city) {
         return
                 restClient.get()
                         .uri(uriBuilder -> uriBuilder
@@ -52,12 +52,21 @@ public class ZipCodeApi {
                                 .host("openpostcode.nl")
                                 .path("/api/postcode")
                                 .queryParam("straat", streetName)
+                                .queryParam("huisnummer", houseNumber)
                                 .queryParam("plaats", city)
                                 .build()
                         )
                         .exchange((req, res) -> {
                             if (res.getStatusCode() == HttpStatus.OK) {
-                                return Optional.of(new Address(null, String.join(", ", res.bodyTo(AddressZipCodes.class).postcodes), null, null));
+                                return Optional.of(res.bodyTo(Address.class));
+                            }
+                            if (res.getStatusCode() == HttpStatus.NOT_FOUND) {
+                                AddressErrors addressErrors = res.bodyTo(AddressErrors.class);
+                                return Optional.of(
+                                        new Address(null,
+                                                addressErrors.suggestions == null ? "" : String.join(", ", filterHouseNumber(addressErrors.suggestions, houseNumber))
+                                                                ,null, null)
+                                );
                             }
                             return Optional.empty();
                         });
@@ -82,5 +91,10 @@ public class ZipCodeApi {
 
     public record AddressZipCodes(List<String> postcodes
     ) {
+    }
+
+    private List<String> filterHouseNumber(List<String> suggestions, String houseNumber) {
+        List<String> result = suggestions.stream().filter(suggestion -> suggestion.startsWith(houseNumber)).toList();
+        return result.isEmpty() ? suggestions : result;
     }
 }

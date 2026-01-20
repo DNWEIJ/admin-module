@@ -3,6 +3,7 @@ package dwe.holding.vmas.controller;
 import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.vmas.model.VmasUserPreferences;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class VmasUserPreferencesController {
 
     private final UserService userService;
     private final ObjectMapper objectMapper;
+    private final CustomerForm customerForm;
 
     // Called for new users via login controller. Afterward it can be called on users request
     @GetMapping("/userpreferences")
@@ -42,6 +44,13 @@ public class VmasUserPreferencesController {
     @PostMapping("/userpreferences")
     String localMember(@Valid SettingsForm form) {
         userService.saveUserSettings(objectMapper.writeValueAsString(form.userPreferences), form.localMemberId(), form.language(), form.username(), form.email());
+        customerForm.updateForm(
+                form.userPreferences.getSearchCustStart().booleanValue(),
+                form.userPreferences.getSearchCustStreet().booleanValue(),
+                form.userPreferences.getSearchCustNameTelephone().booleanValue(),
+                form.userPreferences.getSearchCustPet().booleanValue()
+        );
+
         return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 

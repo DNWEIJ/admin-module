@@ -54,10 +54,11 @@ public class VisitController {
     private final AppointmentVisitService appointmentVisitService;
     private final CostingService costingService;
     private final ObjectMapper objectMapper;
+    private final CustomerForm customerForm;
 
     @GetMapping("/visit/search")
     String firstStepCreateVisitFindCustomer(Model model) {
-        model.addAttribute("form", new CustomerForm(true, false, false, false))
+        model.addAttribute("form", customerForm)
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
                 .addAttribute("textLabel", "label.title.visit")
                 .addAttribute("url", "/consult/visit/search/");
@@ -71,22 +72,22 @@ public class VisitController {
         updateRoomsInModel(model, lookupRoomRepository);
         updateLocationsInModel(model, lookupLocationRepository);
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
+        updateReasonsInModel(model, lookupPurposeRepository);
         model
-                .addAttribute("form", new CustomerForm(true, false, false, false))
+                .addAttribute("form", customerForm)
                 .addAttribute("appointment", Appointment.builder().visitDateTime(LocalDateTime.now()).localMemberId(AutorisationUtils.getCurrentUserMlid()).build())
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("timeList", IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList()
-                );
-        updateReasonsInModel(model, lookupPurposeRepository);
-
+                .addAttribute("timeList", IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList())
+        ;
         return "consult-module/visit/petanddateselectpage";
     }
 
     @PostMapping("/visit/customer/{customerId}")
-    String thirdStepPetFoundCreateAppointmentAndVisit(@NotNull @PathVariable Long customerId, @NotNull CreateVisitForm createForm, Model model) {
+    String thirdStepPetFoundCreateAppointmentAndVisit(@NotNull @PathVariable Long customerId, @NotNull CreateVisitForm createVisitForm, Model model) {
+
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        List<AppointmentVisitService.CreatePet> pets = createForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked()).toList();
+        List<AppointmentVisitService.CreatePet> pets = createVisitForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked()).toList();
         if (customer == null || pets.isEmpty()) {
             model.addAttribute("message", "Something went wrong. Please try again");
             return "redirect:/visit/search/" + customerId;
@@ -95,7 +96,6 @@ public class VisitController {
         Visit visit = app.getVisits().iterator().next();
         return "redirect:/consult/visit/customer/" + customerId + "/visit/" + app.getVisits().iterator().next().getId();
     }
-
 
     // List visits from customer/customer
     @GetMapping("/visit/customer/{customerId}/visits")
@@ -122,7 +122,7 @@ public class VisitController {
         updateLocationsInModel(model, lookupLocationRepository);
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
         updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());
-
+        updateVisitStatusInModel(model, visit.getStatus());
         model
                 .addAttribute("customer", customer)
                 .addAttribute("visit", visit)

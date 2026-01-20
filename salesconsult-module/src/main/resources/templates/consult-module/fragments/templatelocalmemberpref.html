@@ -1,15 +1,24 @@
 <th:block th:fragment="template(name, list)">
-    <fieldset class="grid">
+    <fieldset style="display: flex; align-items: center; gap: 0.5em;">
+        <div class="checkbox-group">
+            <th:block th:insert="~{fragments/elements/select::checkBox('overwriteText','','true','0')}" th:with="placement='right',tooltip=#{visit.template.overwrite}, switch='switch'"></th:block>
+        </div>
         <select th:id="${name}" th:name="${name}">
             <th:block th:each="element : ${list}">
-                    <option th:data-element="${element.text}" th:utext="${element.title}"
-                            th:value="${element.title}" th:selected="${element.selected}"></option>
+                <option th:data-element="${element.text}" th:utext="${element.title}"
+                        th:value="${element.title}" th:selected="${element.selected}"></option>
             </th:block>
         </select>
-    <label>
-        <input id="overwriteText" checked="true" type="checkbox"/>
-        <th:block th:text="#{visit.template.overwrite}"/>
-    </label>
     </fieldset>
     <textarea cols="110" id="visit.comments" name="visit.comments" rows="10" th:text="${visit.comments}"></textarea>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("template").addEventListener("change", function () {
+                if (document.getElementById("overwriteText").checked) {
+                    document.getElementById("visit.comments").value =
+                        this.selectedOptions[0].dataset.element || "";
+                }
+            });
+        });
+    </script>
 </th:block>

@@ -51,7 +51,6 @@ public class OTCSellController {
         Pet selectedPet = (visits.isEmpty()) ? app.getVisits().iterator().next().getPet() : visits.getFirst().getPet();
 
         model
-                .addAttribute("appointment", app)
                 .addAttribute("customer", customer)
                 .addAttribute("petsOnVisit", app.getVisits().stream().map(Visit::getPet)
                         .map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased()))
@@ -126,6 +125,7 @@ public class OTCSellController {
 
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, app.getId()));
         model
+                .addAttribute("appointment", app)
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("salesType", SalesType.OTC);
 

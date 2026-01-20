@@ -24,7 +24,7 @@
             <h4 th:text="${info}"></h4>
         </div>
         <div class="three">
-            <a role="button" class="outline" th:href="${link}" th:text="#{label.list}"></a>
+            <a role="button" class="outline button" th:href="${link}" th:if="${link != ''}" th:text="#{label.create}"></a>
         </div>
         <div class="four">
             <input type="submit" form="createForm" th:value="#{label.button.save}"/>

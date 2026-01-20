@@ -1,0 +1,36 @@
+<th:block th:fragment="Visit(visits, memberLocalMap)">
+    <th:block th:each="visit : ${visits}">
+        <details class="visit" open>
+            <summary>
+                <strong>
+                <span th:with="otcLabel=${visit.appointment.OTC.label == 'label.yesno.yes' ? 'OTC - ' : ''}"
+                      th:text="${#temporals.format(visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' - ' + otcLabel + visit.purpose}"></span>
+                </strong>
+            </summary>
+            <!-- Clinic -->
+            <div>
+                <strong th:text="#{label.soap.Clinic}">Clinic</strong>:
+                <span th:text="${memberLocalMap[visit.appointment.localMemberId]}"></span>
+                <span th:if="${visit.veterinarian != null}"
+                      th:text="' (' + ${visit.veterinarian} + ')'"></span>
+            </div>
+
+            <!-- Weight / Temp / Glucose -->
+            <div th:if="${visit.weight != null or visit.temperature != null or visit.glucose != null}">
+                <strong th:text="#{label.soap.WeightTemp}">Weight, Temp</strong>:
+                <span th:text="${(visit.weight ?: '0.00') + ' Kg -- ' + (visit.temperature ?: '0.00') + ' &#8451; -- ' + (visit.glucose ?: '0.00') + ' mmol/L'}"></span>
+            </div>
+
+            <!-- Comments -->
+            <div th:if="${visit.comments != null and !#strings.isEmpty(visit.comments)}">
+
+                <div class="avoid-print-break">
+                    <strong th:text="#{label.soap.Comments}">Comments</strong>:<br/>
+                    <div th:utext="${visit.comments}" style="white-space: pre-line;"></div>
+                </div>
+            </div>
+            <div th:replace="~{consult-module/soap/fragments/lineitem :: lineItem(${appointment.lineItems}) }"></div>
+            <div th:replace="~{consult-module/soap/fragments/diagnose :: Diagnose(${appointment.diagnoses}) }"></div>
+        </details>
+    </th:block>
+</th:block>

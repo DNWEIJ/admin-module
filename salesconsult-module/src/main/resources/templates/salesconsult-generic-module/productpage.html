@@ -16,8 +16,8 @@
             <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapButtons}">
-                <th:block th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnVisit}, ${selectedPet}, ${customer}, ${appointment}, ${extras})}"></th:block>
+            <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapNoteButtons}">
+                <th:block th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnVisit}, ${selectedPet}, ${customer}, ${appointment}, ${extras}, false)}"></th:block>
             </th:block>
         </fieldset>
         <hr/>
@@ -28,7 +28,7 @@
     <fieldset role="group" class="grid">
         <legend th:text="#{label.otc.legend.lineitems}"></legend>
 
-        <table class="table-tight">
+        <table class="table-tight striped">
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
             <!--htmx replaces body and footer -->
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>

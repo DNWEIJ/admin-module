@@ -63,17 +63,5 @@
         <div th:text="#{__${pet.sex.label}__}"></div>
         <div th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' ('+ ${pet.age}+')'"></div>
         <div th:text="${pet.idealWeight != null} ? #{pet.idealWeight} + ': ' + ${pet.idealWeight} : #{pet.idealWeight} + ': '"></div>
-        <div class="grid" role="group">
-            <div role="button">
-                <span>History</span>
-            </div>
-            <div role="button">
-                <span>SOAP</span>
-            </div>
-            <div role="button">
-                <span>Add note</span>
-            </div>
-        </div>
-
     </th:block>
 </th:block>

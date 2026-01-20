@@ -14,10 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -31,9 +28,11 @@ public class CustomerController {
     private final CustomerForm customerForm;
 
     @GetMapping("/customer")
-    String newRecord(Model model) {
+    String newRecord(@RequestParam(required = false) boolean isNew, Model model) {
         Long customerId = customerExists();
-        if (customerId > 0) return "redirect:/customer/customer/" + customerId;
+        if (customerId > 0 && !isNew) return "redirect:/customer/customer/" + customerId;
+        if (isNew) customerReset();
+
         model.addAttribute("form", customerForm);
         model.addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
         setModel(model);
@@ -43,7 +42,7 @@ public class CustomerController {
     @GetMapping("/customer/{id}")
     String editRecord(@PathVariable Long id, Model model) {
         if (id == 0) {
-            return newRecord(model);
+            return newRecord(true, model);
         }
         setModel(model);
         model.addAttribute("form", customerForm);
@@ -106,5 +105,9 @@ public class CustomerController {
         return customerId.isEmpty() ? Long.valueOf(0)
                 : Long.valueOf(customerId.substring(customerId.lastIndexOf('(') + 1, customerId.lastIndexOf(')')).strip());
 
+    }
+
+    private void customerReset() {
+        AutorisationUtils.setTempGenericStorage("");
     }
 }

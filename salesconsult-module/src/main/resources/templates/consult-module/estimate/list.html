@@ -7,7 +7,7 @@
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.estimate},'/consult/customer/'+ ${customerId}+'/estimate', ${customerInformation})}"></th:block>
     <hr/>
-    <table class="table-tight" id="visit-table">
+    <table class="table-tight striped" id="visit-table">
         <thead>
         <tr>
             <th th:text="#{estimate.header.action}"></th>

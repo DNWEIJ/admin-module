@@ -30,7 +30,7 @@ class ZipCodeApiTest {
     @Test
     void callsRealOpenPostcodeStreetApi_Succes() {
         ZipCodeApi.Address address =
-                api.getAddressViaStreet("Jacob van Lennepkade", "Amsterdam").get();
+                api.getAddressViaStreetAndCity("Jacob van Lennepkade","2", "Amsterdam").get();
         assertThat(address).isNotNull();
         assertThat(address.street()).isNotBlank();
         assertThat(address.city()).isNotBlank();

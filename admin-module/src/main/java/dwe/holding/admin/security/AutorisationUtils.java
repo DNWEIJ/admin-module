@@ -32,12 +32,6 @@ public class AutorisationUtils {
         getCurrentUserDetails().setUser(user);
     }
 
-    public static String getCurrentLocalMemberName() {
-        return getCurrentMember().getLocalMembers().stream()
-                .filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst()
-                .orElseThrow().getLocalMemberName();
-    }
-
     public static Member getCurrentMember() {
         return getCurrentUserDetails().getUser().getMember();
     }
@@ -56,6 +50,9 @@ public class AutorisationUtils {
 
     public static String getCurrentUserAccount() {
         return getCurrentUserDetails().getUser().getAccount();
+    }
+    public static String getCurrentUserName() {
+        return getCurrentUserDetails().getUser().getName();
     }
 
     public static Long getCurrentUserMlid() {

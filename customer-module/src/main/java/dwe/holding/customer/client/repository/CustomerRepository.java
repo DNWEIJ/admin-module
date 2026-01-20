@@ -19,7 +19,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Customer findByPets_IdAndMemberId(Long petId, Long memberId);
 
-    List<Customer> findByZipCodeIgnoreCaseAndMemberId(String searchCriteria, Long MemberId);
+    List<Customer> findByZipCodeAndMemberId(String zipCode, Long MemberId);
+    List<Customer> findByZipCodeAndStreetNumberStartingWithAndMemberId(String zipCode, String streetNumber, Long MemberId);
 
     default List<Customer> findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(String searchCriteria, long memberId) {
         return findByHomePhoneOrWorkPhoneContainingOrMobilePhoneContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, searchCriteria, searchCriteria, memberId);

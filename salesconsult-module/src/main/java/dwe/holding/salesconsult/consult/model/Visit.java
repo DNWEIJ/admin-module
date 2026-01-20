@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -76,4 +77,10 @@ public class Visit extends MemberBaseBO {
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "visit")
     @Builder.Default
     private Set<PaymentVisit> paymentVisits = new HashSet<>(0);
+
+    @Transient
+    public @Nullable boolean isOpen() {
+        return !this.getAppointment().isCancelled() && !this.getAppointment().iscompleted()  && VisitStatusEnum.isOpen(this.getStatus());
+
+    }
 }

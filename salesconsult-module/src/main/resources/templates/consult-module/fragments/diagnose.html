@@ -1,5 +1,5 @@
 <th:block th:fragment="diagnose()">
-    <table class="table-tight">
+    <table class="table-tight striped">
         <thead>
         <tr>
             <th></th>
@@ -14,7 +14,7 @@
         </div>
     </table>
     <form id="diagnoseForm"
-          th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
+          th:if="${visit.isOpen}"
           th:hx-post="'/consult/visit/'+${visit.id}+'/diagnose'" hx-target="#diagnoseTableReplaceHtmx">
 
         <fieldset class="grid">

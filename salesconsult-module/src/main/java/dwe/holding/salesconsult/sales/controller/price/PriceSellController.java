@@ -1,9 +1,11 @@
 package dwe.holding.salesconsult.sales.controller.price;
 
+import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.salesconsult.sales.model.LineItem;
+import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.data.web.ProjectedPayload;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class PriceSellController {
     private final LineItemService lineItemService;
     private final CostingService costingService;
+    private final Appointment appointment = Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build();
 
     @ModelAttribute("lineItems")
     public List<LineItem> lineItems() {
@@ -31,18 +35,15 @@ public class PriceSellController {
     }
 
     @GetMapping("/price/sell")
-    String setupProductSell_InitialCall(Model model, @ModelAttribute("lineItems") List<LineItem> lineItems) {
-        model
-                .addAttribute("salesType", SalesType.PRICE_INFO)
-                .addAttribute("lineItems", new ArrayList<>());
+    String setupProductSell_InitialCall(Model model, SessionStatus status) {
+        status.setComplete();
+        updateModel(model, new ArrayList<>());
         return "salesconsult-generic-module/productpage";
     }
 
     @GetMapping("/price/sell/more")
-    String setupProductSell_RepeatableCall(Model model, @ModelAttribute("lineItems") List<LineItem> lineItems) {
-        model
-                .addAttribute("salesType", SalesType.PRICE_INFO)
-                .addAttribute("lineItems", lineItems);
+    String setupProductSell_RepeatableCall(Model model) {
+        updateModel(model, new ArrayList<>());
         return "salesconsult-generic-module/productpage";
     }
 
@@ -54,9 +55,8 @@ public class PriceSellController {
         list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
 
         lineItems.addAll(list);
-        ModelHelper.updateLineItemsInModel(model, lineItems);
+        updateModel(model, lineItems);
         model
-                .addAttribute("salesType", SalesType.PRICE_INFO)
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("url", "/sales/price/sell/");
 
@@ -67,5 +67,13 @@ public class PriceSellController {
     String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
         model.addAttribute("lineItems", lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
         return "redirect:/sales/price/sell/more";
+    }
+
+    private Model updateModel(Model model, List<LineItem> lineItems) {
+        ModelHelper.updateLineItemsInModel(model, lineItems);
+        model
+                .addAttribute("appointment", appointment)
+                .addAttribute("salesType", SalesType.PRICE_INFO);
+        return model;
     }
 }

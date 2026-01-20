@@ -4,10 +4,13 @@
 </head>
 <body>
 <section layout:fragment="content">
+
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${pet.id}, #{label.title.pet},'/customer/customer/'+ ${customerId}+ '/pets', ${customerInformation})}"></th:block>
-    <th:block th:insert="~{customer-module/pet/petform::petForm('/customer/customer/'+${customerId}+ '/pet')}"></th:block>
-    <th:block th:insert="~{fragments/elements/audit::audit('pet.addedBy','pet.addedOn', 'pet.lastEditedBy', 'pet.lastEditedOn')}"></th:block>
+
+    <th:block th:insert="~{customer-module/pet/petform::petForm('/customer/customer/'+${customerId}+ '/pet','no-target')}"></th:block>
+    <th:block th:if="${pet.id != null}"
+            th:insert="~{fragments/elements/audit::audit('pet.addedBy','pet.addedOn', 'pet.lastEditedBy', 'pet.lastEditedOn')}"></th:block>
 </section>
 </body>
 </html>

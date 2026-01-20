@@ -1,0 +1,44 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.w3.org/1999/html" layout:decorate="~{/print.html}">
+<head>
+    <title th:text="${'SOAP-report-'+ #strings.replace(pet.name, ' ', '_')+ '(' + pet.id + ')_'+ #temporals.format(#temporals.createNow(), 'yyyyMMdd-HHmm')}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+    <style>
+        details.visit > :not(summary) {
+            margin-left: 1.5rem;
+        }
+
+        details.note > :not(summary) {
+            margin-left: 1.5rem;
+        }
+
+        .lineitem {
+            margin-top: .5rem;
+        }
+
+        summary {
+            font-weight: bold;
+            list-style: none;
+            cursor: default;
+        }
+    </style>
+    <script>
+        function processSoap() {
+            const visitElements = document.querySelectorAll('.visit[data-split-from]');
+            console.log("elements found: "+ visitElements.length);
+            visitElements.forEach(parent => {
+                const nestedWithoutSplit = parent.querySelectorAll(':scope *:not([data-split-from])');
+                if (nestedWithoutSplit.length === 0) return;
+                const container = document.createElement('div');
+                nestedWithoutSplit.forEach(el => container.appendChild(el));
+                parent.parentNode.insertBefore(container, parent);
+                parent.remove();
+            });
+        }
+    </script>
+
+    <th:block th:replace="~{consult-module/soap/fragments/soap :: Soap(${appointments})}"></th:block>
+</section>
+</body>
+</html>

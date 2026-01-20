@@ -67,7 +67,7 @@ public class HtmxVisitLineItemsController {
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
-    boolean validateAppointmenIsOk(Appointment app, RedirectAttributes redirect) {
+    public static boolean validateAppointmenIsOk(Appointment app, RedirectAttributes redirect) {
         if (app.isCancelled() || app.iscompleted()) {
             redirect.addFlashAttribute("message", "Appointment is cancelled or completed.");
             return false;

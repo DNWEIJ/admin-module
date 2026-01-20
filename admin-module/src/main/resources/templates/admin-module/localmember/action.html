@@ -15,20 +15,20 @@
             <input id="id" name="id" th:value="${id}" type="hidden">
             <input id="version" name="version" th:value="${version}" type="hidden">
 
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','localmember.name','localMemberName','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','localmember.email','email','2')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1','localmember.phone1','phone1','3')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2','localmember.phone2','phone2','4')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','localmember.name','localmember.localMemberName','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','localmember.email','localmember.email','2')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1','localmember.phone1','localmember.phone1','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2','localmember.phone2','localmember.phone2','4')}"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','localmember.address1','address1','5')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','localmember.address2','address2','6')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3','localmember.address3','address3','7')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','localmember.address1','localmember.address1','5')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','localmember.address2','localmember.address2','6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3','localmember.address3','localmember.address3','7')}"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','localmember.city','city','8')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('state','localmember.state','state','8')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','localmember.zipCode','zipCode','10')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','localmember.city','localmember.city','8')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('state','localmember.state','localmember.state','8')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','localmember.zipCode','localmember.zipCode','10')}"></th:block>
         </fieldset>
     </form>
 </section>
