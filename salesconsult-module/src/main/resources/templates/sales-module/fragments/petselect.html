@@ -95,7 +95,7 @@
             </tbody>
         </table>
     </fieldset>
-    <details th:if="${deceasedPets.size() > 0}">
+    <details th:if="${!deceasedPets.isEmpty()}">
         <summary>
             [[#{label.otc.pet.deceased.showhide}]]
         </summary>
@@ -148,7 +148,7 @@
     </details>
     <th:block th:if="${postUrl != ''}">
         <fieldset role="group">
-            <input type="submit" th:form="${formName}" th:value="#{label.button.next}"/>
+            <input name="_save" type="submit" th:form="${formName}" th:value="#{label.button.next}"/>
         </fieldset>
         </form>
     </th:block>

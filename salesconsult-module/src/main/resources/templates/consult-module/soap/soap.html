@@ -41,7 +41,7 @@
         }
     </script>
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.soap},'', ${customerInformation})}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.soap.title},'', ${customerInformation})}"></th:block>
 
     <button th:onclick="'printFromUrl(\'/consult/visit/customer/' + ${customerId} + '/pet/' + ${petId} + '/soap\')'" th:text="#{label.button.print}"></button>
 
@@ -49,7 +49,7 @@
     <form id="form">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <label>[[#{label.soap.extracomments}]]
-            <textarea name="extra-comment" id="extra-comment"></textarea>
+            <textarea name="extraComment" id="extra-comment"></textarea>
         </label>
     </form>
     <div th:replace="~{consult-module/soap/fragments/soap::Soap(${appointments})}"></div>

@@ -10,7 +10,7 @@
             </th:block>
         </select>
     </fieldset>
-    <textarea cols="110" id="visit.comments" name="visit.comments" rows="10" th:text="${visit.comments}"></textarea>
+    <textarea cols="110" id="visit.comments" name="visit.comments" rows="10" th:utext="${visit.comments}"></textarea>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("template").addEventListener("change", function () {

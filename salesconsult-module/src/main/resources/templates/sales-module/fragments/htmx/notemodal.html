@@ -13,7 +13,7 @@
         </p>
         <footer>
             <fieldset class="grid">
-                <input type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input name="_save" type="submit" form="createForm" th:value="#{label.button.save}"/>
                 <input type="button" data-target="customer-note-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
             </fieldset>
         </footer>

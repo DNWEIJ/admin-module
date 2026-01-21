@@ -31,7 +31,10 @@
 
 
 <th:block th:fragment="visitReactivateButtons">
-    <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus/reactivate'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
+
+    <form th:if="${userIsAllowed}" th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus/reactivate'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
         <button type="submit" class="secondary tigh" name="_reactivateApp" th:text="#{label.visit.reactivateapp}"></button>
     </form>
+    <button th:unless="${userIsAllowed}" type="submit" class="secondary tigh" name="_reactivateApp" th:text="#{label.visit.reactivateapp}" disabled></button>
+
 </th:block>

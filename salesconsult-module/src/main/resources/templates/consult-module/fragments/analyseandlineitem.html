@@ -1,0 +1,28 @@
+
+<th:block th:fragment="analyseAndLineItems(customerId, petId)">
+    <details id="analyses" open>
+        <summary th:text="#{visit.analyse.title}"></summary>
+        <th:include th:replace="~{consult-module/visit/analyse}"></th:include>
+    </details>
+    <details id="lineitems" open>
+        <summary>
+            [[#{label.otc.legend.lineitems}]]
+            <div class="center-align-svg">
+                <a href="" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}" hx-target="#modal-container" hx-swap="innerHTML"/>
+                <svg class="svg-icon">
+                    <use href="/lib/tabler-icons-3_35_0/icons/outline/shopping-cart.svg"></use>
+                </svg>
+                </a>
+            </div>
+        </summary>
+
+        <table id="lineItemsTable" class="no-sorting table-tight striped">
+            <!-- head -->
+            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
+            <!-- body and footer -->
+            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
+        </table>
+        <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
+             th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
+    </details>
+</th:block>

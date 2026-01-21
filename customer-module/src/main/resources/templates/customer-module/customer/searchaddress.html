@@ -11,7 +11,7 @@
                           th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
                 </th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber','customer.street.number','','')}"></th:block>
-                <input type="submit" th:value="#{label.button.search}"/>
+                <input name="_save" type="submit" th:value="#{label.button.search}"/>
             </fieldset>
         </form>
         <form hx-get="/customer/search/customer/address/street/{searchStreet2}/{searchHouseNumber2}/{searchCity2}" hx-include="#searchStreet2,#searchHouseNumber2, #searchCity2"
@@ -29,27 +29,26 @@
         <footer>
             <fieldset class="grid">
                 <button data-target="address-search-modal" onclick="copyInfoFromModalToForm();toggleModal(event)" th:text="#{label.button.saveinform}"></button>
-                <input type="button" rel="prev" data-target="address-search-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+                <button data-target="address-search-modal" onclick="toggleModal(event)" th:text="#{label.button.close}"></button>
             </fieldset>
         </footer>
     </article>
 </dialog>
+<script>
+    document.getElementById('searchZipCode').focus()
+    document.getElementById('searchZipCode').value = document.getElementById('zipCode').value;
+    document.getElementById('searchHouseNumber').value = document.getElementById('streetNumber').value;
+</script>
 <style>
     .addressLayout {
-        display:grid;
+        display: grid;
         grid-template-columns: 3fr 1fr 3fr 1fr;
-        gap:.5rem;
-        align-items:end;
+        gap: .5rem;
+        align-items: end;
     }
 
-    .field{
-        display:flex;
-        flex-direction:column;
-    }
-
-    /*@media (max-width: 640px){*/
-    /*    .addressLayout{*/
-    /*        grid-template-columns: 1fr;*/
-    /*    }*/
+    .field {
+        display: flex;
+        flex-direction: column;
     }
 </style>

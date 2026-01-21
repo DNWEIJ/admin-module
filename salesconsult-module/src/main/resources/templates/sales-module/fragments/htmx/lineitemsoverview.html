@@ -15,11 +15,11 @@
         </td>
         <td th:text="${lineitem.nomenclature}"></td>
         <td th:text="${categoryNames.get(lineitem.categoryId)}" class="desktop-only"></td>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.quantity})}" th:with="deskTopOnly=false"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.salesPriceExTax})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.processingFeeExTax})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.taxPortionOfProduct + lineitem.taxPortionOfProcessingFeeService})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${lineitem.totalIncTax})}" th:with="deskTopOnly=false"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.quantity},false)}"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.salesPriceExTax},true)}"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.processingFeeExTax},true)}"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.taxPortionOfProduct + lineitem.taxPortionOfProcessingFeeService}, true)}"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.totalIncTax},false)}"></th:block>
         <td class="center">
             <a class="desktop-only center-align-svg" th:if="${lineitem.hasPrintLabel}" href="/todo/printLabel?id=${lineitem.id}">
                 <svg class="svg-icon">
@@ -30,9 +30,9 @@
     </tr>
 </th:block>
 
-<th:block th:if="${allLineItems.size == 0}">
+<th:block th:if="${allLineItems.isEmpty()}">
     <tr>
-        <td colspan="9">
+        <td colspan="9" class="center">
             <th:block th:text="#{label.not-found}"></th:block>
         </td>
     </tr>
@@ -47,9 +47,9 @@
         <th class="desktop-only left"></th>
         <th class="desktop-only right"></th>
         <th class="desktop-only right"></th>
-        <th class="right" th:text="#{label.otc.sell.total}"></th>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalVatAmount})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${totalAmount})}" th:with="deskTopOnly=false"></th:block>
+        <th style="font-size: 120%" class="right" th:text="#{label.otc.sell.total}"></th>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${totalVatAmount}, true)}" th:with="increaseFont=120"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${totalAmount}, false)}" th:with="increaseFont=120"></th:block>
         <th class="right"></th>
     </tr>
     </tfoot>

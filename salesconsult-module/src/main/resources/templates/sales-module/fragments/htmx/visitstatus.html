@@ -7,7 +7,7 @@
             <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#actionbar" hx-swap="innerHTML">
                 <th:block th:if="${statusProgress.previous != null}">
                     <input type="hidden" name="changeStatusTo" th:value="${statusProgress.previous}"/>
-                    <button type="submit" class="secondary " th:name="'_previous_'+${statusProgress.previous}" th:text="#{__${statusProgress.previous.label}__}"></button>
+                    <button name="_save" type="submit" class="secondary " th:name="'_previous_'+${statusProgress.previous}" th:text="#{__${statusProgress.previous.label}__}"></button>
                 </th:block>
             </form>
         </div>
@@ -27,7 +27,7 @@
                 <th:block th:each="n : ${statusProgress.next}">
                     <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#actionbar" hx-swap="innerHTML">
                         <input type="hidden" name="changeStatusTo" th:value="${n.name()}"/>
-                        <button type="submit" class="secondary " th:name="'_next_'+${n.name()}" th:text="#{__${n.label}__}"></button>
+                        <button name="_save" type="submit" class="secondary " th:name="'_next_'+${n.name()}" th:text="#{__${n.label}__}"></button>
                     </form>
                 </th:block>
             </th:block>
@@ -43,7 +43,7 @@
             <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
                 <th:block th:if="${statusProgress.previous != null}">
                     <input type="hidden" name="changeStatusTo" th:value="${statusProgress.previous}"/>
-                    <button disabled type="submit" class="secondary " th:name="'_previous_'+${statusProgress.previous}" th:text="#{__${statusProgress.previous.label}__}"></button>
+                    <button disabled name="_save" type="submit" class="secondary " th:name="'_previous_'+${statusProgress.previous}" th:text="#{__${statusProgress.previous.label}__}"></button>
                 </th:block>
             </form>
         </div>
@@ -63,7 +63,7 @@
                 <th:block th:each="n : ${statusProgress.next}">
                     <form th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
                         <input type="hidden" name="changeStatusTo" th:value="${n.name()}"/>
-                        <button disabled type="submit" class="secondary " th:name="'_next_'+${n.name()}" th:text="#{__${n.label}__}"></button>
+                        <button disabled name="_save" type="submit" class="secondary " th:name="'_next_'+${n.name()}" th:text="#{__${n.label}__}"></button>
                     </form>
                 </th:block>
             </th:block>

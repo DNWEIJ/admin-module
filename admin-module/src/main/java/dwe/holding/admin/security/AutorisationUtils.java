@@ -131,6 +131,11 @@ public class AutorisationUtils {
         return getCurrentUserDetails().getTempGenericStorage() == null ? "" : getCurrentUserDetails().getTempGenericStorage();
     }
 
+    // todo make this a role
+    public static boolean getCurrentUserIsAuthorized() {
+        return getCurrentUserDetails().getUser().getPersonnelStatus().equals(PersonnelStatusEnum.Vet);
+    }
+
     public record UserSettings(Long localMemberId, LanguagePrefEnum language, String username, String email) {
     }
 

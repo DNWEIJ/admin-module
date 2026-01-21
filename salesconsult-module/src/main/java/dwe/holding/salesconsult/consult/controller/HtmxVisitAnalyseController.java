@@ -16,9 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @AllArgsConstructor
 @Controller
@@ -30,37 +32,56 @@ public class HtmxVisitAnalyseController {
     private final AnalyseRepository analyseRepository;
     private final LineItemService lineItemService;
 
-    // selection of the dropdown
+    // Changed dropdown -> produce list of analyses
     @GetMapping("/visit/{visitId}/analyse/{analyseDescriptionId}")
-    String getAnalyses(@PathVariable Long visitId, @PathVariable Long analyseDescriptionId, Model model) {
+    String getAnalysesHtmx(@PathVariable Long visitId, @PathVariable Long analyseDescriptionId, Model model) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
-        List<Analyse> list = analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), analyseDescriptionId);
+        List<Analyse> definedAnalyseList = analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), analyseDescriptionId);
+        List<AnalyseItem> result = definedAnalyseList.stream().flatMap(a ->
+                createAnalyseItem(a, lineItemService.createConsultAnalyseLineItem(a.getCosting().getId(), a.getQuantity(), visit.getPet()), visit)
+                        .stream()).toList();
         model
-                .addAttribute("analyseItems", list.stream().map(a ->
-                                createAnalyseItem(a, lineItemService.createConsultAnalyseLineItem(a.getCosting().getId(), a.getQuantity(), visit.getPet()), visit)
-                        ).toList()
-                );
+                .addAttribute("visit", visit)
+                .addAttribute("analyseItems", result)
+                .addAttribute("isAnalyseItemsFromDb", false);
 
         return "consult-module/visit/analyselist";
     }
 
 
+    @PostMapping("/visit/{visitId}/analyse/copy")
+    String saveAnalysesHtmx(@PathVariable Long visitId, @PathVariable Long analyseDescriptionId, Model model) {
+
+    return "";
+    }
+
     private List<AnalyseItem> createAnalyseItem(Analyse analyse, List<LineItem> lineItems, Visit visit) {
+        AtomicLong counter = new AtomicLong(1);
         return lineItems.stream().map(lineItem ->
-                (AnalyseItem) AnalyseItem.builder()
-                        .costingId(analyse.getCosting().getId())
-                        .analyseId(analyse.getId())
-                        .nomenclature(analyse.getCosting().getNomenclature())
-                        .appointmentId(visit.getAppointment().getId())
-                        .comment("")
-                        .ownerIndicator(YesNoEnum.No)
-                        .vetIndicator(YesNoEnum.No)
-                        .quantity(lineItem.getQuantity())
-                        .exclPrice(lineItem.getSalesPriceExTax())
-                        .inclPrice(lineItem.getTotalIncTax())
-                        .taxedType(lineItem.getTaxedTypeEnum())
-                        .petId(visit.getPet().getId())
-                        .build()
+                        (AnalyseItem) AnalyseItem.builder()
+                                .id(counter.getAndIncrement())
+                                .appointmentId(visit.getAppointment().getId())
+                                .petId(visit.getPet().getId())
+                                .costingId(analyse.getCosting().getId())
+                                .categoryId(lineItem.getCategoryId())
+                                .analyseId(analyse.getId())
+                                .comment("")
+                                .ownerIndicator(YesNoEnum.No)
+                                .vetIndicator(YesNoEnum.No)
+
+                                .nomenclature(analyse.getCosting().getNomenclature())
+                                .salesPriceExTax(lineItem.getSalesPriceExTax())
+                                .processingFeeExTax(lineItem.getProcessingFeeExTax())
+                                .quantity(lineItem.getQuantity())
+                                .taxPortionOfProduct(lineItem.getTaxPortionOfProduct())
+                                .taxPortionOfProcessingFeeService(lineItem.getTaxPortionOfProcessingFeeService())
+                                .taxedTypeEnum(lineItem.getTaxedTypeEnum())
+                                .taxGoodPercentage(lineItem.getTaxGoodPercentage())
+                                .taxServicePercentage(lineItem.getTaxServicePercentage())
+                                .totalIncTax(lineItem.getTotalIncTax())
+                                .build()
+                // inital move, so all is alrready calculated
+                //  analyseItem.calculateTotal(null);
         ).toList();
     }
 }

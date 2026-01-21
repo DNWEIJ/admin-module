@@ -26,10 +26,10 @@ public class VmasUserPreferences {
     private String agendaVet3;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum searchCustStart;
+    private YesNoEnum searchCustStart = YesNoEnum.Yes;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum searchCustStreet;
+    private YesNoEnum searchCustStreet = YesNoEnum.No;
 
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum searchCustNameTelephone = YesNoEnum.No;
@@ -37,27 +37,33 @@ public class VmasUserPreferences {
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum searchCustPet = YesNoEnum.No;
 
+    // consult screen
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitAppointmentList;
+    private YesNoEnum showVisitTotal = YesNoEnum.Yes;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitTotalVisit;
+    private YesNoEnum showCustomerPet = YesNoEnum.Yes;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitAppointmentInfo;
+    private YesNoEnum showConsult = YesNoEnum.Yes;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitVisitInfo;
+    private YesNoEnum showAnalyse = YesNoEnum.Yes;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitAnalyseInfo;
+    private YesNoEnum showProducts = YesNoEnum.Yes;
 
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitComments;
+    private YesNoEnum showDiagnoses = YesNoEnum.Yes;
 
-    @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitProducts;
-
-    @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum visitDiagnoses;
+    public VmasUserPreferences valid() {
+        // if there is a null field, we are not correct and need to reset
+        if (
+                agendaVet1 == null || agendaVet2 == null || agendaVet3 == null
+                        || searchCustStart == null || searchCustStreet == null || searchCustNameTelephone == null || searchCustPet == null
+                        || showVisitTotal == null || showCustomerPet == null || showConsult == null || showAnalyse == null || showProducts == null || showDiagnoses == null) {
+            return new VmasUserPreferences(); // one or more fields are null → invalid
+        }
+        return this; // all fields are non-null → valid
+    }
 }

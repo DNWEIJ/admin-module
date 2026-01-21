@@ -36,7 +36,7 @@
             </td>
             <td th:text="${#temporals.format(estimateForPet.estimateDate, 'dd-MM-yyyy')}"></td>
             <td th:text="${estimateForPet.purpose}"></td>
-            <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${estimateForPet.totalAmount})}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${estimateForPet.totalAmount}, false)}"></th:block>
             <td th:text="${#temporals.format(estimateForPet.transToVisit, 'dd-MM-yyyy')}"></td>
         </tr>
         </tbody>

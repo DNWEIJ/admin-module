@@ -29,7 +29,7 @@
             </legend>
             <button class="input-height-as-input-field"
                     hx-get="/customer/search/customer/address"
-                    hx-target="#modal-container" hx-swap="innerHTML" hx-on="htmx:afterSwap: this.querySelector('#searchZipCode')?.focus()"
+                    hx-target="#modal-container" hx-swap="innerHTML"
                     th:text="#{customer.search.zipcode}"></button>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipcode','customer.zipCode','12')}"
                       th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
@@ -65,8 +65,10 @@
             <legend>
                 <th:block th:utext="#{customer.legend.otherInformation}"/>
             </legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarian','customer.previousVeterinarian','customer.previousVeterinarian','0')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarianPhone','customer.previousVeterinarianPhone','customer.previousVeterinarianPhone','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarian','customer.previousVeterinarian','customer.previousVeterinarian','0')}"
+                      th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('previousVeterinarianPhone','customer.previousVeterinarianPhone','customer.previousVeterinarianPhone','0')}"
+                      th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('ubn','customer.ubn','customer.ubn','23')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">

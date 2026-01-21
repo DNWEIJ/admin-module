@@ -29,13 +29,13 @@ public class VmasUserPreferencesController {
     // Called for new users via login controller. Afterward it can be called on users request
     @GetMapping("/userpreferences")
     String loadUserPreferences(Model model, HttpServletRequest request) {
-        VmasUserPreferences prefData = objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), VmasUserPreferences.class);
+        VmasUserPreferences prefData = objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), VmasUserPreferences.class).valid();
         model
                 .addAttribute("_csrf", request.getAttribute(CsrfToken.class.getName()))
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("user", AutorisationUtils.getCurrentUserSettings())
-                .addAttribute("userPreferences", prefData == null ? new VmasUserPreferences() : prefData)
+                .addAttribute("userPreferences", prefData)
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("languageList", LanguagePrefEnum.getWebList());
         return "vmas-module/userpreferences";

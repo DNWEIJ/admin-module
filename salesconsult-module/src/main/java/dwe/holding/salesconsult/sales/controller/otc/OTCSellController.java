@@ -38,6 +38,7 @@ public class OTCSellController {
     private final AppointmentRepository appointmentRepository;
 
 
+    // TODO add the lineitems; add if closed not editable
     @GetMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
     String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
 

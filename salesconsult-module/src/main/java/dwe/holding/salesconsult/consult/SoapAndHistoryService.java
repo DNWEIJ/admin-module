@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class SoapService {
+public class SoapAndHistoryService {
     private final VisitRepository visitRepository;
     private final NoteRepository noteRepository;
     private final DiagnoseRepository diagnoseRepository;
@@ -73,5 +73,30 @@ public class SoapService {
             }
         }
         return appointmentList;
+    }
+
+    public List<History> getHistoryForTempWeightClugose(Long petId) {
+        return visitRepository.findByMemberIdAndPet_Id(AutorisationUtils.getCurrentUserMid(), petId)
+                .stream()
+                .filter(v -> !v.getAppointment().isOTC())
+                .map(History::fromVisit)
+                .sorted(Comparator.comparing(History::visitDate).reversed())
+                .toList();
+    }
+
+    record History(
+            LocalDate visitDate,
+            Double weight,
+            Double glucose,
+            Double temperature
+    ) {
+        public static History fromVisit(Visit visit) {
+            return new History(
+                    visit.getAppointment().getVisitDateTime().toLocalDate(),
+                    Objects.requireNonNullElse(visit.getWeight(), Double.valueOf(0)),
+                    Objects.requireNonNullElse(visit.getGlucose(), Double.valueOf(0)),
+                    Objects.requireNonNullElse(visit.getTemperature(), Double.valueOf(0))
+            );
+        }
     }
 }

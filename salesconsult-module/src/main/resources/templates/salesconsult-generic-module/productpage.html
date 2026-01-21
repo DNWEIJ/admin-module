@@ -28,7 +28,7 @@
     <fieldset role="group" class="grid">
         <legend th:text="#{label.otc.legend.lineitems}"></legend>
 
-        <table class="table-tight striped">
+        <table class="no-sorting table-tight striped">
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
             <!--htmx replaces body and footer -->
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>

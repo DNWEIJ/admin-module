@@ -9,7 +9,7 @@
 
 
 <th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)"
-          th:with="type=${type}?:'text', required=${required}?:true, pattern=${pattern}?:'', onblur=${onblur}?:'', autofocus=${shoulfFocus}?:false">
+          th:with="type=${type}?:'text', required=${required}?:true, pattern=${pattern}?:'', onblur=${onblur}?:'', autofocus=${shouldFocus}?:false">
     <div class="field">
         <input th:id="${name}" th:name="${name}" placeholder="" th:required="${required}" th:attr="onblur=''+ ${onblur}" th:autofocus="${shouldFocus}"
                th:pattern="${pattern}" th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__ ?: ''}"

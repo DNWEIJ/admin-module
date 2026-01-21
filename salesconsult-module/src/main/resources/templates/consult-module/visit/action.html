@@ -4,70 +4,100 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <details id="consultList" open>
-        <summary>stuff</summary>
+    <script>
+        window.addEventListener("beforeunload", function (event) {
+            event.preventDefault();
+            event.returnValue = "";
+        });
+    </script>
+    <div id="visit-page">
+        <style>
+            #visit-page details {
+                margin: 0;
+                margin-bottom: .5rem;
+                border: 1px solid var(--pico-primary);
+                border-radius: var(--pico-border-radius);
+            }
+
+            #visit-page summary {
+                margin: 0;
+                text-align: center;
+                background-color: lightgrey;
+                line-height: 2rem;
+                border-radius: var(--pico-border-radius);
+            }
+        </style>
+
+        <div id="actionbar">
+            <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
+        </div>
         <h1>TODO: afspraken volgorde lijst</h1>
-    </details>
 
-    <div id="actionbar">
-    <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
+        <details id="customerpetinfo" open>
+            <summary th:text="#{visit.customerinfo.title} "></summary>
+            <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${visit.pet}, false)}"></th:block>
+        </details>
+        <details id="visitInfo" open>
+            <summary th:text="#{visit.info.title}"></summary>
+            <form id="visitForm" method="post">
+                <input name="visit.id" th:value="${visit.id}" type="hidden"/>
+                <input name="visit.version" th:value="${visit.version}" type="hidden"/>
+                <fieldset class="grid">
+                    <!-- define extra buttons to add behind -->
+                    <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapNoteButtons}">
+                        <th:block
+                                th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${visit.pet}, ${customer}, ${appointment}, ${extras},${visit.isOpen?false:true})}"></th:block>
+                    </th:block>
+                </fieldset>
+                <fieldset class="grid">
+                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('veterinarian','visit.staff',${visit.veterinarian}, ${staffList}, false, '3')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('room','visit.room',${visit.room}, ${rooms}, false, '6')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sentToInsurance','visit.insurance',${visit.sentToInsurance}, ${ynvaluesList}, false, '4')}"></th:block>
+                </fieldset>
+                <fieldset class="grid" style="margin-top: 1rem">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','visit.purpose','visit.purpose','1')}"></th:block>
+                </fieldset>
+                <fieldset class="grid">
+                    <div class="icon-plus-input">
+                        <div class="center-align-svg">
+                            <a href="" th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/weight'}" hx-target="#modal-container" hx-swap="innerHTML"/>
+                            <svg class="svg-icon">
+                                <use href="/lib/tabler-icons-3_35_0/icons/outline/history.svg"></use>
+                            </svg>
+                            </a>
+                        </div>
+                        <div>
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('weight','visit.weight','visit.weight','2')}" th:with="required=false"></th:block>
+                        </div>
+                    </div>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('temperature','visit.temperature','visit.temperature','5')}" th:with="required=false"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','7')}" th:with="required=false"></th:block>
+                </fieldset>
+                <th:block th:insert="~{/consult-module/fragments/templatelocalmemberpref::template('template', ${templates})}"></th:block>
+                <button name="_save" type="submit" form="visitForm" th:text="#{label.button.save}"></button>
+                <th:block th:insert="~{fragments/elements/audit::audit('visit.addedBy','visit.addedOn', 'visit.lastEditedBy', 'visit.lastEditedOn')}"></th:block>
+            </form>
+        </details>
+
+        <script>
+
+        </script>
+        <div id="analyse-and-lineitems" th:insert="~{consult-module/fragments/analyseandlineitem::analyseAndLineItems(${customer.id}, ${visit.pet.id})}"></div>
+        <details id="diagnose" open>
+            <summary>
+                [[#{label.diagnose}]]
+                <div class="center-align-svg">
+                    <a href="" th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/diagnose'}" hx-target="#modal-container" hx-swap="innerHTML"/>
+                    <svg class="svg-icon">
+                        <use href="/lib/tabler-icons-3_35_0/icons/outline/body-scan.svg"></use>
+                    </svg>
+                    </a>
+                </div>
+            </summary>
+
+            <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>
+        </details>
     </div>
-
-    <details id="customerpetinfo" open>
-        <summary th:text="#{visit.customerinfo.title}"></summary>
-        <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${visit.pet}, false)}"></th:block>
-    </details>
-    <details id="visitInfo" open>
-        <summary th:text="#{visit.info.title}"></summary>
-        <form id="visitForm" method="post">
-            <input name="visit.id" th:value="${visit.id}" type="hidden"/>
-            <input name="visit.version" th:value="${visit.version}" type="hidden"/>
-            <fieldset class="grid">
-                <!-- define extra buttons to add behind -->
-                <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapNoteButtons}">
-                    <th:block
-                            th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${visit.pet}, ${customer}, ${appointment}, ${extras},${visit.isOpen?false:true})}"></th:block>
-                </th:block>
-            </fieldset>
-            <fieldset class="grid">
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('veterinarian','visit.staff',${visit.veterinarian}, ${staffList}, false, '3')}"></th:block>
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('room','visit.room',${visit.room}, ${rooms}, false, '6')}"></th:block>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sentToInsurance','visit.insurance',${visit.sentToInsurance}, ${ynvaluesList}, false, '4')}"></th:block>
-            </fieldset>
-            <fieldset class="grid" style="margin-top: 1rem">
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','visit.purpose','visit.purpose','1')}"></th:block>
-            </fieldset>
-            <fieldset class="grid">
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('weight','visit.weight','visit.weight','2')}" th:with="postfix='Kg',required=false"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('temperature','visit.temperature','visit.temperature','5')}" th:with="postfix='°C',required=false"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','7')}" th:with="postfix='mmol/L',required=false"></th:block>
-            </fieldset>
-            <th:block th:insert="~{/consult-module/fragments/templatelocalmemberpref::template('template', ${templates})}"></th:block>
-            <button name="_save" type="submit" form="visitForm" th:text="#{label.button.save}"></button>
-            <th:block th:insert="~{fragments/elements/audit::audit('visit.addedBy','visit.addedOn', 'visit.lastEditedBy', 'visit.lastEditedOn')}"></th:block>
-        </form>
-    </details>
-
-    <details id="analyses" open>
-        <summary th:text="#{visit.analyse.title}"></summary>
-        <th:include th:replace="~{consult-module/visit/analyse}"></th:include>
-    </details>
-
-    <details id="lineitems" open>
-        <summary th:text="#{label.otc.legend.lineitems}"></summary>
-
-        <table id="lineItemsTable" class="table-tight striped">
-            <!-- head -->
-            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
-            <!-- body and footer -->
-            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
-        </table>
-        <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
-             th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
-    </details>
-
-    <details id="diagnose" open>
-        <summary th:text="#{label.diagnose}"></summary>
-        <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>
-    </details>
 </section>
+</body>
+</html>

@@ -2,8 +2,10 @@ package dwe.holding.salesconsult.consult.controller;
 
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
+import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
+import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateVisitStatusInModel;
 
 @AllArgsConstructor
@@ -27,9 +31,10 @@ public class HtmxVisitStatusController {
     private final VisitRepository visitRepository;
     private final CustomerService customerService;
     private final AppointmentVisitService appointmentVisitService;
+    private final AppointmentRepository appointmentRepository;
 
     @PostMapping("/visit/{visitId}/updatestatus")
-    String updateVisitStatusHtmx(@PathVariable Long visitId, Model model, String changeStatusTo,  HttpServletResponse response) {
+    String updateVisitStatusHtmx(@PathVariable Long visitId, Model model, String changeStatusTo, HttpServletResponse response) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
 
         if (!visit.isOpen()) {
@@ -61,22 +66,36 @@ public class HtmxVisitStatusController {
     public String updateVisitAppointmentStatus(@PathVariable Long visitId, @PathVariable String action, HttpServletResponse response) {
 
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
+        Appointment appointment = appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow();
 
         if (visit.isOpen()) {
-            switch (action.toLowerCase()) {
-                case "cancel" -> visit.getAppointment().setCancelled(YesNoEnum.Yes);
-                case "complete" -> visit.getAppointment().setCompleted(YesNoEnum.Yes);
-                default -> throw new IllegalArgumentException("Unknown action: " + action);
+            if (action.toLowerCase().equals("cancel")) {
+                visit.getAppointment().setCancelled(YesNoEnum.Yes);
+                visit = visitRepository.save(visit);
             }
-            visit = visitRepository.save(visit);
+            if (action.toLowerCase().equals("complete")) {
+                boolean okToUpdate = UpdateIfValidationOk(appointment, visitId);
+                if (okToUpdate) visit = visitRepository.save(visit);
+            }
+
         } else {
             if (action.toLowerCase().equals("reactivate")) {
                 checkAndUpdate(visit);
             }
             visit = visitRepository.save(visit);
         }
+        // TODO on error, set message do not return header onyl message and replace.
         response.setHeader("HX-Trigger", "refreshPage");
         return "fragments/elements/empty";
+    }
+
+    boolean UpdateIfValidationOk(Appointment app, Long vistiId) {
+        // app visitstatus should be finished OR not finished without lineItems
+        Optional<Visit> found = app.getVisits().stream()
+                .filter(visit -> !visit.getStatus().equals(VisitStatusEnum.FINISHED))
+                .filter(visit -> visit.getAppointment().getLineItems().stream().filter(lineItem -> lineItem.getPet().getId().equals(visit.getPet().getId())).count() == 0)
+                .findFirst();
+        return found.isPresent();
     }
 
     @GetMapping("/visit/{visitId}/reschedule")

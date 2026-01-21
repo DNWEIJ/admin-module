@@ -27,7 +27,7 @@
                 <td><a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
                 <td th:text="${localMembersList.get(payment.localMemberId)}"></td>
                 <td>[[#{${payment.method.getLabel}}]]</td>
-                <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${payment.amount})}"></th:block>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${payment.amount}, false)}"></th:block>
                 <td>[[${payment.referenceNumber}]]</td>
                 <th:block th:insert="~{fragments/elements/audit::lastEditedByOn_td(${payment.addedBy},${payment.addedOn},${payment.lastEditedBy},${payment.lastEditedOn})}"></th:block>
             </tr>

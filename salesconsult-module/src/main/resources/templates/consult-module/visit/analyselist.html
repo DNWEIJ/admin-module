@@ -1,16 +1,68 @@
-<th:block th:each="analyseItem : ${analyseItems}">
-    <tr>
-        <td>
-            <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}"></th:block>
-        </td>
-        <td th:text="${analyseItem.nomenclature}"></td>
-        <td>
-            <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}"></th:block>
-        </td>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${analyseItem.quantity})}" th:with="deskTopOnly=false"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${analyseItem.salesPriceExTax})}" th:with="deskTopOnly=true"></th:block>
-        <th:block th:insert="~{fragments/elements/moneydisplay::showMoney_td(${analyseItem.totalIncTax})}" th:with="deskTopOnly=false"></th:block>
+<form id="analyse-form" th:hx-post="'/visit/'+ ${visit.id} + '/analyse/copy'" hx-target="#analyse-and-lineitems" hx-swap="innerHTML">
+    <table class="analyse no-sorting table-tight striped">
+        <thead>
+        <tr>
+            <th th:text="#{analyses.label.nnbVet}">NNB Vet</th>
+            <th th:text="#{analyses.label.activity}">Activity</th>
+            <th th:text="#{analyses.label.nnbOwner}">NNB Owner</th>
+            <th th:text="#{analyses.label.exclPrice}">Excl. Price</th>
+            <th th:text="#{analyses.label.quantity}">Quantity</th>
+            <th th:text="#{analyses.label.tax}">Tax</th>
+            <th th:text="#{analyses.label.inclPrice}">Incl. Price</th>
+            <th th:text="#{analyses.label.outcome}">Outcome</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:if="${analyseItems.isEmpty()}">
+            <tr>
+                <td colspan="7" class="center">
+                    <th:block th:text="#{label.not-found}"></th:block>
+                </td>
+            </tr>
+        </th:block>
 
-        <td th:if="" th:text="${analyseItem.comment}"></td>
-    </tr>
-</th:block>
+        <th:block th:if="${!analyseItems.isEmpty() and !isAnalyseItemsFromDb}">
+            <th:block th:each="analyseItem : ${analyseItems}">
+                <tr>
+                    <td>
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox(${'vet_' + analyseItem.id},'','','')}"></th:block>
+                    </td>
+                    <td th:text="${analyseItem.nomenclature}"></td>
+                    <td>
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox(${'owner_'+ analyseItem.id},'','','')}"></th:block>
+                    </td>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.salesPriceExTax},true)}"></th:block>
+                    <td><input id="quantity" style="width:5rem; padding:0;maqrgin:0;" th:name="${'quantity_'+ analyseItem.id}" placeholder="" type="text" value="1.00" autocomplete="off"
+                               required="required"></td>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.taxPortionOfProduct + analyseItem.taxPortionOfProcessingFeeService}, true)}"></th:block>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.totalIncTax}, false)}"></th:block>
+                    <td th:text="${analyseItem.comment}"></td>
+                </tr>
+            </th:block>
+        </th:block>
+
+
+        <th:block th:if="${!analyseItems.isEmpty() and isAnalyseItemsFromDb}">
+            <div>part 3</div>
+            <th:block th:each="analyseItem : ${analyseItems}">
+                <tr>
+                    <!-- TODO set checkbox read only disabeld? -->
+                    <td>
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox(${'vet_' + analyseItem.id},'','','')}"></th:block>
+                    </td>
+                    <td th:text="${analyseItem.nomenclature}"></td>
+                    <td>
+                        <th:block th:insert="~{fragments/elements/select::selectCheckBox(${'owner_'+ analyseItem.id},'','','')}"></th:block>
+                    </td>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.salesPriceExTax},true)}"></th:block>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.quantity},true)}"></th:block>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.taxPortionOfProduct + analyseItem.taxPortionOfProcessingFeeService}, true)}"></th:block>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.totalIncTax}, false)}"></th:block>
+                    <td><input id="comment" style="width:5rem; padding:0;maqrgin:0;" th:name="${'comment_'+ analyseItem.id}" placeholder="" type="text"
+                               th:value="${analyseItem.comment}" autocomplete="off" required="required"></td>
+                </tr>
+            </th:block>
+        </th:block>
+        </tbody>
+    </table>
+</form>

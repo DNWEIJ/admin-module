@@ -302,6 +302,13 @@ tbody tr.red-text td {
     align-items: baseline; /* aligns text nicely */
 }
 
+.icon-plus-input {
+    display: grid;
+    grid-template-columns: 4fr 9fr;
+    grid-template-rows: 1fr;
+    align-items: stretch;
+}
+
 .threecolumn-spread {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -353,7 +360,7 @@ tbody tr.red-text td {
 .fourcolumn-spread.three {
     grid-area: three;
     justify-self: center;
-    align-self: start;
+    align-self: center;
 }
 
 .fourcolumn-spread.two {
@@ -433,8 +440,11 @@ tbody tr.red-text td {
     transition: color 0.3s ease;
     transition: color 0.3s ease;
     vertical-align: middle;
-    width: 1.7rem;
-    height: 1.7rem;
+    height:24px;
+    width:24px;
+    align-items: center; /* vertical */
+    justify-content: center; /* horizontal */
+    display: inline-flex;
 }
 
 .svg-icon:hover .svg-header-icon:hover {
@@ -466,12 +476,12 @@ html, body {
     min-height: 100vh;
 }
 
-.wrapper main {
+.wrapper > main {
     margin-top: .5rem;
     flex: 1; /* Pushes footer to the bottom */
 }
 
-.wrapper footer {
+.wrapper > footer {
     background: var(--pico-secondary-underline);
     color: white;
     padding: 1rem;
@@ -533,7 +543,7 @@ html details summary {
     transition: all 0.5s ease;
 }
 .notification-message {
-    height: 3.5em;
+    height: 2.0em;
     opacity: 0;
     transition: opacity 0.5s ease, transform 0.5s ease;
 }

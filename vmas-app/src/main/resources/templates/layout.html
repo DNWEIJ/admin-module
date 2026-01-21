@@ -50,7 +50,12 @@
         </header>
     </th:block>
     <main>
-        <th:block id="content" layout:fragment="content"></th:block>
+        <div>
+            <!-- TODO implement aside for bigger screen -->
+<!--        <aside><div th:replace="~{navigation}"></div></aside>-->
+            <th:block id="content" layout:fragment="content"></th:block>
+        </div>
+
     </main>
     <footer>
         <p>

@@ -7,6 +7,7 @@ import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.expose.CustomerService;
+import dwe.holding.salesconsult.consult.model.AnalyseItem;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.*;
@@ -123,7 +124,9 @@ public class VisitController {
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
         updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());
         updateVisitStatusInModel(model, visit.getStatus());
+        List<AnalyseItem> analyseItems = analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId());
         model
+                .addAttribute("userIsAllowed", AutorisationUtils.getCurrentUserIsAuthorized())
                 .addAttribute("customer", customer)
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
@@ -138,9 +141,11 @@ public class VisitController {
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("url", "/sales/price/sell/")
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("analyseItems", analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(
-                        AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId())
-                );
+                .addAttribute("analyseItems", analyseItems)
+                .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())
+                ;
+
+
 //        for the view:
 //        'analyseItems' is filled initially by the saved version;
 //        if no records found, then the dropdown is displayed, and the selection is made to load the analyses that, after selecting, can be saved

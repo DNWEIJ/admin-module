@@ -10,13 +10,11 @@
             <legend th:text="#{userpreferences.general}"></legend>
             <fieldset class="grid">
                 <button>color theme</button>
-                <button>light/dark</button>
-       <select>
-           <option>auto</option>
-           <option>dark</option>
-           <option>light</option>
-       </select>
-
+                <select>
+                    <option>auto</option>
+                    <option>dark</option>
+                    <option>light</option>
+                </select>
             </fieldset>
 
             <fieldset class="grid">
@@ -57,23 +55,19 @@
             <fieldset class="grid">
                 <div>
                     <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitAppointmentList','userpreferences.visitappointmentlist', ${userPreferences.visitAppointmentList}, ${ynvaluesList}, true,'12')}"></th:block>
+                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.showvisittotal','userpreferences.showvisittotal', ${userPreferences.showVisitTotal}, ${ynvaluesList}, true,'12')}"></th:block>
                     <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitTotalVisit','userpreferences.visittotalvisit', ${userPreferences.visitTotalVisit}, ${ynvaluesList}, true,'13')}"></th:block>
+                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.showconsult','userpreferences.showconsult', ${userPreferences.showConsult}, ${ynvaluesList}, true,'14')}"></th:block>
                     <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitAppointmentInfo','userpreferences.visitappointmentinfo', ${userPreferences.visitAppointmentInfo}, ${ynvaluesList}, true,'14')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitVisitInfo','userpreferences.visitvisitinfo', ${userPreferences.visitVisitInfo}, ${ynvaluesList}, true,'15')}"></th:block>
+                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.showproducts','userpreferences.showproducts', ${userPreferences.showProducts}, ${ynvaluesList}, true,'16')}"></th:block>
                 </div>
                 <div>
                     <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitAnalyseInfo','userpreferences.visitanalyseinfo', ${userPreferences.visitAnalyseInfo}, ${ynvaluesList}, true,'16')}"></th:block>
+                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.showcustomerpet','userpreferences.showcustomerpet', ${userPreferences.showCustomerPet}, ${ynvaluesList}, true,'13')}"></th:block>
                     <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitComments','userpreferences.visitcomments', ${userPreferences.visitComments}, ${ynvaluesList}, true,'17')}"></th:block>
+                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.showanalyse','userpreferences.showanalyse', ${userPreferences.showAnalyse}, ${ynvaluesList}, true,'15')}"></th:block>
                     <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitProducts','userpreferences.visitproducts', ${userPreferences.visitProducts}, ${ynvaluesList}, true,'18')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.visitDiagnoses','userpreferences.visitdiagnoses', ${userPreferences.visitDiagnoses}, ${ynvaluesList}, true,'19')}"></th:block>
+                            th:insert="~{fragments/elements/dropdown::propDropdown('userPreferences.showdiagnoses','userpreferences.showdiagnoses', ${userPreferences.showDiagnoses}, ${ynvaluesList}, true,'17')}"></th:block>
                 </div>
             </fieldset>
         </fieldset>

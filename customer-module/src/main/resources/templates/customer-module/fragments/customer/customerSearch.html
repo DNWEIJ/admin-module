@@ -90,7 +90,10 @@
                    hx-include="#startLastName, #includeStreetName, #includeFirstTel, #includePet"
                    autocomplete="off"
                    style="transition: opacity .4s;">
-            <span id="searching-indicator" class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
+            <span id="searching-indicator" class="htmx-indicator">
+                <span aria-busy="true" style="color: red">
+                    <strong th:text="#{label.customer.search.search}"></strong></span>
+            </span>
             <div class="ac_results_wrapper">
                 <div class="ac_results" id="input-customerName" hx-on::after-swap="attachMouseHandlers()"></div>
             </div>
@@ -98,8 +101,10 @@
         <div class="checkbox-group">
             <!-- using switch with tooltip needs adjustment of CSS -->
             <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}" th:with="tooltip=#{label.tooltip.customer.name}, switch='switch'"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}" th:with="tooltip=#{label.tooltip.customer.street}, switch='switch'"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}" th:with="tooltip=#{label.tooltip.customer.firstel}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}"
+                      th:with="tooltip=#{label.tooltip.customer.street}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}"
+                      th:with="tooltip=#{label.tooltip.customer.firstel}, switch='switch'"></th:block>
             <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}, switch='switch'"></th:block>
         </div>
         <div role="group">
@@ -108,7 +113,7 @@
         </div>
     </div>
     <script>
-        function alternatetextPlaceHolder() {
+        function alternateTextPlaceHolder() {
             const input = document.getElementById('customerFind');
             let count = 0;
             const timer = setInterval(() => {
@@ -121,7 +126,6 @@
                 }, 200);
             }, 5000);
         }
-        alternatetextPlaceHolder();
+        alternateTextPlaceHolder();
     </script>
-
 </th:block>

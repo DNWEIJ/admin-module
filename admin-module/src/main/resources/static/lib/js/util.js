@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
     document.body.addEventListener("refreshPage", () => {
@@ -21,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-        // todo this makes the tool tip blink but it doesnt go away.
+    // todo this makes the tool tip blink but it doesnt go away.
     // document.querySelectorAll('[data-tooltip]').forEach(el => {
     //     el.addEventListener('mouseenter', () => {
     //         const tooltip = el.dataset.tooltip;
@@ -31,35 +30,40 @@ document.addEventListener("DOMContentLoaded", () => {
     //         }, 1000);
     //     });
     // });
-
     sortingTables();
 });
 
+
 function sortingTables() {
-    // define CSS for sortable headers with absolute arrows
+
+    const SORTABLE_SELECTOR = 'table:not(.no-sorting) > thead th';
+
     const style = document.createElement("style");
     style.textContent = `
-    th {
-      cursor: pointer;
-      user-select: none;
-      position: relative;      /* needed for absolute arrow */
-      padding-right: 1.5em;    /* space for arrow */
-      white-space: nowrap;
-    }
-    th.asc::after, th.desc::after {
-      position: absolute;
-      right: 0.3em;           /* position arrow at the right edge */
-      top: 50%;
-      transform: translateY(-50%);
-      content: "";
-    }
-    th.asc::after { content: "▲"; }
-    th.desc::after { content: "▼"; }
-  `;
+  ${SORTABLE_SELECTOR} {
+    cursor: pointer;
+    user-select: none;
+    position: relative;      /* needed for absolute arrow */
+    padding-right: 1.5em;    /* space for arrow */
+    white-space: nowrap;
+  }
+
+  ${SORTABLE_SELECTOR}.asc::after,
+  ${SORTABLE_SELECTOR}.desc::after {
+    position: absolute;
+    right: 0.3em;           /* position arrow at the right edge */
+    top: 50%;
+    transform: translateY(-50%);
+    content: "";
+  }
+
+  ${SORTABLE_SELECTOR}.asc::after { content: "▲"; }
+  ${SORTABLE_SELECTOR}.desc::after { content: "▼"; }
+`;
     document.head.appendChild(style);
 
-    // Make all table headers sortable
-    document.querySelectorAll("table th").forEach(th => {
+// Make all table headers sortable
+    document.querySelectorAll(SORTABLE_SELECTOR).forEach(th => {
         th.addEventListener("click", () => sortColumn(th));
     });
 

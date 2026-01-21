@@ -4,7 +4,7 @@ import dwe.holding.admin.model.tenant.LocalMember;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
-import dwe.holding.salesconsult.consult.SoapService;
+import dwe.holding.salesconsult.consult.SoapAndHistoryService;
 import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,22 +19,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(path = "/consult")
 @Slf4j
-public class HtmxSoapHistoryController {
-    private final SoapService soapService;
+public class HtmxSoapAndHistoryController {
+    private final SoapAndHistoryService soapAndHistoryService;
     private final PetRepository petRepository;
     private final CustomerService customerService;
 
-    @GetMapping("/visit/customer/{customerId}/pet/{petId}/history")
-    String returnHistoryModal(@PathVariable Long customerId, @PathVariable Long petId, Model model) {
-        return "";
+    @GetMapping("/visit/customer/{customerId}/pet/{petId}/history/{action}")
+    String returnHistoryModal(@PathVariable Long customerId, @PathVariable Long petId, @PathVariable String action, Model model) {
+        CustomerService.Customer customer = customerService.searchCustomerAndPet(customerId, petId);
+
+        switch (action) {
+            case "weight": model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
+            case "product": model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
+            case "diagnose": model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
+        }
+        model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
+        return "consult-module/visit/historymodal";
     }
+
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/soap")
     String returnSoapModal(@PathVariable Long customerId, @PathVariable Long petId, Model model) {
         // get all details for petId
         // validate customer and pet
         customerService.searchCustomerAndPet(customerId, petId);
-        model.addAttribute("appointments", soapService.getSoap(petId));
+        model.addAttribute("appointments", soapAndHistoryService.getSoap(petId));
         model.addAttribute("memberLocals", AutorisationUtils.getLocalMemberMap());
         model.addAttribute("petId", petId);
         model.addAttribute("petId", petId);
@@ -45,10 +54,9 @@ public class HtmxSoapHistoryController {
         return "consult-module/soap/soap";
     }
 
-    @GetMapping("/visit/customer/{customerId}/pet/{petId}/soap/print")
     @PostMapping("/visit/customer/{customerId}/pet/{petId}/soap")
     String printSoapModal(@PathVariable Long customerId, @PathVariable Long petId, String extraComment, Model model) {
-        returnSoapModal(customerId,petId,model);
+        returnSoapModal(customerId, petId, model);
         model.addAttribute("extraComment", extraComment);
         return "consult-module/soap/soapprint";
     }

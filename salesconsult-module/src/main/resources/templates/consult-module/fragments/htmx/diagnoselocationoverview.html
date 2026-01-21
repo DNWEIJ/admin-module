@@ -12,7 +12,7 @@
         <td th:text="${diagnose.location}"></td>
     </tr>
 </th:block>
-<th:block th:if="${allDiagnoses == null or allDiagnoses.size == 0}">
+<th:block th:if="${allDiagnoses == null or allDiagnoses.isEmpty()}">
     <tr>
         <td colspan="3" class="center">
             <th:block th:text="#{label.not-found}"></th:block>

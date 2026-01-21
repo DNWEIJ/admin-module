@@ -4,7 +4,6 @@ import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -63,7 +62,6 @@ public abstract class CostCalc extends MemberBaseBO {
     @Column(precision = 38, scale = 4)
     private BigDecimal totalIncTax;
 
-    @Transient
     public BigDecimal calculateTotal(BigDecimal reduction) {
         BigDecimal hundred = new BigDecimal("100.0");
         BigDecimal goodTax = new BigDecimal("0.0");
@@ -101,18 +99,15 @@ public abstract class CostCalc extends MemberBaseBO {
         return part1.add(part2);
     }
 
-    @Transient
     public BigDecimal calculateProcessingFeeServiceTax() {
         // double result = processingFeeExTax * getTaxServicePercentage() / 100.0;
         return processingFeeExTax.multiply(getTaxServicePercentage()).divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP);
     }
 
-    @Transient
     public BigDecimal calculateCostTaxPortion() {
         // double result = getTotal() - (processingFeeExTax + TaxPortionOfProcessingFeeExTaxService + (getQuantity() * salesPriceExtax));
         BigDecimal part1 = quantity.multiply(salesPriceExTax);
         BigDecimal part2 = processingFeeExTax.add(taxPortionOfProcessingFeeService).add(part1);
         return getTotalIncTax().subtract(part2);
-
     }
 }

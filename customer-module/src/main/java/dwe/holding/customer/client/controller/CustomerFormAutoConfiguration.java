@@ -11,9 +11,9 @@ public class CustomerFormAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CustomerForm.class)
     /**
-     * inital definition.
-     * In VMAS we have defined properties to be able to set preferences.
-     * If required, this bean can be overwritten in VMAS to set the default values from userpreferences
+     * initial definition.
+     * In the application (VMAS) we have defined properties to be able to set preferences.
+     * If required, this bean can be overwritten in VMAS to set the default values from user preferences
      */
     CustomerForm createCustomerForm() {
         return new CustomerForm(true, false, false, false);

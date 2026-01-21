@@ -1,31 +1,23 @@
-<th:block th:if="${analyseItems.size() == 0 and analyses.size() > 0}">
+<th:block th:if="${!isAnalyseItemsFromDb}">
     <div hx-ext="path-params">
-        <select id="analyseDropDown" name="analyseDropDown" th:hx-get="'/consult/visit/'+ ${visit.id} + '/analyse/{analyseDropDown}'" hx-target="#analyseTableReplaceHtmx">
-            <th:block th:unless="${analyses.size() == 1}">
-                <option disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
-            </th:block>
-            <th:block th:each="element : ${analyses}">
-                <option th:utext="${element.description}" th:value="${element.id}"></option>
-            </th:block>
-        </select>
+        <fieldset class="grid">
+            <div>
+                <select id="analyseDropDown" name="analyseDropDown" th:hx-get="'/consult/visit/'+ ${visit.id} + '/analyse/{analyseDropDown}'" hx-target="#analyseTableReplaceHtmx">
+                    <th:block th:unless="${analyses.size() == 1}">
+                        <option disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
+                    </th:block>
+                    <th:block th:each="element : ${analyses}">
+                        <option th:utext="${element.description}" th:value="${element.id}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div>
+                <button th:text="#{analyses.button.save}"></button>
+            </div>
+        </fieldset>
     </div>
 </th:block>
 
-<table>
-    <thead>
-    <tr>
-        <th th:text="#{analyses.label.nnbVet}">NNB Vet</th>
-        <th th:text="#{analyses.label.activity}">Activity</th>
-        <th th:text="#{analyses.label.nnbOwner}">NNB Owner</th>
-        <th th:text="#{analyses.label.exclPrice}">Excl. Price</th>
-        <th th:text="#{analyses.label.quantity}">Quantity</th>
-        <th th:text="#{analyses.label.tax}">Tax</th>
-        <th th:text="#{analyses.label.inclPrice}">Incl. Price</th>
-        <th th:text="#{analyses.label.outcome}">Outcome</th>
-    </tr>
-    </thead>
-    <tbody id="analyseTableReplaceHtmx">
+<div id="analyseTableReplaceHtmx">
     <th:include th:replace="~{consult-module/visit/analyselist}"></th:include>
-    </tbody>
-    </tbody>
-</table>
+</div>

@@ -68,6 +68,10 @@ public class Appointment extends TenantBaseBO {
     public boolean isPickedUp() {
         return pickedUp.equals(YesNoEnum.Yes);
     }
+    @Transient
+    public boolean isOTC() {
+        return OTC.equals(YesNoEnum.Yes);
+    }
 
     @Transient
     // USED FOR SOAP
