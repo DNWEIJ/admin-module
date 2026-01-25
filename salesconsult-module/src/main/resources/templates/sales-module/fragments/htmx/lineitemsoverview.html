@@ -1,13 +1,10 @@
-<tbody id="lineItemsReplacedByHtmx"
-       hx-swap-oob="innerHTML"
-       th:hx-confirm="#{label.otc.sell.delete.confirm}"
+<tbody th:hx-confirm="#{label.otc.sell.delete.confirm}"
        hx-target="closest tr"
        hx-swap="outerHTML swap:1s">
-
 <th:block th:each="lineitem : ${allLineItems}">
     <tr>
         <td class="center">
-            <a href="" th:if="${!(appointment.isCancelled || appointment.iscompleted)}" th:hx-delete="${url+lineitem.id}" hx-include="#csrfParameterName">
+            <a href="" th:if="${visit.isOpen}" th:hx-delete="${url+lineitem.id}" hx-include="#csrfParameterName">
                 <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>
@@ -30,7 +27,7 @@
     </tr>
 </th:block>
 
-<th:block th:if="${allLineItems.isEmpty()}">
+<th:block th:if="${allLineItems.size == 0}">
     <tr>
         <td colspan="9" class="center">
             <th:block th:text="#{label.not-found}"></th:block>
@@ -54,3 +51,4 @@
     </tr>
     </tfoot>
 </th:block>
+</span>

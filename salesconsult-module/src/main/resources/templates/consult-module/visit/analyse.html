@@ -12,12 +12,129 @@
                 </select>
             </div>
             <div>
-                <button th:text="#{analyses.button.save}"></button>
+                <button name="_save" type="submit" form="analyseForm" th:text="#{label.button.save}"></button>
             </div>
         </fieldset>
     </div>
+    <script>
+        document.addEventListener("change", e => {
+            if (!e.target.matches("table.analyse input[type='checkbox']")) return;
+
+            const row = e.target.closest("tr");
+            const anyChecked = row.querySelector("input[type='checkbox']:checked");
+            const qty = row.querySelector("input[type='number']");
+            const total = row.querySelector(".analyseTotalIncTax");
+            const tax = row.querySelector(".analyseTaxPortion");
+            const sales = row.querySelector(".analyseSalesPrice");
+
+            qty.value = anyChecked ? "0.00" : row.querySelector("input[id^='origQuantity']").value;
+            qty.disabled = anyChecked;
+
+            const decoration = anyChecked ? "line-through" : "none";
+
+            [total, tax, sales].forEach(cell => {
+                if (!cell) return;
+                cell.style.textDecoration = decoration;
+            })
+            // update totals
+            updateTotals(anyChecked, tax, total)
+
+        })
+
+        function updateTotals(anyChecked, tax, total) {
+            // --- Update totals in tfoot by adding/subtracting this row ---
+            const totalVatCell = document.querySelector("table.analyse tfoot .analyseTotalVatAmount");
+            const totalAmountCell = document.querySelector("table.analyse tfoot .analyseTotalAmount");
+
+            if (!totalVatCell || !totalAmountCell) return;
+
+            // Parse the row values
+            const rowTax = parseFloat(tax?.textContent.replace(',', '.') || 0);
+            const rowTotal = parseFloat(total?.textContent.replace(',', '.') || 0);
+
+            // Current totals
+            let currentVat = parseFloat(totalVatCell.textContent.replace(',', '.') || 0);
+            let currentAmount = parseFloat(totalAmountCell.textContent.replace(',', '.') || 0);
+
+            if (anyChecked) {
+                // Subtract row amounts
+                currentVat -= rowTax;
+                currentAmount -= rowTotal;
+            } else {
+                // Add row amounts back
+                currentVat += rowTax;
+                currentAmount += rowTotal;
+            }
+
+            totalVatCell.textContent = currentVat.toFixed(2).replace('.', ',');
+            totalAmountCell.textContent = currentAmount.toFixed(2).replace('.', ',');
+        }
+
+        // Listener for changes to quantity inputs
+        document.addEventListener("input", e => {
+            if (!e.target.matches("table.analyse input[type='number']")) return;
+
+            const qtyInput = e.target;
+            const row = qtyInput.closest("tr");
+
+            // Prevent calculation if row is struck-through
+            const anyChecked = row.querySelector("input[type='checkbox']:checked");
+            if (anyChecked) return;
+
+            // Original values
+            const origQtyInput = row.querySelector("input[id^='origQuantity']");
+            const origTotalInput = row.querySelector("input[id^='origTotalIncTax']");
+
+            if (!origQtyInput || !origTotalInput) return;
+
+            const origQty = parseFloat(origQtyInput.value);
+            const origTotal = parseFloat(origTotalInput.value);
+            const newQty = parseFloat(qtyInput.value);
+
+            // Calculate new row total proportionally
+            const newTotal = (newQty / origQty) * origTotal;
+
+            // Update row total in the table
+            const totalCell = row.querySelector(".analyseTotalIncTax");
+            if (totalCell) totalCell.textContent = newTotal.toFixed(2);
+
+            // Update table totals
+            updateAllTotals();
+        });
+
+        // Function to recalculate totals for the table
+        function updateAllTotals() {
+            const table = document.querySelector("table.analyse");
+            if (!table) return;
+
+            let totalIncTaxSum = 0;
+            let totalTaxSum = 0;
+
+            table.querySelectorAll("tbody tr").forEach(row => {
+                const totalCell = row.querySelector(".analyseTotalIncTax");
+                const taxCell = row.querySelector(".analyseTaxPortion");
+
+                if (totalCell) totalIncTaxSum += parseFloat(totalCell.textContent) || 0;
+                if (taxCell) totalTaxSum += parseFloat(taxCell.textContent) || 0;
+            });
+
+            // Update tfoot totals
+            const tfootTotal = table.querySelector("tfoot .analyseTotalAmount");
+            const tfootVat = table.querySelector("tfoot .analyseTotalVatAmount");
+
+            if (tfootTotal) tfootTotal.textContent = totalIncTaxSum.toFixed(2);
+            if (tfootVat) tfootVat.textContent = totalTaxSum.toFixed(2);
+        }
+    </script>
 </th:block>
 
 <div id="analyseTableReplaceHtmx">
     <th:include th:replace="~{consult-module/visit/analyselist}"></th:include>
 </div>
+<th:block th:if="${isAnalyseItemsFromDb}">
+    <fieldset class="grid">
+        <div>
+            <button name="_save" type="submit" form="analyseForm" th:text="#{label.button.save}"></button>
+        </div>
+    </fieldset>
+</th:block>

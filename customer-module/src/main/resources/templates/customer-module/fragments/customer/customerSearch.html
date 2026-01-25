@@ -1,4 +1,4 @@
-<th:block th:fragment="customerSearch(saveButton, url)">
+<th:block th:fragment="customerSearch(saveButton, url, salesType)">
     <script>
         let baseUrl;
         let selectedIndex = -1;
@@ -78,7 +78,6 @@
             })
         })
     </script>
-    <span></span>
     <div class="gridSearchCustomerWithCheck">
         <div id="holder" class="holder">
             <input list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria"
@@ -108,7 +107,7 @@
             <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}, switch='switch'"></th:block>
         </div>
         <div role="group">
-            <input class="secondary" name="_reset" type="button" th:value="#{label.button.reset}" onclick="window.location.href=window.location.origin + '/customer/customer?isNew=true'"/>
+            <input th:if="${salesType == null}" class="secondary" name="_reset" type="button" th:value="#{label.button.reset}" onclick="window.location.href=window.location.origin + '/customer/customer?isNew=true'"/>
             <input th:if="${saveButton}" name="_save" type="submit" th:value="#{label.button.save}" form="createForm"/>
         </div>
     </div>

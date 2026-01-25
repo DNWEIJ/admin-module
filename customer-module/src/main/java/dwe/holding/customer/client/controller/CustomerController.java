@@ -96,8 +96,9 @@ public class CustomerController {
     }
 
     private void setModel(Model model) {
-        model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
-        model.addAttribute("statusList", CustomerStatusEnum.getWebList());
+        model
+                .addAttribute("ynvaluesList", YesNoEnum.getWebList())
+                .addAttribute("statusList", CustomerStatusEnum.getWebList());
     }
 
     private Long customerExists() {

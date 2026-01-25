@@ -6,9 +6,11 @@ import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
 import dwe.holding.customer.expose.CustomerService;
+import dwe.holding.salesconsult.consult.model.AnalyseItem;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
+import dwe.holding.salesconsult.consult.repository.AnalyseItemRepository;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.salesconsult.sales.repository.LineItemRepository;
@@ -36,6 +38,7 @@ public class LineItemService {
     private final ReminderRepository reminderRepository;
     private final CustomerService customerService;
     private final CostingMapper costingMapper;
+    private final AnalyseItemRepository analyseItemRepository;
 
 
     public List<LineItem> createPricing(@NotNull Long costingId, @NotNull BigDecimal quantity) {
@@ -46,8 +49,10 @@ public class LineItemService {
         return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
     }
 
-    public List<LineItem> createConsultAnalyseLineItem(@NotNull Long costingId, @NotNull BigDecimal quantity, @NotNull Pet pet) {
-        return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
+    public List<LineItem> createConsultAnalyseLineItem(@NotNull Long costingId, @NotNull BigDecimal quantity, @NotNull Pet pet, Long analyseId) {
+        List<LineItem> lineItems = createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
+        lineItems.forEach(lineItem -> lineItem.setId(analyseId));
+        return lineItems;
     }
 
 
@@ -129,7 +134,7 @@ public class LineItemService {
         return toBeSavedLineItems;
     }
 
-    // THIS IS THE HEART OF ALL LINEITEM CALCULATIONS, FOR ALL TYPES OTC / VISIT / ESTIMATE / ANALYSE BE CAREFULL CHANGING STUFF HERE
+    // THIS IS THE HEART OF ALL LINEITEM CALCULATIONS, FOR ALL TYPES OTC / VISIT / ESTIMATE / ANALYSE BE CAREFULLY CHANGING STUFF HERE
     private LineItem createLineItem(Appointment appointment, CostingPriceProjection cpp, BigDecimal quantity, Pet pet,
                                     LocalMemberTax taxes, Map<Long, BigDecimal> costingGroupList, Long costingId) {
         LineItem newLineItem = LineItem.builder().appointment(appointment)
@@ -183,5 +188,16 @@ public class LineItemService {
         if (YesNoEnum.Yes.equals(cpp.deceasedPetPrompt())) {
             customerService.updatePetDeceased(pet.getId());
         }
+    }
+    @Transactional
+    public Set<LineItem> saveAnalyseAndLineItem(List<AnalyseItem> analyseItemList, List<LineItem> lineItemsList, Visit visit) {
+        analyseItemRepository.saveAll(analyseItemList);
+        Appointment app = appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow();
+        lineItemsList.forEach(li -> li.setAppointment(app));
+        app.getLineItems().addAll(lineItemsList);
+        lineItemRepository.saveAll(lineItemsList);
+        Appointment savedApp = appointmentRepository.save(app);
+        savedApp.getLineItems().size();
+        return savedApp.getLineItems();
     }
 }

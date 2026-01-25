@@ -1,62 +1,84 @@
 <th:block th:fragment="customerPetInfo(customer, pet, backbutton)" xmlns:th="http://www.w3.org/1999/html">
-    <div class="grid">
-        <div>
+    <details id="customerpetinfo" open>
+        <summary>
+            <span th:text="#{visit.customerinfo.title}"></span><a href="/info/customerpetinfo" title="More info" class="info-icon">ℹ️</a>
+        </summary>
+        <div class="grid">
             <th:block th:if="${backbutton}">
-                <a href="/sales/otc/search" role="button" th:text="#{label.button.back}"></a>
+                <div style="display: flex; align-items: center;">
+                    <a href="/sales/otc/search" role="button" th:text="#{label.button.back}"></a>
+                </div>
             </th:block>
             <th:block th:if="${!backbutton}">
-                <th:block th:replace="~{::customerInfo}"/>
+                <div>
+                    <th:block th:replace="~{::customerInfo}"/>
+                </div>
             </th:block>
-        </div>
-        <div>
-            <th:block th:if="${backbutton}">
-                <th:block th:replace="~{::customerInfo}"/>
-            </th:block>
-            <th:block th:if="${!backbutton}">
-                <th:block th:replace="~{::petInfo}"/>
-            </th:block>
-        </div>
-        <div>
-            <th:block th:if="${backbutton}">
-                <th:block th:replace="~{::petInfo}"/>
-            </th:block>
+            <div>
+                <th:block th:if="${backbutton}">
+                    <th:block th:replace="~{::customerInfo}"/>
+                </th:block>
+                <th:block th:if="${!backbutton}">
+                    <th:block th:replace="~{::petInfo}"/>
+                </th:block>
+            </div>
+            <div>
+                <th:block th:if="${backbutton}">
+                    <th:block th:replace="~{::petInfo}"/>
+                </th:block>
 
-            <th:block th:if="${pet != null}">
-                <div>&nbsp;</div>
-                <div th:classappend="${pet.insured.label == 'label.yesno.yes'} ? ' red-text' : ''">
-                    <span class="mono">I:</span>
-                    <span th:text="#{__${pet.insured.label}__}"></span>
-                    <span th:if="${pet.insuredBy != null}" th:text="' (' + ${pet.insuredBy} + ')'"></span>
-                </div>
-                <div
-                        th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''">
-                    <span class="mono">A:</span>
-                    <span th:text="#{__${pet.allergies.label}__}"></span>
-                    <span th:if="${pet.allergiesDescription != null}"
-                          th:text="' (' + ${pet.allergiesDescription} + ')'"></span>
-                </div>
-                <div th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''">
-                    <span class="mono">D:</span>
-                    <span th:text="#{__${pet.gpwarning.label}__}"></span>
-                    <span th:if="${pet.gpwarningDescription != null}"
-                          th:text="' (' + ${pet.gpwarningDescription} + ')'"></span>
-                </div>
-                <div th:text="#{pet.chipped} + ': '+  ${pet.chipTattooId ?: ''} + ' - ' + ${pet.chipDate != null ? #temporals.format(pet.chipDate, 'dd-MM-yyyy') : ''}"></div>
-            </th:block>
+                <th:block th:if="${pet != null}">
+                    <div>&nbsp;</div>
+                    <div th:classappend="${pet.insured.label == 'label.yesno.yes'} ? '' : ' red-text'">
+                        <span class="mono">I:</span>
+                        <span th:text="#{__${pet.insured.label}__}"></span>
+                        <span th:if="${pet.insuredBy != null and !pet.insuredBy.isEmpty()}" th:text="' (' + ${pet.insuredBy} + ')'"></span>
+                    </div>
+                    <div th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                        <span class="mono">A:</span>
+                        <span th:text="#{__${pet.allergies.label}__}"></span>
+                        <span th:if="${pet.allergiesDescription != null and !pet.allergiesDescription.isEmpty()}"
+                              th:text="' (' + ${pet.allergiesDescription} + ')'"></span>
+                    </div>
+                    <div th:classappend="${pet.gpwarning.label == 'label.yesno.yes'} ? ' red-text' : ''">
+                        <span class="mono">D:</span>
+                        <span th:text="#{__${pet.gpwarning.label}__}"></span>
+                        <span th:if="${pet.gpwarningDescription != null and !pet.gpwarningDescription.isEmpty()}"
+                              th:text="' (' + ${pet.gpwarningDescription} + ')'"></span>
+                    </div>
+                    <div th:text="#{pet.chipped} + ': '+  ${pet.chipTattooId ?: ''} + ' - ' + ${pet.chipDate != null ? #temporals.format(pet.chipDate, 'dd-MM-yyyy') : ''}"></div>
+                </th:block>
+            </div>
         </div>
-    </div>
+
+        <script>
+            function copyToClipboard(el) {
+                const span = el.previousElementSibling;
+                if (!span) return;
+                const text = span.innerText;
+                navigator.clipboard.writeText(text);
+                span.innerText = 'Copied!';
+                setTimeout(() => span.innerText = text, 800);
+            }
+        </script>
+    </details>
 </th:block>
 
 <th:block th:fragment="customerInfo">
     <th:block th:if="${customer != null}">
         <h6 th:text="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ')'"></h6>
-        <div
-                th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
-                th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></div>
-        <div th:text="${customer.address2}+', '+ ${customer.address3}"></div>
+        <div><span id="copy-customer-email" th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
+                   th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></span>
+            <a th:if="${!#strings.isEmpty(customer.email)}" href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy email">📋</a>
+            <a th:if="${!#strings.isEmpty(customer.email)}" title="Send email" th:href="'mailto:' + ${customer.email}">✉️</a></div>
+        <div><span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.address3}"></span>
+            <a href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy addressl">📋</a>
+        </div>
         <div th:text="${customer.homePhone?:''}+', '+ ${customer.workPhone?:''}+', '+ ${customer.mobilePhone?:''}"></div>
     </th:block>
 </th:block>
+
+
 <th:block th:fragment="petInfo">
     <th:block th:if="${pet != null}">
         <h6 th:utext="${pet.nameWithDeceasedAndDate} "></h6>

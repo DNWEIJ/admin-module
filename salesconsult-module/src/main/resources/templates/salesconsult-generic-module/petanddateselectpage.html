@@ -1,0 +1,34 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title th:if="${salesType.isOtc}" th:text="#{label.title.otc}"></title>
+    <title th:if="${salesType.isVisit}" th:text="#{label.title.visit}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="overflow-auto">
+        <fieldset role="group" class="grid">
+            <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, true)}"></th:block>
+        </fieldset>
+        <th:block th:if="${salesType.isOtc}" th:with="formAction='/sales/otc/search/' + ${customer.id}"></th:block>
+        <th:block th:if="${salesType.isVisit}" th:with="formAction='/consult/visit/customer/' + ${customer.id}"></th:block>
+        <th:block th:if="${salesType.isEstimate}" th:with="formAction='/consult/customer/'+ ${customer.id} + '/estimate'"></th:block>
+
+        <form id="petAndSelectForm" method="post" th:action="${formAction}">
+            <fieldset th:if="${salesType.isVisit}">
+                <th:block th:insert="~{consult-module/fragments/datetimelocation::dateTimeLocationSelect()}"></th:block>
+            </fieldset>
+            <th:block th:insert="~{salesconsult-generic-module/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, ${salesType}, true, 'petAndSelectForm')}"></th:block>
+            <fieldset class="grid">
+                <div th:if="${salesType.isVisit}">
+                    <input type="button" th:value="#{label.otc.sell.add.pet}" th:hx-get="'/customer/customer/'+ ${customer.id} + '/pet'"
+                           hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="addEventListenersForPetSelect()"/>
+                </div>
+                <div>
+                    <input type="submit" name="_save" form="petAndSelectForm" th:value="#{label.button.next}"/>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>
+</body>
+</html>

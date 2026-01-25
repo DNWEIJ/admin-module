@@ -1,44 +1,34 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
     <title>[[#{label.title.visit}]]</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
 </head>
 <body>
 <section layout:fragment="content">
-    <script>
-        window.addEventListener("beforeunload", function (event) {
-            event.preventDefault();
-            event.returnValue = "";
-        });
-    </script>
+    <!-- TODO activate -->
+    <!--    <script>-->
+    <!--        window.addEventListener("beforeunload", function (event) {-->
+    <!--            event.preventDefault();-->
+    <!--            event.returnValue = "";-->
+    <!--        });-->
+    <!--    </script>-->
     <div id="visit-page">
-        <style>
-            #visit-page details {
-                margin: 0;
-                margin-bottom: .5rem;
-                border: 1px solid var(--pico-primary);
-                border-radius: var(--pico-border-radius);
-            }
-
-            #visit-page summary {
-                margin: 0;
-                text-align: center;
-                background-color: lightgrey;
-                line-height: 2rem;
-                border-radius: var(--pico-border-radius);
-            }
-        </style>
-
-        <div id="actionbar">
-            <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
-        </div>
-        <h1>TODO: afspraken volgorde lijst</h1>
 
         <details id="customerpetinfo" open>
-            <summary th:text="#{visit.customerinfo.title} "></summary>
-            <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${visit.pet}, false)}"></th:block>
+            <summary>
+                <div id="actionbar">
+                    <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
+                </div>
+                <h1>TODO: afspraken volgorde lijst</h1>
+            </summary>
         </details>
+
+        <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${visit.pet}, false)}"></th:block>
+
         <details id="visitInfo" open>
-            <summary th:text="#{visit.info.title}"></summary>
+            <summary>
+                <span th:text="#{visit.info.title}"></span><a href="/info/visitinfo" title="More info" class="info-icon">ℹ️</a>
+            </summary>
             <form id="visitForm" method="post">
                 <input name="visit.id" th:value="${visit.id}" type="hidden"/>
                 <input name="visit.version" th:value="${visit.version}" type="hidden"/>
@@ -74,25 +64,49 @@
                     <th:block th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','7')}" th:with="required=false"></th:block>
                 </fieldset>
                 <th:block th:insert="~{/consult-module/fragments/templatelocalmemberpref::template('template', ${templates})}"></th:block>
-                <button name="_save" type="submit" form="visitForm" th:text="#{label.button.save}"></button>
                 <th:block th:insert="~{fragments/elements/audit::audit('visit.addedBy','visit.addedOn', 'visit.lastEditedBy', 'visit.lastEditedOn')}"></th:block>
+                <div>
+                    <button name="_save" type="submit" form="visitForm" th:text="#{label.button.save}"></button>
+                </div>
+
             </form>
         </details>
-
-        <script>
-
-        </script>
-        <div id="analyse-and-lineitems" th:insert="~{consult-module/fragments/analyseandlineitem::analyseAndLineItems(${customer.id}, ${visit.pet.id})}"></div>
-        <details id="diagnose" open>
+        <details id="analyses" open>
             <summary>
-                [[#{label.diagnose}]]
-                <div class="center-align-svg">
-                    <a href="" th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/diagnose'}" hx-target="#modal-container" hx-swap="innerHTML"/>
-                    <svg class="svg-icon">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/body-scan.svg"></use>
-                    </svg>
-                    </a>
+                <span th:text="#{visit.analyse.title}"></span><a href="/info/customerpetinfo" title="More info" class="info-icon">ℹ️</a>
+            </summary>
+            <div id="analyseReplaceHtmx">
+                <th:include th:replace="~{consult-module/visit/analyse}"></th:include>
+            </div>
+        </details>
+        <details id="lineitems" open>
+
+            <summary class="three-elements">
+                <a href="" th:title="#{visit.lineitems.history}" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}" hx-target="#modal-container"
+                   hx-swap="innerHTML">️🛒</a>
+                <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
+                <a href="/info/lineiteminfo" title="More info" class="info-icon">ℹ️</a>
+            </summary>
+
+            <table id="lineItemsTable" class="no-sorting table-tight striped">
+                <!-- head -->
+                <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
+                <!-- body and footer -->
+                <div id="lineItemsOverviewReplaceHtmx">
+                    <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
                 </div>
+            </table>
+            <!-- TODO: Check on visit isOpen -->
+            <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.iscompleted)}"
+                 th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
+        </details>
+        <details id="diagnose" open>
+
+            <summary class="three-elements">
+                <a href="" th:title="#{visit.diagnose.history}" th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/diagnose'}"
+                   hx-target="#modal-container" hx-swap="innerHTML">🏷️</a>
+                <span class="center-text" th:text="#{label.diagnose}"></span>
+                <a href="/info/visitinfo" title="More info" class="info-icon">ℹ️</a>
             </summary>
 
             <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>

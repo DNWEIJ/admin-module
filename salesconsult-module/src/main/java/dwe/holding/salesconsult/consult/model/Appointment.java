@@ -48,7 +48,7 @@ public class Appointment extends TenantBaseBO {
     @Builder.Default
     private Set<Visit> visits = new HashSet<>(0);
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "appointment")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appointment")
     @Builder.Default
     private Set<LineItem> lineItems = new HashSet<>(0);
 

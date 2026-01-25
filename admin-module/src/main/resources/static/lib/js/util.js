@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
         location.reload();
     });
 
-
     document.body.addEventListener("closeModal", () => {
         const modal = document.getElementById("datetime-modal")
         closeModal(modal)
@@ -14,9 +13,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('htmx:configRequest', e => {
         const token = document.querySelector('meta[name="_csrf"]')?.content;
         const header = document.querySelector('meta[name="_csrf_header"]')?.content;
-
+        console.log("add csrf")
         if (token && header) {
             e.detail.headers[header] = token;
+            console.log("add csrf - done")
+        }
+    });
+    document.body.addEventListener("htmx:responseError", function (evt) {
+        const status = evt.detail.xhr.status;
+
+        if (status === 401 || status === 403) {
+            window.location.href = "/admin/login";
         }
     });
 

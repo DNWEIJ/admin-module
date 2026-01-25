@@ -6,7 +6,7 @@
 
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer/')}"></div>
+    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer/', null)}"></div>
     <hr/>
     <form id="createForm" th:action="@{/customer/customer}" method="post">
 

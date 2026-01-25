@@ -98,7 +98,9 @@ public class PetController {
 
     @PostMapping("/customer/{customerId}/pet")
     String saveNewPet(@PathVariable Long customerId, @Valid Pet petForm, RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response, Model model) {
-
+        if (petForm.getId() != null) {
+            return savePet(customerId, petForm.getId(), petForm, redirect, request, model);
+        }
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (customer.getPets().stream()
                 .map(o -> o.getName().replaceAll("\\s+", "").toLowerCase())

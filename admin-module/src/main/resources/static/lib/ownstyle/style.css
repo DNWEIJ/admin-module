@@ -75,6 +75,7 @@ fieldset legend {
     .desktop-only {
         display: table-cell;
     }
+
     .mobile-only {
         display: none;
     }
@@ -247,15 +248,10 @@ article > footer {
 
 .table-tight td,
 .table-tight th {
+    padding: 0;
     padding-right: 0.05rem;
     margin: 0;
 }
-
-/* striping via picocss
-.table-tight tr:nth-child(even) td {
-    background-color: var(--pico-dropdown-background-color);
-}
-*/
 
 .table-tight footer {
     margin: .5rem;
@@ -285,6 +281,7 @@ tbody tr.red-text td {
 .text-align-center {
     text-align: center;
 }
+
 .text-align-right {
     text-align: right;
 }
@@ -318,6 +315,7 @@ tbody tr.red-text td {
     "one two three";
     align-items: stretch;
 }
+
 .threecolumn-spread > div > fieldset {
     width: 100%;
     height: 100%;
@@ -376,8 +374,8 @@ tbody tr.red-text td {
     align-self: center;
 }
 
-.mono {
-    font-family: Consolas, Menlo, Monaco, "Roboto Mono", monospace;
+.number-font, .mono {
+    font-family: IBM Plex Mono;
 }
 
 /********************
@@ -440,8 +438,8 @@ tbody tr.red-text td {
     transition: color 0.3s ease;
     transition: color 0.3s ease;
     vertical-align: middle;
-    height:24px;
-    width:24px;
+    height: 24px;
+    width: 24px;
     align-items: center; /* vertical */
     justify-content: center; /* horizontal */
     display: inline-flex;
@@ -518,13 +516,62 @@ html, body {
     padding-top: 1.4rem;
 }
 
-html details summary {
-    margin-top: 1rem;
+details {
+     margin: 0;
+     margin-bottom: .5rem;
+     border: 1px solid var(--pico-primary);
+     border-radius: var(--pico-border-radius);
+ }
+
+details summary {
     font-size: 1.2rem;
-    cursor: pointer;
     font-weight: bold;
+    position: relative; /* needed for absolute positioning inside */
+    margin: 0;
+    text-align: center; /* keeps text centered */
+    background-color: lightgrey;
+    line-height: 2rem;
+    border-radius: var(--pico-border-radius);
+    cursor: pointer;
 }
 
+details summary a.info-icon {
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.three-elements {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+}
+
+.three-elements .center-text {
+    flex: 1;
+    text-align: center;
+}
+
+.three-elements a {
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+
+
+
+/* create fixed input field for smaller inputs that really do not need space, like nr below 100 */
+.small-input {
+    width: 5rem;
+}
+
+.medium-input {
+    width: 8rem;
+}
 
 /********************************************/
 /** PicoCSS alerting message                */
@@ -542,6 +589,7 @@ html details summary {
     z-index: 99999;
     transition: all 0.5s ease;
 }
+
 .notification-message {
     height: 2.0em;
     opacity: 0;
@@ -587,7 +635,7 @@ html details summary {
 
 /* Success */
 .alert-success {
-    background-color:  #e8f5e9;
+    background-color: #e8f5e9;
     background-image: var(--pico-icon-valid);
     color: #1b5e20;
 }

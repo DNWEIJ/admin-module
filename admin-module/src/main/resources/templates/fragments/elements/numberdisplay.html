@@ -1,5 +1,11 @@
 <th:block th:fragment="showNumber_td(money, deskTopOnly)">
-    <td class="right" th:text="${#numbers.formatDecimal(money, 1, 2, 'COMMA')}"
+    <td class="right number-font" th:text="${#numbers.formatDecimal(money, 1, 2, 'COMMA')}"
+        th:style="${increaseFont != null ? 'font-size:' + increaseFont + '%' : null}"
+        th:classappend="${deskTopOnly} ? 'desktop-only' : null"></td>
+</th:block>
+
+<th:block th:fragment="showNumberAddClass_td(money, deskTopOnly, class)">
+    <td th:class="${class} + ' number-font right'" th:text="${#numbers.formatDecimal(money, 1, 2, 'COMMA')}"
         th:style="${increaseFont != null ? 'font-size:' + increaseFont + '%' : null}"
         th:classappend="${deskTopOnly} ? 'desktop-only' : null"></td>
 </th:block>

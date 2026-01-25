@@ -37,16 +37,14 @@ public class OTCSellController {
     private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
 
-
-    // TODO add the lineitems; add if closed not editable
     @GetMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
     String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect,appointmentRepository);
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect, appointmentRepository);
         if (app == null) return "redirect:/sales/otc/search/";
 
-        HashSet<Long> petsOnVisit = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
+        HashSet<Long> petsOnAppointment = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
         // after refresh the petId isn't available anymore on the visit, so select the first one then....
         List<Visit> visits = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).toList();
         Pet selectedPet = (visits.isEmpty()) ? app.getVisits().iterator().next().getPet() : visits.getFirst().getPet();
@@ -57,10 +55,10 @@ public class OTCSellController {
                         .map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased()))
                         .sorted(Comparator.comparing(PresentationElement::getId)).toList())
                 .addAttribute("selectedPet", selectedPet)
-                .addAttribute("pets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && !pet.deceased()))
-                .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnVisit.contains(pet.id()) && pet.deceased()))
+                .addAttribute("pets", customer.pets().stream().filter(pet -> !petsOnAppointment.contains(pet.id()) && !pet.deceased()))
+                .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnAppointment.contains(pet.id()) && pet.deceased()))
                 .addAttribute("url", "/sales/otc/search/" + customer.id() + "/sell/" + app.getId() + "/" + selectedPet.getId() + "/");
-        updateModel(model, petId, app);
+        updateModel(model, petId, visits.stream().filter(visit -> visit.getPet().getId().equals(selectedPet.getId())).findFirst().get());
         return "salesconsult-generic-module/productpage";
     }
 
@@ -69,7 +67,7 @@ public class OTCSellController {
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("HX-Refresh", "true");
 
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect,appointmentRepository);
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect, appointmentRepository);
 
         if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
             return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
@@ -83,7 +81,7 @@ public class OTCSellController {
     @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}/{lineItemId}")
     String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
         // still allowed to delete line item?
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect,appointmentRepository);
+        final Appointment app = getAndValidateAppointment(appointmentId, redirect, appointmentRepository);
         if (app == null) return "redirect:/sales/otc/search/";
 
         lineItemService.delete(lineItemId);
@@ -91,7 +89,7 @@ public class OTCSellController {
         Appointment newApp = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
-        updateModel(model, petId, newApp);
+        updateModel(model, petId, app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get());
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
@@ -107,7 +105,7 @@ public class OTCSellController {
         }
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
-        updateModel(model, petId, app);
+        updateModel(model, petId, app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get());
         model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
@@ -122,11 +120,12 @@ public class OTCSellController {
         return app;
     }
 
-    private void updateModel(Model model, Long petId, Appointment app) {
+    private void updateModel(Model model, Long petId, Visit visit) {
 
-        updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, app.getId()));
+        updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, visit.getAppointment().getId()));
         model
-                .addAttribute("appointment", app)
+                .addAttribute("visit", visit)
+                .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("salesType", SalesType.OTC);
 

@@ -2,7 +2,7 @@
     <input type="button" class="secondary" th:value="#{label.otc.sell.history}" hx-confirm="Weet je zeker dat je deze patient wilt verwijderen?"
            hx-delete="/sales/otc/search/69945/sell/1247547/135625">
     <input type="button" class="secondary" th:value="#{label.otc.sell.soap}" hx-confirm="Weet je zeker dat je deze patient wilt verwijderen?" hx-delete="/sales/otc/search/69945/sell/1247547/135625">
-    <input type="button" class="secondary" th:value="#{label.otc.sell.note}"
+    <input th:if="${salesType.isVisit}" type="button" class="secondary" th:value="#{label.otc.sell.note}"
            th:hx-get="'/consult/visit/customer/'+${visit.pet.customer.id}+'/pet/'+ ${visit.pet.id}+ '/note'"
            hx-target="#modal-container" hx-swap="innerHTML"/>
 </th:block>

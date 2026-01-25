@@ -102,6 +102,7 @@ public class CostingService {
                 );
     }
 
+    // Maybe cache this
     public Map<Long, String>  getCategories() {
         return lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1L)).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
     }

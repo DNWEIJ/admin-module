@@ -1,16 +1,20 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
     <title th:if="${salesType.isPriceInfo}" th:text="#{label.title.priceinfo}"></title>
-    <title th:if="${salesType.isOtc}"       th:text="#{label.title.otc}"></title>
-    <title th:if="${salesType.isEstimate}"  th:text="#{label.title.estimate}"></title>
+    <title th:if="${salesType.isOtc}" th:text="#{label.title.otc}"></title>
+    <title th:if="${salesType.isEstimate}" th:text="#{label.title.estimate}"></title>
 </head>
 <body>
 
 <section layout:fragment="content">
-    <h3 th:if="${salesType.isOtc}"       th:text="#{label.title.otc}"></h3>
+    <h3 th:if="${salesType.isOtc}" th:text="#{label.title.otc}"></h3>
     <h3 th:if="${salesType.isPriceInfo}" th:text="#{label.title.priceinfo}"></h3>
-    <h3 th:if="${salesType.isVisit}"  th:text="#{label.title.visit}"></h3>
-    <h3 th:if="${salesType.isEstimate}"  th:text="#{label.title.estimate}"></h3>
+    <h3 th:if="${salesType.isVisit}" th:text="#{label.title.visit}"></h3>
+    <h3 th:if="${salesType.isEstimate}" th:text="#{label.title.estimate}"></h3>
+    <div th:if="${thymeleafDebug != null}">
+        <div th:text="${appointment.id} + ' - ' + ${selectedPet.name}"> </div>
+    </div>
+
     <block th:if="${!salesType.isPriceInfo}">
         <fieldset role="group" class="grid">
             <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
@@ -22,6 +26,7 @@
         </fieldset>
         <hr/>
     </block>
+
     <block th:if="${salesType.isPriceInfo}">
         <div style="height: 1rem">&nbsp;</div>
     </block>

@@ -41,6 +41,8 @@ import static dwe.holding.salesconsult.sales.controller.ModelHelper.*;
 @RequestMapping(path = "/consult")
 @Slf4j
 public class VisitController {
+    public static final String VISIT_URL = "/consult/visit/customer/{customerId}/visit/{visitId}/lineitem/";
+    public static final String CONSULT_VISIT_SEARCH = "/consult/visit/search/";
     private final VisitRepository visitRepository;
     private final LookupRoomRepository lookupRoomRepository;
     private final LookupPurposeRepository lookupPurposeRepository;
@@ -62,7 +64,8 @@ public class VisitController {
         model.addAttribute("form", customerForm)
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
                 .addAttribute("textLabel", "label.title.visit")
-                .addAttribute("url", "/consult/visit/search/");
+                .addAttribute("url", CONSULT_VISIT_SEARCH)
+                .addAttribute("salesType", SalesType.VISIT);
         return "/salesconsult-generic-module/customersearchpage";
     }
 
@@ -80,8 +83,9 @@ public class VisitController {
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("timeList", IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList())
+                .addAttribute("salesType", SalesType.VISIT)
         ;
-        return "consult-module/visit/petanddateselectpage";
+        return "salesconsult-generic-module/petanddateselectpage";
     }
 
     @PostMapping("/visit/customer/{customerId}")
@@ -139,7 +143,7 @@ public class VisitController {
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("url", "/sales/price/sell/")
+                .addAttribute("url", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyseItems", analyseItems)
                 .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())

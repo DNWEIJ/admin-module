@@ -35,10 +35,10 @@ public class OTCSelectController {
                 .addAttribute("form", customerForm)
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
                 .addAttribute("textLabel", "label.title.otc")
-                .addAttribute("url", "/sales/otc/search/");
+                .addAttribute("url", "/sales/otc/search/")
+                .addAttribute("salesType", SalesType.OTC);
         return "salesconsult-generic-module/customersearchpage";
     }
-
 
     @GetMapping("/otc/search/{customerId}")
     String second_CustomerFound(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
@@ -46,19 +46,19 @@ public class OTCSelectController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/ot/search";
         }
-        // todo do we still need this?
-        model.addAttribute("form", customerForm);
+        model
+                .addAttribute("form", customerForm)
+                .addAttribute("salesType", SalesType.OTC);
         updateReasonsInModel(model, lookupPurposeRepository);
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
-        return "sales-module/otc/petselectpage";
+        return "salesconsult-generic-module/petanddateselectpage";
     }
 
-
     @PostMapping("/otc/search/{customerId}")
-    String selectedPets(@PathVariable Long customerId, @ModelAttribute PetsForm petsForm, Model model, RedirectAttributes redirect) {
+    String selectedPets(@PathVariable Long customerId, @ModelAttribute PetsForm petsForm, Model model) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        List<AppointmentVisitService.CreatePet> pets = petsForm.formPet().stream().filter(pet -> pet.checked() != null).toList();
+        List<AppointmentVisitService.CreatePet> pets = petsForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked().booleanValue() == true).toList();
         if (customer == null || pets.isEmpty()) {
             model.addAttribute("message", "Something went wrong. Please try again");
             return "sales-module/otc/searchpage";

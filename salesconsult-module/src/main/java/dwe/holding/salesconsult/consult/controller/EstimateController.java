@@ -53,8 +53,10 @@ public class EstimateController {
     String stepOneShowPetsAndLocation(@PathVariable Long customerId, Model model) {
         updateReasonsInModel(model, lookupPurposeRepository);
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
-        model.addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap());
-        return "consult-module/estimate/petselectpage";
+        model
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
+                .addAttribute("salesType", SalesType.ESTIMATE);
+        return "salesconsult-generic-module/petanddateselectpage";
     }
 
     @PostMapping("/customer/{customerId}/estimate")

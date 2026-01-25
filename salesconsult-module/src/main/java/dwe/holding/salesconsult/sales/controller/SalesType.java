@@ -6,17 +6,20 @@ public enum SalesType {
     VISIT,
     ESTIMATE;
 
-    public boolean isOtc(){
-       return this.equals(OTC);
+
+    public boolean isOtc() {
+        return this.equals(OTC);
     }
 
-    public boolean isPriceInfo(){
+    public boolean isPriceInfo() {
         return this.equals(PRICE_INFO);
     }
-    public boolean isVisit(){
+
+    public boolean isVisit() {
         return this.equals(VISIT);
     }
-    public boolean isEstimate(){
+
+    public boolean isEstimate() {
         return this.equals(ESTIMATE);
     }
 }

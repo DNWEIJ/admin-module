@@ -64,6 +64,7 @@ public class HtmxVisitLineItemsController {
             return "redirect:/sales/visit/search";
         }
         lineItemService.createOtcLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
+        updateModel(model, visit, customerId);
         return "sales-module/fragments/htmx/lineitemsoverview";
     }
 
@@ -79,6 +80,7 @@ public class HtmxVisitLineItemsController {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
                 .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("visit", visit)
                 .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("url", "/visit/customer/" + customerId + "/visit/" + visit.getId() + "/lineitem/");
     }

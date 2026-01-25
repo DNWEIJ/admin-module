@@ -239,24 +239,26 @@
 
         })
     </script>
-<style>
-    /*checkbox in the middle*/
-    .gridSearchCostingWithCheck > div:first-child {
-        align-self: center;     /* vertical */
-        justify-self: center;   /* horizontal */
-    }
-</style>
+    <style>
+        /*checkbox in the middle*/
+        .gridSearchCostingWithCheck > div:first-child {
+            align-self: center; /* vertical */
+            justify-self: center; /* horizontal */
+        }
+    </style>
     <form id="costingSearchForm" hx-post="" hx-swap="none">
         <fieldset>
             <div class="gridSearchCostingWithCheck">
-                <div>
-                    <label for="useDropDown">
-                        <input id="useDropDown" class="switch" role="switch" tabindex="0" type="checkbox" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right" autocomplete="off"
+
+                <div class="checkbox-group">
+                    <label for="useDropDown" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right">
+                        <input id="useDropDown" role="switch" tabindex="0" type="checkbox" autocomplete="off"
                                hx-get="/costing/costing/search/costing/dropdown"
                                hx-trigger="click"
                                hx-target="#categoryList"
                                hx-swap="innerHTML"
-                               hx-on::after-request="setView(this)"/>
+                               hx-on::after-request="setView(this)">
+                        <span class="no-break"></span>
                     </label>
                 </div>
                 <div id="holder-input" class="holder">
@@ -266,7 +268,7 @@
                            hx-target="#input-costingName"
                            hx-swap="innerHTML"
                            hx-indicator="#searching-indicator"
-                            autocomplete="off"
+                           autocomplete="off"
                     >
                     <span id="searching-indicator" class="htmx-indicator"><span aria-busy="true">Searching...</span></span>
                     <div class="ac_results_wrapper">

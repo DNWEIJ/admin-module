@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Responsive Navigation with JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .layout {
+            display: grid;
+            height: 100vh;
+        }
+
+        nav {
+            background: #333;
+            color: #fff;
+            display: flex;
+            gap: 6px;
+        }
+
+        button {
+            background: #555;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #777;
+        }
+
+        .main-menu {
+            flex-direction: row;
+            padding: 6px;
+        }
+
+        .sub-menu {
+            flex-wrap: wrap;
+            padding: 6px;
+        }
+
+        .content {
+            padding: 16px;
+            background: #eee;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .active-main {
+            background: #999;
+            color: #000;
+        }
+
+        /* PORTRAIT (default) */
+        .layout {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto 1fr;
+        }
+
+        .main-menu { grid-row: 1; }
+        .sub-menu { grid-row: 2; }
+        .content { grid-row: 3; }
+
+        /* LANDSCAPE */
+        @media (orientation: landscape) {
+            .layout {
+                grid-template-columns: 56px 1fr;
+                grid-template-rows: 1fr;
+                position: relative;
+            }
+
+            .main-menu {
+                grid-column: 1;
+                grid-row: 1;
+                flex-direction: column;
+                width: 56px;
+                padding: 8px 0;
+                position: relative;
+                overflow: visible;
+            }
+
+            .main-menu:hover {
+                width: 56px;
+            }
+
+            .main-menu button {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .main-menu:hover button span {
+                opacity: 1;
+            }
+
+            .sub-menu {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .content {
+                grid-column: 2;
+                grid-row: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- MAIN MENU -->
+    <nav class="main-menu">
+        <button data-menu="home" class="active-main">🏠 <span>Home</span></button>
+        <button data-menu="products">📦 <span>Products</span></button>
+        <button data-menu="settings">⚙️ <span>Settings</span></button>
+    </nav>
+
+    <!-- SUBMENU -->
+    <nav class="sub-menu" id="subMenu">
+        <!-- HOME -->
+        <button data-parent="home">Dashboard</button>
+        <button data-parent="home">News</button>
+        <button data-parent="home">Profile</button>
+
+        <!-- PRODUCTS -->
+        <button data-parent="products" class="hidden">Catalog</button>
+        <button data-parent="products" class="hidden">Pricing</button>
+        <button data-parent="products" class="hidden">Reviews</button>
+
+        <!-- SETTINGS -->
+        <button data-parent="settings" class="hidden">Account</button>
+        <button data-parent="settings" class="hidden">Security</button>
+        <button data-parent="settings" class="hidden">Notifications</button>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="content">
+        <h2>Content Area</h2>
+        <p>
+            Portrait: top main menu + submenu below.
+            Landscape: thin left menu expands overlay on hover.
+            JS handles showing/hiding submenu and active highlighting.
+        </p>
+    </main>
+
+</div>
+
+<script>
+    const mainButtons = document.querySelectorAll('.main-menu > button');
+    const subButtons = document.querySelectorAll('#subMenu > button');
+
+    function activateMenu(menuName) {
+        mainButtons.forEach(btn => btn.classList.toggle('active-main', btn.dataset.menu === menuName));
+        subButtons.forEach(btn => btn.classList.toggle('hidden', btn.dataset.parent !== menuName));
+    }
+
+    mainButtons.forEach(btn => {
+        btn.addEventListener('click', () => activateMenu(btn.dataset.menu));
+    });
+
+    // Initialize default menu
+    activateMenu('home');
+</script>
+
+</body>
+</html>
