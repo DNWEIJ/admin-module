@@ -34,7 +34,7 @@
             <td>
                 <a th:href="'/consult/customer/'+ ${customerId} + '/estimate/'+ ${estimateForPet.id} + '/'+ ${estimateForPet.petId}" th:utext="${pets.get(estimateForPet.petId)}"></a>
             </td>
-            <td th:text="${#temporals.format(estimateForPet.estimateDate, 'dd-MM-yyyy')}"></td>
+            <td th:attr="data-sort-value=${estimateForPet.estimateDate}" th:text="${#temporals.format(estimateForPet.estimateDate, 'dd-MM-yyyy')}"></td>
             <td th:text="${estimateForPet.purpose}"></td>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${estimateForPet.totalAmount}, false)}"></th:block>
             <td th:text="${#temporals.format(estimateForPet.transToVisit, 'dd-MM-yyyy')}"></td>

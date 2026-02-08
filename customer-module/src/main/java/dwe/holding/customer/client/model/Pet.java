@@ -11,6 +11,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,7 +57,6 @@ public class Pet extends MemberBaseBO {
 
     private String species;
     private String breed;
-    private String breedOther;
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = SexTypeConverter.class)
     private SexTypeEnum sex;
@@ -86,22 +86,24 @@ public class Pet extends MemberBaseBO {
 
     @Transient
     public String getNameWithDeceased() {
-        return (deceased.name().equals(YesNoEnum.No.name())) ? getName() : getName() + " &dagger;";
+        return (deceased.name().equals(YesNoEnum.No.name())) ? getName() : getName() + " ✟";
     }
 
     public String getNameWithDeceasedAndDate() {
+        String formattedDate = (getDeceasedDate() != null) ? " (" + getDeceasedDate().format(DateTimeFormatter.ofPattern("dd-MM-yy")) + ")" : "";
+
         return deceased.equals(YesNoEnum.Yes) ?
-                getNameWithDeceased() + " (" + getDeceasedDate() + ")" : getNameWithDeceased();
+                getNameWithDeceased() + formattedDate : getNameWithDeceased();
     }
 
     @Transient
     // TODO make the years and month variables to be replaced in the string in the controller
     public String getAge() {
         if (deceased.equals(YesNoEnum.Yes)) {
-            return getBirthday() == null || getDeceasedDate() == null ? "" : getBirthday().until(deceasedDate).getYears() + " years " + getBirthday().until(deceasedDate).getMonths() + " months";
+            return getBirthday() == null || getDeceasedDate() == null ? "" : "(" + getBirthday().until(deceasedDate).getYears() + " years " + getBirthday().until(deceasedDate).getMonths() + " months)";
         } else {
             LocalDate today = LocalDate.now();
-            return getBirthday() == null ? "" : getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months";
+            return getBirthday() == null ? "" : "(" + getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months)";
         }
     }
 }

@@ -6,6 +6,7 @@ import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
+import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -23,10 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateLineItemsInModel;
+import static dwe.holding.salesconsult.sales.controller.ValidationHelper.validateAppointmenIsOk;
 
 @RequestMapping("/sales")
 @Controller
@@ -36,65 +37,71 @@ public class OTCSellController {
     private final LineItemService lineItemService;
     private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
+    private final VisitRepository visitRepository;
 
-    @GetMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
-    String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, Model model, RedirectAttributes redirect) {
+    @GetMapping("/otc/customer/{customerId}/visit/{visitId}")
+    String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Model model, RedirectAttributes redirect) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect, appointmentRepository);
-        if (app == null) return "redirect:/sales/otc/search/";
 
-        HashSet<Long> petsOnAppointment = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
-        // after refresh the petId isn't available anymore on the visit, so select the first one then....
-        List<Visit> visits = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).toList();
-        Pet selectedPet = (visits.isEmpty()) ? app.getVisits().iterator().next().getPet() : visits.getFirst().getPet();
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
+        if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
+            return "redirect:/sales/otc/search/";
+        Appointment app = visit.getAppointment();
+        HashSet<Long> listPetsOnAppointment = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
 
         model
                 .addAttribute("customer", customer)
-                .addAttribute("petsOnVisit", app.getVisits().stream().map(Visit::getPet)
-                        .map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased()))
+                // using the visit Id so switching between the pets is going ok since we change the url
+                .addAttribute("petsOnAppointment", app.getVisits().stream().map(vist -> new PresentationElement(vist.getId(), vist.getPet().getNameWithDeceased()))
                         .sorted(Comparator.comparing(PresentationElement::getId)).toList())
-                .addAttribute("selectedPet", selectedPet)
-                .addAttribute("pets", customer.pets().stream().filter(pet -> !petsOnAppointment.contains(pet.id()) && !pet.deceased()))
-                .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !petsOnAppointment.contains(pet.id()) && pet.deceased()))
-                .addAttribute("url", "/sales/otc/search/" + customer.id() + "/sell/" + app.getId() + "/" + selectedPet.getId() + "/");
-        updateModel(model, petId, visits.stream().filter(visit -> visit.getPet().getId().equals(selectedPet.getId())).findFirst().get());
+                .addAttribute("selectedPet", visit.getPet())
+                .addAttribute("pets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && !pet.deceased()))
+                .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && pet.deceased()))
+                .addAttribute("url", "/otc/customer/"+ customer.id() +"/visit/" + visit.getId());
+        updateModel(model, visit.getPet().getId(),customer.id(), visit);
         return "salesconsult-generic-module/productpage";
     }
 
-    @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
-    ResponseEntity<?> deleteVisitFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, RedirectAttributes redirect) {
+    @DeleteMapping("/otc/customer/{customerId}/visit/{visitId}")
+    ResponseEntity<?> deleteVisitFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long petId, RedirectAttributes redirect) {
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("HX-Refresh", "true");
+        // validate
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
 
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect, appointmentRepository);
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
+        if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
+            return new ResponseEntity<>(responseHeaders, HttpStatus.FORBIDDEN);
+
+        Appointment app = visit.getAppointment();
 
         if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
             return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
         }
-        app.getVisits().removeIf(visit -> visit.getPet().getId().equals(petId));
+        app.getVisits().removeIf(vist -> vist.getPet().getId().equals(petId));
         app.getLineItems().removeIf(lineItem -> lineItem.getPet().getId().equals(petId));
         appointmentRepository.save(app);
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
 
-    @DeleteMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}/{lineItemId}")
-    String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable Long petId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
-        // still allowed to delete line item?
-        final Appointment app = getAndValidateAppointment(appointmentId, redirect, appointmentRepository);
-        if (app == null) return "redirect:/sales/otc/search/";
 
-        lineItemService.delete(lineItemId);
+    @DeleteMapping("/otc/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
+    String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
+        if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
+            return "redirect:/sales/otc/search/";
 
-        Appointment newApp = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-
-        model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
-        updateModel(model, petId, app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get());
-        return "sales-module/fragments/htmx/lineitemsoverview";
+        Appointment app = visit.getAppointment();
+        app.getLineItems().removeIf(lItem -> lItem.getId().equals(lineItemId));
+        appointmentRepository.save(app);
+        updateModel(model, visit.getPet().getId(),customer.id(), visit);
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
     // TODO do we need to add version ?
-    @PostMapping("/otc/search/{customerId}/sell/{appointmentId}/{petId}")
+    @PostMapping("/otc/customer/{customerId}/visit/{visitId}")
     String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @PathVariable Long appointmentId, @PathVariable Long petId,
                                           @NotNull BigDecimal inputCostingQuantity, @NotNull Long inputCostingId,
                                           String inputBatchNumber, String spillageName, Model model, RedirectAttributes redirect) {
@@ -105,25 +112,16 @@ public class OTCSellController {
         }
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
-        updateModel(model, petId, app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get());
-        model.addAttribute("url", "/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + petId + "/");
-        return "sales-module/fragments/htmx/lineitemsoverview";
+        updateModel(model, petId, customer.id(), app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get());
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
 
-    private static Appointment getAndValidateAppointment(Long appointmentId, RedirectAttributes redirect, AppointmentRepository appointmentRepository) {
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        if (app.isCancelled() || app.iscompleted()) {
-            redirect.addFlashAttribute("message", "Appointment is cancelled or completed.");
-            return null;
-        }
-        return app;
-    }
-
-    private void updateModel(Model model, Long petId, Visit visit) {
+    private void updateModel(Model model, Long petId, Long customerId, Visit visit) {
 
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, visit.getAppointment().getId()));
         model
+                .addAttribute("url",  "/otc/customer/"+ customerId +"/visit/" + visit.getId())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("categoryNames", costingService.getCategories())

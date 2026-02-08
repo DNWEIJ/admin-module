@@ -1,5 +1,6 @@
 package dwe.holding.admin.model.type;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -31,7 +32,7 @@ public enum AgendaTypeEnum {
         throw new IllegalArgumentException(value + " is not a valid AgendaTypeEnum");
     }
 
-
+    @JsonCreator
     public static AgendaTypeEnum getEnumFromDbField(String value) {
         if (value == null)
             throw new IllegalArgumentException();

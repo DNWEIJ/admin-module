@@ -1,0 +1,23 @@
+<p>
+<div class="notification-message text-align-center alert "
+     th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert"
+     th:text="${message != null} ? #{${message}} : ''"></div>
+<table class="table-tight striped">
+    <thead>
+    <tr>
+        <th th:text="#{visit.header.visitDate}"></th>
+        <th th:text="#{label.diagnose}"></th>
+        <th th:text="#{visit.header.location}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="historyItem : ${historyItems}">
+        <tr>
+            <td th:text="${#temporals.format(historyItem.visitDate, 'dd-MM-yy')}"></td>
+            <td th:text="${historyItem.diagnose}"></td>
+            <td th:text="${historyItem.location}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+</p>

@@ -54,7 +54,7 @@ public class HtmxEstimateController {
                 .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
                 .addAttribute("categoryNames", costingService.getCategories());
         ModelHelper.updateLineItemsInModel(model, estimateService.getAllLineItems(estimateId, petId));
-        return "sales-module/fragments/htmx/lineitemsoverview";
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
     @PostMapping("/customer/{customerId}/estimateforpet")

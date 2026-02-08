@@ -14,9 +14,9 @@ import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
-import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +28,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class SetupService {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -37,17 +38,6 @@ public class SetupService {
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
-    private final CustomerRepository customerRepository;
-
-    public SetupService(MemberRepository memberRepository, UserRepository localMemberRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, CustomerRepository customerRepository) {
-        this.memberRepository = memberRepository;
-        this.localMemberRepository = localMemberRepository;
-        this.functionRepository = functionRepository;
-        this.roleRepository = roleRepository;
-        this.functionRoleRepository = functionRoleRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.customerRepository = customerRepository;
-    }
 
     @Transactional
     public   Long init() {

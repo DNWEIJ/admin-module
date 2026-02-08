@@ -70,7 +70,7 @@ public class PaymentController {
     }
 
     @GetMapping("/customer/{customerId}/payments")
-    String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
+    String list(@PathVariable Long customerId, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         model
                 .addAttribute("payments", paymentRepository.findByCustomer_IdOrderByPaymentDateDesc(customer.getId()))

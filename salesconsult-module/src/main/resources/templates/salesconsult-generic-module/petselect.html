@@ -1,53 +1,7 @@
-<th:block th:fragment="petSelect(customer, pets, deceasedPets, salesType, showPetLink, formName)">
-    <script th:inline="javascript">
-        function addEventListenersForPetSelect() {
-
-            // Attach listener to all dropdowns starting with 'reasonList['  copy the purpose and check the checkbox
-            document.querySelectorAll("select[id^='reasonList']").forEach(select => {
-                select.addEventListener("change", function () {
-                    const index = this.id.match(/\[(\d+)\]/)[1]; // extract index houseNumber
-
-                    // Find matching input + checkbox
-                    const purposeInput = document.getElementById(`formPet[${index}].purpose`);
-                    const checkBox = document.getElementById(`formPet[${index}].checked`);
-                    const purposeSelect = document.getElementById(`reasonList[${index}].reason`);
-
-                    if (purposeInput) purposeInput.value = purposeSelect.options[purposeSelect.selectedIndex].text;
-                    if (checkBox) checkBox.checked = true;
-                    // now if we are creating an appointment, we need to handle the reason -> time setting
-                    const timeFromReasonSelect = document.getElementById(`formPet[${index}].timeNeeded`);
-                    if (timeFromReasonSelect) {
-                        timeFromReasonSelect.value =
-                            purposeSelect.options[purposeSelect.selectedIndex].dataset.element;
-                    }
-                });
-            });
-            // add to staff and room to set checkbox
-            document.querySelectorAll("select[id^='formPet'][id$='.vet'], select[id^='formPet'][id$='.room']").forEach(select => {
-                select.addEventListener("change", function () {
-                    const index = this.id.match(/\[(\d+)\]/)[1]; // extract index houseNumber
-                    // Find checkbox
-                    const checkBox = document.getElementById(`formPet[${index}].checked`);
-                    if (checkBox) checkBox.checked = true;
-                })
-            })
-
-            // prevent submitting the form if no checkbox is checked
-            document.getElementById([[${formName}]]).addEventListener("submit", function (e) {
-                if (!document.querySelectorAll('input[type=checkbox]:checked').length) {
-                    // @formatter:off
-                    alert([[#{label.otc.pet.checkbox.error}]])
-                    // @formatter:on
-                    e.preventDefault();
-                }
-            });
-        }
-        document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
-    </script>
-
-    <details id="customerpetinfo" open>
+<th:block th:fragment="petSelect(customer, pets, deceasedPets, salesType, showPetLink)">
+    <details id="selectpets" open>
         <summary>
-            <span th:text="#{label.otc.petList}"></span><a href="/info/petlist" title="More info" class="info-icon">ℹ️</a>
+            <span th:text="#{label.otc.petList}"></span><a href="/info/selectpets" title="More info" class="info-icon">ℹ️</a>
         </summary>
         <table id="show-table" class="table-tight striped">
             <thead>
@@ -67,7 +21,6 @@
                     <td>
                         <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
                     </td>
-
                     <td th:if="${showPetLink}"><a href="" th:text="${pet.name} + ' (' + ${pet.species()} + ')'" hx-target="#modal-container" hx-swap="innerHTML"
                                                   th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}"></a>
                     </td>
@@ -78,11 +31,11 @@
                                   th:with="required=false,class='small-input'"></th:block>
                     </td>
                     <td th:if="${salesType.isVisit}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', '', ${staffList}, true, ${3+iStat.index})}"
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', ${selectedVet}, ${staffList}, true, ${3+iStat.index})}"
                                   th:with="required=false"></th:block>
                     </td>
                     <td th:if="${salesType.isVisit}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '', '', ${rooms}, true,${4+iStat.index})}"
+                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '',  ${selectedRoom}, ${rooms}, true,${4+iStat.index})}"
                                   th:with="required=false"></th:block>
                     </td>
 

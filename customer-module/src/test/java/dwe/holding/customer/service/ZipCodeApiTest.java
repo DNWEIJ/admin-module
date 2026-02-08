@@ -1,15 +1,12 @@
 package dwe.holding.customer.service;
 
 import org.junit.jupiter.api.Test;
-import tools.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ZipCodeApiTest {
 
-    private final ZipCodeApi api = new ZipCodeApi(
-            new ObjectMapper()
-    );
+    private final ZipCodeApi api = new ZipCodeApi();
 
     @Test
     void callsRealOpenPostcodeApi_Succes() {
@@ -24,17 +21,21 @@ class ZipCodeApiTest {
 
     @Test
     void callsRealOpenPostcodeApi_NotFound() {
-        assertThat(api.getAddress("2215MT", "1800").isEmpty()).isTrue();
+        ZipCodeApi.Address address = api.getAddress("2215MT", "1800").get();
+        assertThat(address).isNotNull();
+        assertThat(address.street()).isNull();
+        assertThat(address.city()).isNull();
+        assertThat(address.houseNumber()).isNotEmpty();
     }
 
     @Test
     void callsRealOpenPostcodeStreetApi_Succes() {
         ZipCodeApi.Address address =
-                api.getAddressViaStreetAndCity("Jacob van Lennepkade","2", "Amsterdam").get();
+                api.getAddressViaStreetAndCity("Jacob van Lennepkade","2-1", "Amsterdam").get();
         assertThat(address).isNotNull();
         assertThat(address.street()).isNotBlank();
         assertThat(address.city()).isNotBlank();
-        assertThat(address.zipCode()).isEqualTo("2215MT");
+        assertThat(address.zipCode()).isEqualTo("1053MJ");
     }
 
 }

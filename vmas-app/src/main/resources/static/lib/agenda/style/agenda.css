@@ -1,0 +1,72 @@
+/* fixed header */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/* tooltip set align */
+[data-tooltip]::before {
+
+    width: 100%;
+    white-space: break-spaces;
+    text-indent: 0;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-ligatures: none; /* prevent ligatures from breaking alignment */
+}
+
+
+.calendar-title {
+    margin: 0;
+    padding: 0;
+    background: dodgerblue;
+    font-size: 110%;
+    font-weight: bold;
+}
+
+.ec-events article {
+    margin: 0;
+    padding: 0;
+}
+
+/*Context menu */
+.contextmenu-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max-content;
+    white-space: nowrap;
+    transform: translate(-25%, -50%);
+    right: 0;
+    background-color: rgb(245, 245, 245);
+    border-radius: 10px;
+    border: 3px solid darkgray;
+    z-index: 999;
+}
+
+.contextmenu-item {
+    background-color: rgb(245, 245, 245);
+    padding: 0.5rem 0.8rem;
+    border-radius: 5px;
+    margin: 0.05rem;
+    cursor: pointer;
+    border: 1px solid rgb(245, 245, 245);
+}
+
+.contextmenu-item:hover {
+    border: 1px solid rgb(219, 219, 219);
+    background-color: rgb(255, 255, 255);
+}
+
+.active {
+    border: 0.5px solid rgb(219, 219, 219);
+    background-color: rgb(255, 255, 255);
+}
+
+.contextmenu-item a {
+    color: rgb(95, 95, 95);
+    text-decoration: none;
+    font-size: 14px;
+}
+

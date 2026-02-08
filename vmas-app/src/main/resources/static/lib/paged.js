@@ -11488,7 +11488,6 @@
                 var enterRet = enter.call(context, node, item, list);
 
                 if (enterRet === breakWalk) {
-                    debugger;
                     return true;
                 }
 

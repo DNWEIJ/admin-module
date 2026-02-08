@@ -1,0 +1,21 @@
+<dialog id="create-new-appointment-modal" class="modal-xlg" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev" data-target="create-new-appointment-modal"
+                    onclick="toggleModal(event)"></button>
+        </header>
+        <p id="modalPetFormPart">
+        <form name="createForm" id="createForm" action="#">
+            <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(false, ${url}, ${salesType})}"></div>
+        </form>
+        </p>
+
+        <footer>
+            <fieldset class="grid">
+                <input type="button" data-target="create-new-appointment-modal" onclick="toggleModal(event)"
+                       th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+</dialog>
+

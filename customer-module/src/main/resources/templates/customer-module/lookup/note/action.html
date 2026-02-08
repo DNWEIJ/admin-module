@@ -14,7 +14,7 @@
         <input id="version" name="version" th:value="${note.version}" type="hidden"/>
 
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','customer.address1','customer.address1','1')}"></th:block>
+
         </fieldset>
     </form>
     <th:block th:insert="~{fragments/elements/audit::audit('note.addedBy','note.addedOn', 'note.lastEditedBy', 'note.lastEditedOn')}"></th:block>

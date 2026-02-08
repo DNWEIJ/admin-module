@@ -9,7 +9,7 @@
 
 
 <th:block th:fragment="visitStatusButtons">
-    <fieldset class="grid right-left-space">
+    <fieldset class="grid">
         <div>
             <input th:if="${visit.status == T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).PLANNED}"
                    type="button" th:value="#{label.visit.reschedule}"

@@ -22,5 +22,6 @@ public class LookupSpecies extends MemberBaseBO {
     private Set<LookupBreeds> breeds = new HashSet<>(0);
     @NotEmpty
     @Column(nullable = false)
+    // todo plural -> single
     private String species;
 }

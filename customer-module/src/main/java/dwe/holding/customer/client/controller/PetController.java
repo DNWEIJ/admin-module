@@ -3,9 +3,9 @@ package dwe.holding.customer.client.controller;
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
+import dwe.holding.customer.client.model.lookup.LookupBreeds;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.customer.client.repository.LookupBreedsRepository;
 import dwe.holding.customer.client.repository.LookupSpeciesRepository;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
 
 @Controller
 @RequestMapping(path = "/customer")
@@ -34,7 +36,6 @@ public class PetController {
     private final PetRepository petRepository;
     private final CustomerRepository customerRepository;
     private final LookupSpeciesRepository lookupSpeciesRepository;
-    private final LookupBreedsRepository lookupBreedsRepository;
 
     @GetMapping("/customer/{customerId}/pets")
     String list(@PathVariable Long customerId, Model model) {
@@ -75,7 +76,6 @@ public class PetController {
         pet.setIdealWeight(petForm.getIdealWeight());
         pet.setSpecies(petForm.getSpecies());
         pet.setBreed(petForm.getBreed());
-        pet.setBreedOther(petForm.getBreedOther());
         pet.setSex(petForm.getSex());
         pet.setBriefDescription(petForm.getBriefDescription());
         pet.setAllergies(petForm.getAllergies());
@@ -95,6 +95,16 @@ public class PetController {
         return getHtmxAndAddToModel(request, model) ? "customer-module/pet/petformmodal" : "redirect:/customer/customer/" + customerId + "/pets";
     }
 
+    @PostMapping("/customer/pet/breed/{id}")
+    String getBreed(@PathVariable Long id, Model model){
+        model.addAttribute("flatData",
+                model.addAttribute("speciesList", lookupSpeciesRepository.findById(id).orElseThrow().getBreeds()
+                        .stream().sorted(comparing(LookupBreeds::getBreed)).map(
+                                f -> "<option='" + f.getId() + "'>" + f.getBreed() + "</option>"
+                        ).collect(Collectors.joining()))
+                );
+        return "fragments/elements/flatData";
+    }
 
     @PostMapping("/customer/{customerId}/pet")
     String saveNewPet(@PathVariable Long customerId, @Valid Pet petForm, RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -127,7 +137,7 @@ public class PetController {
         Pet savedPet = petRepository.save(
                 Pet.builder()
                         .name(petForm.getName()).birthday(petForm.getBirthday()).idealWeight(petForm.getIdealWeight())
-                        .species(petForm.getSpecies()).breed(petForm.getBreed()).breedOther(petForm.getBreedOther()).sex(petForm.getSex())
+                        .species(petForm.getSpecies()).breed(petForm.getBreed()).sex(petForm.getSex())
                         .briefDescription(petForm.getBriefDescription())
                         .allergies(petForm.getAllergies()).insured(petForm.getInsured()).deceased(petForm.getDeceased()).gpwarning(petForm.getGpwarning())
                         .allergiesDescription(petForm.getAllergiesDescription()).insuredBy(petForm.getInsuredBy())
@@ -167,16 +177,9 @@ public class PetController {
         model.addAttribute("pet", pet);
         model.addAttribute("speciesList", lookupSpeciesRepository.findByMemberIdIn(listIds)
                 .stream().map(
-                        f -> new PresentationElement(f.getSpecies(), f.getSpecies())
+                        f -> new PresentationElement(f.getId(), f.getSpecies())
                 )
-                .sorted(Comparator.comparing(PresentationElement::getName)).toList()
-        );
-        model.addAttribute("breedList", lookupBreedsRepository.findByMemberIdIn(listIds)
-                .stream().map(
-                        f -> new PresentationElement(f.getBreed(), f.getBreed())
-                )
-                .sorted(Comparator.comparing(PresentationElement::getName)).toList()
-
+                .sorted(comparing(PresentationElement::getName)).toList()
         );
     }
 

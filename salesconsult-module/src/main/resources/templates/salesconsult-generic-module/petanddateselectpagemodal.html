@@ -1,0 +1,19 @@
+<dialog id="create-new-appointment-pet-modal" class="modal-xlg" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev" data-target="create-new-appointment-pet-modal"
+                    onclick="toggleModal(event)"></button>
+        </header>
+        <p id="modalPetFormPart">
+            <div th:replace="~{sales-module/fragments/petanddateselectpage}"></div>
+        </p>
+
+        <footer>
+            <fieldset class="grid">
+                <input type="button" data-target="create-new-appointment-pet-modal" onclick="toggleModal(event)"
+                       th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+</dialog>
+

@@ -14,7 +14,8 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "CUSTOMER_CUSTOMER") // , uniqueConstraints = @UniqueConstraint(name = "uk_parent_name", columnNames = "NAME"))
+@Table(name = "CUSTOMER_CUSTOMER")
+// , uniqueConstraints = @UniqueConstraint(name = "uk_parent_name", columnNames = "NAME"))
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -76,24 +77,50 @@ public class Customer extends MemberBaseBO {
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 //    private Set<Payment> payments = new HashSet<Payment>(0);
 
-    public String getCustomerName() {
-        String CustomerName = getLastName();
+    public static String getCustomerName(String lastName, String surName, String firstName, String middleInitial) {
+        String CustomerName = lastName;
 
-        if(getSurName() != null && !getSurName().isEmpty()) {
-            CustomerName = getSurName() + " " + CustomerName;
+        if (surName != null && !surName.isEmpty()) {
+            CustomerName = surName + " " + CustomerName;
         }
-        if((getFirstName() != null) && (!getFirstName().isEmpty())) {
-            CustomerName = CustomerName + ", " + getFirstName();
+        if ((firstName != null) && (!firstName.isEmpty())) {
+            CustomerName = CustomerName + ", " + firstName;
         }
-        if((getMiddleInitial() != null) && (!getMiddleInitial().isEmpty())) {
-            CustomerName = CustomerName + " " + getMiddleInitial() + (getMiddleInitial().endsWith(".") ? "" : ".");
-
+        if ((middleInitial != null) && (!middleInitial.isEmpty())) {
+            CustomerName = CustomerName + " " + middleInitial + (middleInitial.endsWith(".") ? "" : ".");
         }
         return CustomerName;
+    }
+
+    public String getCustomerName() {
+        return getCustomerName(this.lastName, this.surName, this.firstName, this.middleInitial);
     }
 
     @Transient
     public String getCustomerNameWithId() {
         return getCustomerName() + " (" + getId() + ")";
+    }
+
+    public String getPhoneList() {
+        StringBuffer phoneList = new StringBuffer();
+        if (mobilePhone != null && !mobilePhone.isBlank()) {
+            phoneList.append(mobilePhone);
+        }
+        if (homePhone != null && !homePhone.isBlank()) {
+            if (phoneList.isEmpty()) {
+                phoneList.append(homePhone);
+            } else {
+                phoneList.append(", ").append(homePhone);
+            }
+        }
+        if (workPhone != null && !workPhone.isBlank()) {
+            if (phoneList.isEmpty()) {
+                phoneList.append(workPhone);
+            } else {
+                phoneList.append(", ").append(workPhone);
+            }
+
+        }
+        return phoneList.toString();
     }
 }

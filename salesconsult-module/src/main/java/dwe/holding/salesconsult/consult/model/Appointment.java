@@ -14,7 +14,13 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "CONSULT_APPOINTMENT")
+@Table(name = "CONSULT_APPOINTMENT",
+        indexes = {
+                @Index(name = "idx_appointment_member_local_date", columnList = "member_id, local_member_id, visit_date_time, id")
+        }
+)
+
+
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -22,6 +28,11 @@ import java.util.Set;
 @Getter
 @Setter
 public class Appointment extends TenantBaseBO {
+
+    public static final String CANCELLED_COLOUR = "#9999FF";
+    public static final String CANCELLED_LABEL_TEXT = "label.visit.status.canceled";
+    public static final String FINISHED_COLOUR = "#0A640A";
+    public static final String FINISHED_LABEL_TEXT = "label.visit.status.completed";
 
     @NotNull
     @Column(nullable = false)
@@ -44,7 +55,7 @@ public class Appointment extends TenantBaseBO {
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum OTC;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "appointment",  cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "appointment", cascade = {CascadeType.ALL}, orphanRemoval = true)
     @Builder.Default
     private Set<Visit> visits = new HashSet<>(0);
 
@@ -58,16 +69,19 @@ public class Appointment extends TenantBaseBO {
 
     @Transient
     public boolean isCancelled() {
-       return cancelled.equals(YesNoEnum.Yes);
+        return cancelled.equals(YesNoEnum.Yes);
     }
+
     @Transient
-    public boolean iscompleted() {
+    public boolean isCompleted() {
         return completed.equals(YesNoEnum.Yes);
     }
+
     @Transient
     public boolean isPickedUp() {
         return pickedUp.equals(YesNoEnum.Yes);
     }
+
     @Transient
     public boolean isOTC() {
         return OTC.equals(YesNoEnum.Yes);

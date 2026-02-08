@@ -1,0 +1,40 @@
+<dialog id="history-modal" open>
+    <!-- HX-Trigger-After-Settle::-->
+    <article>
+        <header>
+            <span><h4>[[${headertitle}]]</h4></span>
+        </header>
+        <p>
+            <th:block id="content" th:replace="~{${fragment}}"></th:block>
+        </p>
+        <footer>
+            <fieldset class="grid">
+                <input type="button" data-target="history-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("history-modal", () => {
+            const modal = document.getElementById("history-modal")
+            closeModal(modal)
+            location.reload();
+        });
+
+
+        function messageDisplay(messageText) {
+            const element = document.querySelector('.notification-message')
+            if (messageText) element.textContent = messageText;
+            if (element.textContent.length !== 0) {
+                element.classList.add('show');
+                setTimeout(function () {
+                    element.classList.remove('show');
+                }, 1300)
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            messageDisplay();
+        });
+    </script>
+</dialog>

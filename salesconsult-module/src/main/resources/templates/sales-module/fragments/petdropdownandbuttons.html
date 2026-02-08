@@ -1,24 +1,32 @@
-<th:block th:fragment="petDropDownAndButtons(petsOnVisit, selectedPet, customer, appointment, extraContent, disabled)">
+<block th:if="${!salesType.isPriceInfo}">
+    <script th:inline="javascript">
+        document.getElementById('selectPetId').onchange = function () {
+            window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + this.value;
+        }
+    </script>
+</block>
+<th:block th:fragment="petDropDownAndButtons(petsOnAppointment, selectedPet, customer,visit, appointment, extraContent, disabled)">
     <div>
         <form method="post">
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selectPetId','', ${selectedPet.id}, ${petsOnVisit}, true,'-1')}" th:with="isPleaseChoose=false"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selectPetId','', ${visit.getId}, ${petsOnAppointment}, true,'-1')}" th:with="isPleaseChoose=false"></th:block>
         </form>
     </div>
     <div>
-        <input th:if="${petsOnVisit.size() != customer.pets.size()}" type="button"  th:value="#{label.otc.sell.add.pet}"
-               th:hx-get="'/sales/otc/search/'+ ${customer.id}+'/sell/'+ ${appointment.id}+'/addpet'"
+        <input th:if="${petsOnAppointment.size() != customer.pets.size()}" type="button" th:value="#{label.otc.sell.add.pet}"
+               th:hx-get="'/generic/customer/'+ ${customer.id}+'/appointment/'+ ${appointment.id}+'/addpet/'+${salesType}"
                hx-target="#modal-container"
                hx-swap="innerHTML"
                th:attrappend="disabled=${disabled} ? 'disabled' : null"
-        hx-on::after-request="addEventListenersForPetSelect()"/>
-        <input th:if="${petsOnVisit.size() == customer.pets.size()}" type="button" style="cursor: not-allowed;" class="secondary" th:value="#{label.otc.sell.add.pet}" disabled/>
+               hx-on::after-request="addEventListenersForPetSelect()"/>
+        <input th:if="${petsOnAppointment.size() == customer.pets.size()}" type="button" style="cursor: not-allowed;" class="secondary" th:value="#{label.otc.sell.add.pet}" disabled/>
     </div>
     <div>
-        <input type="button" th:value="#{label.otc.sell.delete}"
+        <input  th:if="${petsOnAppointment.size()>1}"  type="button" th:value="#{label.otc.sell.delete}"
                hx-include="#csrfParameterName"
                th:attrappend="disabled=${disabled} ? 'disabled' : null"
                th:hx-confirm="#{label.otc.pet.delete.confirm}"
                th:hx-delete="'/sales/otc/search/'+ ${customer.id}+'/sell/'+ ${appointment.id}+'/' + ${selectedPet.id}"> <!-- returning hx-refresh header -->
+        <input  th:if="${petsOnAppointment.size()<2}"  type="button" th:value="#{label.otc.sell.delete}" style="cursor: not-allowed;"  disabled> <!-- returning hx-refresh header -->
     </div>
-        <th:block th:replace="${extraContent}"></th:block>
+    <th:block th:replace="${extraContent}"></th:block>
 </th:block>

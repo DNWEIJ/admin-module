@@ -2,7 +2,6 @@ package dwe.holding.salesconsult.consult.controller;
 
 import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
-import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
@@ -22,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateLineItemsInModel;
+import static dwe.holding.salesconsult.sales.controller.ValidationHelper.validateAppointmenIsOk;
 
 @AllArgsConstructor
 @Controller
@@ -47,11 +47,11 @@ public class HtmxVisitLineItemsController {
         lineItemService.delete(lineItemId);
 
         updateModel(model, visit, customerId);
-        return "sales-module/fragments/htmx/lineitemsoverview";
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
 
-    @PostMapping("/visit/customer/{customerId}/visit/{visitId}")
+    @PostMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem")
     String postLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId,
                                @NotNull BigDecimal inputCostingQuantity, String inputBatchNumber, Long inputCostingId, String spillageName, Model model, RedirectAttributes redirect) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
@@ -65,16 +65,10 @@ public class HtmxVisitLineItemsController {
         }
         lineItemService.createOtcLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
         updateModel(model, visit, customerId);
-        return "sales-module/fragments/htmx/lineitemsoverview";
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
-    public static boolean validateAppointmenIsOk(Appointment app, RedirectAttributes redirect) {
-        if (app.isCancelled() || app.iscompleted()) {
-            redirect.addFlashAttribute("message", "Appointment is cancelled or completed.");
-            return false;
-        }
-        return true;
-    }
+
 
     private void updateModel(Model model, Visit visit, Long customerId) {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));

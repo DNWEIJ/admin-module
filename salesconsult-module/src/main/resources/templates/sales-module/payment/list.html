@@ -24,7 +24,8 @@
         <tbody>
         <th:block th:each="payment : ${payments}">
             <tr>
-                <td><a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
+                <td th:attr="data-sort-value=${payment.paymentDate}">
+                    <a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
                 <td th:text="${localMembersList.get(payment.localMemberId)}"></td>
                 <td>[[#{${payment.method.getLabel}}]]</td>
                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${payment.amount}, false)}"></th:block>

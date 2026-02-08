@@ -1,3 +1,42 @@
+
+
+
+
+function applyTheme(color) {
+    const STORAGE_KEY = 'pico-theme';
+    const DEFAULT_THEME = 'grey';
+    const BASE_PATH = '/lib/pico/pico.';
+    const POST_FIX = '.min.css';
+
+    let link = document.getElementById('pico-theme');
+
+    if (!link) {
+        link = document.createElement('link');
+        link.id = 'pico-theme';
+        link.rel = 'stylesheet';
+
+        const customCss = document.querySelector('link[href*="style.css"]');
+        document.head.insertBefore(link, customCss);
+    }
+
+    link.href = BASE_PATH + color + POST_FIX;
+    localStorage.setItem(STORAGE_KEY, color);
+
+    // remove aria-current from all
+    document.querySelectorAll('[data-color]').forEach(el => el.removeAttribute('aria-current'));
+
+    // set aria-current on selected
+    const active = document.querySelector(`[data-color="${color}"]`);
+    if (active) active.setAttribute('aria-current', 'page');
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // initialize theme **after DOM is ready**
+    applyTheme(localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME);
+})
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
     document.body.addEventListener("refreshPage", () => {
@@ -13,10 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('htmx:configRequest', e => {
         const token = document.querySelector('meta[name="_csrf"]')?.content;
         const header = document.querySelector('meta[name="_csrf_header"]')?.content;
-        console.log("add csrf")
         if (token && header) {
             e.detail.headers[header] = token;
-            console.log("add csrf - done")
         }
     });
     document.body.addEventListener("htmx:responseError", function (evt) {
@@ -91,21 +128,26 @@ function sortingTables() {
         // Add new sort class to clicked header
         th.classList.add(newDirection);
 
-        // Sort rows
         rows.sort((a, b) => {
-            let aText = a.cells[colIndex].innerText;
-            let bText = b.cells[colIndex].innerText;
+            // get tds, then validate on data-sort-value else value of td
+            const aCell = a.cells[colIndex];
+            const bCell = b.cells[colIndex];
+            const aText = aCell.dataset.sortValue ?? aCell.innerText.trim();
+            const bText = bCell.dataset.sortValue ?? bCell.innerText.trim();
 
+            // see if we have numbers
             const aNum = parseFloat(aText);
             const bNum = parseFloat(bText);
 
             if (!isNaN(aNum) && !isNaN(bNum)) {
-                return newDirection === "asc" ? aNum - bNum : bNum - aNum;
-            } else {
                 return newDirection === "asc"
-                    ? aText.localeCompare(bText)
-                    : bText.localeCompare(aText);
+                    ? aNum - bNum
+                    : bNum - aNum;
             }
+
+            return newDirection === "asc"
+                ? aText.localeCompare(bText)
+                : bText.localeCompare(aText);
         });
 
         // Re-append sorted rows

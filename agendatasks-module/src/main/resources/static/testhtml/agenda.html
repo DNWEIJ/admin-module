@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>EventCalendar</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.3.0/dist/event-calendar.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.3.0/dist/event-calendar.min.js"></script>
+
+</head>
+<body>
+
+<div id="calander" class="col"></div>
+<script>
+
+    window.addEventListener('contextmenu', (e) => {
+        console.log("contextmenu");
+        console.log(elOfCalanderArticle)
+        if (elOfCalanderArticle  == null)
+            return;
+        e.preventDefault();
+
+        var callBacks = [
+            function () {
+                console.log('First')
+            },
+            function () {
+                console.log('Second')
+            },
+            function () {
+                console.log('Third')
+            },
+            function () {
+                console.log('Fourth')
+            },
+            function () {
+                console.log('Fifth')
+            },
+            function () {
+                console.log('Sixth')
+            },
+        ];
+        if (!(document.querySelector('.contextmenu-container'))) {
+            createMenu(["View", "Sort by", "Refresh", "New", "Settings", "Show More Options"], callBacks, elOfCalanderArticle);
+        }
+    });
+
+    window.addEventListener('click', (e) => {
+
+        if (document.querySelector('.contextmenu-container')) {
+            document.querySelector('.contextmenu-container').remove()
+        }
+
+    })
+
+    function createMenu(menuOptions, callBacks, el) {
+
+        let menuContainer = document.createElement('div');
+        menuContainer.classList.add("contextmenu-container");
+
+
+        menuOptions.forEach((option, index) => {
+            let menuItem = document.createElement('div');
+            menuItem.classList.add("contextmenu-item");
+
+            let menuContent = document.createElement('a');
+            menuContent.textContent = option;
+
+            menuItem.append(menuContent);
+            menuItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('click in the conextmenu');
+                callBacks[index]();
+            });
+            menuContainer.appendChild(menuItem);
+        });
+        el.appendChild(menuContainer);
+    }
+</script>
+<script>
+    let elOfCalanderArticle
+    const calander = EventCalendar.create(document.getElementById('calander'), {
+            view: 'resourceTimeGridDay',
+            headerToolbar: {
+                start: 'prev,next, today, dateButton',
+                end: ' locationButton, backButton, roomButton, resourceTimeGridDay'
+            },
+            resources: [
+                {
+                    id: 1,
+                    title: {html: "<select class=\"column-head-select\"><option selected value=\"Dr. A. Doctor\">Dr. A. Doctor</option><option value=\"Dr. B. Doctor\">Dr. B. Doctor</option><option value=\"Dr. C. Doctor\">Dr. C. Doctor</option></select>"},
+                    color: "#779ECB"
+                },
+                {
+                    id: 2,
+                    title: {html: "<select class=\"column-head-select\"><option value=\"Dr. A. Doctor\">Dr. A. Doctor</option><option selected value=\"Dr. B. Doctor\">Dr. B. Doctor</option><option value=\"Dr. C. Doctor\">Dr. C. Doctor</option></select>"},
+                    color: "#779ECB"
+                },
+                {
+                    id: 3,
+                    title: {html: "<select class=\"column-head-select\"><option value=\"Dr. A. Doctor\">Dr. A. Doctor</option><option value=\"Dr. B. Doctor\">Dr. B. Doctor</option><option selected value=\"Dr. C. Doctor\">Dr. C. Doctor</option></select>"},
+                    color: "#779ECB"
+                },
+                {
+                    id: 4,
+                    title: {html: "<select class=\"column-head-select\"><option value=\"Dr. A. Doctor\">Dr. A. Doctor</option><option value=\"Dr. B. Doctor\">Dr. B. Doctor</option><option value=\"Dr. C. Doctor\">Dr. C. Doctor</option><option selected value=\"Assistance's\">Assistance's</option></select>"},
+                    color: "#779ECB"
+                },
+            ],
+
+                // new Date(Date.now() - 60 * 60 * 1000).toTimeString().slice(0, 8),
+            events: createEvents(),
+            dayMaxEvents: true,
+            nowIndicator: true,
+            selectable: true,
+
+            customScrollbars: /Mac/i.test(navigator.userAgent),
+            buttonText: {
+                close: 'Close',
+                dayGridDay: 'Dag',
+                dayGridMonth: 'Maand',
+                dayGridWeek: 'Week',
+                listDay: 'Lijst',
+                listMonth: 'Lijst',
+                listWeek: 'Lijst',
+                listYear: 'Lijst',
+                resourceTimeGridDay: 'Resources',
+                resourceTimeGridWeek: 'Resources',
+                resourceTimelineDay: 'Tijdslijn',
+                resourceTimelineMonth: 'Tijdslijn',
+                resourceTimelineWeek: 'Tijdslijn',
+                timeGridDay: 'Dag',
+                timeGridWeek: 'Week',
+                today: 'Vandaag'
+            },
+            customButtons: {
+                backButton: {
+                    text: 'back',
+                    click: function () {
+                        alert('going back to the app');
+                    }
+                },
+                locationButton: {
+                    text: 'locatie veranderen',
+                    click: function () {
+                        alert('show dropdown locations in a modal to select from ');
+                    }
+                },
+                roomButton: {
+                    text: 'kameroverzicht',
+                    click: function () {
+                        alert('from resource (person) to room (resource) view');
+                    }
+                },
+                dateButton: {
+                    text: 'datum selecteren',
+                    click: function () {
+                        alert('select a date from dropdown ');
+                    }
+                }
+
+            },
+            select: function (info) {
+                console.log(info)
+                alert(info.start + '- ' + info.end + '-' + info.resource.id)
+            },
+            slotDuration: '00:10:00',
+            slotHeight: 25,
+            // slotMaxTime: '23:00:00',
+            // slotMinTime: '07:00:00',
+            slotEventOverlap: false,
+            eventClick: function (info) {
+                console.log("lets go with the event")
+            },
+            eventTimeFormat: function (start, end) {
+                return {html: "this is working"}
+            },
+            eventContent: function (info) {
+                // info.event  The associated Event object
+                // info.timeText Formatted time of the event
+                // info.view the view
+                return {html: "<div class=\"pico\"><a data-tooltip=\"14:00-19:00 fsdfjsdifj \<br/> &#10;dfosdj fodsjf osdjf sdfjsdof jsdofj &#10;sdf jsdfds fsd ahua) Purpose: controle urine \"><div><strong>14:00-19:00 Romeijn, I.L.</strong></div><div>Dusty - controle urine (nog niet betaald)</div></div>"}
+
+            },
+            eventMouseEnter: function (info) {
+                // info.el        The HTML element for the event
+                // info.event     The associated Event object
+                // info.jsEvent   JavaScript native event object with low-level information such as click coordinates
+                // info.view      The current View object
+                console.log("setting el")
+                console.log(info.el)
+                elOfCalanderArticle = info.el;
+                console.log(elOfCalanderArticle)
+            },
+            eventMouseLeave: function (info) {
+                // info.el        The HTML element for the event
+                // info.event     The associated Event object
+                // info.jsEvent   JavaScript native event object with low-level information such as click coordinates
+                // info.view      The current View object
+                elOfCalanderArticle = null;
+            },
+            scrollTime: '12:00:00'
+        })
+    ;
+
+    function createEvents() {
+
+        let days = [];
+        for (let i = 0; i < 7; ++i) {
+            let day = new Date();
+            days[i] = day.getFullYear() + "-" + _pad(day.getMonth() + 1) + "-" + _pad(day.getDate());
+        }
+
+        return [
+            {
+
+                start: days[1] + " 10:00",
+                end: days[1] + " 10:30",
+                resourceId: 2,
+                title: "Dog happy is getting it's yearly shots",
+                color: "#FE6B64"
+            },
+            {
+                start: days[1] + " 11:00",
+                end: days[1] + " 11:20",
+                resourceId: 2,
+                title: "Lotje, not active, passive",
+                color: "#B29DD9"
+            },
+            {
+                start: days[2] + " 12:00",
+                end: days[2] + " 12:30",
+                resourceId: 2,
+                title: "Woef, not eating",
+                color: "#779ECB"
+            },
+            {start: days[3] + " 14:00", end: days[3] + " 14:10", resourceId: 3, title: "do it", color: "#FE6B64"},
+            {
+                start: days[3] + " 15:00",
+                end: days[3] + " 18:00",
+                resourceId: 1,
+                title: "Overlapping events are positioned properly",
+                color: "#779ECB"
+            },
+            {
+                start: days[5] + " 15:00",
+                end: days[5] + " 15:40",
+                resourceId: 2,
+                title: {html: "You have complete control over the <i><b>display</b></i> of events…"},
+                color: "#779ECB"
+            },
+            {
+                start: days[5] + " 14:00",
+                end: days[5] + " 19:00",
+                resourceId: 2,
+                title: {
+                    html: "<div class=\"pico\">" +
+                        "<a data-tooltip=\"14:00-19:00 Owner: dajed, I.L.|Phone: (02012345678,06-12345678)|--------------------------------------------------------|Pet: Doggi - Male (Neutered) (Canine,Chihuahua)|Purpose: controle urine \"" +
+                        " <div><strong>14:00-19:00 Romeijn, I.L.</strong></div><div>Dusty - controle urine (nog niet betaald)</div>" +
+                        "</div>"
+                },
+                color: "#FE6B64"
+            },
+            {start: days[5] + " 18:00", end: days[5] + " 21:00", resourceId: 2, title: "", color: "#B29DD9"},
+            {
+                start: days[1],
+                end: days[3],
+                resourceId: 1,
+                title: "All-day events can be displayed at the top",
+                color: "#B29DD9",
+                allDay: true
+            }
+        ];
+    }
+
+
+    function _pad(num) {
+        let norm = Math.floor(Math.abs(num));
+        return (norm < 10 ? '0' : '') + norm;
+    }
+</script>
+</body>
+</html>

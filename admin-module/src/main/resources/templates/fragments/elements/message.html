@@ -1,5 +1,7 @@
 <!-- notification message with fadein fadeout -->
-<div id="notification-message" class="notification-message box text-align-center alert" th:classappend="${messageClass}"  role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
+<div  id="notification-message" class="notification-message box alert-success" role="alert"
+         th:classappend="${messageClass}" th:text="${message != null} ? #{${message}} : ''"></div>
+
 
 <script>
     function messageDisplay(messageText) {
@@ -9,7 +11,7 @@
             element.classList.add('show');
             setTimeout(function () {
                 element.classList.remove('show');
-            }, 1300)
+            }, 1600)
         }
     }
 

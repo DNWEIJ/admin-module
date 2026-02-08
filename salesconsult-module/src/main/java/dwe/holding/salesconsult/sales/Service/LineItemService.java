@@ -16,7 +16,6 @@ import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.salesconsult.sales.repository.LineItemRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.CostingService;
-import dwe.holding.supplyinventory.mapper.CostingMapper;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
 import dwe.holding.supplyinventory.repository.ReminderRepository;
 import jakarta.transaction.Transactional;
@@ -37,7 +36,6 @@ public class LineItemService {
     private final AppointmentRepository appointmentRepository;
     private final ReminderRepository reminderRepository;
     private final CustomerService customerService;
-    private final CostingMapper costingMapper;
     private final AnalyseItemRepository analyseItemRepository;
 
 
@@ -82,7 +80,6 @@ public class LineItemService {
         appointmentRepository.save(app);
     }
 
-
     public void delete(@NotNull Long lineItemId) {
         lineItemRepository.deleteById(lineItemId);
     }
@@ -90,7 +87,6 @@ public class LineItemService {
     public List<LineItem> getLineItemsForPet(Long petId, Long appointmentId) {
         return lineItemRepository.findByPet_IdAndAppointment_IdAndMemberId(petId, appointmentId, AutorisationUtils.getCurrentUserMid());
     }
-
 
     private List<LineItem> createLineItemsFromCosting(Appointment appointment, Long costingId, BigDecimal quantity, Pet pet) {
         return createLineItemsFromCosting(appointment, costingId, quantity, null, null, pet);
@@ -134,7 +130,13 @@ public class LineItemService {
         return toBeSavedLineItems;
     }
 
-    // THIS IS THE HEART OF ALL LINEITEM CALCULATIONS, FOR ALL TYPES OTC / VISIT / ESTIMATE / ANALYSE BE CAREFULLY CHANGING STUFF HERE
+
+    /**************************************************************************************************************/
+    /*      THIS IS THE HEART OF ALL LINEITEM CALCULATIONS, FOR ALL TYPES OTC / VISIT / ESTIMATE / ANALYSE        */
+    /*                                                                                                            */
+    /*                               BE CAREFULLY CHANGING STUFF HERE                                             */
+
+    /**************************************************************************************************************/
     private LineItem createLineItem(Appointment appointment, CostingPriceProjection cpp, BigDecimal quantity, Pet pet,
                                     LocalMemberTax taxes, Map<Long, BigDecimal> costingGroupList, Long costingId) {
         LineItem newLineItem = LineItem.builder().appointment(appointment)
@@ -171,6 +173,8 @@ public class LineItemService {
         //update balance
 //        getUserSession().setCustomerBalance(getUserSession().getCustomerBalance() - l.getTotal());
 
+        // update visit total amount
+
         // update reminder status
         if (YesNoEnum.Yes.equals(cpp.autoReminder())) {
             // clean up existing reminders
@@ -189,6 +193,7 @@ public class LineItemService {
             customerService.updatePetDeceased(pet.getId());
         }
     }
+
     @Transactional
     public Set<LineItem> saveAnalyseAndLineItem(List<AnalyseItem> analyseItemList, List<LineItem> lineItemsList, Visit visit) {
         analyseItemRepository.saveAll(analyseItemList);

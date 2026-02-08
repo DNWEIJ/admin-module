@@ -1,6 +1,6 @@
 <th:block th:fragment="customerLinks">
     <div th:if="${customerId != null}">
-        <fieldset role="group">
+        <div role="group">
             <a role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/pets'" th:text="#{label.title.pet}"></a>
             <!--           <a  role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/pet'">&plus;</a>-->
             <a role="button" th:class="${activeMenu == 'visits'} ? 'secondary' : null" th:href="'/consult/visit/customer/'+${customerId}+'/visits'" th:text="#{label.title.visit}"></a>
@@ -8,7 +8,7 @@
             <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null" th:href="'/supplies/customer/'+${customerId}+'/reminders'" th:text="#{label.title.reminder}"></a>
             <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/notes'" th:text="#{label.title.notes}"></a>
             <a role="button" th:class="${activeMenu == 'estimate'} ? 'secondary' : null" th:href="'/consult/customer/'+${customerId}+'/estimates'" th:text="#{label.title.estimate}"></a>
-        </fieldset>
+        </div>
     </div>
     <hr/>
 </th:block>

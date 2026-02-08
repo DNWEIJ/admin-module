@@ -1,26 +1,3 @@
-/****************************************/
-/******* Genric HTML definitions ********/
-/****************************************/
-fieldset {
-    font-family: sans-serif;
-    border: solid 1px var(--pico-muted-border-color);
-    border-radius: var(--pico-border-radius);
-    background-color: var(--pico-muted-border-color);
-}
-
-fieldset legend {
-    font-size: 105%;
-    font-style: italic;
-    font-weight: bold;
-    border-radius: 1rem;
-    margin-left: 8rem;
-    margin-bottom: .7rem;
-    border-radius: var(--pico-border-radius);
-    padding: .2rem;
-    background-color: var(--pico-muted-border-color);
-    border-color: var(--pico-color);
-}
-
 /* ***************************************** */
 /** pico specific scaling issues for an app **/
 /* ***************************************** */
@@ -132,12 +109,38 @@ article > footer {
     display: none;
 }
 
+.grid {
+    padding-left: var(--pico-grid-column-gap);
+    padding-right: var(--pico-grid-column-gap);
+}
+
+/** big modal **/
+dialog.modal-xlg > article {
+    width: 95vw;
+    max-width: 1000px;
+    height: 55vh;
+    display: flex;
+    flex-direction: column;
+}
+
+dialog.modal-xlg > article > header {
+    background-color: var(--pico-form-element-spacing-vertical);
+}
+
+dialog.modal-xlg > article > body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+dialog.modal-xlg > article > footer {
+    margin-top: auto;
+}
 
 /**************************************************************/
-/*  Ensure the cswitch (checkbox) is aligned in the middle    */
+/*  Ensure the switch (checkbox) is aligned in the middle    */
 /**************************************************************/
 [data-tooltip]:not(a,button,input,[role=button]) {
-    border-bottom: 0px;
+    border-bottom: 0;
     text-decoration: none;
     cursor: default;
 }
@@ -153,9 +156,11 @@ article > footer {
     display: inline-block;
 }
 
+
 /*********************************************/
 /* dynamic search with search result window  */
 /* *******************************************/
+
 .gridSearchCustomerWithCheck {
     display: grid;
     grid-template-columns: 3fr repeat(3, 0fr);
@@ -240,6 +245,7 @@ article > footer {
 
 /* *********************** */
 /* narrow table definition */
+
 .table-tight {
     width: 100%;
     margin-top: .5rem;
@@ -251,6 +257,7 @@ article > footer {
     padding: 0;
     padding-right: 0.05rem;
     margin: 0;
+    background-color: #fafafa;
 }
 
 .table-tight footer {
@@ -278,6 +285,7 @@ tbody tr.red-text td {
 }
 
 /**** text alingment ****/
+
 .text-align-center {
     text-align: center;
 }
@@ -293,17 +301,29 @@ tbody tr.red-text td {
 /* ********************************************************** */
 /* two, three and four columns with alignment left and right */
 /* ********************************************************** */
+.four-cols {
+    grid-template-columns: repeat(4, 1fr);
+}
+.span-2 {
+    grid-column: span 2;
+}
+@media (max-width: 480px) {
+    .four-cols {
+        grid-template-columns: 1fr;
+    }
+
+    .span-2 {
+        grid-column: span 1;
+    }
+}
+
+
+
+
 .twocolumn-spread {
     display: flex;
     justify-content: space-between; /* pushes h3 left and span right */
     align-items: baseline; /* aligns text nicely */
-}
-
-.icon-plus-input {
-    display: grid;
-    grid-template-columns: 4fr 9fr;
-    grid-template-rows: 1fr;
-    align-items: stretch;
 }
 
 .threecolumn-spread {
@@ -381,6 +401,7 @@ tbody tr.red-text td {
 /********************
  *** Placeholder floats up in input CSS
  *************************/
+
 :root {
     --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -390,6 +411,7 @@ tbody tr.red-text td {
 }
 
 /* Input */
+
 .field input {
     transition: border-color var(--transition), box-shadow var(--transition);
 }
@@ -399,6 +421,12 @@ tbody tr.red-text td {
 }
 
 /* Label */
+label {
+    color: var(--pico-primary-underline);
+    font-weight: bold;
+    font-style: italic;
+}
+
 .field label {
     position: absolute;
     left: .2rem;
@@ -408,15 +436,21 @@ tbody tr.red-text td {
     font-style: italic;
     color: var(--pico-primary-underline);
     padding: 0 .4rem;
+    font-weight: bold;
 }
 
-/* Wanneer input focus heeft of niet leeg is -> label omhoog */
+/* input field: place the fieldname on top */
+
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
     top: -.9rem;
-    left: 8px;
+    left: .2rem;
+    font-weight: bold;
     color: var(--pico-primary-underline);
     background: var(--pico-background-color);
+    border: 1px solid var(--pico-form-element-border-color);
+    border-bottom:none;
+    border-radius: var(--pico-border-radius);
     z-index: 100;
 }
 
@@ -460,9 +494,17 @@ tbody tr.red-text td {
 }
 
 
+.icon-plus-input {
+    display: grid;
+    grid-template-columns: 4fr 9fr;
+    grid-template-rows: 1fr;
+    align-items: stretch;
+}
+
 /************************************************************/
 /* keep footer stick to the bottom when middle isn't filled */
 /************************************************************/
+
 html, body {
     height: 100%;
     margin: 0;
@@ -489,11 +531,13 @@ html, body {
 
 
 /* miscellaneous */
+
 .no-break {
     white-space: nowrap;
 }
 
 /** show the required fields with a red border */
+
 :required {
     box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
 }
@@ -512,16 +556,48 @@ html, body {
     font-weight: bold;
 }
 
+.red-background {
+    background-color: var(--pico-color-red-500);
+    color: white;
+    font-weight: bold;
+}
+tr.highlighted td {
+    color: var(--pico-color);
+    font-style: italic;
+    font-weight: bold;
+}
+
+
 .lower {
     padding-top: 1.4rem;
 }
 
+
+/****************************************/
+/******* Genric HTML definitions ********/
+/****************************************/
+fieldset {
+    background-color: #fafafa;
+    border: 1px solid var(--pico-primary);
+    border-radius: var(--pico-border-radius);
+    padding-top: 1.2rem;
+}
+
+fieldset legend {
+    font-size: 1.2rem;
+    font-weight: bold;
+    white-space: nowrap;
+    /*background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);*/
+}
+
+
 details {
-     margin: 0;
-     margin-bottom: .5rem;
-     border: 1px solid var(--pico-primary);
-     border-radius: var(--pico-border-radius);
- }
+    margin: 0;
+    margin-bottom: .5rem;
+    background-color: #fafafa;
+    border: 1px solid var(--pico-primary);
+    border-radius: var(--pico-border-radius);
+}
 
 details summary {
     font-size: 1.2rem;
@@ -529,7 +605,7 @@ details summary {
     position: relative; /* needed for absolute positioning inside */
     margin: 0;
     text-align: center; /* keeps text centered */
-    background-color: lightgrey;
+    background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);
     line-height: 2rem;
     border-radius: var(--pico-border-radius);
     cursor: pointer;
@@ -541,7 +617,11 @@ details summary a.info-icon {
     top: 50%;
     transform: translateY(-50%);
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.2rem;
+}
+
+.info-icon {
+    text-decoration: none;
 }
 
 .three-elements {
@@ -562,9 +642,8 @@ details summary a.info-icon {
 }
 
 
-
-
 /* create fixed input field for smaller inputs that really do not need space, like nr below 100 */
+
 .small-input {
     width: 5rem;
 }
@@ -576,48 +655,47 @@ details summary a.info-icon {
 /********************************************/
 /** PicoCSS alerting message                */
 /********************************************/
+
 .box {
-    /*TODO make colors match the pico color schema */
     position: fixed;
     right: 2rem;
-    width: 40rem;
-    background: white;
+    width: 20rem;
     border: 1px solid #ccc;
     padding: 1rem;
-    border-radius: 12px;
+    border-radius: 24px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    z-index: 99999;
-    transition: all 0.5s ease;
+    z-index: 999;
 }
 
 .notification-message {
-    height: 2.0em;
+    top: 2rem;
+    right: 2rem;
+
     opacity: 0;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(-20px);
+    pointer-events: none;
+
+    transition: opacity 400ms ease-out, transform 400ms ease-out;
+
+    background-color: #e8f5e9;
+    background-image: var(--pico-icon-valid);
+    background-repeat: no-repeat;
+    background-position: center left;
+    background-size: 2.5rem 2.5rem;
+    color: #1b5e20;
+
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    padding-left: 5rem;
+    margin-left: 5rem;
 }
 
 .notification-message.show {
-    top: 2rem;
-    right: 2rem;
     opacity: 1;
-    height: 3.5em;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
-
-/* .alert base */
-.alert {
-    margin-bottom: var(--pico-spacing);
-    padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
-    border-radius: var(--pico-border-radius);
-    color: var(--pico-color);
-    background-color: var(--pico-background-color);
-    border: 1px solid var(--pico-background-color);
-
-    background-position: center left var(--pico-form-element-spacing-vertical);
-    padding-left: 3.0rem;
-    /*background-size: auto;*/
-}
 
 /* Danger */
 .alert-error {
@@ -633,12 +711,7 @@ details summary a.info-icon {
     color: #994400;
 }
 
-/* Success */
-.alert-success {
-    background-color: #e8f5e9;
-    background-image: var(--pico-icon-valid);
-    color: #1b5e20;
-}
+
 
 [data-theme=light],
 :root:not([data-theme="dark"]) {

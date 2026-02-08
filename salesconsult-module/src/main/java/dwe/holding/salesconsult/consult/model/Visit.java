@@ -18,7 +18,11 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "CONSULT_VISIT")
+@Table(name = "CONSULT_VISIT",
+        indexes = {
+                @Index(name = "idx_visit_appointment_pet", columnList = "appointment_id, pet_id")
+        }
+)
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -80,7 +84,27 @@ public class Visit extends MemberBaseBO {
 
     @Transient
     public @Nullable boolean isOpen() {
-        return !this.getAppointment().isCancelled() && !this.getAppointment().iscompleted()  && VisitStatusEnum.isOpen(this.getStatus());
+        return !this.getAppointment().isCancelled() && !this.getAppointment().isCompleted() && VisitStatusEnum.isOpen(this.getStatus());
+    }
 
+    public String getBackgroundColor() {
+        if (appointment.isCancelled()) return Appointment.CANCELLED_COLOUR;
+        if (appointment.isCompleted()) return Appointment.FINISHED_COLOUR;
+        return status.getColor();
+    }
+
+    public String getStatusLabel() {
+        if (appointment.isCancelled()) return Appointment.CANCELLED_LABEL_TEXT;
+        if (appointment.isCompleted()) return Appointment.FINISHED_LABEL_TEXT;
+        return status.getLabel();
+    }
+
+    public String getTextColor() {
+        String hexColor = getBackgroundColor().replace("#", "");
+        int r = Integer.parseInt(hexColor.substring(0, 2), 16);
+        int g = Integer.parseInt(hexColor.substring(2, 4), 16);
+        int b = Integer.parseInt(hexColor.substring(4, 6), 16);
+        double luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+        return luminance > 186 ? "#000000" : "#FFFFFF";
     }
 }

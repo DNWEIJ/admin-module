@@ -8,6 +8,5 @@ import java.util.List;
 public interface LookupRoomRepository extends JpaRepository<LookupRoom, Long> {
     List<LookupRoom> getByMemberIdOrderByRoom(Long memberId);
 
-    // todo move to id,name object
     List<LookupRoom> findByLocalMemberIdAndMemberId(Long Mlid, Long mid);
 }

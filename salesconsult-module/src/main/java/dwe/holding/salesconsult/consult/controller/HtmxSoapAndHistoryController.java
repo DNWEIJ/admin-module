@@ -5,15 +5,19 @@ import dwe.holding.admin.security.AutorisationUtils;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.SoapAndHistoryService;
+import dwe.holding.supplyinventory.expose.CostingService;
 import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Locale;
 
 @AllArgsConstructor
 @Controller
@@ -23,20 +27,42 @@ public class HtmxSoapAndHistoryController {
     private final SoapAndHistoryService soapAndHistoryService;
     private final PetRepository petRepository;
     private final CustomerService customerService;
+    private final CostingService costingService;
+    private final MessageSource messageSource;
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/history/{action}")
-    String returnHistoryModal(@PathVariable Long customerId, @PathVariable Long petId, @PathVariable String action, Model model) {
+    String returnHistoryModal(@PathVariable Long customerId, @PathVariable Long petId, @PathVariable String action, Model model, Locale local) {
         CustomerService.Customer customer = customerService.searchCustomerAndPet(customerId, petId);
 
         switch (action) {
-            case "weight": model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
-            case "product": model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
-            case "diagnose": model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
+            case "weight": {
+                model
+                        .addAttribute("headertitle", messageSource.getMessage("label.history.weight", null, local))
+                        .addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId))
+                        .addAttribute("fragment", "consult-module/visit/dialog/history/tempweightglucosehistory");
+                break;
+            }
+            case "product": {
+                model
+                        .addAttribute("headertitle", messageSource.getMessage("label.history.product", null, local))
+                        .addAttribute("historyItems", soapAndHistoryService.getHistoryForProducts(petId))
+                        .addAttribute("categoryNames", costingService.getCategories())
+                        .addAttribute("fragment", "consult-module/visit/dialog/history/productshistory");
+                break;
+            }
+            case "diagnose": {
+                model
+                        .addAttribute("headertitle", messageSource.getMessage("label.history.diagnose", null, local))
+                        .addAttribute("historyItems", soapAndHistoryService.getHistoryForDiagnose(petId))
+                        .addAttribute("fragment", "consult-module/visit/dialog/history/diagnosehistory");
+                break;
+            }
+            default: {
+                model.addAttribute("fragment", "");
+            }
         }
-        model.addAttribute("historyItems", soapAndHistoryService.getHistoryForTempWeightClugose(petId));
-        return "consult-module/visit/historymodal";
+        return "consult-module/visit/dialog/historydialog";
     }
-
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/soap")
     String returnSoapModal(@PathVariable Long customerId, @PathVariable Long petId, Model model) {

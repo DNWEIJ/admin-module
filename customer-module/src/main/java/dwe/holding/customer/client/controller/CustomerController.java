@@ -7,7 +7,6 @@ import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.customer.service.ZipCodeApi;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CustomerController {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
-    private final ZipCodeApi zipCodeApi;
     private final CustomerForm customerForm;
 
     @GetMapping("/customer")
@@ -90,7 +88,7 @@ public class CustomerController {
                 return "redirect:/customer/customer";
             }
             customerMapper.updateCustomerFromForm(customerForm, customer);
-            redirect.addFlashAttribute("message", "label.customer.saved");
+            redirect.addFlashAttribute("message", "label.saved");
             return "redirect:/customer/customer/" + customerRepository.save(customer).getId();
         }
     }

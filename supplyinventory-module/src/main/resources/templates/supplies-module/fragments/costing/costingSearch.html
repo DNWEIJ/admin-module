@@ -6,9 +6,13 @@
     </script>
 
     <script>
-        let baseUrl
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("#costingSearchForm");
+            form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
+            htmx.process(form);
+        });
+
         let selectedIndex = -1
-        let hxPostUrl
         let selectedFieldDataSet
 
         // used in checkbox -> hx-on::after-request="setView(this)"/>
@@ -61,7 +65,6 @@
                 element.select()
             }
 
-
             if (action === "costingAmount") {
                 if (!isPriceInfo && !isEstimate && selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
                     let element = document.getElementById("batchNumberForCosting")
@@ -102,9 +105,7 @@
 
         function resetForNextItem() {
             // global values
-            baseUrl = ''
             selectedIndex = -1
-            hxPostUrl = ''
             selectedFieldDataSet = undefined
 
             document.getElementById("inputCostingQuantity").value = ''
@@ -151,8 +152,6 @@
         document.addEventListener("DOMContentLoaded", () => {
 
             attachMouseHandlersToAllItems()
-            baseUrl = window.location.href
-            hxPostUrl = window.location.href
             selectedIndex = -1
 
             document.getElementById("costingFind").addEventListener("keydown", (event) => {
@@ -234,9 +233,6 @@
                 executeAction("find")
                 event.preventDefault()
             });
-
-            document.getElementById("costingFind").focus()
-
         })
     </script>
     <style>
@@ -246,7 +242,7 @@
             justify-self: center; /* horizontal */
         }
     </style>
-    <form id="costingSearchForm" hx-post="" hx-swap="none">
+    <form id="costingSearchForm" hx-post="" hx-target="#lineItemsTable" hx-swap="outerHTML">
         <fieldset>
             <div class="gridSearchCostingWithCheck">
 

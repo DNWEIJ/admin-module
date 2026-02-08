@@ -17,9 +17,8 @@
 
     </fieldset>
     <fieldset class="grid">
-        todo: add htmx from species to breed
-        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('species', 'pet.species', ${pet.species}, ${speciesList}, true,'4')}" th:with="required=false"></th:block>
-        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('breed', 'pet.breed', ${pet.breed}, ${breedList}, true,'5')}" th:with="required=false"></th:block>
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithHtmx('species', 'pet.species', ${pet.species}, ${speciesList}, true, '/customer/customer/pet/{species}', '#breed')}" th:with="required=false"></th:block>
+        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('breed', 'pet.breed', ${pet.breed}, ${speciesList}, true,'5')}" th:with="required=false"></th:block>
 
         <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sex','pet.sex', ${pet.sex}, ${sexTypeList}, true,'6')}"></th:block>
     </fieldset>

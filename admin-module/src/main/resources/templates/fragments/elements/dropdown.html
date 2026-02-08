@@ -1,18 +1,22 @@
-<th:block th:fragment="dbDropdown(name, label, dbFieldValue, list, required, tabindex)" th:with=" isPleaseChoose=${isPleaseChoose}?:true, dataOnChange=${dataOnchange}?:${dataOnchange}, class=${class}?:${class}">
-    <th:block th:if="${list.size() > 0}">
+<th:block th:fragment="dbDropdown(name, label, dbFieldValue, list, required, tabindex)"
+          th:with=" isPleaseChoose=${isPleaseChoose}?:true, dataOnChange=${dataOnchange}?:${dataOnchange}, class=${class}?:${class}">
+    <th:block th:if="${list != null and list.size() > 0}">
         <th:block th:if="${label != ''}">
             <label th:for="${name}" th:value="${label}">[[#{${label}}]]
         </th:block>
-        <select  th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
+        <select th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}"
+                th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
             <th:block th:unless="${list.size() == 1}">
-                <option th:if="${isPleaseChoose}" disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
+                <option th:if="${isPleaseChoose}" disabled readonly selected="true" value=""
+                        th:text="#{label.choose}"></option>
             </th:block>
             <th:block th:each="element : ${list}">
                 <th:block th:if="${dbFieldValue == null || dbFieldValue == ''}">
                     <option th:utext="${element.name}" th:value="${element.id}"></option>
                 </th:block>
                 <th:block th:unless="${dbFieldValue == null || dbFieldValue == ''}">
-                    <option th:selected="${#strings.equals(dbFieldValue, element.id)}" th:utext="${element.name}" th:value="${element.id}"></option>
+                    <option th:selected="${#strings.equals(dbFieldValue, element.id)}" th:utext="${element.name}"
+                            th:value="${element.id}"></option>
                 </th:block>
             </th:block>
         </select>
@@ -22,13 +26,15 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="dbDropdownWithDataElement(name, label, dbFieldValue, list, required, tabindex)" th:with="dataOnChange=${dataOnchange}?:${dataOnchange}">
+<th:block th:fragment="dbDropdownWithDataElement(name, label, dbFieldValue, list, required, tabindex)"
+          th:with="dataOnChange=${dataOnchange}?:${dataOnchange}">
     <th:block th:if="${list.size() > 0}">
         <th:block th:if="${label != ''}">
             <label th:for="${name}" th:value="${label}">[[#{${label}}]]
         </th:block>
 
-        <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
+        <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}"
+                th:attr="onchange=${dataOnChange}">
             <th:block th:if="${list.size() == 1}">
                 <option selected th:Utext="${list[0].name}" th:value="${list[0].id}"></option>
             </th:block>
@@ -37,10 +43,13 @@
             </th:block>
             <th:block th:each="element : ${list}">
                 <th:block th:if="${dbFieldValue == null || dbFieldValue == ''}">
-                    <option th:data-element="${element.dataField}" th:utext="${element.name}" th:value="${element.id}"></option>
+                    <option th:data-element="${element.dataField}" th:utext="${element.name}"
+                            th:value="${element.id}"></option>
                 </th:block>
                 <th:block th:unless="${dbFieldValue == null || dbFieldValue == ''}">
-                    <option th:data-element="${element.dataField}" th:selected="${#strings.equals(dbFieldValue, element.id)}" th:utext="${element.name}" th:value="${element.id}"></option>
+                    <option th:data-element="${element.dataField}"
+                            th:selected="${#strings.equals(dbFieldValue, element.id)}" th:utext="${element.name}"
+                            th:value="${element.id}"></option>
                 </th:block>
             </th:block>
         </select>
@@ -63,6 +72,38 @@
     </details>
 </th:block>
 
+<th:block th:fragment="dbDropdownWithHtmx(name, label, dbFieldValue, list, required, hxget, hxtarget)"
+          th:with=" isPleaseChoose=${isPleaseChoose}?:true, dataOnChange=${dataOnchange}?:${dataOnchange}, class=${class}?:${class}">
+    <th:block th:if="${list.size() > 0}">
+        <th:block th:if="${label != ''}">
+            <label th:for="${name}" th:value="${label}">[[#{${label}}]]
+        </th:block>
+        <div hx-ext="path-params">
+            <select th:hx-get="${hxget}" th:hx-target="${hxtarget}"
+                    th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}"
+                    th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
+                <th:block th:unless="${list.size() == 1}">
+                    <option th:if="${isPleaseChoose}" disabled readonly selected="true" value=""
+                            th:text="#{label.choose}"></option>
+                </th:block>
+                <th:block th:each="element : ${list}">
+                    <th:block th:if="${dbFieldValue == null || dbFieldValue == ''}">
+                        <option th:utext="${element.name}" th:value="${element.id}"></option>
+                    </th:block>
+                    <th:block th:unless="${dbFieldValue == null || dbFieldValue == ''}">
+                        <option th:selected="${#strings.equals(dbFieldValue, element.id)}" th:utext="${element.name}"
+                                th:value="${element.id}"></option>
+                    </th:block>
+                </th:block>
+            </select>
+        </div>
+        <th:block th:if="${label != ''}">
+            </label>
+        </th:block>
+    </th:block>
+</th:block>
+
+
 <th:block th:fragment="propDropdown(name, label, dbFieldValue, list, required, tabindex)">
     <th:block th:if="${label != ''}">
         <label th:for="${name}" th:value="${label}">[[#{${label}}]]
@@ -77,7 +118,8 @@
             <!--                <option disabled readonly th:selected="${__${dbField}__} == null" value="" th:text="#{label.choose}"/>-->
             </option>
             <th:block th:each="element : ${list}">
-                <option th:selected="${#strings.equals(dbFieldValue, element.name)}" th:text="#{${element.label}}" th:value="${element.name}"></option>
+                <option th:selected="${#strings.equals(dbFieldValue, element.name)}" th:text="#{${element.label}}"
+                        th:value="${element.name}"></option>
             </th:block>
         </th:block>
     </select>
@@ -111,5 +153,4 @@
     <th:block th:if="${label != ''}">
         </label>
     </th:block>
-
 </th:block>

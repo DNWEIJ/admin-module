@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport"/>
+    <meta content="light dark" name="color-scheme">
+
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+    <title>Template title</title>
+    <link th:href="@{/images/favicon.svg}" rel="icon" type="image/x-icon"/>
+
+    <link th:href="@{/lib/pico/pico.amber.min.css}" rel="stylesheet"/>
+    <link th:href="@{/lib/pico/pico.colors.min.css}" rel="stylesheet"/>
+
+    <!--    <link th:href="@{/lib/ownstyle/hamburger.css}" rel="stylesheet"/>-->
+    <link th:href="@{/lib/ownstyle/style.css}" rel="stylesheet"/>
+
+    <link th:href="@{/lib/agenda/style/agenda.css}" rel="stylesheet"/>
+
+    <!-- javascript -->
+    <script th:src="@{/lib/htmx/htmx.js}" type="text/javascript"></script>
+    <script th:src="@{/lib/htmx/ext/path-params.js}" type="text/javascript"></script>
+
+    <script th:src="@{/lib/pico/modal.js}" type="text/javascript"></script>
+    <script th:src="@{/lib/agenda/js/vmas-agenda.js}" type="text/javascript"></script>
+    <script th:src="@{/lib/agenda/js/agenda-context.js}" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.3.1/dist/event-calendar.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.3.1/dist/event-calendar.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap">
+</head>
+<body>
+<th:block th:insert="~{consult-module/fragments/statusColour::statusColour()}"></th:block>
+
+<noscript>This app is not going to fly without javascript</noscript>
+
+<input type="hidden" id="modalCommunication" name="creationDate" hx-trigger="change" hx-target="#modal-container-agenda"
+       data-originalUrl="/consult/visit/search" hx-get="/consult/visit/search"
+       data-originalAfterRequest="prepareAll()" hx-on::after-request="prepareAll()" >
+<div id="modal-container-agenda"></div>
+<div id="modal-container"></div>
+<div th:replace="~{/fragments/elements/sessiontimeout}"></div>
+<div id="vmasCalendar" class="col"></div>
+</body>
+</html>
+<script th:inline="javascript">
+    const agendaState = new AgendaState(
+        /*[[${agendaType}]]*/ 'something',
+        /* [[${initialDate}]]*/ '2016-01-01',
+        'resource',
+        [[${localMemberId}]]
+    )
+
+    const agendaContext = new AgendaContext(agendaState)
+
+    const calendar = EventCalendar.create(document.getElementById('vmasCalendar'),
+//        ['DayGrid','List','ResourceTimeline','ResourceTimeGrid','TimeGrid','Interaction'],
+        {
+            view: 'resourceTimeGridDay',
+            scrollTime: /* [[${scrollToTime}]]*/ '20:00:00',
+            slotDuration: '00:10:00',
+            slotHeight: 25,
+            height: '99vh',
+            // slotMaxTime: '23:00:00',
+            // slotMinTime: '07:00:00',
+            slotEventOverlap: false,
+            dayMaxEvents: true,
+            nowIndicator: true,
+            selectable: true,
+            customScrollbars: /Mac/i.test(navigator.userAgent),
+            headerToolbar: {
+                start: 'prevButton,nextButton,todayButton,dateButton',
+                center: 'backButton otcButton',
+                end: 'locationButton, roomButton, resourceTimeGridWeek, colorsButton'
+            },
+            date: /*[[${initialDate}]]*/ '2016-01-01',
+            dateClick: newAppointment,
+            resources: {url: '/agenda/resources', method: 'post', extraParams: getParams},
+            eventSources: [{url: '/agenda/events', method: 'post', extraParams: getParams}],
+
+            buttonText: {
+                close: /*[[#{label.agenda.close}]]*/ 'Close',
+                dayGridDay: /*[[#{label.agenda.dayGridDay}]]*/ 'Day',
+                dayGridMonth: /*[[#{label.agenda.dayGridMonth}]]*/ 'Month',
+                dayGridWeek: /*[[#{label.agenda.dayGridWeek}]]*/ 'Week',
+                listDay: /*[[#{label.agenda.listDay}]]*/ 'List',
+                listMonth: /*[[#{label.agenda.listMonth}]]*/ 'List',
+                listWeek: /*[[#{label.agenda.listWeek}]]*/ 'List',
+                listYear: /*[[#{label.agenda.listYear}]]*/ 'List',
+                resourceTimeGridDay: /*[[#{label.agenda.resourceTimeGridDay}]]*/ 'Resources Day',
+                resourceTimeGridWeek: /*[[#{label.agenda.resourceTimeGridWeek}]]*/ 'Resources Week',
+                resourceTimelineDay: /*[[#{label.agenda.resourceTimelineDay}]]*/ 'Timeline',
+                resourceTimelineMonth: /*[[#{label.agenda.resourceTimelineMonth}]]*/ 'Timeline',
+                resourceTimelineWeek: /*[[#{label.agenda.resourceTimelineWeek}]]*/ 'Timeline',
+                timeGridDay: /*[[#{label.agenda.timeGridDay}]]*/ 'Day',
+                timeGridWeek: /*[[#{label.agenda.timeGridWeek}]]*/ 'Week',
+                today: /*[[#{label.agenda.today}]]*/ 'Today'
+            },
+            lazyFetching: false,
+            datesAboveResources: false,
+            allDaySlot: false,
+            customButtons: {
+                colorsButton: {
+                    text: {html: /*[[${colorModal}]]*/ 'hallo'},
+                },
+                otcButton: {
+                    text: 'otc', click: function () {
+                        window.location.href = '/sales/otc/search'
+                    },
+                },
+                backButton: {
+                    text: 'main',
+                    click: function () {
+                        window.location.href = '/vmas/index'
+                    }
+                },
+                locationButton: {
+                    text: {html: /*[[${locationDropdown}]]*/ <br/>}
+                },
+                roomButton: {
+                    text: {html:/*[[${changeRoomVet}]]*/ <br/>}
+                },
+                dateButton: {
+                    text: {html:/*[[${selectDate}]]*/ <br/>}
+                },
+                prevButton: {
+                    text: ' < ',
+                    click: prevButtonF
+                },
+                nextButton: {
+                    text: ' > ',
+                    click: nextButtonF
+                },
+                todayButton: {
+                    text: ' today ',
+                    click: todayButtonF
+                }
+            },
+            eventClick: goToConsult,
+            eventContent: function (info) {
+                return {html: info.event.extendedProps.bodyText}
+            },
+            eventMouseEnter: function (info) {
+                agendaContext.setEvent(info)
+            },
+            eventMouseLeave: function (info) {
+                agendaContext.setEvent(null)
+            },
+        })
+
+
+    agendaState.setCalendar(calendar)
+
+    function newAppointment(info) {
+        // cannot be in the past
+        if (info.date.getTime() < Date.now()) return;
+        let inputField = document.getElementById('modalCommunication')
+        inputField.value = info.dateStr
+        agendaState.setNewAppointment(info)
+        htmx.trigger(inputField, 'change');
+    }
+
+    function getParams() {
+        return {agendaType: agendaState.agendaType, localMemberId: agendaState.localMemberId}
+    }
+
+    function prevButtonF() {
+        agendaState.moveDate('<')
+    }
+
+    function nextButtonF() {
+        agendaState.moveDate('>')
+    }
+
+    function todayButtonF() {
+        agendaState.moveDate('today')
+
+    }
+
+    function goToConsult(info) {
+        // todo if (otc) go to otc screen
+        window.location.href = '/consult/visit/customer/' + info.event.extendedProps.customerId + '/visit/' + info.event.extendedProps.visitId + '?callFrom=agenda'
+    }
+    // called from the modal
+    function processData(event) {
+        agendaState.processData(event.detail.xhr.responseText)
+    }
+</script>
+

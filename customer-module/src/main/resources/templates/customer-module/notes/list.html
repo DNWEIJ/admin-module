@@ -23,7 +23,7 @@
             <th:block th:each="note : ${notes}">
                 <tr>
                     <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}" th:utext="${note.pet.nameWithDeceased}"></a></td>
-                    <td th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></td>
+                    <td th:attr="data-sort-value=${note.noteDate}" th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></td>
                     <td>[[${note.purpose}]]</td>
                     <td>
                         <small th:data-tooltip="'Created by  '+${note.addedBy}+' on ' +${#temporals.format(note.addedOn, 'dd-MM-yy')}">

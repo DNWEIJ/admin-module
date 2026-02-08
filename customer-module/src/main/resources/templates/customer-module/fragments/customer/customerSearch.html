@@ -1,6 +1,5 @@
 <th:block th:fragment="customerSearch(saveButton, url, salesType)">
     <script>
-        let baseUrl;
         let selectedIndex = -1;
 
         function updateSelection(listItems) {
@@ -24,6 +23,15 @@
             return document.querySelectorAll("#input-customerName li");
         }
 
+        // We will handle calander call here
+        function submitInfo() {
+            if ('[[${isHtmx}]]' === 'true' && agendaState) {
+                agendaState.handleModalSubmitForPetSelect(getId(getListItems()))
+            } else {
+                window.location.href = `${window.location.origin}[[${url}]]` + getId(getListItems());
+            }
+        }
+
         function attachMouseHandlers() {
             const listItems = getListItems();
 
@@ -35,15 +43,13 @@
                 });
 
                 li.addEventListener("click", (event) => {
-                    window.location.href = `${window.location.origin}[[${url}]]` + getId(getListItems());
-                    event.preventDefault();
+                    submitInfo()
                 });
             });
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
+        function prepareAll() {
             attachMouseHandlers()
-            baseUrl = window.location.href;
             const input = document.getElementById("customerFind");
             selectedIndex = -1;
             input.addEventListener("keydown", (event) => {
@@ -72,16 +78,21 @@
                     event.preventDefault();
                 }
                 if (event.key === "Enter") {
-                    window.location.href = `${window.location.origin}[[${url}]]` + getId(getListItems());
+                    submitInfo()
                     event.preventDefault();
                 }
             })
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            prepareAll()
         })
     </script>
     <div class="gridSearchCustomerWithCheck">
         <div id="holder" class="holder">
             <input list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria"
-                   th:placeholder="#{label.customer.search.placeholder}" th:data-alternatetext="#{label.customer.search.explenation}" autofocus
+                   th:placeholder="#{label.customer.search.placeholder}"
+                   th:data-alternatetext="#{label.customer.search.explenation}" autofocus
                    hx-get="/customer/search/customer"
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
@@ -99,15 +110,21 @@
         </div>
         <div class="checkbox-group">
             <!-- using switch with tooltip needs adjustment of CSS -->
-            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}" th:with="tooltip=#{label.tooltip.customer.name}, switch='switch'"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}"
-                      th:with="tooltip=#{label.tooltip.customer.street}, switch='switch'"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}"
-                      th:with="tooltip=#{label.tooltip.customer.firstel}, switch='switch'"></th:block>
-            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}" th:with="tooltip=#{label.tooltip.customer.pet}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('startLastName','','form.startLastName','0')}"
+                      th:with="tooltip=#{label.tooltip.customer.name}, switch='switch'"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/select::checkBox('includeStreetName','','form.includeStreetName','0')}"
+                    th:with="tooltip=#{label.tooltip.customer.street}, switch='switch'"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/select::checkBox('includeFirstTel','','form.includeFirstTel','0')}"
+                    th:with="tooltip=#{label.tooltip.customer.firstel}, switch='switch'"></th:block>
+            <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}"
+                      th:with="tooltip=#{label.tooltip.customer.pet}, switch='switch'"></th:block>
         </div>
         <div role="group">
-            <input th:if="${salesType == null}" class="secondary" name="_reset" type="button" th:value="#{label.button.reset}" onclick="window.location.href=window.location.origin + '/customer/customer?isNew=true'"/>
+            <input th:if="${salesType == null}" class="secondary" name="_reset" type="button"
+                   th:value="#{label.button.reset}"
+                   onclick="window.location.href=window.location.origin + '/customer/customer?isNew=true'"/>
             <input th:if="${saveButton}" name="_save" type="submit" th:value="#{label.button.save}" form="createForm"/>
         </div>
     </div>
@@ -125,6 +142,7 @@
                 }, 200);
             }, 5000);
         }
+
         alternateTextPlaceHolder();
     </script>
 </th:block>

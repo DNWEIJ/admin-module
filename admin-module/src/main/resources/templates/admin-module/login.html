@@ -32,9 +32,7 @@
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('password', 'login.password', 'password', '2')}" th:with="type='password', required=false"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','login.shortcode', 'shortCode','3')}" th:with="required=false"></th:block>
             </fieldset>
-            <fieldset class="grid" role="group">
-                <button name="_save" type="submit" th:text="#{login.button.signin}"></button>
-            </fieldset>
+            <button name="_save" type="submit" th:text="#{login.button.signin}"></button>
         </form>
     </article>
     <script>

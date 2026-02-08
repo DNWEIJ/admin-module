@@ -11,13 +11,13 @@
 
 <fieldset class="grid">
     <legend>[[#{label.payment.details}]]</legend>
-    <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method',${payment.method}, ${payMethodsList}, true,'1')}"></th:block>
-</fieldset>
-<fieldset class="grid">
-    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','payment.amount','2')}" th:with="pattern='^(?!0+(?:\.0+)?$)\d+(?:\.\d{1,2})?$'"></th:block>
+    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','payment.amount','2')}" th:with="shouldFocus=true,pattern='^(?!0+(?:\.0+)?$)\d+(?:\.\d{1,2})?$'"></th:block>
     <th:block th:insert="~{fragments/elements/input::inputHtmlLift('paymentDate','label.payment.paymentDate','payment.paymentDate','3')}"></th:block>
-    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('referenceNumber','label.payment.referenceNumber','payment.referenceNumber','4')}" th:with="required=false"></th:block>
 </fieldset>
+<div class="grid">
+    <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method',${payment.method}, ${payMethodsList}, true,'1')}"></th:block>
+    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('referenceNumber','label.payment.referenceNumber','payment.referenceNumber','4')}" th:with="required=false"></th:block>
+</div>
 <fieldset class="grid">
     <label for="payment.comments">
         <th:block th:utext="#{label.payment.comments}"/>

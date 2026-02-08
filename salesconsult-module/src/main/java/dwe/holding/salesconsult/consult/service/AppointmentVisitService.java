@@ -62,11 +62,11 @@ public class AppointmentVisitService {
                         Visit.builder()
                                 .appointment(app)
                                 .pet(customerService.getPet(customerId, formPet.id()))
-                                .room("")
-                                .purpose(formPet.purpose() == null ? "" : formPet.purpose())
-                                .estimatedTimeInMinutes(5)
+                                .room(formPet.room)
+                                .purpose(formPet.purpose())
+                                .estimatedTimeInMinutes(Integer.parseInt(formPet.timeNeeded))
                                 .veterinarian(AutorisationUtils.getCurrentUserAccount())
-                                .status(VisitStatusEnum.WAITING)
+                                .status(VisitStatusEnum.CONSULT)
                                 .sentToInsurance(YesNoEnum.No)
                                 .invoiceStatus(InvoiceStatusEnum.NEW)
                                 .build()
@@ -88,7 +88,7 @@ public class AppointmentVisitService {
         public CreatePet {
             checked = checked == null ? false : checked;
             purpose = purpose == null ? "" : purpose;
-            timeNeeded = timeNeeded == null ? "" : timeNeeded;
+            timeNeeded = timeNeeded == null ? "5" : timeNeeded;
             vet = vet == null ? "" : vet;
             room = room == null ? "" : room;
         }

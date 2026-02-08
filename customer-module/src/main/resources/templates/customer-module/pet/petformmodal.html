@@ -1,13 +1,12 @@
 <dialog id="pets-modal" open>
     <!-- HX-Trigger-After-Settle::-->
     <article>
-        <header style="height: 2rem">
+        <header>
             <button aria-label="Close" rel="prev" data-target="pets-modal" onclick="toggleModal(event)"></button>
         </header>
         <p id="modalPetFormPart">
         <div class="notification-message text-align-center alert "
              th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
-
         <th:block th:insert="~{customer-module/pet/petform::petForm(${'/customer/customer/'+ customerId + '/pet' + (pet.id!=null? '/' + pet.id : '') }, '#pets-modal')}"></th:block>
         </p>
         <footer>

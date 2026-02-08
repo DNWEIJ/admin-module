@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Custom Context Menu</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    body {
+        background-color: rgb(255, 255, 255);
+    }
+
+    .menu-container {
+        max-width: 200px;
+        background-color: rgb(245, 245, 245);
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        border-radius: 5px;
+        padding: 0.4rem;
+        box-shadow: 0px 0px 14px rgba(105, 105, 105, 0.15);
+        border: 0.5px solid rgb(219, 219, 219);
+
+    }
+
+    .menu-item {
+        padding: 0.5rem 0.8rem;
+        width: 100%;
+        border-radius: 5px;
+        margin: 0.05rem;
+        cursor: pointer;
+        border: 0.5px solid rgb(245, 245, 245);
+    }
+
+    .menu-item:hover {
+        border: 0.5px solid rgb(219, 219, 219);
+        background-color: rgb(255, 255, 255);
+    }
+
+    .active {
+        border: 0.5px solid rgb(219, 219, 219);
+        background-color: rgb(255, 255, 255);
+    }
+
+    .menu-item a {
+        color: rgb(95, 95, 95);
+        text-decoration: none;
+        font-size: 14px;
+    }
+</style>
+</head>
+
+<body>
+<!-- <div class="menu-container">
+    <div class="menu-item">
+        <p><a href="#">First Option</a></p>
+    </div>
+    <div class="menu-item">
+        <p><a href="#">Second Option</a></p>
+    </div>
+    <div class="menu-item">
+        <p><a href="#">Third Option</a></p>
+    </div>
+    <div class="menu-item">
+        <p><a href="#">Fourth Option</a></p>
+    </div>
+    <div class="menu-item">
+        <p><a href="#">Fifth Option</a></p>
+    </div>
+    <div class="menu-item">
+        <p><a href="#">Sixth Option</a></p>
+    </div>
+</div> -->
+</body>
+<script>
+    const documentBody = document.querySelector('body');
+
+    window.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+
+        var callBacks = [
+            function () { console.log('First') },
+            function () { console.log('Second') },
+            function () { console.log('Third') },
+            function () { console.log('Fourth') },
+            function () { console.log('Fifth') },
+            function () { console.log('Sixth') },
+        ];
+
+        if (!(document.querySelector('.menu-container'))) {
+
+            createMenu(
+                ["View", "Sort by", "Refresh", "New", "Settings", "Show More Options"],
+                callBacks, [e.clientX, e.clientY]
+            );
+        }
+
+
+    });
+
+    window.addEventListener('click', () => {
+
+        if (documentBody.firstChild.nodeName) {
+            documentBody.removeChild(document.querySelector('.menu-container'));
+        }
+
+
+    })
+
+    function createMenu(menuOptions, callBacks, menuPos) {
+        let menuContainer = document.createElement('div');
+        menuContainer.classList.add("menu-container");
+
+
+        menuOptions.forEach((option, index) => {
+            let menuItem = document.createElement('div');
+            menuItem.classList.add("menu-item");
+
+            let menuContent = document.createElement('a');
+            menuContent.textContent = option;
+
+            menuItem.append(menuContent);
+            menuItem.addEventListener('click', () => {
+                callBacks[index]();
+            });
+            menuContainer.appendChild(menuItem);
+        });
+
+        menuContainer.style.position = "relative";
+        menuContainer.style.left = `${menuPos[0]}px`;
+        menuContainer.style.top = `${menuPos[1]}px`;
+        documentBody.appendChild(menuContainer);
+    }
+</script>
+</html>

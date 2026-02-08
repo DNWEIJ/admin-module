@@ -17,19 +17,19 @@ import java.util.List;
 public class LocalMemberPreferences {
     private String firstPageMessage;
     private String consultTextTemplate;
-    private Integer prefEstimatedTime;
+    private Integer estimatedTime;
     private String openingsTimes;
-    private String prefInsuranceCompany;
-    private PaymentMethodEnum prefPaymentMethod;
+    private String insuranceCompany;
+    private PaymentMethodEnum paymentMethod;
 
-    private String prefRoom1;
-    private String prefRoom2;
-    private String prefRoom3;
-    private String prefRoom4;
-
-    private AgendaTypeEnum startAgendaIn;
+    private String room1;
+    private String room2;
+    private String room3;
+    private String room4;
+    // todo rename and renaming at the copy file roomAgenda -> agendaType
+    private AgendaTypeEnum roomAgenda;
     private YesNoEnum active;
-    private YesNoEnum prefRxLabel;
+    private YesNoEnum rxLabel;
     private YesNoEnum mandatoryReason;
     private YesNoEnum sendOutAppointmentReminderMail;
 

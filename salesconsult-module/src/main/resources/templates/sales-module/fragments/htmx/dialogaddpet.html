@@ -1,11 +1,49 @@
 <dialog id="pets-modal" open>
     <!-- HX-Trigger-After-Settle::-->
     <article>
+        <th:block th:replace="~{salesconsult-generic-module/jsforpetselect}"></th:block>
         <header>
             <button aria-label="Close" rel="prev" data-target="pets-modal" onclick="toggleModal(event)"></button>
         </header>
-        <p>
-            <th:block th:insert="~{sales-module/fragments/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, ${'/sales/otc/search/'+ customerId + '/sell/' + appointmentId+ '/addpet'}, false, 'createForm')}"></th:block>
+        <p id="modalPetFormPart">
+        <div class="notification-message text-align-center alert "
+             th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
+
+        <form id="createForm" hx-target="#selectPetId" hx-include="#selectPetId" hx-swap="outerHTML" th:hx-post="'/generic/customer/'+ ${customerId} + '/appointment/'+ ${appointmentId} + '/addpet/'+ ${salesType}">
+            <th:block th:insert="~{salesconsult-generic-module/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, ${salesType}, false, 'createForm')}"></th:block>
+        </form>
         </p>
+        <footer>
+            <fieldset class="grid">
+                <input name="_save" type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="pets-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
     </article>
+    <script>
+        addEventListenersForPetSelect()
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("pets-modal")
+            closeModal(modal)
+            location.reload();
+        });
+
+
+        function messageDisplay(messageText) {
+            const element = document.querySelector('.notification-message')
+            if (messageText) element.textContent = messageText;
+            if (element.textContent.length !== 0) {
+                element.classList.add('show');
+                setTimeout(function () {
+                    element.classList.remove('show');
+                }, 1300)
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            messageDisplay();
+        });
+
+    </script>
 </dialog>

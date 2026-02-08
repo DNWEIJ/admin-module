@@ -18,18 +18,21 @@ spring:
   messages:
     basename: admin.messages, shared.messages, customer.messages, lookup.messages,  supplyinventory.messages, sales.messages, consult.messages, vmas.messages
   jpa:
+
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
+      naming:
+        implicit-strategy: dwe.holding.admin.hibernatenamingstrategy.CustomImplicitNamingStrategy
       ddl-auto: update
     show-sql: false
     generate-ddl: false
     database: mysql
-#    properties:
-#      hibernate:
-#        generate-ddl: no
-#        show_sql: true
-#        use_sql_comments: true
-#        format_sql: true
+    properties:
+      hibernate:
+        generate-ddl: no
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
   ssl:
     bundle:
       jks:
@@ -52,7 +55,8 @@ logging:
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.hibernate.tool.schema: INFO
-
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
 server:
   servlet:
     session:

@@ -1,0 +1,25 @@
+<p>
+    <div class="notification-message text-align-center alert "
+         th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert"
+         th:text="${message != null} ? #{${message}} : ''"></div>
+    <table class="table-tight striped">
+        <thead>
+        <tr>
+            <th th:text="#{visit.header.visitDate}"></th>
+            <th th:text="#{visit.weight}"></th>
+            <th th:text="#{visit.temperature}"></th>
+            <th th:text="#{visit.glucose}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="historyItem : ${historyItems}">
+            <tr>
+                <td th:text="${#temporals.format(historyItem.visitDate, 'dd-MM-yy')}"></td>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${historyItem.weight}, false)}"></th:block>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${historyItem.temperature}, false)}"></th:block>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${historyItem.glucose}, false)}"></th:block>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</p>

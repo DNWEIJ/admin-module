@@ -12,7 +12,7 @@
     <h3 th:if="${salesType.isVisit}" th:text="#{label.title.visit}"></h3>
     <h3 th:if="${salesType.isEstimate}" th:text="#{label.title.estimate}"></h3>
     <div th:if="${thymeleafDebug != null}">
-        <div th:text="${appointment.id} + ' - ' + ${selectedPet.name}"> </div>
+        <div th:text="${appointment.id} + ' - ' + ${selectedPet.name}"></div>
     </div>
 
     <block th:if="${!salesType.isPriceInfo}">
@@ -21,36 +21,25 @@
         </fieldset>
         <fieldset class="grid">
             <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapNoteButtons}">
-                <th:block th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnVisit}, ${selectedPet}, ${customer}, ${appointment}, ${extras}, false)}"></th:block>
+                <th:block th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${selectedPet}, ${customer}, ${visit}, ${appointment}, ${extras}, false)}"></th:block>
             </th:block>
         </fieldset>
         <hr/>
     </block>
 
-    <block th:if="${salesType.isPriceInfo}">
-        <div style="height: 1rem">&nbsp;</div>
-    </block>
-    <fieldset role="group" class="grid">
-        <legend th:text="#{label.otc.legend.lineitems}"></legend>
-
-        <table class="no-sorting table-tight striped">
-            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
-            <!--htmx replaces body and footer -->
-            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverview}"></th:include>
-        </table>
-    </fieldset>
-    <div id="replacePartForCostingSearch"
-         th:replace="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}">
-    </div>
-    <block th:if="${!salesType.isPriceInfo}">
-        <script th:inline="javascript">
-            const partialUrl = '/sales/otc/search/[[${customer.id}]]/sell/[[${appointment.id}]]/'
-
-            document.getElementById('selectPetId').onchange = function () {
-                window.location.href = partialUrl + this.value;
-            }
-        </script>
-    </block>
+    <details id="lineitems" open>
+        <summary class="three-elements">
+            <a href="" th:title="#{visit.lineitems.history}" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}" hx-target="#modal-container"
+               hx-swap="innerHTML">️🛒</a>
+            <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
+            <a href="/info/lineiteminfo" title="More info" class="info-icon">ℹ️</a>
+        </summary>
+        <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
+        <!-- TODO: Check on visit isOpen -->
+        <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.isCompleted)}"
+             th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}">
+        </div>
+    </details>
 </section>
 </body>
 </html>

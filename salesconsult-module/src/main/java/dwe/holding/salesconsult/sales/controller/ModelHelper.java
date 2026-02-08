@@ -21,7 +21,7 @@ public class ModelHelper {
             model.addAttribute("totalAmount", lineItems.stream().map(CostCalc::getTotalIncTax).reduce(BigDecimal::add).get());
             model.addAttribute("totalVatAmount", lineItems.stream().map(c -> c.getTaxPortionOfProduct().add(c.getTaxPortionOfProcessingFeeService())).reduce(BigDecimal::add).get());
         }
-        model.addAttribute("allLineItems", lineItems);
+        model.addAttribute("lineItems", lineItems);
         return model;
     }
 

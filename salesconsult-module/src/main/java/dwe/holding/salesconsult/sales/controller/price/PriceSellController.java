@@ -1,6 +1,8 @@
 package dwe.holding.salesconsult.sales.controller.price;
 
 import dwe.holding.salesconsult.consult.model.Appointment;
+import dwe.holding.salesconsult.consult.model.Visit;
+import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.salesconsult.sales.controller.SalesType;
@@ -29,6 +31,7 @@ public class PriceSellController {
     private final LineItemService lineItemService;
     private final CostingService costingService;
     private final Appointment appointment = Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build();
+    private final Visit visit = Visit.builder().status(VisitStatusEnum.CONSULT).appointment(appointment).build();
 
     @ModelAttribute("lineItems")
     public List<LineItem> lineItems() {
@@ -38,12 +41,7 @@ public class PriceSellController {
     @GetMapping("/price/sell")
     String setupProductSell_InitialCall(Model model, SessionStatus status) {
         status.setComplete();
-        updateModel(model, new ArrayList<>());
-        return "salesconsult-generic-module/productpage";
-    }
 
-    @GetMapping("/price/sell/more")
-    String setupProductSell_RepeatableCall(Model model) {
         updateModel(model, new ArrayList<>());
         return "salesconsult-generic-module/productpage";
     }
@@ -54,25 +52,24 @@ public class PriceSellController {
         List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingQuantity);
         AtomicLong counter = new AtomicLong(lineItems.size() + 1);
         list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
-
         lineItems.addAll(list);
-        updateModel(model, lineItems);
-        model
-                .addAttribute("categoryNames", costingService.getCategories())
-                .addAttribute("url", SALES_PRICE_SELL);
 
-        return "sales-module/fragments/htmx/lineitemsoverview";
+        updateModel(model, lineItems);
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
     @DeleteMapping("/price/sell/{lineItemId}")
-    String foundProductAddLineItemViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
-        model.addAttribute("lineItems", lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
-        return "redirect:/sales/price/sell/more";
+    String deleteProductFromLineItemsViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
+        updateModel(model, lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
+        return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
     private Model updateModel(Model model, List<LineItem> lineItems) {
         ModelHelper.updateLineItemsInModel(model, lineItems);
         model
+                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("url", SALES_PRICE_SELL)
+                .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)
                 .addAttribute("salesType", SalesType.PRICE_INFO);
         return model;

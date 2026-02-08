@@ -1,9 +1,19 @@
 <th:block th:fragment="customerPetInfo(customer, pet, backbutton)" xmlns:th="http://www.w3.org/1999/html">
     <details id="customerpetinfo" open>
         <summary>
-            <span th:text="#{visit.customerinfo.title}"></span><a href="/info/customerpetinfo" title="More info" class="info-icon">ℹ️</a>
+            <span th:text="#{visit.customerinfo.title}"></span><a href="/info/customerpetinfo" title="More info"
+                                                                  class="info-icon">ℹ️</a>
         </summary>
-        <div class="grid">
+
+        <div th:if="${!backbutton and pet == null}" class="grid">
+            <div></div>
+            <div>
+                <th:block th:replace="~{::customerInfo}"/>
+            </div>
+            <div></div>
+        </div>
+
+        <div th:unless="${!backbutton and pet == null}" class="grid">
             <th:block th:if="${backbutton}">
                 <div style="display: flex; align-items: center;">
                     <a href="/sales/otc/search" role="button" th:text="#{label.button.back}"></a>
@@ -32,7 +42,8 @@
                     <div th:classappend="${pet.insured.label == 'label.yesno.yes'} ? '' : ' red-text'">
                         <span class="mono">I:</span>
                         <span th:text="#{__${pet.insured.label}__}"></span>
-                        <span th:if="${pet.insuredBy != null and !pet.insuredBy.isEmpty()}" th:text="' (' + ${pet.insuredBy} + ')'"></span>
+                        <span th:if="${pet.insuredBy != null and !pet.insuredBy.isEmpty()}"
+                              th:text="' (' + ${pet.insuredBy} + ')'"></span>
                     </div>
                     <div th:classappend="${pet.allergies.label == 'label.yesno.yes'} ? ' red-text' : ''">
                         <span class="mono">A:</span>
@@ -49,8 +60,11 @@
                     <div th:text="#{pet.chipped} + ': '+  ${pet.chipTattooId ?: ''} + ' - ' + ${pet.chipDate != null ? #temporals.format(pet.chipDate, 'dd-MM-yyyy') : ''}"></div>
                 </th:block>
             </div>
-        </div>
+    </details>
+</th:block>
 
+<th:block th:fragment="customerInfo">
+    <th:block th:if="${customer != null}">
         <script>
             function copyToClipboard(el) {
                 const span = el.previousElementSibling;
@@ -61,20 +75,22 @@
                 setTimeout(() => span.innerText = text, 800);
             }
         </script>
-    </details>
-</th:block>
-
-<th:block th:fragment="customerInfo">
-    <th:block th:if="${customer != null}">
-        <h6 th:text="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ')'"></h6>
-        <div><span id="copy-customer-email" th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
+        <h6 th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''"
+            th:class="${colorClass}" th:text="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ')'"></h6>
+        <div><span id="copy-customer-email"
+                   th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
                    th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></span>
-            <a th:if="${!#strings.isEmpty(customer.email)}" href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy email">📋</a>
-            <a th:if="${!#strings.isEmpty(customer.email)}" title="Send email" th:href="'mailto:' + ${customer.email}">✉️</a></div>
-        <div><span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.address3}"></span>
+            <a th:if="${!#strings.isEmpty(customer.email)}" href="javascript:void(0);" onclick="copyToClipboard(this)"
+               title="Copy email">📋</a>
+            <a th:if="${!#strings.isEmpty(customer.email)}" title="Send email" th:href="'mailto:' + ${customer.email}">✉️</a>
+        </div>
+        <div th:if="${!#strings.isEmpty(customer.address2)  and !#strings.isEmpty(customer.address3)}">
+            <span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.address3}"></span>
             <a href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy addressl">📋</a>
         </div>
-        <div th:text="${customer.homePhone?:''}+', '+ ${customer.workPhone?:''}+', '+ ${customer.mobilePhone?:''}"></div>
+        <div th:text="${(customer.homePhone != null ? customer.homePhone + ', ' : '') + (customer.workPhone != null ? customer.workPhone + ', ' : '') + (customer.mobilePhone ?: '')}">
+        </div>
+
     </th:block>
 </th:block>
 
@@ -83,7 +99,7 @@
     <th:block th:if="${pet != null}">
         <h6 th:utext="${pet.nameWithDeceasedAndDate} "></h6>
         <div th:text="#{__${pet.sex.label}__}"></div>
-        <div th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' ('+ ${pet.age}+')'"></div>
+        <div th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' '+ ${pet.age}"></div>
         <div th:text="${pet.idealWeight != null} ? #{pet.idealWeight} + ': ' + ${pet.idealWeight} : #{pet.idealWeight} + ': '"></div>
     </th:block>
 </th:block>

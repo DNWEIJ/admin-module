@@ -1,31 +1,43 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
     <title th:text="#{userpreferences.userpref}"></title>
+<!--    <script th:src="@{/lib/pico/themeswitcher.js}" type="text/javascript"></script>-->
 </head>
 <body>
 <section layout:fragment="content">
     <form th:action="@{/vmas/userpreferences}" method="post">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <fieldset>
             <legend th:text="#{userpreferences.general}"></legend>
-            <fieldset class="grid">
-                <button>color theme</button>
-                <select>
-                    <option>auto</option>
-                    <option>dark</option>
-                    <option>light</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="grid">
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('username', 'userpreferences.username', 'user.username', '1')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', 'userpreferences.email', 'user.email', '2')}"></th:block>
-            </fieldset>
-            <fieldset class="grid">
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId', 'userpreferences.clinic', ${user.localMemberId}, ${localMembersList}, true,'3')}"></th:block>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language', 'userpreferences.language', ${user.language}, ${languageList}, true,'4')}"></th:block>
-            </fieldset>
-
+             <select>
+                <option>auto</option>
+                <option>dark</option>
+                <option>light</option>
+            </select>
+            <th:block th:insert="~{vmas-module/userpreferencescolor}"></th:block>
+        </fieldset>
+        <fieldset>
+            <div class="grid">
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('username', 'userpreferences.username', 'user.username', '1')}"></th:block>
+                </div>
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('email', 'userpreferences.email', 'user.email', '2')}"></th:block>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId', 'userpreferences.clinic', ${user.localMemberId}, ${localMembersList}, true,'3')}"></th:block>
+                </div>
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::propDropdown('language', 'userpreferences.language', ${user.language}, ${languageList}, true,'4')}"></th:block>
+                </div>
+            </div>
         </fieldset>
         <fieldset class="grid">
             <legend th:text="#{userpreferences.agenda}"></legend>
@@ -72,7 +84,8 @@
             </fieldset>
         </fieldset>
         <fieldset role="group">
-            <a role="button" class='secondary' href="/admin/resetpassword" th:text="#{userPreferences.resetpassword}"></a>
+            <a role="button" class='secondary' href="/admin/resetpassword"
+               th:text="#{userPreferences.resetpassword}"></a>
             <th:block th:insert="~{fragments/elements/buttons::saveButtons()}"></th:block>
         </fieldset>
     </form>

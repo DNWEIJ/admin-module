@@ -1,0 +1,98 @@
+<style>
+    .table-wrapper {
+        overflow-y: auto;
+    }
+
+    #appointmentList {
+        border-collapse: collapse;
+        table-layout: auto; /* columns shrink to fit content */
+        width: 100%;        /* table fills wrapper width */
+    }
+
+    #appointmentList th,
+    #appointmentList td {
+        padding: 0.3rem 0.5rem;
+        white-space: nowrap; /* prevent wrapping for normal columns */
+        text-align: left;
+    }
+
+    /* last column stretches */
+    #appointmentList th:last-child,
+    #appointmentList td:last-child {
+        white-space: normal; /* allow wrapping */
+        width: 100%;         /* takes remaining space */
+    }
+
+    /* sticky header */
+    #appointmentList thead th {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 2;
+    }
+</style>
+<script th:inline="javascript">
+    function tableShow(targetId) {
+        const wrapper = document.querySelector('.table-wrapper');
+        const tbody = document.querySelector('#appointmentList tbody');
+        if (!tbody || !wrapper) return;
+
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        if (!rows.length || rows.length < 5) return;
+
+        // Calculate total height of first 5 rows
+        const firstFive = rows.slice(0, 5);
+        const totalHeight = firstFive.reduce((sum, r) => sum + r.offsetHeight, 0);
+
+        // Set wrapper height to exactly 5 rows
+        wrapper.style.maxHeight = totalHeight + 'px';
+
+        // Highlight and center target row
+        const targetRow = document.getElementById(targetId);
+        if (!targetRow) return;
+
+        targetRow.classList.add('highlighted');
+
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const rowRect = targetRow.getBoundingClientRect();
+
+        wrapper.scrollTop += (rowRect.top - wrapperRect.top) - (wrapper.clientHeight / 2) + (rowRect.height / 2);
+    }
+    document.addEventListener('DOMContentLoaded', () => tableShow([[${visit.id}]]))
+</script>
+<div id="class-wrapper-list-app" class="table-wrapper">
+    <table id="appointmentList" class="table-tight  striped">
+        <thead>
+        <tr>
+            <th th:text="#{label.consultlist.date}">Date</th>
+            <th th:text="#{label.consultlist.status}">Status</th>
+            <th th:text="#{label.consultlist.owner}">Owner</th>
+            <th th:text="#{label.consultlist.pet}">Pet</th>
+            <th th:text="#{label.consultlist.type}">Type</th>
+            <th th:text="#{label.consultlist.veterinarianRoom}">Veterinarian / Room</th>
+            <th th:text="#{label.consultlist.purpose}">Purpose</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="app : ${appointmentList}">
+            <th:block th:each="visit : ${app.visits}">
+                <tr th:id="${visit.id}">
+                    <td>
+                        <a th:href="'/consult/visit/customer/'+ ${customerId}+ '/visit/'+ ${visit.id} + '?callFrom=customer'">
+                        <span th:text="${#temporals.format(app.visitDateTime, 'dd-MM-yyyy HH:mm')}"
+                              th:remove="tag"></span>
+                        </a>
+                    </td>
+                    <td th:style="${'background-color:' + visit.backgroundColor + '; color:' + visit.textColor}" th:text="#{__${visit.status.label}__}"></td>
+                    <td th:text="${visit.pet.customer.customerName}"></td>
+                    <td th:text="${visit.pet.name + ' ' + visit.pet.age}"></td>
+                    <td th:text="${visit.pet.species + '/'+visit.pet.breed }"></td>
+                    <td th:text="${visit.veterinarian + '/' + visit.room}"></td>
+                    <td th:text="${visit.purpose}"></td>
+                </tr>
+            </th:block>
+        </th:block>
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+</div>

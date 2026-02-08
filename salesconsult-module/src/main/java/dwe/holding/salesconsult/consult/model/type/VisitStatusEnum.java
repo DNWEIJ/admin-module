@@ -7,27 +7,30 @@ import java.util.*;
 @Getter
 public enum VisitStatusEnum {
 
-    PLANNED("X", "label.visit.status.planned", 0),
-    WAITING("W", "label.visit.status.waiting", 1),
-    CONSULT("C", "label.visit.status.consult", 2),
-    INTAKE("I", "label.visit.status.intake", 3),
-    OPERATION("O", "label.visit.status.operation", 4),
-    RECOVERY("R", "label.visit.status.recovery", 5),
-    FINISHED_CONSULT("F", "label.visit.status.ready_for_checkout", 6),
-    PAYMENT("P", "label.visit.status.ready_to_pay", 7),
-    FINISHED("D", "label.visit.status.finished", 8);
+    PLANNED("X", "label.visit.status.planned", 0, "#99CCFF"),
+    WAITING("W", "label.visit.status.waiting", 1,"#00B8FF"),
+    CONSULT("C", "label.visit.status.consult", 2, "#00FF00"),
+    INTAKE("I", "label.visit.status.intake", 3, "#00CCCC"),
+    OPERATION("O", "label.visit.status.operation", 4,"#00AE00"),
+    RECOVERY("R", "label.visit.status.recovery", 5,"#E6E64C"),
+    FINISHED_CONSULT("F", "label.visit.status.ready_for_checkout", 6, "#FFFF00"),
+    PAYMENT("P", "label.visit.status.ready_to_pay", 7,"#FF950E"),
+    FINISHED("D", "label.visit.status.finished", 8,"#FF3333");
+
 
     private final String databaseField;
     private final String label;
     private final int order;
+    private final String color;
 
     private static final Map<VisitStatusEnum, Set<VisitStatusEnum>> NEXT = new EnumMap<>(VisitStatusEnum.class);
     private static final Map<VisitStatusEnum, VisitStatusEnum> PREVIOUS = new EnumMap<>(VisitStatusEnum.class);
 
-    VisitStatusEnum(String databaseField, String label, int order) {
+    VisitStatusEnum(String databaseField, String label, int order,  String color) {
         this.databaseField = databaseField;
         this.label = label;
         this.order = order;
+        this.color = color;
     }
 
     static {

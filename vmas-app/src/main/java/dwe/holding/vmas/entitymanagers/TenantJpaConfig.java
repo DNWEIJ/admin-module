@@ -41,7 +41,7 @@ public class TenantJpaConfig {
             @Qualifier("tenantDataSource") DataSource dataSource,
             EntityManagerFactoryBuilder builder,
             ObjectProvider<JpaProperties> jpaPropertiesProvider,
-            CurrentTenantIdentifierResolver<String> currentTenantIdentifierResolver
+            CurrentTenantIdentifierResolver currentTenantIdentifierResolver
     ) {
         JpaProperties jpaProperties = jpaPropertiesProvider.getIfAvailable(JpaProperties::new);
 

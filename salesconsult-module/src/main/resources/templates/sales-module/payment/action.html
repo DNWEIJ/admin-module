@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block
-            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${payment.id}, #{label.title.pet},'/customer/customer/'+ ${customerId}+ '/payments', ${customerInformation})}"></th:block>
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${payment.id}, #{label.title.payment},'/sales/customer/'+ ${customerId}+ '/payments', ${customerInformation})}"></th:block>
     <form id="createForm" th:action="'/sales/customer/'+${customerId}+ '/payment'" method="post">
         <th:block th:insert="~{sales-module/payment/paymentform}"></th:block>
     </form>

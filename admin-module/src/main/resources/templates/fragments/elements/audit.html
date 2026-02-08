@@ -1,8 +1,10 @@
 <th:block th:fragment="audit(addedBy,addedOn,lastEditedBy,lastEditedOn)">
             <fieldset>
                 <legend>[[#{label.audit.info}]]</legend>
-                <span>[[#{label.audit.addedbyOn}]]: [[${__${addedBy}__}]]&nbsp;<span><small>([[${__${addedOn}__}]])</small></span></span>
+                <div>
+                <span>[[#{label.audit.addedbyOn}]]: [[${__${addedBy}__}]]&nbsp;<span><small>([[${#temporals.format(__${addedOn}__, 'yyyy-MM-dd''T''HH:mm')}]])</small></span></span>
                 <span>[[#{label.audit.lasteditedbyOn}]]: [[${__${lastEditedBy}__}]]&nbsp;<span><small>([[${__${lastEditedOn}__}]])</small></span></span>
+                </div>
             </fieldset>
 </th:block>
 

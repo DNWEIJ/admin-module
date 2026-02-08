@@ -15,19 +15,12 @@
             <th th:text="#{visit.header.visitDate}"></th>
             <th th:text="#{visit.header.petName}"></th>
             <th th:text="#{visit.header.purpose}"></th>
-            <th th:text="#{visit.header.location}"></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="visit : ${visits}">
-
-            <td th:if="${visit.appointmentOTC.label == 'label.yesno.yes'}">
-                <!--TODO fix the redirect-->
-                <a th:href="'/sales/otc/search/'+ ${customerId} + '/sell/{appointmentId}/'+ ${visit.petId}"
-                   th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm') + ' (OTC)'}"></a>
-            </td>
-            <td th:if="${visit.appointmentOTC.label == 'label.yesno.no'}">
-                <a th:href="'/consult/visit/customer/'+ ${customerId} + '/visit/'+ ${visit.id}"
+            <td  th:attr="data-sort-value=${visit.appointmentVisitDateTime}">
+                <a th:href="'/consult/visit/customer/'+ ${customerId} + '/visit/'+ ${visit.id} + '?callFrom=customer'"
                    th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm')}"></a>
             </td>
             <td th:utext="${pets.get(visit.petId)}"></td>

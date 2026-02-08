@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
 
     @Override
-    public Long resolveCurrentTenantIdentifier() {
+    public String resolveCurrentTenantIdentifier() {
         if (AutorisationUtils.isLoggedIn()) {
-            return AutorisationUtils.getCurrentUserMid();
+            return AutorisationUtils.getCurrentUserMid().toString();
         } else {
-            return 0L;
+            return "0";
         }
     }
 

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,8 +27,8 @@ public class SoapAndHistoryService {
     public List<Appointment> getSoap(Long petId) {
         List<Visit> visits = visitRepository.findByMemberIdAndPet_Id(AutorisationUtils.getCurrentUserMid(), petId);
         visits.stream().forEach(v -> {
-            v.getAppointment().getLineItems();
-            v.getAppointment().getDiagnoses();
+            v.getAppointment().getLineItems().size();
+            v.getAppointment().getDiagnoses().size();
         });
         // change from visits -> appointment with visits
         Map<Appointment, Set<Visit>> grouped =
@@ -75,6 +76,14 @@ public class SoapAndHistoryService {
         return appointmentList;
     }
 
+
+    public List<HistoryProduct> getHistoryForProducts(Long petId) {
+        return visitRepository.findByMemberIdAndPet_Id(AutorisationUtils.getCurrentUserMid(), petId)
+                .stream().flatMap(visit -> HistoryProduct.fromVisit(visit).stream())
+                .sorted(Comparator.comparing(HistoryProduct::visitDate).reversed())
+                .toList();
+    }
+
     public List<History> getHistoryForTempWeightClugose(Long petId) {
         return visitRepository.findByMemberIdAndPet_Id(AutorisationUtils.getCurrentUserMid(), petId)
                 .stream()
@@ -84,7 +93,49 @@ public class SoapAndHistoryService {
                 .toList();
     }
 
-    record History(
+    public List<HistoryDiagnose> getHistoryForDiagnose(Long petId) {
+
+        return visitRepository.findByMemberIdAndPet_Id(AutorisationUtils.getCurrentUserMid(), petId)
+                .stream().flatMap(visit -> HistoryDiagnose.fromVisit(visit).stream())
+                .sorted(Comparator.comparing(HistoryDiagnose::visitDate).reversed())
+                .toList();
+
+    }
+
+
+    public record HistoryDiagnose(
+            LocalDate visitDate,
+            String diagnose,
+            String location
+    ) {
+        public static List<HistoryDiagnose> fromVisit(Visit visit) {
+            return visit.getAppointment().getDiagnoses().stream().map(diagnose ->
+                    new HistoryDiagnose(
+                            visit.getAppointment().getVisitDateTime().toLocalDate(),
+                            diagnose.getLookupDiagnose().getNomenclature(),
+                            diagnose.getLookupLocation().getNomenclature()
+                    )).toList();
+        }
+    }
+
+    public record HistoryProduct(
+            LocalDate visitDate,
+            Long categoryId,
+            String nomenclature,
+            BigDecimal quantity
+    ) {
+        public static List<HistoryProduct> fromVisit(Visit visit) {
+            return visit.getAppointment().getLineItems().stream().map(lineItem ->
+                    new HistoryProduct(
+                            visit.getAppointment().getVisitDateTime().toLocalDate(),
+                            lineItem.getCategoryId(),
+                            lineItem.getNomenclature(),
+                            lineItem.getQuantity()
+                    )).toList();
+        }
+    }
+
+    public record History(
             LocalDate visitDate,
             Double weight,
             Double glucose,

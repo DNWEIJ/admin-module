@@ -1,6 +1,6 @@
 <th:block th:fragment="openVisitStatus">
     <th:block th:insert="~{consult-module/fragments/statusColour::statusColour()}"></th:block>
-    <fieldset id="updateVisitStatus" class="grid right-left-space">
+    <fieldset id="updateVisitStatus" class="grid">
         <div>
             <div class="text-align-center" th:text="#{label.visit.status.previous}">previous status</div>
             <br/>
@@ -36,7 +36,7 @@
 </th:block>
 
 <th:block th:fragment="closedVisitStatus">
-    <fieldset id="updateVisitStatus" class="grid right-left-space">
+    <fieldset id="updateVisitStatus" class="grid">
         <div>
             <div class="text-align-center" th:text="#{label.visit.status.previous}">previous status</div>
             <br/>

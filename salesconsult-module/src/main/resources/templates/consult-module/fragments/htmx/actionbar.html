@@ -2,9 +2,11 @@
     .threecolumn-spread {
         grid-template-columns: 10fr 17fr 10fr;
     }
+
     .column-wrapper {
         position: relative;
     }
+
     .column-header {
         padding: 0.5rem;
         text-align: center;
@@ -13,22 +15,44 @@
         border: 1px solid;
         background: var(--pico-background-color);
     }
+
     .column-content {
         position: absolute;
-        top: 2.2rem;
+        top: 2.3rem;
         left: 0;
         right: 0;
-        display: none;
+        padding-left: 0.1rem;
+        padding-right: 0.1rem;
+
         background: var(--pico-background-color);
-        z-index: 1000;
+        border: 1px solid;
+        border-top: none;
+        z-index: 9;
+
+        /* transition setup */
+        opacity: 0;
+        transform: translateY(-6px);
+        visibility: hidden;
+        pointer-events: none;
+
+        transition:
+                opacity 400ms ease-out,
+                transform 400ms ease-out,
+                visibility 0ms linear 200ms;
     }
+
     /* open on hover */
-    .column-wrapper:hover .column-content {
-        display: block;
-    }
-    /* also stay open when manually opened */
+    .column-wrapper:hover .column-content,
     .column-wrapper.open .column-content {
-        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+
+        transition:
+                opacity 400ms ease-out,
+                transform 400ms ease-out,
+                visibility 0ms;
     }
 </style>
 <div class="threecolumn-spread">
