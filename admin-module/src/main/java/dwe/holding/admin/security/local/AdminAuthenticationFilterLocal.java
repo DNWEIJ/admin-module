@@ -16,9 +16,9 @@ public class AdminAuthenticationFilterLocal implements AuthenticationConverter {
 
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) {
         if (request.getMethod().equals("POST")) {
-            String username = "daniel";
-            String password = "gdTS$$m8UOPX";
-            String domain = "GWZ";
+            String username = obtainUsername(request);
+            String password = obtainPassword(request);
+            String domain = obtainShortCode(request);
 
             String usernameDomain = String.format("%s%s%s", username.trim(), String.valueOf(Character.LINE_SEPARATOR), domain);
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(usernameDomain, password);
@@ -27,4 +27,14 @@ public class AdminAuthenticationFilterLocal implements AuthenticationConverter {
         }
         return null;
     }
+    protected String obtainPassword(HttpServletRequest request) {
+        return request.getParameter("password");
+    }
+    protected String obtainUsername(HttpServletRequest request) {
+        return request.getParameter("username");
+    }
+    protected String obtainShortCode(HttpServletRequest request) {
+        return request.getParameter("shortCode");
+    }
+
 }
