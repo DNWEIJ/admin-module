@@ -6,8 +6,7 @@
         </summary>
         <div class="grid">
         <label th:for="appointment.visitDateTime">[[#{visit.header.visitDate}]]
-            <input id="appointment.visitDateTime" name="appointment.visitDateTime" required tabindex="1" autofocus
-                   type="datetime-local" autocomplete="off"
+            <input id="appointment.visitDateTime" name="appointment.visitDateTime" required tabindex="1" autofocus max="9999-01-01 23:59" type="datetime-local" autocomplete="off"
                    th:value="${#temporals.format(appointment.visitDateTime, 'yyyy-MM-dd''T''HH:mm')}">
         </label>
         <th:block

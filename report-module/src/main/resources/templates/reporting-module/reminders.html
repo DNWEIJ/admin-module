@@ -1,0 +1,103 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.reminders}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <form action="" method="get">
+        <details id="reportRemindersInfo" open>
+            <summary>
+                <span th:text="#{label.report.reminder.input.title}"></span><a href="/info/reportreminders" title="More info" class="info-icon">ℹ️</a>
+            </summary>
+            <div class="grid">
+                <label th:for="recDateTimeStart">[[#{visit.headerlist.from}]]
+                    <input id="recDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
+                           th:value="${#temporals.format(reminderForm.from, 'yyyy-MM-dd')}">
+                </label>
+                <label th:for="recDateTimeEnd">[[#{visit.headerlist.untill}]]
+                    <input id="recDateTimeEnd" name="includeTill" required type="date" autocomplete="off" max="9999-01-01"
+                           th:value="${#temporals.format(reminderForm.includeTill, 'yyyy-MM-dd')}">
+                </label>
+            </div>
+            <div class="grid">
+                <select>
+                    <option value="all" th:text="#{label.report.limit.all}">#{}</option>
+                    <option value="after" th:text="#{label.report.limit.after}">#{}</option>
+                    <option value="notAfter" th:text="#{label.report.limit.notafter}"></option>
+                </select>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('LastNameFilter','label.report.startCustomerName','reminderForm.LastNameFilter','0')}"
+                          th:with="required=false"></th:block>
+                <label th:for="onlyActiveWithLivePet">[[#{label.report.limitalive}]]
+                    <input role="switch" type="checkbox" name="onlyActiveWithLivePet" id="onlyActiveWithLivePet" th:checked="${reminderForm.onlyActiveWithLivePet}"/>
+                </label>
+            </div>
+            <div class="grid">
+                <div>
+                    <fieldset>
+                        <legend>Species All: <input role="switch" type="checkbox" th:checked="true" onchange="toggleAllCheckBoxesInSurroundingElement(this, 'fieldset')"></legend>
+                        <input type="hidden" name="speciesListLength" th:value="${#lists.size(species)}"/>
+                        <th:block th:each="record : ${species}">
+                            <input role="switch" type="checkbox" name="species" th:value="${record.name}" th:text="${record.name}"
+                                   th:checked="${record.connected}"/><br/>
+                        </th:block>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset>
+                        <legend>Current reminders All: <input role="switch" type="checkbox" th:checked="true" onchange="toggleAllCheckBoxesInSurroundingElement(this, 'fieldset')"></legend>
+                        <input type="hidden" name="reminderTypesLength" th:value="${#lists.size(reminderTypes)}"/>
+                        <th:block th:each="record : ${reminderTypes}">
+                            <input role="switch" type="checkbox" name="reminderTypes" th:value="${record.name}" th:text="${record.name}"
+                                   th:checked="${record.connected}"/><br/>
+                        </th:block>
+                    </fieldset>
+                </div>
+            </div>
+            <input type="submit" th:value="#{label.button.search}"/>
+        </details>
+    </form>
+    <form action="post">
+        <table>
+            <tr>
+                <td>
+                    <a style="text-decoration-line: none; font-size: 2rem;" href="">📧</a>
+                </td>
+                <td>
+                    <a style="text-decoration-line: none; font-size: 2rem;" href="">🖨️</a>
+                </td>
+                <td>
+                    <a style="text-decoration-line: none; font-size: 2rem;" href="">📅</a>
+                </td>
+            </tr>
+        </table>
+        <table class="table-tight " id="rec-table">
+            <thead>
+            <tr>
+                <th class="no-sorting"><input role="switch" type="checkbox" th:checked="false" onchange="toggleAllCheckBoxesInSurroundingElement(this, 'table')"></th>
+                <th th:text="#{report.reminders.headerlist.dueDate}"></th>
+                <th th:text="#{report.reminders.headerlist.reminder}"></th>
+                <th th:text="#{report.reminders.headerlist.customerName}"></th>
+                <th th:text="#{report.reminders.headerlist.email}"></th>
+                <th th:text="#{report.reminders.headerlist.phone}"></th>
+                <th th:text="#{report.reminders.headerlist.petName}"></th>
+                <th th:text="#{report.reminders.headerlist.appoinment}"></th>
+            </tr>
+
+            </thead>
+            <tbody>
+            <tr th:each="rec : ${reminders}">
+                <td><input role="switch" type="checkbox" name="reminderSelected" th:value="${rec.reminderId}"/></td>
+                <td th:text="${#temporals.format(rec.dueDate, 'dd-MM-yy')}"></td>
+                <td th:text="${rec.reminderText}"></td>
+                <td th:text="${T(dwe.holding.customer.client.model.Customer).getCustomerName(rec.lastName, rec.surName, rec.firstName, rec.middleInitial)}"></td>
+                <td th:text="${rec.email}"></td>
+                <td th:text="${rec.mobilePhone + '/'+rec.workPhone}"></td>
+                <td th:text="${rec.petName + ' (' + rec.species + '/' +rec.breed +')'}"></td>
+                <td th:text="${rec.originatingAppointmentId}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </form>
+</section>

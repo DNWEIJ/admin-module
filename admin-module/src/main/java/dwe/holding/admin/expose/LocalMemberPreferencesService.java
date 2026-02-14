@@ -4,7 +4,7 @@ import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
 import dwe.holding.admin.model.tenant.LocalMember;
 import dwe.holding.admin.model.tenant.MetaLocalMemberPreferences;
 import dwe.holding.admin.preferences.MetaLocalMemberPreferencesRepository;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

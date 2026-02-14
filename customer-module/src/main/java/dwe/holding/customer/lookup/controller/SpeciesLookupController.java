@@ -2,7 +2,7 @@ package dwe.holding.customer.lookup.controller;
 
 import dwe.holding.customer.client.model.lookup.LookupSpecies;
 import dwe.holding.customer.lookup.repository.SpeciesLookupRepository;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

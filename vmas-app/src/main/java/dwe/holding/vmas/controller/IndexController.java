@@ -4,7 +4,7 @@ package dwe.holding.vmas.controller;
 import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.model.tenant.LocalMember;
 import dwe.holding.admin.preferences.LocalMemberPreferences;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

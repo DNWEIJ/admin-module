@@ -32,7 +32,7 @@
     }
 </style>
 <script th:inline="javascript">
-    function tableShow(targetId) {
+    function tableShowMax5Lines(targetId) {
         const wrapper = document.querySelector('.table-wrapper');
         const tbody = document.querySelector('#appointmentList tbody');
         if (!tbody || !wrapper) return;
@@ -58,8 +58,9 @@
 
         wrapper.scrollTop += (rowRect.top - wrapperRect.top) - (wrapper.clientHeight / 2) + (rowRect.height / 2);
     }
-    document.addEventListener('DOMContentLoaded', () => tableShow([[${visit.id}]]))
+    document.addEventListener('DOMContentLoaded', () => tableShowMax5Lines([[${visit.id}]]))
 </script>
+
 <div id="class-wrapper-list-app" class="table-wrapper">
     <table id="appointmentList" class="table-tight  striped">
         <thead>

@@ -1,6 +1,6 @@
 <th:block th:fragment="selectCheckBoxList(groups, dbField, tabindex, legend)">
+    <fieldset class="grid" role="presentation">
     <th:block th:each="group : ${groups}">
-        <fieldset class="grid" role="presentation">
             <label th:each="record : ${group}" th:for="${'rec-' + record.id}">[[${record.name}]]
                 <input role="switch"
                        th:checked="${record.connected}"
@@ -10,8 +10,8 @@
                        th:value="${record}"
                        type="checkbox"/>
             </label>
-        </fieldset>
     </th:block>
+    </fieldset>
 </th:block>
 
 <th:block th:fragment="selectCheckBox(name, label, dbField, tabindex)" th:with="tooltip=${tooltip}?:''">

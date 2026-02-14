@@ -2,7 +2,7 @@ package dwe.holding.teammover.controller;
 
 import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
 import dwe.holding.admin.expose.UserService;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
 import org.springframework.stereotype.Controller;

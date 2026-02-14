@@ -78,8 +78,8 @@
             },
             date: /*[[${initialDate}]]*/ '2016-01-01',
             dateClick: newAppointment,
-            resources: {url: '/agenda/resources', method: 'post', extraParams: getParams},
-            eventSources: [{url: '/agenda/events', method: 'post', extraParams: getParams}],
+            resources: {url: '[[${ulResources}]]', method: 'post', extraParams: getParams},
+            eventSources: [{url: '[[${urlEvents}]]', method: 'post', extraParams: getParams}],
 
             buttonText: {
                 close: /*[[#{label.agenda.close}]]*/ 'Close',

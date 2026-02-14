@@ -16,16 +16,13 @@
         <div id="actionbar">
             <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
         </div>
-        <fieldset>
-            <th:block th:insert="~{sales-module/fragments/appointmentlist}"></th:block>
-        </fieldset>
+         <th:block th:insert="~{sales-module/fragments/appointmentlist}"></th:block>
         <th:block
                 th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${visit.pet}, false)}"></th:block>
 
         <details id="visitInfo" open>
             <summary>
-                <span th:text="#{visit.info.title}"></span><a href="/info/visitinfo" title="More info"
-                                                              class="info-icon">ℹ️</a>
+                <span th:text="#{visit.info.title}"></span><a href="/info/visitinfo" title="More info" class="info-icon">ℹ️</a>
             </summary>
             <fieldset class="grid">
                 <!-- define extra buttons to add behind -->

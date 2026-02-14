@@ -245,19 +245,32 @@ dialog.modal-xlg > article > footer {
 
 /* *********************** */
 /* narrow table definition */
+/* *********************** */
+.table-wrapper {
+    overflow-y: auto;
+}
+
 
 .table-tight {
     width: 100%;
     margin-top: .5rem;
     padding: .1rem;
+    max-width: 100%;
 }
 
 .table-tight td,
 .table-tight th {
-    padding: 0;
-    padding-right: 0.05rem;
+    text-align: left;
+    padding: 0 0.3rem 0.3rem 0;
+    white-space: nowrap;
     margin: 0;
     background-color: #fafafa;
+}
+
+.table-tight th:last-child,
+.table-tight td:last-child {
+    white-space: normal;
+    width: 100%;
 }
 
 .table-tight footer {
@@ -283,6 +296,10 @@ tbody tr.red-text td {
 .table-tight .center {
     text-align: center;
 }
+.table-tight .nowrap {
+    white-space: nowrap;
+}
+
 
 /**** text alingment ****/
 
@@ -316,9 +333,6 @@ tbody tr.red-text td {
         grid-column: span 1;
     }
 }
-
-
-
 
 .twocolumn-spread {
     display: flex;
@@ -398,10 +412,9 @@ tbody tr.red-text td {
     font-family: IBM Plex Mono;
 }
 
-/********************
- *** Placeholder floats up in input CSS
- *************************/
-
+/*****************************************/
+/*** Placeholder floats up in input CSS **/
+/*****************************************/
 :root {
     --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -411,21 +424,14 @@ tbody tr.red-text td {
 }
 
 /* Input */
-
 .field input {
-    transition: border-color var(--transition), box-shadow var(--transition);
+   transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .field input:focus {
     box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.08);
 }
 
-/* Label */
-label {
-    color: var(--pico-primary-underline);
-    font-weight: bold;
-    font-style: italic;
-}
 
 .field label {
     position: absolute;
@@ -438,9 +444,14 @@ label {
     padding: 0 .4rem;
     font-weight: bold;
 }
+/* any label should be the same as this one */
+label {
+    color: var(--pico-primary-underline);
+    font-weight: bold;
+    font-style: italic;
+}
 
-/* input field: place the fieldname on top */
-
+/* input field: place the label on top */
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
     top: -.9rem;
@@ -453,6 +464,79 @@ label {
     border-radius: var(--pico-border-radius);
     z-index: 100;
 }
+/* select field: to align with an input in a grid */
+
+
+
+/***********************************************/
+/*                   TABS                */
+/***********************************************/
+
+/* picocss reset */
+ .tabs input[type=radio] ~ label {
+     margin: 0;
+     padding: 1rem !important;
+     border: 1px solid color-mix(in srgb, var(--pico-primary-background) 15%, white);
+     border-bottom: 0;
+ }
+
+.tabs input[type=radio] {
+    display: none;
+    margin: 0;
+}
+
+/* Style the tab labels as buttons */
+.tabs label {
+    display: inline-block;
+    cursor: pointer;
+    background: var(--muted-background-color);
+    border-radius: var(--pico-border-radius);
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+/* Highlight the active tab */
+.tabs input:checked + label {
+    font-weight: bold;
+    white-space: nowrap;
+    background:  color-mix(in srgb, var(--pico-primary-background) 15%, white);
+}
+
+/* Container for panels */
+.tabs .panels {
+    border: 2px solid color-mix(in srgb, var(--pico-primary-background) 15%, white);
+}
+
+/* Hide all panels by default */
+.tabs .panel {
+    display: none;
+}
+
+/* Show the panel corresponding to the checked tab */
+#tab-reminder:checked ~ .panels .panel:nth-child(1),
+#tab-supply:checked ~ .panels .panel:nth-child(2),
+#tab-certificate:checked ~ .panels .panel:nth-child(3),
+#tab-instructions:checked ~ .panels .panel:nth-child(4),
+#tab-prescription:checked ~ .panels .panel:nth-child(5),
+#tab-actions:checked ~ .panels .panel:nth-child(6) {
+    display: block;
+}
+
+/* Optional: make panels scrollable if content is tall */
+.tabs .panels .panel {
+    padding-top: 1.4rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    max-height: 500px; /* adjust as needed */
+    overflow-y: auto;
+}
+
+.tabs .panels .panel .field {
+    padding-bottom: 1rem;
+}
+/****************?
+
+
 
 .svg-header-icon {
     fill: currentColor;
@@ -506,7 +590,7 @@ label {
 /************************************************************/
 
 html, body {
-    height: 100%;
+    height: 60%;
     margin: 0;
 }
 
@@ -531,13 +615,11 @@ html, body {
 
 
 /* miscellaneous */
-
 .no-break {
     white-space: nowrap;
 }
 
 /** show the required fields with a red border */
-
 :required {
     box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
 }
@@ -561,6 +643,13 @@ html, body {
     color: white;
     font-weight: bold;
 }
+
+.green-background {
+    background-color: var(--pico-color-green-500) !important;
+    color: white ! important;
+    font-weight: bold;
+}
+
 tr.highlighted td {
     color: var(--pico-color);
     font-style: italic;
@@ -576,18 +665,22 @@ tr.highlighted td {
 /****************************************/
 /******* Genric HTML definitions ********/
 /****************************************/
+
+input[type="checkbox"][role="switch"] {
+    margin-bottom: .2rem;
+}
+
 fieldset {
-    background-color: #fafafa;
     border: 1px solid var(--pico-primary);
     border-radius: var(--pico-border-radius);
-    padding-top: 1.2rem;
+    padding: 1rem .2rem 1.2rem;
 }
 
 fieldset legend {
     font-size: 1.2rem;
     font-weight: bold;
     white-space: nowrap;
-    /*background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);*/
+    background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);
 }
 
 
@@ -643,7 +736,6 @@ details summary a.info-icon {
 
 
 /* create fixed input field for smaller inputs that really do not need space, like nr below 100 */
-
 .small-input {
     width: 5rem;
 }
@@ -651,6 +743,8 @@ details summary a.info-icon {
 .medium-input {
     width: 8rem;
 }
+
+
 
 /********************************************/
 /** PicoCSS alerting message                */

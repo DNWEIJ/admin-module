@@ -22,8 +22,8 @@
         <th:block th:each="reminder : ${reminders}">
             <tr>
                 <td><a th:href="'/supplies/customer/'+ ${customerId}+ '/reminder/'+ ${reminder.id}" th:utext="${reminder.pet.nameWithDeceased}"></a></td>
-                <td th:attr="data-sort-value=${reminder.dueDate}"> th:text="${#temporals.format(reminder.dueDate, 'dd-MM-yyyy')}"></td>
-                <td>[[${reminder.reminder}]]</td>
+                <td th:attr="data-sort-value=${reminder.dueDate}" th:text="${#temporals.format(reminder.dueDate, 'dd-MM-yyyy')}"></td>
+                <td>[[${reminder.reminderText}]]</td>
                 <td>
                     <small th:data-tooltip="'Created by  '+${reminder.addedBy}+' on ' +${#temporals.format(reminder.addedOn, 'dd-MM-yy')}">
                         [[${reminder.lastEditedBy}]] • [[${#temporals.format(reminder.lastEditedOn, 'dd-MM-yy')}]]

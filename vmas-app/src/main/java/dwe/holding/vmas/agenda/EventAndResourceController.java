@@ -1,7 +1,7 @@
 package dwe.holding.vmas.agenda;
 
 import dwe.holding.admin.preferences.LocalMemberPreferences;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;

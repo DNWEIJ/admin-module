@@ -13,6 +13,7 @@
         font-weight: bold;
         cursor: pointer;
         border: 1px solid;
+        border-radius: var(--pico-border-radius);
         background: var(--pico-background-color);
     }
 
@@ -26,6 +27,7 @@
 
         background: var(--pico-background-color);
         border: 1px solid;
+        border-radius: var(--pico-border-radius);
         border-top: none;
         z-index: 9;
 
@@ -41,6 +43,10 @@
                 visibility 0ms linear 200ms;
     }
 
+    .column-wrapper:hover .column-header {
+        background: var(--pico-table-row-stripped-background-color);
+
+    }
     /* open on hover */
     .column-wrapper:hover .column-content,
     .column-wrapper.open .column-content {
@@ -48,7 +54,6 @@
         transform: translateY(0);
         visibility: visible;
         pointer-events: auto;
-
         transition:
                 opacity 400ms ease-out,
                 transform 400ms ease-out,

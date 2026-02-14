@@ -14,8 +14,8 @@ public class CustomImplicitNamingStrategy
         String cols = source.getColumnNames().stream()
                 .map(Identifier::getText)
                 .collect(Collectors.joining("_"));
-        String name = "fk_" + table + "_" + refTable + "_" + cols;
-        return toIdentifier(name, source.getBuildingContext());
+        String name = "fk_" + table + "_" + refTable + "__" + cols;
+        return toIdentifier(name.replaceAll("(?i)[aeiou]", ""), source.getBuildingContext());
     }
 
     @Override
@@ -24,8 +24,8 @@ public class CustomImplicitNamingStrategy
         String cols = source.getColumnNames().stream()
                 .map(Identifier::getText)
                 .collect(Collectors.joining("_"));
-        String name = "uk_" + table + "_" + cols;
-        return toIdentifier(name, source.getBuildingContext());
+        String name = "uk_" + table + "__" + cols;
+        return toIdentifier(name.replaceAll("(?i)[aeiou]", ""), source.getBuildingContext());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CustomImplicitNamingStrategy
         String cols = source.getColumnNames().stream()
                 .map(Identifier::getText)
                 .collect(Collectors.joining("_"));
-        String name = "idx_" + table + "_" + cols;
-        return toIdentifier(name, source.getBuildingContext());
+        String name = "idx_" + table + "__" + cols;
+        return toIdentifier(name.replaceAll("(?i)[aeiou]", ""), source.getBuildingContext());
     }
 }

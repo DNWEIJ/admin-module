@@ -258,7 +258,9 @@
                     </label>
                 </div>
                 <div id="holder-input" class="holder">
-                    <input list="input-costingName" id="costingFind" class="no-break" type="search" name="searchCriteria" th:placeholder="#{label.costing.search.placeholder}"
+                    <input list="input-costingName" id="costingFind" class="no-break" type="search" name="searchCriteria"
+                           th:placeholder="#{label.costing.search.placeholder}"
+                           th:data-alternatetext="#{label.costing.search.explenation}"
                            hx-post="/costing/search/costing"
                            hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter']"
                            hx-target="#input-costingName"
@@ -274,7 +276,8 @@
                 <div id="holder-dropdown" class="hidden">
                     <!-- options will be filled by hx-target -->
                     <fieldset class="grid">
-                        <div><select name="categoryId" id="categoryList" hx-post="/costing/costing/search/costing/dropdown/found/costing" hx-target="#productsFromCategory" hx-swap="innerHTML">
+                        <div><select name="categoryId" id="categoryList" hx-post="/costing/costing/search/costing/dropdown/found/costing" hx-target="#productsFromCategory"
+                                     hx-swap="innerHTML">
                         </select>
                         </div>
                         <div>
@@ -320,5 +323,22 @@
         document.getElementById('costingFind').addEventListener('htmx:afterRequest', function (evt) {
             document.querySelector('#searching-indicator').classList.remove('visible');
         });
+
+        function alternateTextPlaceHolder() {
+            const input = document.getElementById('costingFind');
+            let count = 0;
+            const timer = setInterval(() => {
+                if (++count > 3) return clearInterval(timer);
+                input.style.opacity = 0;
+                setTimeout(() => {
+                    [input.placeholder, input.dataset.alternatetext] =
+                        [input.dataset.alternatetext, input.placeholder];
+                    input.style.opacity = 1;
+                }, 200);
+            }, 5000);
+        }
+
+        alternateTextPlaceHolder();
+
     </script>
 </th:block>

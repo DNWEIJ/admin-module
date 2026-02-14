@@ -2,7 +2,7 @@ package dwe.holding.salesconsult.sales.Service;
 
 import dwe.holding.admin.model.tenant.LocalMemberTax;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
 import dwe.holding.customer.expose.CustomerService;

@@ -1,6 +1,6 @@
 package dwe.holding.customer.expose;
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.model.type.SexTypeEnum;

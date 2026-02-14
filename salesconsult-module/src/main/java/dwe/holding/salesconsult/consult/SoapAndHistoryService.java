@@ -1,11 +1,10 @@
 package dwe.holding.salesconsult.consult;
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Note;
 import dwe.holding.customer.client.repository.NoteRepository;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
-import dwe.holding.salesconsult.consult.repository.DiagnoseRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 public class SoapAndHistoryService {
     private final VisitRepository visitRepository;
     private final NoteRepository noteRepository;
-    private final DiagnoseRepository diagnoseRepository;
 
     @Transactional(readOnly = true)
     public List<Appointment> getSoap(Long petId) {
@@ -144,9 +142,9 @@ public class SoapAndHistoryService {
         public static History fromVisit(Visit visit) {
             return new History(
                     visit.getAppointment().getVisitDateTime().toLocalDate(),
-                    Objects.requireNonNullElse(visit.getWeight(), Double.valueOf(0)),
-                    Objects.requireNonNullElse(visit.getGlucose(), Double.valueOf(0)),
-                    Objects.requireNonNullElse(visit.getTemperature(), Double.valueOf(0))
+                    Objects.requireNonNullElse(visit.getWeight(), (double) 0),
+                    Objects.requireNonNullElse(visit.getGlucose(), (double) 0),
+                    Objects.requireNonNullElse(visit.getTemperature(), (double) 0)
             );
         }
     }

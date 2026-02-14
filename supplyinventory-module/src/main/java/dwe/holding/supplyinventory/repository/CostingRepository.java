@@ -28,10 +28,16 @@ public interface CostingRepository extends JpaRepository<Costing, Long> {
 
     List<CostingProjection> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long currentUserMid);
 
+    List<CostingProjection> findByReminderNomenclatureIsNotNullAndReminderNomenclatureIsNotEmptyAndMemberIdOrderByReminderNomenclature(Long memberId);
+
     @Query("""
-            SELECT DISTINCT c.reminderNomenclature
-            FROM Costing c
-            WHERE c.memberId = :memberId order by c.reminderNomenclature
+                select DISTINCT c.reminderNomenclature as reminderText
+                from Costing c
+                where c.reminderNomenclature is not null
+                  and c.reminderNomenclature <> ''
+                  and c.deleted = YesNoEnum.Yes
+                  and c.memberId = :memberId
+               order by reminderText
             """)
-    List<String> getReminderNomenclature(Long memberId);
+    List<String> findWithNonEmptyReminderNomenclature(Long memberId);
 }

@@ -19,34 +19,43 @@
             <th:block th:each="pet, iStat : ${pets}">
                 <tr>
                     <td>
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
                     </td>
-                    <td th:if="${showPetLink}"><a href="" th:text="${pet.name} + ' (' + ${pet.species()} + ')'" hx-target="#modal-container" hx-swap="innerHTML"
-                                                  th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}"></a>
+                    <td th:if="${showPetLink}">
+                        <a href="" th:text="${pet.name} + ' (' + ${pet.species()} + ')'"
+                           hx-target="#modal-container" hx-swap="innerHTML" th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}">
+
+                        </a>
                     </td>
                     <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
 
                     <td th:if="${salesType.isVisit}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true, ${2+iStat.index})}"
-                                  th:with="required=false,class='small-input'"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true, ${2+iStat.index})}"
+                                th:with="required=false,class='small-input'"></th:block>
                     </td>
                     <td th:if="${salesType.isVisit}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', ${selectedVet}, ${staffList}, true, ${3+iStat.index})}"
-                                  th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', ${selectedVet}, ${staffList}, true, ${3+iStat.index})}"
+                                th:with="required=false"></th:block>
                     </td>
                     <td th:if="${salesType.isVisit}">
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '',  ${selectedRoom}, ${rooms}, true,${4+iStat.index})}"
-                                  th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '',  ${selectedRoom}, ${rooms}, true,${4+iStat.index})}"
+                                th:with="required=false"></th:block>
                     </td>
 
                     <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                     <td>
-                        <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}"
-                                  th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}"
+                                th:with="required=false"></th:block>
                     </td>
                     <td>
-                        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','-1')}"
-                                  th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','-1')}"
+                                th:with="required=false"></th:block>
                     </td>
                 </tr>
             </th:block>
@@ -74,32 +83,38 @@
                 <th:block th:each="pet, iStat : ${deceasedPets}">
                     <tr>
                         <td>
-                            <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${pets.size() + iStat.index} + '].checked','','','1')}"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${pets.size() + iStat.index} + '].checked','','','1')}"></th:block>
                         </td>
                         <td th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
 
 
                         <td th:if="${salesType.isVisit}">
-                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"
-                                      th:with="required=false"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"
+                                    th:with="required=false"></th:block>
                         </td>
                         <td th:if="${salesType.isVisit}">
-                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', '', ${staffList}, true,'1')}"
-                                      th:with="required=false"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].vet', '', '', ${staffList}, true,'1')}"
+                                    th:with="required=false"></th:block>
                         </td>
                         <td th:if="${salesType.isVisit}">
-                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '', '', ${rooms}, true,'1')}"
-                                      th:with="required=false"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].room', '', '', ${rooms}, true,'1')}"
+                                    th:with="required=false"></th:block>
                         </td>
 
                         <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                         <td>
-                            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('reasonList['+${pets.size() + iStat.index}+']', '', '', ${reasons}, true,'1')}"
-                                      th:with="required=false"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${pets.size() + iStat.index}+'],reason', '', '', ${reasons}, true,'-1')}"
+                                    th:with="required=false"></th:block>
                         </td>
                         <td>
-                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+ ${pets.size() + iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
-                                      th:with="required=false"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+ ${pets.size() + iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
+                                    th:with="required=false"></th:block>
                         </td>
                     </tr>
                 </th:block>

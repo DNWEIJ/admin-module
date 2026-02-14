@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Reminder extends MemberBaseBO implements Serializable {
+public class Reminder extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pet_id")

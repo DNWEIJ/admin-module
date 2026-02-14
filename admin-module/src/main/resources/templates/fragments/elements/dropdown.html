@@ -104,7 +104,8 @@
 </th:block>
 
 
-<th:block th:fragment="propDropdown(name, label, dbFieldValue, list, required, tabindex)">
+<th:block th:fragment="propDropdown(name, label, dbFieldValue, list, required, tabindex)"
+          th:with=" class=${class}?:${class}">
     <th:block th:if="${label != ''}">
         <label th:for="${name}" th:value="${label}">[[#{${label}}]]
     </th:block>

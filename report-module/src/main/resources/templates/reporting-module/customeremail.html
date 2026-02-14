@@ -1,0 +1,114 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.customeremail}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <form action="" method="get">
+        <details id="reportCustomerEmailInfo" open>
+            <summary>
+                <span th:text="#{label.report.email.input.title}"></span><a href="/info/reportcustomeremail" title="More info" class="info-icon">ℹ️</a>
+            </summary>
+            <div style="font-size: 1.2rem;margin:1rem" th:utext="'<b>' + #{label.mailToCustomer.stepInfoOne} + '</b>'"></div>
+
+            <div class="grid">
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::dbDropdown('nrOfMonths','label.report.email.monthspre', ${emailForm.nrOfMonths}, ${monthList}, true,'0')}"
+                            th:with="required=false"></th:block>
+                </div>
+                <div>
+                    [[#{label.report.email.monthspost}]]
+                </div>
+            </div>
+            <fieldset class="grid">
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::propDropdown('onlyActiveWithLivePet','label.report.emial.limitalive', ${emailForm.onlyActiveWithLivePet}, ${ynvaluesList}, false,'0')}"></th:block>
+                </div>
+                <div>
+                    <div class="field">
+                        <input id="minAgePet" name="minAgePet" placeholder="" tabindex="0" type="number" value="0" min="0" autocomplete="off" required="required">
+                        <label for="minAgePet">from age</label>
+                    </div>
+                </div>
+                <div>
+                    <div class="field">
+                        <input id="maxAgePet" name="maxAgePet" placeholder="" tabindex="0" type="number" value="0" min="0" autocomplete="off" required="required">
+                        <label for="maxAgePet">to age</label>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="grid">
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::propDropdown('emailAddress','label.report.email.emailaddress', ${emailForm.emailAddress}, ${ynvaluesList}, false,'0')}"></th:block>
+                </div>
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::propDropdown('emailAddress','label.report.email.newletter', ${emailForm.newsLetter}, ${ynvaluesList}, false,'0')}"></th:block>
+                </div>
+                <div>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::propDropdown('sexType','label.report.email.sextype', ${emailForm.sexType}, ${sexTypeList}, false,'0')}"></th:block>
+                </div>
+            </div>
+
+
+            <fieldset>
+                <legend>Species All: <input role="switch" type="checkbox" th:checked="true" onchange="toggleAllCheckBoxesInSurroundingElement(this)"></legend>
+                <input type="hidden" name="speciesListLength" th:value="${#lists.size(species)}"/>
+                <th:block th:each="record : ${species}">
+                    <input role="switch" type="checkbox" name="species" th:value="${record.name}" th:text="${record.name}"
+                           th:checked="${record.connected}"/><br/>
+                </th:block>
+            </fieldset>
+            <label th:for="onlyIncludeAgePet">[[#{label.report.emial.limitalive}]]
+                <input role="switch" type="checkbox" name="onlyIncludeAgePet" id="onlyIncludeAgePet" th:checked="${emailForm.onlyActiveWithLivePet}"/>
+            </label>
+            <label th:for="onlyIncludeNobirthday">[[#{label.report.emial.nobirthday}]]
+                <input role="switch" type="checkbox" name="onlyIncludeNobirthday" id="onlyIncludeNobirthday" th:checked="${emailForm.onlyIncludeNobirthday}"/>
+            </label>
+            <input type="submit" th:value="#{label.button.search}"/>
+        </details>
+    </form>
+
+    <form action="post">
+        <table class="table-tight " id="rec-table">
+            <thead>
+            <tr>
+                <td><input role="switch" type="checkbox" th:checked="true" onchange="toggleAllInTable(this)"></td>
+                <td colspan="3">
+                    <a style="font-size: 2rem;" href="">📧</a>
+                    <a style="font-size: 2rem;" href="">🖨️</a>
+                    <a style="font-size: 2rem;" href="">📅</a>
+                </td>
+            </tr>
+            <tr>
+                <th th:text="#{report.reminders.headerlist.dueDate}"></th>
+                <th th:text="#{report.reminders.headerlist.reminder}"></th>
+                <th th:text="#{report.reminders.headerlist.customerName}"></th>
+                <th th:text="#{report.reminders.headerlist.email}"></th>
+                <th th:text="#{report.reminders.headerlist.phone}"></th>
+                <th th:text="#{report.reminders.headerlist.petName}"></th>
+                <th th:text="#{report.reminders.headerlist.appoinment}"></th>
+            </tr>
+
+            </thead>
+            <tbody>
+            <tr th:each="rec : ${customers}">
+                <td><input role="switch" type="checkbox" name="reminderSelected" th:value="${rec.reminderId}"/></td>
+                <td th:text="${#temporals.format(rec.dueDate, 'dd-MM-yy')}"></td>
+                <td th:text="${rec.reminderText}"></td>
+                <td th:text="${T(dwe.holding.customer.client.model.Customer).getCustomerName(rec.lastName, rec.surName, rec.firstName, rec.middleInitial)}"></td>
+                <td th:text="${rec.email}"></td>
+                <td th:text="${rec.mobilePhone + '/'+rec.workPhone}"></td>
+                <td th:text="${rec.petName + ' (' + rec.species + '/' +rec.breed +')'}"></td>
+                <td th:text="${rec.originatingAppointmentId}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </form>
+</section>

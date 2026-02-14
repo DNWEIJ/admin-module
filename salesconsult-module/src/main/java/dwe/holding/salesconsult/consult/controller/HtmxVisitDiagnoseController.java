@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.consult.controller;
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.salesconsult.consult.model.Diagnose;
 import dwe.holding.salesconsult.consult.model.LookupDiagnose;
 import dwe.holding.salesconsult.consult.model.LookupLocation;

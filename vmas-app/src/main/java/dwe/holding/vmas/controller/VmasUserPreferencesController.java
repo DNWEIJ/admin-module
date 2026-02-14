@@ -2,7 +2,7 @@ package dwe.holding.vmas.controller;
 
 import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.vmas.model.VmasUserPreferences;

@@ -1,17 +1,15 @@
-package dwe.holding.salesconsult.consult.repository.dsl;
+package dwe.holding.reporting.repository.dsl;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
+
 import dwe.holding.customer.client.model.QCustomer;
 import dwe.holding.customer.client.model.QPet;
+import dwe.holding.reporting.repository.projection.VisitListProjection;
 import dwe.holding.salesconsult.consult.model.QAppointment;
-import dwe.holding.salesconsult.consult.model.QPaymentVisit;
 import dwe.holding.salesconsult.consult.model.QVisit;
-import dwe.holding.salesconsult.consult.repository.VisitListProjection;
-import dwe.holding.salesconsult.sales.model.QLineItem;
-import dwe.holding.salesconsult.sales.model.QPayment;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,13 +19,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class AppointmentListDsl {
 
     private final EntityManager em;
 
-    public List<VisitListProjection> findVisits(Long mid, Long mlid, LocalDate fromDate, LocalDate toDate) {
+    public List<VisitListProjection> findVisits(Long memberId, Long localMemberId, LocalDate fromDate, LocalDate toDate) {
 
         JPAQuery<VisitListProjection> query = new JPAQuery<>(em);
 
@@ -35,25 +34,21 @@ public class AppointmentListDsl {
         QVisit visit = QVisit.visit;
         QPet pet = QPet.pet;
         QCustomer customer = QCustomer.customer;
-        QLineItem lineItem = QLineItem.lineItem;
-        QPaymentVisit paymentVisit = QPaymentVisit.paymentVisit;
-        QPayment payment = QPayment.payment;
 
-        // Use numberTemplate for aggregations in QueryDSL 7.x
         NumberExpression<BigDecimal> totalAmountExpr = Expressions.numberTemplate(
                 BigDecimal.class,
-                "coalesce(sum({0}), 0)",
-                lineItem.totalIncTax
+                "coalesce((select sum(li.totalIncTax) from LineItem li where li.appointment.id = {0} and li.pet.id = {1}), 0)",
+                appointment.id,
+                pet.id
         );
 
         NumberExpression<BigDecimal> paidAmountExpr = Expressions.numberTemplate(
                 BigDecimal.class,
-                "coalesce(sum({0}), 0)",
-                payment.amount
+                "coalesce((select sum(p.amount) from Payment p join p.paymentVisits pv where pv.visit.id = {0}), 0)",
+                visit.id
         );
 
-        List<VisitListProjection> results = query
-                .select(Projections.constructor(
+        return query.select(Projections.constructor(
                         VisitListProjection.class,
                         appointment.id,
                         appointment.visitDateTime,
@@ -67,11 +62,14 @@ public class AppointmentListDsl {
                         visit.purpose,
                         visit.room,
                         visit.status,
+                        visit.sentToInsurance,
 
                         pet.id,
                         pet.name,
                         pet.species,
                         pet.breed,
+                        pet.insured,
+                        pet.insuredBy,
 
                         customer.id,
                         customer.lastName,
@@ -86,46 +84,11 @@ public class AppointmentListDsl {
                 .join(visit).on(visit.appointment.id.eq(appointment.id))
                 .join(pet).on(visit.pet.id.eq(pet.id))
                 .join(customer).on(pet.customer.id.eq(customer.id))
-                .leftJoin(lineItem)
-                .on(lineItem.appointment.id.eq(appointment.id)
-                        .and(lineItem.pet.id.eq(pet.id)))
-                .leftJoin(paymentVisit)
-                .on(paymentVisit.visit.id.eq(visit.id))
-                .leftJoin(paymentVisit.payment, payment)
                 .where(
                         appointment.visitDateTime.between(fromDate.atStartOfDay(), toDate.atTime(LocalTime.MAX)),
-                        appointment.memberId.eq(mid),
-                        appointment.localMemberId.eq(mlid)
-                )
-                .groupBy(
-                        appointment.id,
-                        appointment.visitDateTime,
-                        appointment.cancelled,
-                        appointment.completed,
-                        appointment.OTC,
-
-                        visit.id,
-                        visit.estimatedTimeInMinutes,
-                        visit.veterinarian,
-                        visit.purpose,
-                        visit.room,
-                        visit.status,
-
-                        pet.id,
-                        pet.name,
-                        pet.species,
-                        pet.breed,
-
-                        customer.id,
-                        customer.lastName,
-                        customer.firstName,
-                        customer.surName,
-                        customer.middleInitial
+                        appointment.memberId.eq(memberId),
+                        appointment.localMemberId.eq(localMemberId)
                 )
                 .fetch();
-
-        return results;
     }
-
 }
-

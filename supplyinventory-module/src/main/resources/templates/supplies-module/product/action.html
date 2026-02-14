@@ -13,62 +13,90 @@
         <fieldset class="grid" role="presentation">
             <input id="id" name="id" th:value="${product.id}" type="hidden"/>
             <input id="version" name="version" th:value="${product.version}" type="hidden"/>
-            <input id="delete" name="delete" th:value="${product.delete}" type="hidden"/>
+            <input id="delete" name="delete" th:value="${product.deleted}" type="hidden"/>
 
             <!-- General Information -->
             <legend>General Information</legend>
-            <th:block th:insert="~{fragments/elements/select::selectHtml('categoryId','Category','product.categoryId',${categories})}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('nomenclature','Invoice information','product.nomenclature','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('code','Quick Reference Code','product.code','2')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('barcode','Barcode','product.barcode','3')}"></th:block>
-
-            <th:block th:insert="~{fragments/elements/input::inputHtml('cost','Cost','product.cost','4')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtml('processingFee','Processing Fee','product.processingFeeExTax','5')}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::selectHtml('taxed','Taxed Item','product.taxed',${taxTypes})}"></th:block>
-            <th:block th:insert="~{fragments/elements/select::selectHtml('batch','Batch','product.batch',${batchOptions})}"></th:block>
-
-            <!-- Tabs / Accordion Sections -->
-            <details name="product-tabs">
-                <summary>Set Reminder</summary>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('rnomenclature','Reminder Description','product.rnomenclature','6')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('interval','Interval (weeks)','product.interval','7')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('rremovePendingReminderscontaining','Remove pending reminders','product.rremovePendingReminderscontaining','8')}"></th:block>
-            </details>
-
-            <details name="product-tabs">
-                <summary>Supply Items</summary>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('distributor','Distributor','product.distributor','9')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('distDescription','Product name','product.distDescription','10')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('price','Distributor price','product.price','11')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('quantityPerPackage','Quantity per package','product.quantityPerPackage','12')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('itemNumber','Article number','product.itemNumber','13')}"></th:block>
-            </details>
-
-            <details name="product-tabs">
-                <summary>Certificate</summary>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('certificateManufacturer','Manufacturer','product.certificateManufacturer','14')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('certificateType','Type','product.certificateType','15')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('certificateSerialNumber','Serial Number','product.certificateSerialNumber','16')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtml('certificatevaccineExpires','Expires','product.certificatevaccineExpires','17')}"></th:block>
-            </details>
-
-            <details name="product-tabs">
-                <summary>Instructions</summary>
-                <textarea cols="80" id="instructions" name="instructions" rows="8" th:text="${product.instructions}"></textarea>
-            </details>
-
-            <details name="product-tabs">
-                <summary>Prescription Label</summary>
-                <textarea cols="80" id="prescriptionLabel" name="prescriptionLabel" rows="8" th:text="${product.prescriptionLabel}"></textarea>
-            </details>
-
-            <details name="product-tabs">
-                <summary>Additional Actions</summary>
-                <label>
-                    <input id="deceasedPetPrompt" name="deceasedPetPrompt" th:checked="${product.deceasedPetPrompt}" type="checkbox"/>
-                    Prompt user to mark Pet as deceased when this line item is added.
-                </label>
-            </details>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('categoryId','label.costing.product.category',${categoryId}, ${categories}, true,'0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.costing.product.invoiceInformation','product.nomenclature','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('salesPriceExTax','label.costing.product.cost','product.salesPriceExTax','4')}"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/input::inputHtmlLift('processingFeeExTax','label.costing.product.processingFee','product.processingFeeExTax','5')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','label.costing.product.taxedItem',${product.taxed},${taxTypes}, true, '0')}"></th:block>
         </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','label.costing.product.quickReferenceCode','product.shortCode','2')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('barcode','label.costing.product.barcode','product.barcode','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.batch',${product.hasBatchNr},${yesNoOptions}, true, '0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.batch',${product.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
+        </fieldset>
+
+        <!-- Tabs Sections -->
+        <div class="tabs">
+            <input type="radio" name="product-tabs" id="tab-reminder" checked>
+            <label for="tab-reminder" th:text="#{label.costing.product.setReminder}">Set Reminder</label>
+
+            <input type="radio" name="product-tabs" id="tab-supply">
+            <label for="tab-supply" th:text="#{label.costing.product.supplyItems}">Supply Items</label>
+
+            <input type="radio" name="product-tabs" id="tab-certificate">
+            <label for="tab-certificate" th:text="#{label.costing.product.certificate}">Certificate</label>
+
+            <input type="radio" name="product-tabs" id="tab-instructions">
+            <label for="tab-instructions" th:text="#{label.costing.product.instructions}">Instructions</label>
+
+            <input type="radio" name="product-tabs" id="tab-prescription">
+            <label for="tab-prescription" th:text="#{label.costing.product.prescriptionLabel}">Prescription Label</label>
+
+            <input type="radio" name="product-tabs" id="tab-actions">
+            <label for="tab-actions" th:text="#{label.costing.product.additionalActions}">Additional Actions</label>
+
+            <div class="panels">
+
+                <section class="panel">
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('reminderNomenclature','label.costing.product.reminderDescription','product.reminderNomenclature','6')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('intervalInWeeks','label.costing.product.intervalInWeeks','product.intervalInWeeks','7')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('rRemovePendingRemindersContaining','label.costing.product.removePendingReminders','product.rRemovePendingRemindersContaining','8')}"></th:block>
+                </section>
+
+                <section class="panel">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('distributor','label.costing.product.distributor','product.distributor','9')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('distributorDescription','label.costing.product.productName','product.distributorDescription','10')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('purchaseDistributorPrice','label.costing.product.distributorPrice','product.purchaseDistributorPrice','11')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('quantityPerPackage','label.costing.product.quantityPerPackage','product.quantityPerPackage','12')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('itemNumber','label.costing.product.articleNumber','product.itemNumber','13')}"></th:block>
+                </section>
+
+                <section class="panel">
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','14')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','15')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','16')}"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','17')}"></th:block>
+                </section>
+                <section class="panel">
+                    <label for="instructions" th:text="#{label.costing.product.instructions}"></label>
+                    <textarea cols="80" id="instructions" name="instructions" rows="8" th:text="${product.instructions}"></textarea>
+                </section>
+                <section class="panel">
+                    <label for="prescriptionLabel" th:text="#{label.costing.product.prescriptionLabel}"></label>
+                    <textarea cols="80" id="prescriptionLabel" name="prescriptionLabel" rows="8" th:text="${product.prescriptionLabel}"></textarea>
+                </section>
+                <section class="panel">
+                    <label for="deceasedPetPrompt" th:text="#{label.costing.product.deceasedPetPrompt}"></label>
+                    <label><input id="deceasedPetPrompt" name="deceasedPetPrompt" type="checkbox" th:checked="${product.deceasedPetPrompt}">Prompt user to mark Pet as deceased when
+                        this line item is added.</label>
+                </section>
+            </div>
+        </div>
     </form>
 </section>

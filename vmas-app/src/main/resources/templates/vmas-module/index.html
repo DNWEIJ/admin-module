@@ -17,6 +17,35 @@
     </article>
     <article>TODO
         <ul>
+            <li>https://vmasapplication.nl/VMAS/appointment/editvisit.htm?appointmentId=1250545&callflag=customer&visitId=1067433</li>
+            <li><pre><code> using localstorage to save state of checkboxes. Can be used to keep track of any state localle. Maybe push to backend on login/logout so on every computer it is the same....needs to be bound to person id then
+                <!-- Inline script before any visible content -->
+                    const CHECKBOX_STORAGE_KEY = "persistedCheckboxes";
+
+                    // Load persisted states
+                    const persistedStates = JSON.parse(localStorage.getItem(CHECKBOX_STORAGE_KEY) || "{}");
+
+                    // Restore checkbox states immediately
+                    document.querySelectorAll(".persist-checkbox").forEach(cb => {
+                        if (persistedStates.hasOwnProperty(cb.id)) {
+                            cb.checked = persistedStates[cb.id];
+                        }
+
+                        // Save state when checkbox changes
+                        cb.addEventListener("change", () => {
+                            persistedStates[cb.id] = cb.checked;
+                            localStorage.setItem(CHECKBOX_STORAGE_KEY, JSON.stringify(persistedStates));
+                        });
+                    });
+
+                <!-- Your page content -->
+                <cx_input type="checkbox" class="persist-checkbox" id="chk1"> Checkbox 1<br>
+                <cx_input type="checkbox" class="persist-checkbox" id="chk2"> Checkbox 2<br>
+                <cx_input type="checkbox" class="persist-checkbox" id="chk3"> Checkbox 3<br>
+</code></pre>
+            </li>
+
+            <li>https://ashok-khanna.medium.com/beautiful-pdfs-from-html-9a7a3c565404</li>
             <li>Check soap with large https://localhost:8443/consult/visit/customer/895/pet/1311/soap </li>
             <li><h1> Migration</h1></li>
             <li>sql file: sales_line_item estime line item, set costingId and print flag</li>

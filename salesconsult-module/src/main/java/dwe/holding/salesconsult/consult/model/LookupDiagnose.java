@@ -20,7 +20,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LookupDiagnose extends MemberBaseBO implements Serializable {
+public class LookupDiagnose extends MemberBaseBO {
     @Column(nullable = false)
     @NotEmpty
     private String nomenclature;

@@ -1,0 +1,1 @@
+-- If needs be create database triggers here

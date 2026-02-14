@@ -3,7 +3,7 @@ package dwe.holding.salesconsult.consult.controller;
 import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.model.type.AgendaTypeEnum;
 import dwe.holding.admin.preferences.LocalMemberPreferences;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;

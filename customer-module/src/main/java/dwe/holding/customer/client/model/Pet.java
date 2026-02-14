@@ -66,11 +66,8 @@ public class Pet extends MemberBaseBO {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    // TODO
-//    /**
-//     *  Visits belonging to this Patients (Pets).
-//     */
-//    private Set<Visit> visits = new HashSet<Visit>(0);
+
+    // private Set<Visit> visits = new HashSet<Visit>(0);
 //    /**
 //     *  Estimatespecifics belonging to this Patients (Pets).
 //     */

@@ -12,7 +12,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -83,14 +82,34 @@ public class Visit extends MemberBaseBO {
     private Set<PaymentVisit> paymentVisits = new HashSet<>(0);
 
     @Transient
-    public @Nullable boolean isOpen() {
+    public boolean isOpen() {
         return !this.getAppointment().isCancelled() && !this.getAppointment().isCompleted() && VisitStatusEnum.isOpen(this.getStatus());
     }
 
-    public String getBackgroundColor() {
-        if (appointment.isCancelled()) return Appointment.CANCELLED_COLOUR;
-        if (appointment.isCompleted()) return Appointment.FINISHED_COLOUR;
+    /**
+     * Required to make thymeleaf -> SpEl happy --> primitives in SpEl are not there
+     **/
+    public static String getBackgroundColor(Boolean cancelled, Boolean complete, VisitStatusEnum status) {
+        return getBackgroundColor(Boolean.TRUE.equals(cancelled), Boolean.TRUE.equals(complete), status);
+    }
+
+    public static String getBackgroundColor(boolean cancelled, boolean complete, VisitStatusEnum status) {
+        if (cancelled) return Appointment.CANCELLED_COLOUR;
+        if (complete) return Appointment.FINISHED_COLOUR;
         return status.getColor();
+    }
+
+    public static String getTextColor(String stateHexColor) {
+        String hexColor = stateHexColor.replace("#", "");
+        int r = Integer.parseInt(hexColor.substring(0, 2), 16);
+        int g = Integer.parseInt(hexColor.substring(2, 4), 16);
+        int b = Integer.parseInt(hexColor.substring(4, 6), 16);
+        double luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+        return luminance > 186 ? "#000000" : "#FFFFFF";
+    }
+
+    public String getBackgroundColor() {
+        return getBackgroundColor(appointment.isCancelled(), appointment.isCompleted(), status);
     }
 
     public String getStatusLabel() {
@@ -100,11 +119,6 @@ public class Visit extends MemberBaseBO {
     }
 
     public String getTextColor() {
-        String hexColor = getBackgroundColor().replace("#", "");
-        int r = Integer.parseInt(hexColor.substring(0, 2), 16);
-        int g = Integer.parseInt(hexColor.substring(2, 4), 16);
-        int b = Integer.parseInt(hexColor.substring(4, 6), 16);
-        double luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-        return luminance > 186 ? "#000000" : "#FFFFFF";
+        return getTextColor(getBackgroundColor());
     }
 }

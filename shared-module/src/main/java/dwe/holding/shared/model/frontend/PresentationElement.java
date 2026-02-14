@@ -9,6 +9,7 @@ import lombok.Setter;
 public class PresentationElement {
     public String id;
     public String name;
+    public String label;
     public Boolean connected = true;
     public String dataField = "";
 
@@ -17,6 +18,11 @@ public class PresentationElement {
         this.name = name;
     }
 
+    public PresentationElement(String id, String name, String label) {
+        this.id = id;
+        this.name = name;
+        this.label = label;
+    }
     public PresentationElement(Long id, String name) {
         this.id = id.toString();
         this.name = name;
@@ -34,6 +40,13 @@ public class PresentationElement {
         this.name = name;
         this.connected = connected;
     }
+
+    public PresentationElement(String id, String name, Boolean connected) {
+        this.id = id;
+        this.name = name;
+        this.connected = connected;
+    }
+
 
     public PresentationElement() {
     }

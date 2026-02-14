@@ -15,12 +15,13 @@
     <!--    <link th:href="@{/lib/pico/pico.lime.min.css}" rel="stylesheet"/>-->
     <!--    <link th:href="@{/lib/pico/pico.grey.min.css}" rel="stylesheet"/>-->
     <!--    <link th:href="@{/lib/pico/pico.pumpkin.min.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/lib/pico/pico.grey.min.css}" rel="stylesheet"/>-->
-    <link th:href="@{/lib/pico/pico.sand.min.css}" rel="stylesheet"/>
+    <!--    <link th:href="@{/lib/pico/pico.grey.min.css}" rel="stylesheet"/>-->
+<!--    <link th:href="@{/lib/pico/pico.sand.min.css}" rel="stylesheet"/>-->
     <link th:href="@{/lib/pico/pico.colors.min.css}" rel="stylesheet"/>
 
-    <link th:href="@{/lib/ownstyle/hamburger.css}" rel="stylesheet"/>
+    <!--    <link th:href="@{/lib/ownstyle/hamburger.css}" rel="stylesheet"/>-->
     <link th:href="@{/lib/ownstyle/style.css}" rel="stylesheet"/>
+    <link th:href="@{/lib/ownstyle/menu.css}" rel="stylesheet"/>
 
     <!-- javascript -->
     <!--    <script th:src="@{/lib/tabulator/tabulator.js}" type="text/javascript"></script>-->
@@ -29,6 +30,7 @@
 
     <script th:src="@{/lib/pico/modal.js}" type="text/javascript"></script>
     <script th:src="@{/lib/js/util.js}" type="text/javascript"></script>
+    <script th:src="@{/lib/js/table.js}" type="text/javascript"></script>
 
 </head>
 <body>
@@ -45,7 +47,7 @@
         </fieldset>
     </th:block>
 
-    <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
+    <th:block th:if="${T(dwe.holding.admin.sessionstorage.AutorisationUtils).isLoggedIn()}">
         <header>
             <div th:replace="~{navigation}"></div>
         </header>
@@ -58,24 +60,20 @@
         </div>
 
     </main>
+    <div id="modal-container"></div>
     <footer>
-        <p>
+        <p class="grid">
             <th:block th:if="${applicationName != null}">
                 <a th:href="'/'+${applicationName}+'/userpreferences'">preferences</a>
             </th:block>
-            <th:block
-                    th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn() and T(dwe.holding.admin.security.AutorisationUtils).hasRole('PLANNER')}">
-                <a th:href="'/admin/user'">administration</a>
-            </th:block>
-            <br/>
-            <th:block th:if="${T(dwe.holding.admin.security.AutorisationUtils).isLoggedIn()}">
+            <span>DWE Holding &copy;</span>
+            <th:block th:if="${T(dwe.holding.admin.sessionstorage.AutorisationUtils).isLoggedIn()}">
                 <a th:href="'/customer/preferences/user'"
-                   th:text="'loggedin User:' + ${T(dwe.holding.admin.security.AutorisationUtils).getCurrentUserAccount()}"></a>
+                   th:text="'loggedin User:' + ${T(dwe.holding.admin.sessionstorage.AutorisationUtils).getCurrentUserAccount()}"></a>
             </th:block>
-            DWE Holding &copy;
+
         </p>
     </footer>
-    <div id="modal-container"></div>
 </div>
 <div th:replace="~{/fragments/elements/sessiontimeout}"></div>
 <div th:replace="~{/fragments/elements/message}"></div>

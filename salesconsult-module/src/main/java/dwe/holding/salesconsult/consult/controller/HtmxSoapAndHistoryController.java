@@ -1,7 +1,7 @@
 package dwe.holding.salesconsult.consult.controller;
 
 import dwe.holding.admin.model.tenant.LocalMember;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.SoapAndHistoryService;

@@ -1,9 +1,11 @@
 package dwe.holding.customer.client.model.type;
 
+import dwe.holding.shared.model.frontend.PresentationElement;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Getter
 public enum SexTypeEnum {
@@ -28,6 +30,13 @@ public enum SexTypeEnum {
 
     public static List<SexTypeEnum> getWebList() {
         return Arrays.stream(SexTypeEnum.values()).sorted(new SexTypeEnum.SexTypeEnumComparator()).toList();
+    }
+
+    public static List<PresentationElement> getWebListDoNotCare() {
+        return Stream.concat(
+                getWebList().stream().map(a -> new PresentationElement(a.name(), a.name(), a.getLabel())),
+                Stream.of(new PresentationElement("doNotCare", "doNotCare", "label.yesno.donotcare"))
+        ).toList();
     }
 
     public static SexTypeEnum getEnum(String value) {

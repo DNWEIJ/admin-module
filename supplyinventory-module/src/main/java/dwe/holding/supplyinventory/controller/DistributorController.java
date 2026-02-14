@@ -1,7 +1,7 @@
 package dwe.holding.supplyinventory.controller;
 
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
 package dwe.holding.supplyinventory.controller;
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.LookupCostingCategory;
 import dwe.holding.supplyinventory.model.projection.CostingProjection;
@@ -27,15 +27,16 @@ public class CostingSearchController {
     private final CostingRepository costingRepository;
     private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
 
-    private Map<Long, String> costing;
+    // cached version of the costingCategories
+    private Map<Long, String> costingCategories;
 
     @GetMapping("/costing/search/costing/dropdown")
     public String searchLookupCostingDropdown(Model model) {
 
-        if (costing == null || costing.isEmpty()) {
-            costing = lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(),-1)).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
+        if (costingCategories == null || costingCategories.isEmpty()) {
+            costingCategories = lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(),-1)).stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory));
         }
-        model.addAttribute("lookupCostings", costing);
+        model.addAttribute("lookupCostings", costingCategories);
         return "supplies-module/fragments/costing/selectcosting";
     }
 

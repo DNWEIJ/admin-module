@@ -1,6 +1,6 @@
 package dwe.holding.supplyinventory.expose;
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.supplyinventory.mapper.CostingMapper;
 import dwe.holding.supplyinventory.model.*;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;

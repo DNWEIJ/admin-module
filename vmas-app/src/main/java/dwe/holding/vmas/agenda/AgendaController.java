@@ -1,7 +1,7 @@
 package dwe.holding.vmas.agenda;
 
 import dwe.holding.admin.preferences.LocalMemberPreferences;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +35,8 @@ public class AgendaController {
                 .addAttribute("colorModal", colorModalButton())
                 .addAttribute("changeRoomVet", roomVetDropDown())
                 .addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid())
+                .addAttribute("ulResources","/agenda/resources")
+                .addAttribute("urlEvents", "/agenda/events")
         ;
 
         return "agenda-module/agenda";
@@ -42,7 +44,7 @@ public class AgendaController {
 
     private String selectDate(String date) {
         return """
-                <input type="date" id="selectDate" value="%s" name="selectDate" onchange="agendaState.changeDate(this.value)"/>
+                <input type="date" id="selectDate" value="%s" name="selectDate" max="9999-01-01" onchange="agendaState.changeDate(this.value)"/>
                 """.formatted(date);
     }
 

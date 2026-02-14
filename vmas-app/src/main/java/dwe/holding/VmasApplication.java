@@ -1,6 +1,6 @@
 package dwe.holding;
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.admin.setup.SetupAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.Optional;
         "dwe.holding.customer.*",
         "dwe.holding.salesconsult.*",
         "dwe.holding.supplyinventory.*",
+        "dwe.holding.reporting.*",
         "dwe.holding.vmas.*",
         "dwe.holding.admin.tenant"
 })

@@ -1,9 +1,6 @@
 <th:block th:replace="~{salesconsult-generic-module/jsforpetselect}"></th:block>
 <div class="overflow-auto">
-    <fieldset role="group" class="grid">
-        <th:block
-                th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
-    </fieldset>
+        <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
     <th:block th:with="formAction=${salesType.isOtc ? '/sales/otc/search/' + customer.id : salesType.isVisit ? '/consult/visit/search/' + customer.id + '?callFrom=customer' : salesType.isEstimate ? '/consult/customer/' + customer.id + '/estimate' : null }">
         <th:block th:unless="${isHtmx}">
             <form id="createForm" method="post" th:action="${formAction}">

@@ -1,12 +1,13 @@
 package dwe.holding.customer.client.controller;
 
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.service.SessionStorageCustomer;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,12 +25,16 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final CustomerForm customerForm;
+    private final SessionStorageCustomer sessionStorage;
 
     @GetMapping("/customer")
     String newRecord(@RequestParam(required = false) boolean isNew, Model model) {
-        Long customerId = customerExists();
-        if (customerId > 0 && !isNew) return "redirect:/customer/customer/" + customerId;
         if (isNew) customerReset();
+        else {
+            Long customerId = sessionStorage.getCustomer().getId();
+            if (customerId != null)
+                return "redirect:/customer/customer/" + customerId;
+        }
 
         model.addAttribute("form", customerForm);
         model.addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build());
@@ -47,7 +52,9 @@ public class CustomerController {
         Customer customer = customerRepository.findById(id).get();
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
-        AutorisationUtils.setTempGenericStorage(customer.getCustomerNameWithId()); // is used for all specific customer related pages
+
+        sessionStorage.setCustomer(new SessionStorageCustomer.CustomerSettings(customer.getId(), customer.getCustomerNameWithId()));
+
         return "customer-module/customer/action";
     }
 
@@ -99,14 +106,8 @@ public class CustomerController {
                 .addAttribute("statusList", CustomerStatusEnum.getWebList());
     }
 
-    private Long customerExists() {
-        String customerId = AutorisationUtils.getTempGenericStorage();
-        return customerId.isEmpty() ? Long.valueOf(0)
-                : Long.valueOf(customerId.substring(customerId.lastIndexOf('(') + 1, customerId.lastIndexOf(')')).strip());
-
-    }
-
     private void customerReset() {
-        AutorisationUtils.setTempGenericStorage("");
+        sessionStorage.setCustomerId(null);
+        sessionStorage.setCustomerName(null);
     }
 }

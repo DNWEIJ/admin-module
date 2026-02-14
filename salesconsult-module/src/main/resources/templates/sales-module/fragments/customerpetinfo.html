@@ -1,8 +1,7 @@
 <th:block th:fragment="customerPetInfo(customer, pet, backbutton)" xmlns:th="http://www.w3.org/1999/html">
     <details id="customerpetinfo" open>
         <summary>
-            <span th:text="#{visit.customerinfo.title}"></span><a href="/info/customerpetinfo" title="More info"
-                                                                  class="info-icon">ℹ️</a>
+            <span th:text="#{visit.customerinfo.title}"></span><a href="/info/customerpetinfo" title="More info" class="info-icon">ℹ️</a>
         </summary>
 
         <div th:if="${!backbutton and pet == null}" class="grid">
@@ -75,8 +74,9 @@
                 setTimeout(() => span.innerText = text, 800);
             }
         </script>
-        <h6 th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''"
-            th:class="${colorClass}" th:text="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ')'"></h6>
+        <h6 th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''" th:class="${colorClass}"
+            th:Utext="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ' - '+ ${balanceInfo} + ')'">
+        </h6>
         <div><span id="copy-customer-email"
                    th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
                    th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></span>

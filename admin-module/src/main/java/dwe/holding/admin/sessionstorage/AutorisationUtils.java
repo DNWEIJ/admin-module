@@ -1,4 +1,4 @@
-package dwe.holding.admin.security;
+package dwe.holding.admin.sessionstorage;
 
 
 import dwe.holding.admin.model.notenant.Member;
@@ -7,11 +7,13 @@ import dwe.holding.admin.model.tenant.LocalMemberTax;
 import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;
+import dwe.holding.admin.security.AdminUserDetails;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -123,12 +125,9 @@ public class AutorisationUtils {
         throw new RuntimeException("No tax found for date " + date);
     }
 
-    public static void setTempGenericStorage(String str) {
-        getCurrentUserDetails().setTempGenericStorage(str);
-    }
 
-    public static String getTempGenericStorage() {
-        return getCurrentUserDetails().getTempGenericStorage() == null ? "" : getCurrentUserDetails().getTempGenericStorage();
+    public static  Map<String, JsonNode> getTempGenericStorage() {
+        return getCurrentUserDetails().getModuleSettings();
     }
 
     // todo make this a role

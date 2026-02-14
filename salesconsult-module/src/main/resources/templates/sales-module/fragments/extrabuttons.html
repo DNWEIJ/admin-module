@@ -9,7 +9,7 @@
 
 
 <th:block th:fragment="visitStatusButtons">
-    <fieldset class="grid">
+    <div class="grid">
         <div>
             <input th:if="${visit.status == T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).PLANNED}"
                    type="button" th:value="#{label.visit.reschedule}"
@@ -26,15 +26,13 @@
                 <button type="submit" class="secondary " name="_completeApp" th:text="#{label.visit.completeapp}"></button>
             </form>
         </div>
-    </fieldset>
+    </div>
 </th:block>
 
 
 <th:block th:fragment="visitReactivateButtons">
-
     <form th:if="${userIsAllowed}" th:hx-post="'/consult/visit/'+${visit.id}+'/updatestatus/reactivate'" method="post" hx-target="#updateVisitStatus" hx-swap="outerHTML">
         <button type="submit" class="secondary tigh" name="_reactivateApp" th:text="#{label.visit.reactivateapp}"></button>
     </form>
     <button th:unless="${userIsAllowed}" type="submit" class="secondary tigh" name="_reactivateApp" th:text="#{label.visit.reactivateapp}" disabled></button>
-
 </th:block>

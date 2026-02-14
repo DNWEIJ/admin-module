@@ -1,5 +1,6 @@
 package dwe.holding.admin.security;
 
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -10,8 +11,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-
-import static org.springframework.http.HttpMethod.*;
 
 
 @Component

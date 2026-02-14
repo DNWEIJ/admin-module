@@ -1,11 +1,10 @@
 package dwe.holding.supplyinventory.controller;
 
-import dwe.holding.admin.security.AutorisationUtils;
-import dwe.holding.customer.client.model.Customer;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
-import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.repository.PetRepository;
+import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.supplyinventory.repository.CostingRepository;
 import dwe.holding.supplyinventory.repository.ReminderRepository;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping(path = "/supplies")
 @Slf4j
@@ -29,45 +30,38 @@ public class ReminderController {
     private final ReminderRepository reminderRepository;
     private final PetRepository petRepository;
     private final CostingRepository costingRepository;
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
     @GetMapping("/customer/{customerId}/reminders")
-    String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        model.addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customerId));
-        model.addAttribute("activeMenu", "reminders");
+    String list(@PathVariable Long customerId, Model model) {
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
+        model.addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customer.id()));
         return "supplies-module/reminder/list";
     }
 
     @GetMapping("/customer/{customerId}/reminder")
-    String newRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
-        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        model.addAttribute("reminder", Reminder.builder().pet(new Pet()).build());
-        model.addAttribute("petsList",
-                petRepository.findByCustomer_IdOrderByDeceasedAsc(customerId)
-                        .stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList()
-        );
-        model.addAttribute("costingReminderList", costingRepository.getReminderNomenclature(AutorisationUtils.getCurrentUserMid())
-                .stream().map(nomenclature -> new PresentationElement(nomenclature, nomenclature)).toList());
-        model.addAttribute("activeMenu", "reminders");
-
+    String newRecord(@PathVariable Long customerId, Model model) {
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
+        model.addAttribute("reminder", Reminder.builder().dueDate(LocalDate.now()).pet(new Pet()).build());
+        setModel(model, customer);
         return "supplies-module/reminder/action";
     }
 
 
     @PostMapping("/customer/{customerId}/reminder")
     String saveRecord(@Valid Reminder formReminder, @PathVariable Long customerId, RedirectAttributes redirect) {
-        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
         Pet pet = petRepository.findById(formReminder.getPet().getId()).orElseThrow();
-        if (!pet.getCustomer().getId().equals(customer.getId())) {
+        if (!pet.getCustomer().getId().equals(customer.id())) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/supplies/customer/" + customerId + "/reminders";
         }
 
         if (formReminder.isNew()) {
             reminderRepository.save(
-                    Reminder.builder().reminderText(formReminder.getReminderText())
-                            .pet(pet)
-                            .dueDate(formReminder.getDueDate())
+                    Reminder.builder()
+                            .reminderText(formReminder.getReminderText())
+                            .pet(pet).dueDate(formReminder.getDueDate())
                             .build()
             );
         } else {
@@ -80,22 +74,25 @@ public class ReminderController {
 
     @GetMapping("/customer/{customerId}/reminder/{reminderId}")
     @Transactional
-    String editRecord(@PathVariable Long customerId, @PathVariable Long reminderId, Model model, RedirectAttributes redirect) {
-        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        Reminder reminder = reminderRepository.findById(reminderId).orElseThrow();
-        model.addAttribute("reminder", reminder);
-        model.addAttribute("costingReminderList", costingRepository.getReminderNomenclature(AutorisationUtils.getCurrentUserMid())
-                .stream().filter(costing -> (costing==null || costing.isEmpty())).map(nomenclature -> new PresentationElement(nomenclature, nomenclature)).toList());
-        setModel(model, reminder.getPet().getCustomer());
+    String editRecord(@PathVariable Long customerId, @PathVariable Long reminderId, Model model) {
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
+        model.addAttribute("reminder", reminderRepository.findById(reminderId).orElseThrow());
+        setModel(model, customer);
         return "supplies-module/reminder/action";
     }
 
-    void setModel(Model model, Customer customer) {
-        model.addAttribute("petsList", customer.getPets());
-        model.addAttribute("activeMenu", "reminders");
-        model.addAttribute("customerId", customer.getId());
-    }
+    void setModel(Model model, CustomerService.Customer customer) {
+        model
+                .addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customer.id()))
 
-    public record FormReminder(Long petId, Reminder reminder) {
+                .addAttribute("petsList", petRepository.findByCustomer_IdOrderByDeceasedAsc(customer.id())
+                        .stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList()
+                )
+                .addAttribute("activeMenu", "reminders")
+                .addAttribute("customerId", customer.id())
+                .addAttribute("costingReminderList",
+                        costingRepository.findWithNonEmptyReminderNomenclature(AutorisationUtils.getCurrentUserMid())
+                                .stream().map(reminderNomenclature -> new PresentationElement(reminderNomenclature, reminderNomenclature)).toList()
+                );
     }
 }

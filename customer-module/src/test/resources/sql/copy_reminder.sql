@@ -4,7 +4,7 @@
  pet_id,
   member_id,
  due_date,
- reminder,
+ reminder_text,
  originating_appointment_id,
  added_by,
  added_on,

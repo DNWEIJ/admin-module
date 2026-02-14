@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Responsive Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width" name="viewport"/>
+        <meta content="light dark" name="color-scheme">
+
+        <meta name="_csrf" th:content="${_csrf.token}">
+        <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+        <title>Template title</title>
+        <link href="/images/favicon.svg" rel="icon" type="image/x-icon"/>
+
+<!--        <link href="/lib/pico/pico.sand.min.css" rel="stylesheet"/>-->
+<!--        <link href="/lib/pico/pico.colors.min.css" rel="stylesheet"/>-->
+        <link href="/lib/ownstyle/style.css" rel="stylesheet"/>
+
+        <style>
+            /* ================= THEME VARIABLES ================= */
+            :root {
+                --nav-bg: #ffffff;
+                --border-color: #dcdcdc;
+                --dropdown-bg: #f9fafb;
+                --dropdown-hover: #eef2f6;
+                --text-color: #222;
+                --muted-bg: #f5f5f5;
+                --focus-color: #2563eb;
+
+                --gap-sm: .2rem;
+                --gap-md: .1rem;
+                --gap-lg: .2rem;
+
+                --dropdown-width: 14rem;
+                --dropdown-radius: 0.375rem;
+                --dropdown-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.08);
+
+                --anim-fast: 150ms;
+                --anim-normal: 250ms;
+                --easing: cubic-bezier(.4, 0, .2, 1);
+            }
+
+            /* ================= BASE ================= */
+            nav[role="menu"] {
+                display: flex;
+                align-items: center;
+                margin: 0;
+                padding: 0;
+                background: var(--nav-bg);
+                border-bottom: 0.0625rem solid var(--border-color);
+            }
+
+            /* ================= FLEX PRIORITIES ================= */
+            div[role="icons"] {
+                flex: 0 0 auto; /* never shrink */
+            }
+
+            div[role="dropdown"] {
+                flex: 1 1 auto; /* shrink first */
+                min-width: 0; /* REQUIRED to allow shrinking */
+                display: flex; /* make it a flex container */
+                justify-content: center; /* center */
+            }
+
+            div[role="buttons"] {
+                flex: 0 0 auto; /* never shrink */
+            }
+
+            /* ================= ICONS ================= */
+            div[role="icons"] ul {
+                display: flex;
+                gap: var(--gap-md);
+            }
+
+            div[role="icons"] ul li {
+                padding: 0;
+                margin: 0 0 0 .3rem;
+            }
+
+            /* ================= DROPDOWNS (CENTER) ================= */
+            div[role="dropdown"] > ul {
+                display: flex;
+                gap: var(--gap-lg);
+                flex-wrap: nowrap;
+            }
+
+            div[role="dropdown"] ul li {
+                padding: 0;
+                margin: 0 0 0 .5rem;
+            }
+
+            /* ================= DETAILS ================= */
+            div[role="dropdown"] details {
+                position: relative;
+                flex-shrink: 1;
+            }
+
+            div[role="dropdown"] summary {
+                cursor: pointer;
+                font-weight: 500;
+                white-space: nowrap;
+                margin-left: .4rem;
+            }
+
+            div[role="dropdown"] summary::-webkit-details-marker {
+                display: none;
+            }
+
+            /* dropdown panel */
+            div[role="dropdown"] details ul {
+                position: absolute;
+                top: 2.55rem;
+                left: 0;
+                width: var(--dropdown-width);
+
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+
+                background: var(--dropdown-bg);
+
+                border: 0.0625rem solid var(--border-color);
+                border-radius: var(--dropdown-radius);
+                box-shadow: var(--dropdown-shadow);
+
+                opacity: 0;
+
+                pointer-events: none;
+
+                transition: opacity var(--anim-normal) var(--easing),
+                transform var(--anim-normal) var(--easing);
+            }
+
+            div[role="dropdown"] details ul li {
+                background-color: var(--dropdown-bg);
+                width: 100%; /* full width */
+                padding: 1rem 1rem 1rem 1rem;
+            }
+
+            div[role="dropdown"] details[open] ul {
+                opacity: 1;
+            }
+
+            /* hover support */
+            @media (hover: hover) {
+                div[role="dropdown"] details:hover ul li {
+                    opacity: 1;
+                    transform: translateY(0);
+                    pointer-events: auto;
+                }
+            }
+
+            div[role="dropdown"] details ul li:hover {
+                background: var(--dropdown-hover);
+            }
+
+            /* ================= BUTTONS ================= */
+            div[role="buttons"] ul {
+                display: flex;
+                gap: var(--gap-sm);
+                flex-wrap: nowrap; /* NEVER WRAP */
+            }
+            /* HIDE HAMBURGER BY DEFAULT (desktop) */
+            #nav_checkbox, label[data-role="burger"] {
+                display: none;
+            }
+</style>
+
+        <style>
+            /* == == == ==================== == == == */
+            /* ============== MOBILE ================ */
+            /* == == == ==================== == == == */
+            @media (max-width: 48rem) {
+
+                /* == HAMBURGER ICON == */
+                #nav_checkbox {
+                    display: none; /* checkbox functional but hidden */
+                }
+
+                label[data-role="burger"] {
+                    display: block;
+                    cursor: pointer;
+                    width: 2rem;
+                    height: 2rem;
+                    margin: 0.5rem auto;
+                }
+
+                label[data-role="burger"] svg {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                /* == NAV WRAP == */
+                nav[role="menu"] {
+                    flex-wrap: wrap;
+                    align-items: flex-start;
+                    justify-content: center; /* center all nav content */
+                    padding: 0.5rem 0;
+                }
+
+                /* == ICONS == */
+                div[role="icons"],
+                div[role="dropdown"],
+                div[role="buttons"] {
+                    display: none;
+                    width: 100%;
+                }
+
+                #nav_checkbox:checked ~ div[role="icons"],
+                #nav_checkbox:checked ~ div[role="dropdown"],
+                #nav_checkbox:checked ~ div[role="buttons"] {
+                    display: block;
+                }
+
+                div[role="icons"] ul {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center; /* centered horizontally */
+                    gap: var(--gap-md);
+                    padding: 0.5rem 0;
+                    margin: 0;
+                    list-style: none;
+                }
+
+                div[role="icons"] ul li {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                /* == DROPDOWN SUMMARIES STACKED == */
+                div[role="dropdown"] > ul {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center; /* summaries centered */
+                    gap: 0.25rem;
+                    padding: 0.5rem 0;
+                    margin: 0;
+                    list-style: none;
+                }
+
+                div[role="dropdown"] details {
+                    position: relative;
+                    width: auto; /* auto to fit widest li text */
+                    margin: 0.25rem auto;
+                }
+
+                div[role="dropdown"] summary {
+                    display: block;
+                    width: 100%;
+                    padding: 0.5rem 1rem;
+                    background: var(--muted-bg);
+                    border: 0.0625rem solid var(--border-color);
+                    border-radius: var(--dropdown-radius);
+                    cursor: pointer;
+                    text-align: center;
+                    white-space: nowrap;
+                    list-style: none;
+                }
+
+                div[role="dropdown"] details[open] summary {
+                    background: var(--dropdown-hover);
+                }
+
+                /* == DROPDOWN ITEMS == */
+                div[role="dropdown"] details ul {
+                    position: absolute;
+                    top: 100%; /* directly below summary */
+                    left: 50%;
+                    transform: translateX(-50%); /* center under summary */
+                    width: max-content; /* fit content width */
+                    min-width: 100%; /* at least as wide as summary */
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.25rem;
+                    margin: 0.25rem 0 0 0;
+                    padding: 0.25rem 0;
+                    background: var(--dropdown-bg);
+                    border: 0.0625rem solid var(--border-color);
+                    border-radius: var(--dropdown-radius);
+                    box-sizing: border-box;
+                    z-index: 2000;
+                    list-style: none;
+                }
+
+                div[role="dropdown"] details ul li {
+                    width: 100%;
+                    margin: 0;
+                    padding: 0;
+                    background: var(--dropdown-bg);
+                    z-index: 2000;
+                }
+
+                div[role="dropdown"] details ul li a {
+                    display: block;
+                    width: 100%;
+                    padding: 0.5rem 1rem;
+                    box-sizing: border-box;
+                    border-radius: 0.25rem;
+                    text-align: center;
+                    white-space: nowrap;
+                    text-decoration: none;
+                    color: var(--text-color);
+                    z-index: 2000;
+                }
+
+                div[role="dropdown"] details ul li a:hover {
+                    background: var(--dropdown-hover);
+                }
+
+                /* == BUTTONS == */
+                div[role="buttons"] ul {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center; /* center buttons */
+                    gap: var(--gap-sm);
+                    padding: 0.5rem 0;
+                    flex-wrap: nowrap;
+                    margin: 0;
+                    list-style: none;
+                }
+            }
+
+        </style>
+    </head>
+<body>
+
+<nav role="menu">
+    <label data-role="burger" for="nav_checkbox">
+        <!-- simple hamburger icon -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+    </label>
+    <input id="nav_checkbox" type="checkbox"/>
+
+
+    <div role="icons">
+        <ul>
+            <li>
+                <a href="/consult/visit/search" data-tooltip="New appointment" data-placement="right">
+                    <svg class="svg-header-icon"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M12 21h-6a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4.5"/>
+                        <path d="M16 3v4"/>
+                        <path d="M8 3v4"/>
+                        <path d="M4 11h16"/>
+                        <path d="M19 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                        <path d="M22 22a2 2 0 0 0 -2 -2h-2a2 2 0 0 0 -2 2"/>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a href="/sales/otc/search" data-tooltip="OTC" data-placement="bottom">
+                    <svg class="svg-header-icon"
+                         xmlns="http://www.w3.org/2000/svg"
+
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                    >
+                        <path d="M21 15h-2.5c-.398 0 -.779 .158 -1.061 .439c-.281 .281 -.439 .663 -.439 1.061c0 .398 .158 .779 .439 1.061c.281 .281 .663 .439 1.061 .439h1c.398 0 .779 .158 1.061 .439c.281 .281 .439 .663 .439 1.061c0 .398 -.158 .779 -.439 1.061c-.281 .281 -.663 .439 -1.061 .439h-2.5"/>
+                        <path d="M19 21v1m0 -8v1"/>
+                        <path d="M13 21h-7c-.53 0 -1.039 -.211 -1.414 -.586c-.375 -.375 -.586 -.884 -.586 -1.414v-10c0 -.53 .211 -1.039 .586 -1.414c.375 -.375 .884 -.586 1.414 -.586h2m12 3.12v-1.12c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2"/>
+                        <path d="M16 10v-6c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-4c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414v6m8 0h-8m8 0h1m-9 0h-1"/>
+                        <path d="M8 14v.01"/>
+                        <path d="M8 17v.01"/>
+                        <path d="M12 13.99v.01"/>
+                        <path d="M12 17v.01"/>
+                    </svg>
+
+                </a>
+            </li>
+            <li>
+                <a href="/sales/price/sell" data-tooltip="Price Information" data-placement="bottom">
+                    <svg class="svg-header-icon"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M8 9h8"/>
+                        <path d="M8 13h6"/>
+                        <path d="M14 18h-1l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5"/>
+                        <path d="M19 22v.01"/>
+                        <path d="M19 19a2.003 2.003 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483"/>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a href="/agenda/agenda" data-tooltip="Agenda" data-placement="bottom">
+                    <svg class="svg-header-icon"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M16 2c.183 0 .355 .05 .502 .135l.033 .02c.28 .177 .465 .49 .465 .845v1h1a3 3 0 0 1 2.995 2.824l.005 .176v12a3 3 0 0 1 -2.824 2.995l-.176 .005h-12a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-12a3 3 0 0 1 2.824 -2.995l.176 -.005h1v-1a1 1 0 0 1 .514 -.874l.093 -.046l.066 -.025l.1 -.029l.107 -.019l.12 -.007q .083 0 .161 .013l.122 .029l.04 .012l.06 .023c.328 .135 .568 .44 .61 .806l.007 .117v1h6v-1a1 1 0 0 1 1 -1m3 7h-14v9.625c0 .705 .386 1.286 .883 1.366l.117 .009h12c.513 0 .936 -.53 .993 -1.215l.007 -.16z"/>
+                        <path d="M9.015 13a1 1 0 0 1 -1 1a1.001 1.001 0 1 1 -.005 -2c.557 0 1.005 .448 1.005 1"/>
+                        <path d="M13.015 13a1 1 0 0 1 -1 1a1.001 1.001 0 1 1 -.005 -2c.557 0 1.005 .448 1.005 1"/>
+                        <path d="M17.02 13a1 1 0 0 1 -1 1a1.001 1.001 0 1 1 -.005 -2c.557 0 1.005 .448 1.005 1"/>
+                        <path d="M12.02 15a1 1 0 0 1 0 2a1.001 1.001 0 1 1 -.005 -2z"/>
+                        <path d="M9.015 16a1 1 0 0 1 -1 1a1.001 1.001 0 1 1 -.005 -2c.557 0 1.005 .448 1.005 1"/>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a href="/customer/customer" data-tooltip="Customer & Pet" data-placement="bottom">
+                    <svg class="svg-header-icon"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M20 3v10a8 8 0 1 1 -16 0v-10l3.432 3.432a7.963 7.963 0 0 1 4.568 -1.432c1.769 0 3.403 .574 4.728 1.546l3.272 -3.546z"/>
+                        <path d="M2 16h5l-4 4"/>
+                        <path d="M22 16h-5l4 4"/>
+                        <path d="M12 16m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+                        <path d="M9 11v.01"/>
+                        <path d="M15 11v.01"/>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a href="/consult/visit/list" data-tooltip="Consult list" data-placement="bottom">
+
+                    <svg class="svg-header-icon"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M20 3v10a8 8 0 1 1 -16 0v-10l3.432 3.432a7.963 7.963 0 0 1 4.568 -1.432c1.769 0 3.403 .574 4.728 1.546l3.272 -3.546z"/>
+                        <path d="M2 16h5l-4 4"/>
+                        <path d="M22 16h-5l4 4"/>
+                        <path d="M12 16m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+                        <path d="M9 11v.01"/>
+                        <path d="M15 11v.01"/>
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div role="dropdown">
+        <ul>
+            <li>
+                <details name="menu-items">
+                    <summary>Task</summary>
+                    <ul>
+                        <li><a href="/admin/localmember">Consult list</a></li>
+                        <li><a href="/admin/user">Reminder Addressess -> ReminderListSearchFormController</a></li>
+                        <li><a href="/admin/user">Agenda Tasks</a></li>
+                        <li><a href="/admin/user">Bulk (E)mail</a></li>
+                        <li><a href="/admin/user">Reports</a></li>
+                        <li><a href="/admin/user">Reminders</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Supplies</summary>
+                    <ul>
+                        <li><a href="/admin/localmember">Distributor</a></li>
+                        <li><a href="/admin/user">Inventory</a></li>
+                        <li><a href="/admin/user">Product Maintenance</a></li>
+                        <li><a href="/admin/user">Maintenance Prices</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Financials</summary>
+                    <ul>
+                        <li><a href="/admin/localmember">Payments</a></li>
+                        <li><a href="/admin/user">Cash Flow</a></li>
+                        <li><a href="/admin/user">Cash Basis</a></li>
+                        <li><a href="/admin/user">Accounts Receivable</a></li>
+                        <li><a href="/admin/user">Misc Expenses</a></li>
+                        <li><a href="/admin/user">Refunds</a></li>
+                        <li><a href="/admin/user">Misc Transactions</a></li>
+                        <li><a href="/admin/user">Reminder Invoice</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Admin</summary>
+                    <ul>
+                        <li><a href="/admin/localmember">Local Member</a></li>
+                        <li><a href="/admin/user">User</a></li>
+                        <li><a href="/admin/user">Lookup</a></li>
+                        <li><a href="/admin/user">Analyses</a></li>
+                        <li><a href="/admin/user">Labels</a></li>
+                        <li><a href="/admin/user">Indicators</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>SuperAdmin</summary>
+                    <ul>
+                        <li><a href="/admin/member">Member</a></li>
+                        <li><a href="/admin/function">Function</a></li>
+                        <li><a href="/admin/role">Role</a></li>
+                        <li><a href="/admin/role">Reports</a></li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
+    </div>
+    <div role="buttons">
+        <ul>
+            <li>
+                <button class="" onclick="/admin/logout">Logout</button>
+            </li><li>
+                <button class="" onclick="/admin/something">Something</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+</body>
+</html>

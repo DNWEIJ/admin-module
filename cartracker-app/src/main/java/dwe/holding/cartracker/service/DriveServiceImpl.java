@@ -1,7 +1,7 @@
 package dwe.holding.cartracker.service;
 
 
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.cartracker.model.Trip;
 import dwe.holding.cartracker.repository.DriveRepository;
 import org.springframework.stereotype.Service;

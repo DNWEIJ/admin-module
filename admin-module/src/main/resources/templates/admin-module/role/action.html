@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${role.id}, 'Role','/admin/role/list')}"></th:block>
 
-    < th:action="@{/admin/role}" method="post" name="form">
+    <form th:action="@{/admin/role}" method="post" name="form">
 
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
@@ -18,66 +18,65 @@
         </fieldset>
         <hr/>
         <div>
-<!--            <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${functions}, 'checkedFunctions', '2', 'Functions')}"></th:block>-->
-                <div class="grid">
-                    <!-- CONNECTED -->
-                    <section ondragover="allowDrop(event)" ondrop="drop(event, true)">
-                        <article>
-                            <header><strong>Connected</strong></header>
+            <div class="grid">
+                <!-- CONNECTED -->
+                <section ondragover="allowDrop(event)" ondrop="drop(event, true)">
+                    <article>
+                        <header><strong>Connected</strong></header>
 
-                            <div id="connected">
-                                <div th:each="el, iter : ${elements}"
-                                     th:if="${el.connected}"
-                                     draggable="true"
-                                     ondragstart="drag(event)"
-                                     th:id="'item-' + ${el.id}"
-                                     th:data-name="${el.name}"
-                                     style="padding:.5rem; border:1px solid var(--pico-muted-border-color); margin-bottom:.5rem; cursor:grab;">
+                        <div id="connected">
+                            <div th:each="el, iter : ${elements}"
+                                 th:if="${el.connected}"
+                                 draggable="true"
+                                 ondragstart="drag(event)"
+                                 th:id="'item-' + ${el.id}"
+                                 th:data-name="${el.name}"
+                                 style="padding:.5rem; border:1px solid var(--pico-muted-border-color); margin-bottom:.5rem; cursor:grab;">
 
-                                    <span th:text="${el.name}"></span>
+                                <span th:text="${el.name}"></span>
 
-                                    <input type="hidden"
-                                           th:name="'elements[' + ${iter.index} + '].id'"
-                                           th:value="${el.id}"/>
+                                <input type="hidden"
+                                       th:name="'elements[' + ${iter.index} + '].id'"
+                                       th:value="${el.id}"/>
 
-                                    <input type="hidden"
-                                           th:id="'connected-' + ${el.id}"
-                                           th:name="'elements[' + ${iter.index} + '].connected'"
-                                           th:value="${el.connected}"/>
-                                </div>
+                                <input type="hidden"
+                                       th:id="'connected-' + ${el.id}"
+                                       th:name="'elements[' + ${iter.index} + '].connected'"
+                                       th:value="${el.connected}"/>
                             </div>
-                        </article>
-                    </section>
+                        </div>
+                    </article>
+                </section>
 
-                    <!-- NOT CONNECTED -->
-                    <section ondragover="allowDrop(event)" ondrop="drop(event, false)">
-                        <article>
-                            <header><strong>Not Connected</strong></header>
+                <!-- NOT CONNECTED -->
+                <section ondragover="allowDrop(event)" ondrop="drop(event, false)">
+                    <article>
+                        <header><strong>Not Connected</strong></header>
 
-                            <div id="disconnected">
-                                <div th:each="el, iter : ${elements}"
-                                     th:if="${!el.connected}"
-                                     draggable="true"
-                                     ondragstart="drag(event)"
-                                     th:id="'item-' + ${el.id}"
-                                     th:data-name="${el.name}"
-                                     style="padding:.5rem; border:1px solid var(--pico-muted-border-color); margin-bottom:.5rem; cursor:grab;">
+                        <div id="disconnected">
+                            <div th:each="el, iter : ${elements}"
+                                 th:if="${!el.connected}"
+                                 draggable="true"
+                                 ondragstart="drag(event)"
+                                 th:id="'item-' + ${el.id}"
+                                 th:data-name="${el.name}"
+                                 style="padding:.5rem; border:1px solid var(--pico-muted-border-color); margin-bottom:.5rem; cursor:grab;">
 
-                                    <span th:text="${el.name}"></span>
+                                <span th:text="${el.name}"></span>
 
-                                    <input type="hidden"
-                                           th:name="'elements[' + ${iter.index} + '].id'"
-                                           th:value="${el.id}"/>
+                                <input type="hidden"
+                                       th:name="'elements[' + ${iter.index} + '].id'"
+                                       th:value="${el.id}"/>
 
-                                    <input type="hidden"
-                                           th:id="'connected-' + ${el.id}"
-                                           th:name="'elements[' + ${iter.index} + '].connected'"
-                                           th:value="${el.connected}"/>
-                                </div>
+                                <input type="hidden"
+                                       th:id="'connected-' + ${el.id}"
+                                       th:name="'elements[' + ${iter.index} + '].connected'"
+                                       th:value="${el.connected}"/>
                             </div>
-                        </article>
-                    </section>
-                </div>
+                        </div>
+                    </article>
+                </section>
+            </div>
 
             <script>
                 function drag(ev) {
@@ -115,7 +114,6 @@
                 });
             </script>
         </div>
-
     </form>
 
     <form method="post" th:action="@{/roles/saveMatrix}">
@@ -140,7 +138,7 @@
                 <td th:each="role : ${roles}">
                     <input type="checkbox"
                            th:name="'permissions[' + ${row.functionId} + '][' + ${role.id} + ']'"
-                           th:checked="${row.rolePermissions[role.id]}" />
+                           th:checked="${row.rolePermissions[role.id]}"/>
                 </td>
             </tr>
             </tbody>

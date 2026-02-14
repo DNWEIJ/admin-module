@@ -7,7 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 /**
- * Keep track of the previous url, so we can go back to it if needed
+ * Keep track of the previous url, so we can go back to it if neededs be
  */
 public class LastPageInterceptor implements HandlerInterceptor {
 

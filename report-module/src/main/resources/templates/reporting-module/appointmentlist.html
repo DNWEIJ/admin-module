@@ -1,0 +1,123 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.appoinmentlist}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+     <form action="" method="get">
+        <fieldset class="grid">
+            <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
+                <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
+                       th:value="${#temporals.format(form.from, 'yyyy-MM-dd')}">
+            </label>
+            <label th:for="visitDateTimeEnd">[[#{visit.headerlist.untill}]]
+                <input id="visitDateTimeEnd" name="includeTill" required type="date" autocomplete="off"
+                       max="9999-01-01"
+                       th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
+            </label>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::propDropdown('invoiceSend','visit.headerlist.send', ${form.invoiceSend}, ${ynvaluesList}, true,'0')}"
+                    th:with="required=false"></th:block>
+        </fieldset>
+        <input type="submit" th:value="#{label.button.search}"/>
+    </form>
+
+    <table>
+        <tr>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice',#{label.visit.checkbox.amount},'true','0')}"></th:block>
+            </td>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('insurance',#{label.visit.checkbox.insurance},'true','0')}"></th:block>
+            </td>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('vetroom',#{label.visit.checkbox.vetroom},'true','0')}"></th:block>
+            </td>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('petname',#{label.visit.checkbox.petname},'true','0')}"></th:block>
+            </td>
+
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <div class="table-wrapper">
+    <table id="appointmentList" class="table-tight">
+        <thead>
+        <tr>
+            <th data-order="1" th:text="#{visit.headerlist.visitDate}"></th>
+            <th data-order="2" th:text="#{visit.headerlist.status}"></th>
+            <th data-order="3" th:text="#{visit.headerlist.owner}"></th>
+            <th data-order="4" th:text="#{visit.headerlist.petName}"></th>
+            <th data-order="5" th:text="#{visit.headerlist.vetroom}"></th>
+            <th data-order="6" th:text="#{visit.headerlist.purpose}"></th>
+            <th data-order="7" th:text="#{visit.headerlist.insured}"></th>
+            <th data-order="8" th:text="#{visit.headerlist.send}"></th>
+            <th data-order="9" th:text="#{visit.headerlist.totalamount}"></th>
+            <th data-order="10" th:text="#{visit.headerlist.totalpaid}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="visit : ${appointments}">
+            <td th:if="${visit.otc.label == 'label.yesno.yes'}" th:attr="data-sort-value=${visit.visitDateTime}">
+                <a th:href="'/sales/otc/search/'+ ${visit.customerId} + '/sell/'+  ${visit.visitId}"
+                   th:text="${#temporals.format(visit.visitDateTime, 'dd-MM-yyyy HH:mm') + ' (OTC)'}"></a>
+            </td>
+            <td th:if="${visit.otc.label == 'label.yesno.no'}" th:attr="data-sort-value=${visit.visitDateTime}">
+                <a th:href="'/consult/visit/customer/'+ ${visit.customerId} + '/visit/'+ ${visit.visitId} + '?callFrom=customer'"
+                   th:text="${#temporals.format(visit.visitDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+            </td>
+            <th:block th:with="backgroundColor=${T(dwe.holding.salesconsult.consult.model.Visit).getBackgroundColor(visit.isCancelled(), visit.isCompleted(), visit.status)},
+                                    textColor=${T(dwe.holding.salesconsult.consult.model.Visit).getTextColor(backgroundColor)}">
+                <td th:style="${'background-color:' + backgroundColor + '; color:' + textColor}" th:text="#{__${visit.status.label}__}"></td>
+            </th:block>
+            <td th:text="${T(dwe.holding.customer.client.model.Customer).getCustomerName(visit.lastName, visit.surName, visit.firstName, visit.middleInitial)}"></td>
+            <td th:utext="${visit.petName + '(' + (visit.species ==null?'':visit.species) + '/' +(visit.breed==null?'':visit.breed) +')'}"></td>
+            <td th:utext="${visit.veterinarian + '/'+visit.room}"></td>
+            <td th:text="${visit.purpose}"></td>
+            <td th:text="${visit.insured +'-'+ visit.insuredBy}"></td>
+            <td th:text="${visit.sentToInsurance}"></td>
+            <th:block
+                    th:with="amountClass=${visit.totalAmount - visit.paidAmount > 0.01 ? 'red-background': (visit.paidAmount - visit.totalAmount > 0.01 ? 'green-background':'')}">
+                <th:block
+                        th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${visit.totalAmount},false, ${amountClass})}"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${visit.paidAmount},false, ${amountClass})}"></th:block>
+            </th:block>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="2" style="font-size:120%">[[#{label.button.nr-of-records}]] [[${#lists.size(appointments)}]]</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${visitsTotalAmount}, true)}"
+                      th:with="increaseFont=120"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${visitPaidAmount}, false)}"
+                      th:with="increaseFont=120"></th:block>
+        </tr>
+
+        </tfoot>
+    </table>
+    </div>
+    <script>
+        document.getElementById("invoice").addEventListener("change", function () {
+            toggleTableColumns("appointmentList", [9,10], this.checked);
+        });
+        document.getElementById("insurance").addEventListener("change", function () {
+            toggleTableColumns("appointmentList", [7,8], this.checked);
+        });
+        document.getElementById("vetroom").addEventListener("change", function () {
+            toggleTableColumns("appointmentList", [5], this.checked);
+        });
+        document.getElementById("petname").addEventListener("change", function () {
+            toggleTableColumns("appointmentList", [4], this.checked);
+        });
+    </script>
+</section>

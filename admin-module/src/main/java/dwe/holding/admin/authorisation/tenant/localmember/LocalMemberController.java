@@ -1,7 +1,7 @@
 package dwe.holding.admin.authorisation.tenant.localmember;
 
 import dwe.holding.admin.model.tenant.LocalMember;
-import dwe.holding.admin.security.AutorisationUtils;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
