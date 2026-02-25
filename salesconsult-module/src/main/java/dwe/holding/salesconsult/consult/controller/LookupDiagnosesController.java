@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @Slf4j
 public class LookupDiagnosesController {
     private final LookupDiagnosesRepository lookupDiagnosesRepository;
@@ -41,7 +41,7 @@ public class LookupDiagnosesController {
     String editRecord(@PathVariable Long diagnosesId, Model model) {
         LookupDiagnose diagnoses = lookupDiagnosesRepository.findById(diagnosesId).orElseThrow();
         model.addAttribute("lookupDiagnosis", diagnoses.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? diagnoses : new LookupDiagnose());
-        ; //AutorisationUtils.getCurrentUserMid()
+        //AutorisationUtils.getCurrentUserMid()
         model.addAttribute("activeMenu", "diagnosis");
         return "customer-module/lookup/diagnosis/action";
     }

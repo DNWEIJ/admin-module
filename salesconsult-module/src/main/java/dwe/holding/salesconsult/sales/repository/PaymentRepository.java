@@ -10,18 +10,28 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByCustomer_IdOrderByPaymentDateDesc(Long customerId);
 
-    @Query("SELECT sum(p.amount) FROM Payment as p  WHERE p.customer.id = :customerId and p.paymentDate <= :date and p.memberId = :memberId")
+    @Query("SELECT COALESCE(SUM(p.amount), 0.0) FROM Payment as p  WHERE p.customer.id = :customerId and p.paymentDate <= :date and p.memberId = :memberId")
     BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId, @Param("date") LocalDateTime limitDateTime, @Param("memberId") Long memberId);
 
-    @Query("SELECT sum(p.amount) FROM Payment as p WHERE p.customer.id = :customerId and p.memberId = :memberId")
+    @Query("SELECT COALESCE(SUM(p.amount), 0.0) FROM Payment as p WHERE p.customer.id = :customerId and p.memberId = :memberId")
     BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId, @Param("memberId") Long memberId);
 
-
-
-    @Query("SELECT max(p.paymentDate) FROM Payment as p WHERE p.customer.id = :customerId and p.memberId = :memberId")
-    LocalDate getLatestPaymentDate(@Param("customerId") Long customerId, @Param("memberId") Long memberId);
+    @Query("""
+    SELECT sp
+    FROM Payment sp
+    WHERE sp.customer.id = :customerId AND sp.memberId = :memberId
+      AND sp.paymentDate = (
+          SELECT MAX(sp2.paymentDate)
+          FROM Payment sp2
+          WHERE sp2.customer.id = :customerId AND sp2.memberId = :memberId
+      )
+""")
+    Payment findMaxPaymentDate(
+            Long memberId, Long customerId
+    );
 }

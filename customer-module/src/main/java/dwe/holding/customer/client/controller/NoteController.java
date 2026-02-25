@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @Slf4j
 @AllArgsConstructor
 public class NoteController {

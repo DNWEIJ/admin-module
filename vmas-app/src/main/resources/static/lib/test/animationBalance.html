@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Responsive CSS Tooltip Demo</title>
+    <style>
+        /* Apply to all elements with data-title */
+        [data-title] {
+            position: relative;
+            cursor: pointer;
+            font-weight: bold;
+            color: #c40000;
+        }
+
+        /* Tooltip content */
+        [data-title]::after {
+            content: attr(data-title);
+            position: absolute;
+            left: 50%;
+            bottom: 125%; /* show above element */
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            white-space: normal;
+            text-align: center;
+            max-width: 220px; /* wrap long text */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            z-index: 100;
+            box-shadow: 0 0 8px rgba(255,0,0,0.5);
+        }
+
+        /* Tooltip arrow */
+        [data-title]::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 115%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(255,0,0,0.8) transparent transparent transparent;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        /* Show tooltip on hover with pulse glow */
+        [data-title]:hover::after,
+        [data-title]:hover::before {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+            animation: pulseGlow 1s ease-in-out infinite alternate;
+        }
+
+        /* Pulse glow effect */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 6px rgba(255,0,0,0.5); }
+            50% { box-shadow: 0 0 14px rgba(255,0,0,0.9); }
+            100% { box-shadow: 0 0 6px rgba(255,0,0,0.5); }
+        }
+
+        /* Responsive wrapping inside table cells */
+        table td [data-title] {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Responsive Tooltip Demo</h2>
+
+<p>Hover over these elements to see the tooltip:</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <tr>
+        <td data-title="Balance: €-243.31">Balance Info</td>
+        <td data-title="Next payment due: 15-03-2026">Payment Info</td>
+    </tr>
+    <tr>
+        <td data-title="Very long tooltip text that will wrap correctly on small screens to avoid clipping and overflow">Long Tooltip</td>
+        <td data-title="Short info">Short Tooltip</td>
+    </tr>
+</table>
+
+<p>
+    Inline text example: <span data-title="Hover to see details">Hover me</span>
+</p>
+
+</body>
+</html>

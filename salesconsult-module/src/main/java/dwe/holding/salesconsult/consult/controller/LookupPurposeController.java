@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @Slf4j
 public class LookupPurposeController {
     private final LookupPurposeRepository lookupPurposeRepository;

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.1/dist/quill.snow.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #toolbar { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        #toolbar button, #toolbar select, #placeholderDropdown { margin-right: 5px; }
+        #placeholderDropdown { min-width: 150px; padding: 2px; }
+        #editor { height: 400px; border: 1px solid #ccc; padding: 10px; }
+        .placeholder {
+            display: inline-block;
+            background-color: #fffa90;
+            border: 1px dashed #999;
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Invoice Editor</h2>
+
+<!-- Toolbar -->
+<div id="toolbar">
+    <button class="ql-bold"></button>
+    <button class="ql-italic"></button>
+    <button class="ql-underline"></button>
+    <select class="ql-header">
+        <option value="1"></option>
+        <option value="2"></option>
+        <option selected></option>
+    </select>
+</div>
+
+<!-- Placeholder dropdown -->
+<select id="placeholderDropdown">
+    <option value="">Insert Placeholder</option>
+    <option value="customer.name" data-label="Customer Name">Customer Name</option>
+    <option value="customer.address" data-label="Customer Address">Customer Address</option>
+    <option value="pet.name" data-label="Pet Name">Pet Name</option>
+    <option value="pet.type" data-label="Pet Type">Pet Type</option>
+</select>
+
+<!-- Editor -->
+<div id="editor"></div>
+<button id="saveHtml">Save HTML</button>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.1/dist/quill.min.js"></script>
+<script>
+    const Embed = Quill.import('blots/embed');
+
+    // Placeholder embed blot
+    class PlaceholderBlot extends Embed {
+        static create(value) {
+            const node = super.create();
+            node.setAttribute('data-key', value.key || value);
+            node.classList.add('placeholder');
+            node.innerText = `{{${value.label || value.key}}}`;
+            return node;
+        }
+        static value(node) {
+            return { key: node.getAttribute('data-key'), label: node.innerText.replace(/{{|}}/g,'') };
+        }
+    }
+
+    PlaceholderBlot.blotName = 'placeholder';
+    PlaceholderBlot.tagName = 'span';
+    Quill.register(PlaceholderBlot);
+
+    // Initialize Quill
+    const quill = new Quill('#editor', {
+        modules: { toolbar: '#toolbar' },
+        theme: 'snow'
+    });
+
+    const placeholderDropdown = document.getElementById('placeholderDropdown');
+    placeholderDropdown.addEventListener('change', (e) => {
+        const key = e.target.value;
+        if (!key) return;
+
+        const label = e.target.selectedOptions[0].dataset.label || key;
+        const range = quill.getSelection(true);
+        if (!range) return;
+
+        // Insert the placeholder embed at current cursor
+        quill.insertEmbed(range.index, 'placeholder', { key, label }, Quill.sources.USER);
+
+        // Move cursor after placeholder
+        quill.setSelection(range.index + 1, 0, Quill.sources.SILENT);
+        quill.focus();
+
+        e.target.selectedIndex = 0; // reset dropdown
+    });
+
+    // Save HTML
+    document.getElementById('saveHtml').addEventListener('click', () => {
+        console.log(quill.root.innerHTML);
+        alert('HTML saved to console.');
+    });
+
+    // Right-click remove
+    quill.root.addEventListener('contextmenu', (e) => {
+        const span = e.target.closest('.placeholder');
+        if (span) {
+            e.preventDefault();
+            if (confirm('Remove this placeholder?')) span.remove();
+        }
+    });
+</script>
+
+</body>
+</html>

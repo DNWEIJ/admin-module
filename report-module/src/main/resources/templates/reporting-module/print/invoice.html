@@ -1,0 +1,327 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/reporting-module/print/invoiceprint.html}">
+<head>
+    <title th:text="${(printType == 'invoice')?'Invoice-':'Receipt-'} + ${#strings.replace(visit.pet.name,' ','_') + '_' + visit.pet.id + '_'+ #temporals.format(#temporals.createNow(),'dd-MM-yyyy-HH:mm')}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+    <style>
+        .header {
+            text-align: center;
+            color: green;
+            font-size: 1.4rem;
+        }
+
+        .invoice-title {
+            font-size: 1.4rem;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .invoice-date {
+            text-align: right;
+        }
+
+        .address {
+            width: 100%;
+        }
+
+        .invoice-label {
+            display: block;
+            margin-left: 50%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: underline;
+            color: green;
+
+        }
+
+        .invoice-content {
+            margin-left: 55%;
+        }
+
+
+        .section-title {
+            font-weight: bold;
+            font-size: 110%;
+        }
+
+        .totals-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap:6rem;
+        }
+
+        .payment-table,
+        .invoice-totals {
+            border-collapse: collapse;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .row {
+            position: relative;
+            text-align: center;
+        }
+
+        .center {
+            display: inline-block;
+        }
+
+        .absoluteright {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        /** html elements **/
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.0rem;
+        }
+
+        tr, th {
+            text-align: left;
+        }
+
+        th {
+            border-bottom: 1px solid #ddd;
+        }
+
+        fieldset {
+            padding-left: 0;
+            padding-right: 0;
+            border: none;
+        }
+
+        /** paged js specific **/
+        .payment-info {
+            text-align: center;
+            border-top: 1px solid #ccc;
+
+            /* Paged.js multi-page support */
+            position: running(paymentContent);
+
+            /* Single-page fallback: stick to bottom */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /* Multi-page: show only on last page at bottom */
+        @page :last {
+            @bottom-center {
+                content: element(paymentContent);
+                text-align: center;
+            }
+        }
+
+        /* Prevent overlapping content in single page */
+        .payment-info::before {
+            content: "";
+            display: block;
+            height: .5rem; /* same as footer padding */
+        }
+    </style>
+    <div class="row">
+        <div class="center header">Sterkliniek dierenartsen Amsterdam</div>
+        <th:block th:if="${printType == 'invoice'}">
+            <div class="absoluteright invoice-title">FACTUUR</div>
+        </th:block>
+        <th:block th:if="${printType == 'receipt'}">
+            <div class="absoluteright invoice-title">KWITANTIE</div>
+        </th:block>
+    </div>
+    <div class="invoice-date" th:text="${printDate}"></div>
+    <div style="line-height: 180%">&nbsp;</div>
+    <fieldset class="addess">
+        <th:block th:if="${printType == 'invoice'}">
+            <div class="invoice-label" th:text="#{label.print.invoice.customer}"></div>
+        </th:block>
+        <th:block th:if="${printType == 'receipt'}">
+            <div class="invoice-label" th:text="#{label.print.invoice.customer.receipt}"></div>
+        </th:block>
+        <div style="line-height: 50%">&nbsp;</div>
+        <div class="invoice-content">
+            <b>
+                <div th:utext="${customer.customerName}"></div>
+            </b>
+            <div th:utext="${customer.formattedHtmlAddress}"></div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <table style="width: 100%">
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="width:34%">
+                    <b th:text="#{label.print.invoice.visitdate}"> </b>
+                    <span th:text="${#temporals.format(appointment.visitDateTime, 'dd-MM-yyyy')}"></span>
+                </td>
+                <td style="width:33%; text-align: left"><b th:text="#{label.print.invoice.vet}"></b> <span th:text="${visit.veterinarian}"></span></td>
+                <td style="width:33%; text-align: right">
+                    <th:block th:if="${printType == 'invoice'}">
+                        <div class="invoice-mark"><b th:text="#{label.print.invoice.mark}"></b> <span th:text="${customer.id+'/'+visit.id}"></span></div>
+                    </th:block>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <table>
+            <tr>
+                <td style="vertical-align: top;width:35%">
+                    <b th:text="#{label.print.invoice.reminder-five}"></b></td>
+                <td>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th style="width:20%;vertical-align: top;" th:text="#{label.print.invoice.date}"></th>
+                            <th th:text="#{label.print.invoice.reminder}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:if="${reminders.size() == 0}">
+                            <tr>
+                                <td colspan="2" th:text="#{label.not-found}"></td>
+                            </tr>
+                        </th:block>
+                        <th:block th:each="reminder : ${reminders}">
+                            <tr>
+                                <td th:text="${reminder.dueDate}"></td>
+                                <td th:text="${reminder.reminderText}"></td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <th:block th:each="visitFromList : ${appointment.visits}"
+              th:if="${quantityType == 'all' || visitFromList.id == visit.id}">
+        <fieldset style="break-inside: avoid; page-break-inside: avoid; border-top: 1px solid #000;">
+            <fieldset>
+                <div class="section-title" th:text="#{label.print.invoice.petInfo}"></div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th th:text="#{label.print.invoice.naam}"></th>
+                        <th th:text="#{label.print.invoice.soortRas}"></th>
+                        <th th:text="#{label.print.invoice.chipTattooId}"></th>
+                        <th th:text="#{label.print.invoice.geslacht}"></th>
+                        <th th:text="#{label.print.invoice.leeftijd}"></th>
+                        <th style="text-align: right" th:text="#{label.print.invoice.gewicht}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${visitFromList.pet.name}"></td>
+                        <td>
+                            <span th:text="${visitFromList.pet.species}"></span> /
+                            <span th:text="${visitFromList.pet.breed}"></span>
+                        </td>
+                        <td th:text="${visitFromList.pet.chipTattooId}"></td>
+                        <td th:text="#{__${visitFromList.pet.sex.label}__}"></td>
+                        <td th:text="${visitFromList.pet.age}"></td>
+                        <td class="right" th:text="${visitFromList.weight}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="section-title" th:text="#{label.print.invoice.product}"></div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th th:text="#{label.print.invoice.beschrijving}"></th>
+                        <th style="text-align: right" th:text="#{label.print.invoice.aantal}"></th>
+                        <th style="text-align: right" th:text="#{label.print.invoice.regelTotaalInclBtw}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${!appointment.hasLineItemsForPet(visitFromList.pet.id)}">
+                        <tr>
+                            <td th:text="#{label.not-found}"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </th:block>
+                    <th:block th:each="lineItem : ${appointment.lineItems}">
+                        <th:block th:if="${lineItem.pet.id == visitFromList.pet.id}">
+                            <tr>
+                                <td th:text="${lineItem.nomenclature}"></td>
+                                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineItem.quantity},false)}"></th:block>
+                                <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${lineItem.totalIncTax},false,'')}"></th:block>
+                            </tr>
+                        </th:block>
+                    </th:block>
+                    </tbody>
+                    <th:block th:if="${appointment.hasLineItemsForPet(visitFromList.pet.id)}">
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td style="font-weight:bold; text-align: right"
+                                th:text="#{label.print.invoice.subtotal} + '&nbsp;&nbsp;&nbsp;€ ' + ${#numbers.formatDecimal(totalsPerPet.get(visitFromList.pet.id).amount, 1, 2, 'COMMA')}"></td>
+                        </tr>
+                        </tfoot>
+                    </th:block>
+                </table>
+            </fieldset>
+        </fieldset>
+    </th:block>
+    <fieldset>
+        <div class="totals-wrapper">
+            <table class="payment-table">
+                <tbody>
+                <tr>
+                    <td><b th:text="#{label.print.invoice.lastpayment.date}"></b></td>
+                    <td class="right bold" th:text="#{label.print.invoice.lastpayment.amount}"></td>
+                    <td class="right bold" th:text="#{label.print.invoice.lastpayment.balance}"></td>
+                </tr>
+                <tr>
+                    <td th:text="${#temporals.format(lastPaymentDate, 'dd-MM-yyyy')}"></td>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${lastPaymentAmount},false,'')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${balanceInfo},false,'')}"></th:block>
+                </tr>
+                </tbody>
+            </table>
+            <table class="invoice-totals">
+                <tbody>
+                <tr>
+                    <th class="section-title" th:text="#{label.print.invoice.factuurTotaal}"></th>
+                    <th class="section-title number-font right" th:text="'€ '+ ${#numbers.formatDecimal(invoiceTotals.amount, 1, 2, 'COMMA')}"></th>
+                </tr>
+                <tr>
+                    <td th:text="#{label.print.invoice.totaalBtwLaag}"></td>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${invoiceTotals.taxProductAmount},false,'')}"></th:block>
+                </tr>
+                <tr>
+                    <td th:text="#{label.print.invoice.totaalBtwHoog}"></td>
+                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${invoiceTotals.taxServiceAmount}, false, '')}"></th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    <th:block th:if="${printType == 'invoice'}">
+        <th:block th:insert="~{reporting-module/print/fragments/footer_invoice}"></th:block>
+    </th:block>
+    <th:block th:if="${printType == 'receipt'}">
+        <th:block th:insert="~{reporting-module/print/fragments/footer_receipt}"></th:block>
+    </th:block>
+
+</section>
+</body>
+</html>

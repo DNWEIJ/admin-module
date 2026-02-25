@@ -3,6 +3,8 @@ package dwe.holding.salesconsult.sales.controller.otc;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
+import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
@@ -24,10 +26,13 @@ import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateReason
 @Controller
 @AllArgsConstructor
 public class OTCSelectController {
+    public static final String OTC_SEARCH = "/sales/otc/search";
     private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
     private final AppointmentVisitService appointmentVisitService;
     private final LookupPurposeRepository lookupPurposeRepository;
     private final CustomerForm customerForm;
+    private final CustomerFinancialInfo customerFinancialInfo;
 
     @GetMapping("/otc/search")
     String first_SearchCustomer(Model model) {
@@ -35,7 +40,7 @@ public class OTCSelectController {
                 .addAttribute("form", customerForm)
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
                 .addAttribute("textLabel", "label.title.otc")
-                .addAttribute("url", "/sales/otc/search/")
+                .addAttribute("customerSearchUrl", OTC_SEARCH)
                 .addAttribute("salesType", SalesType.OTC);
         return "salesconsult-generic-module/customersearchpage";
     }
@@ -51,6 +56,7 @@ public class OTCSelectController {
                 .addAttribute("salesType", SalesType.OTC);
         updateReasonsInModel(model, lookupPurposeRepository);
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
         return "salesconsult-generic-module/petanddateselectpage";
     }
 

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class SessionStorageCustomer {
+    public static final String CUSTOMER = "customer";
     private final SessionStorage storage;
 
     public CustomerSettings getCustomer() {
         return read();
-
     }
 
     public void setCustomer(CustomerSettings settings) {
@@ -32,12 +32,12 @@ public class SessionStorageCustomer {
         update(customer);
     }
 
-    CustomerSettings read() {
-        return storage.getModule("customer", SessionStorageCustomer.CustomerSettings.class).orElse(new CustomerSettings(null, null));
+    private CustomerSettings read() {
+        return storage.getModule(CUSTOMER, SessionStorageCustomer.CustomerSettings.class).orElse(new CustomerSettings(null, null));
     }
 
-    void update(CustomerSettings updatedCustomer) {
-        storage.updateModule("customer", updatedCustomer);
+    private void update(CustomerSettings updatedCustomer) {
+        storage.updateModule(CUSTOMER, updatedCustomer);
     }
 
     @Setter

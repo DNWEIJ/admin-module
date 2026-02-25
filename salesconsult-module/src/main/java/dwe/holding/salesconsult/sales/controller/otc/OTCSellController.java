@@ -7,6 +7,7 @@ import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
+import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -37,6 +38,7 @@ public class OTCSellController {
     private final LineItemService lineItemService;
     private final CostingService costingService;
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentVisitService appointmentVisitService;
     private final VisitRepository visitRepository;
 
     @GetMapping("/otc/customer/{customerId}/visit/{visitId}")
@@ -58,7 +60,7 @@ public class OTCSellController {
                 .addAttribute("selectedPet", visit.getPet())
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && !pet.deceased()))
                 .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && pet.deceased()))
-                .addAttribute("url", "/otc/customer/"+ customer.id() +"/visit/" + visit.getId());
+                .addAttribute("costingSearchUrl", "/otc/customer/"+ customer.id() +"/visit/" + visit.getId());
         updateModel(model, visit.getPet().getId(),customer.id(), visit);
         return "salesconsult-generic-module/productpage";
     }
@@ -73,18 +75,13 @@ public class OTCSellController {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
             return new ResponseEntity<>(responseHeaders, HttpStatus.FORBIDDEN);
-
-        Appointment app = visit.getAppointment();
-
-        if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
+        visit = appointmentVisitService.deletePetFromAppointment(visit, petId);
+        if (visit == null) {
             return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
         }
-        app.getVisits().removeIf(vist -> vist.getPet().getId().equals(petId));
-        app.getLineItems().removeIf(lineItem -> lineItem.getPet().getId().equals(petId));
-        appointmentRepository.save(app);
+
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
-
 
     @DeleteMapping("/otc/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
     String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
@@ -93,9 +90,7 @@ public class OTCSellController {
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
             return "redirect:/sales/otc/search/";
 
-        Appointment app = visit.getAppointment();
-        app.getLineItems().removeIf(lItem -> lItem.getId().equals(lineItemId));
-        appointmentRepository.save(app);
+        visit = appointmentVisitService.deleteLineItemFromVisit(visit, lineItemId);
         updateModel(model, visit.getPet().getId(),customer.id(), visit);
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
@@ -121,7 +116,7 @@ public class OTCSellController {
 
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, visit.getAppointment().getId()));
         model
-                .addAttribute("url",  "/otc/customer/"+ customerId +"/visit/" + visit.getId())
+                .addAttribute("costingSearchUrl",  "/otc/customer/"+ customerId +"/visit/" + visit.getId())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("categoryNames", costingService.getCategories())

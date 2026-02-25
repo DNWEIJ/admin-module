@@ -50,8 +50,16 @@ applyTheme(localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME);
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    document.body.addEventListener("refreshPage", () => {
-        location.reload();
+    document.body.addEventListener("refreshPage", function (evt) {
+        const detail = evt.detail || '';
+        const url = detail.url;
+
+        if (url) {
+            window.location.href = url;
+        } else {
+            window.location.reload();
+
+        }
     });
 
     document.body.addEventListener("closeModal", () => {

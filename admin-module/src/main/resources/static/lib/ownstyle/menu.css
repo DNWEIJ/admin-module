@@ -1,3 +1,5 @@
+
+
 /* ================= THEME VARIABLES ================= */
 :root {
     --nav-bg: #ffffff;
@@ -68,6 +70,7 @@ div[role="dropdown"] > ul {
 div[role="dropdown"] ul li {
     padding: 0;
     margin: 0 0 0 .5rem;
+    position: relative;
 }
 
 /* ================= DETAILS ================= */
@@ -88,16 +91,14 @@ div[role="dropdown"] summary::-webkit-details-marker {
     display: none;
 }
 
-/* ================= DROPDOWN PANEL ================= */
-div[role="dropdown"] details ul {
+/* ================= DROPDOWN PANEL (ALL LEVELS) ================= */
+div[role="dropdown"] details > ul {
     position: absolute;
-    top: 2.55rem;
-    left: 0;
-    width: var(--dropdown-width);
-
     display: flex;
     flex-direction: column;
     align-items: stretch;
+
+    width: var(--dropdown-width);
 
     background: var(--dropdown-bg);
     border: 0.0625rem solid var(--border-color);
@@ -108,28 +109,44 @@ div[role="dropdown"] details ul {
     pointer-events: none;
     z-index: 4500;
 
-    transition: opacity var(--anim-normal) var(--easing),
-    transform var(--anim-normal) var(--easing);
+    transition:
+            opacity var(--anim-normal) var(--easing),
+            transform var(--anim-normal) var(--easing);
+}
+
+/* ===== LEVEL 1 (OPEN DOWN) ===== */
+div[role="dropdown"] > ul > li > details > ul {
+    top: 2.55rem;
+    left: 0;
+    transform: translateY(.25rem);
+}
+
+/* ===== LEVEL 2+ (OPEN RIGHT) ===== */
+div[role="dropdown"] details ul li > details > ul {
+    top: 0;
+    left: 100%;
+    transform: translateX(.25rem);
+}
+
+/* ===== ENABLE POINTER EVENTS WHEN OPEN ===== */
+div[role="dropdown"] details[open] > ul {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+}
+
+/* ===== DESKTOP HOVER SUPPORT ===== */
+@media (hover: hover) {
+    div[role="dropdown"] details:hover > ul {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 div[role="dropdown"] details ul li {
     background-color: var(--dropdown-bg);
     width: 100%;
     padding: 1rem;
-}
-
-/* ===== FIX: ENABLE POINTER EVENTS WHEN OPEN ===== */
-div[role="dropdown"] details[open] ul {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* ===== DESKTOP HOVER SUPPORT (ANIMATION ONLY) ===== */
-@media (hover: hover) {
-    div[role="dropdown"] details:hover ul {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 div[role="dropdown"] details ul li:hover {
@@ -195,9 +212,6 @@ label[data-role="burger"] {
         font-size: 1rem;
     }
 
-    /* =========================
-          ICONS
-       ========================= */
     div[role="icons"] ul,
     div[role="buttons"] ul {
         display: flex;
@@ -207,10 +221,6 @@ label[data-role="burger"] {
         list-style: none;
         justify-content: center;
     }
-
-    /* =========================
-       DROPDOWNS
-    ========================= */
 
     div[role="dropdown"] {
         display: flex;
@@ -223,6 +233,8 @@ label[data-role="burger"] {
         margin: 0;
         padding: 0;
         list-style: none;
+        flex-direction: column;
+        align-items: center;
     }
 
     div[role="dropdown"] details {
@@ -245,17 +257,17 @@ label[data-role="burger"] {
         background: var(--dropdown-hover);
     }
 
-    div[role="dropdown"] details ul {
-        position: absolute;
-        top: calc(100% + 0.25rem);
-        left: 50%;
-        transform: translateX(-50%);
-        gap: 0.25rem;
-        margin: 0;
+    div[role="dropdown"] details > ul {
+        position: static;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        box-shadow: none;
+        border: none;
+        background: transparent;
+        width: auto;
         padding: 0.25rem 0;
-        list-style: none;
-        white-space: nowrap;
-        z-index: 4500;
+        gap: 0.25rem;
     }
 
     div[role="dropdown"] details ul li {

@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @AllArgsConstructor
 @Slf4j
 public class HtmxCustomerController {
@@ -42,6 +42,7 @@ public class HtmxCustomerController {
             <div class="text-align-center" id="addressData" data-street="%s" data-number="%s" data-zipcode="%s" data-city="%s">%s</div>
             <div class="text-align-center" id="options">%s</div>
             """;
+    private static final Pattern EMPTY_CASE_INSENSITIVE = Pattern.compile("", Pattern.CASE_INSENSITIVE);
 
     @GetMapping("/search/customer/address")
     public String getAddressModalViaHtmx() {
@@ -112,12 +113,14 @@ public class HtmxCustomerController {
             Pattern pattern = Pattern.compile(Pattern.quote(searchCriteria), Pattern.CASE_INSENSITIVE);
             if (searchCriteria.toLowerCase().charAt(0) == 'i') {
                 // find on ID
-                Optional<Customer> maybeCustomer = customerRepository.findById(Long.parseLong(searchCriteria.substring(1)));
-                if (maybeCustomer.isPresent()) {
-                    model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), Pattern.compile(Pattern.quote(""), Pattern.CASE_INSENSITIVE))), locale));
-                    return "fragments/elements/flatData";
-                } else {
-                    model.addAttribute("flatData", wrap(List.of(), locale));
+                try {
+                    Optional<Customer> maybeCustomer = customerRepository.findById(Long.parseLong(searchCriteria.substring(1)));
+                    if (maybeCustomer.isPresent()) {
+                        model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), EMPTY_CASE_INSENSITIVE)), locale));
+                        return "fragments/elements/flatData";
+                    }
+                } catch(NumberFormatException e) {
+                    // do nothing;
                 }
             }
             if (searchCriteria.toLowerCase().charAt(0) == 'z') {
@@ -140,8 +143,6 @@ public class HtmxCustomerController {
                 if (!maybeCustomer.isEmpty()) {
                     model.addAttribute("flatData", wrap(maybeCustomer, locale));
                     return "fragments/elements/flatData";
-                } else {
-                    model.addAttribute("flatData", wrap(List.of(), locale));
                 }
             }
             // search other ways

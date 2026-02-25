@@ -9,14 +9,17 @@
     <th:block
             th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.pet},'/customer/customer/'+ ${customerId}+ '/pet', ${customerInformation})}"></th:block>
     <hr/>
-    <table class="table-tight striped" id="show-table">
+    <table class=" striped" id="show-table">
         <thead>
         <tr>
             <th>Action</th>
-            <th class="filtering">[[#{pet.name}]]</th>
+            <th>[[#{pet.name}]]</th>
             <th class="desktop-only">[[#{pet.species}]]</th>
             <th>[[#{pet.breed}]]</th>
-            <th>[[#{pet.sex}]]</th>
+
+            <th class="mobile-only">[[#{pet.sex}]]</th>
+            <th class="tablet-only">[[#{pet.sex}]]</th>
+
             <th class="desktop-only">[[#{pet.birthday}]]</th>
             <th class="desktop-only">[[#{pet.passportNumber}]]</th>
             <th class="desktop-only">[[#{pet.chipTattooId}]]</th>
@@ -27,20 +30,22 @@
         <th:block th:each="pet : ${pets}">
             <tr>
                 <td>
-                    <a title="SOAP" class="info-icon"  th:href="'/consult/visit/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}+'/soap'">🏥</a>
-                    <a class="info-icon"  href="" hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="sortingTables()"
+                    <a title="SOAP" class="emoji-icon"  th:href="'/consult/visit/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}+'/soap'">🏥</a>
+                    <a class="emoji-icon"  href="" hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="sortingTables()"
                        th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + pet.id + '/history/product'}" th:title="#{visit.lineitems.history}">️🛒</a>
-                    <a class="info-icon" href="" hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="sortingTables()"
+                    <a class="emoji-icon" href="" hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="sortingTables()"
                        th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + pet.id + '/history/weight'}" th:title="#{visit.weight} + ' - '+ #{visit.temperature} + ' - '+ #{visit.glucose}">️️🌡️</a>
-                    <a class="info-icon" href="" hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="sortingTables()"
+                    <a class="emoji-icon" href="" hx-target="#modal-container" hx-swap="innerHTML" hx-on::after-request="sortingTables()"
                        th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + pet.id + '/history/diagnose'}" th:title="#{label.diagnose}">️🩺</a>
                 </td>
                 <td><a th:href="'/customer/customer/'+ ${customerId}+ '/pet/'+ ${pet.id}"><span
                         th:utext="${pet.nameWithDeceasedAndDate}" th:remove="tag"></span></a></td>
                 <td class="desktop-only">[[${pet.species}]]</td>
                 <td>[[${pet.breed}]]</td>
-                <td class="desktop-only">[[#{${pet.sex.getLabel}}]]</td>
+
                 <td class="mobile-only">[[${pet.sex.databaseField}]]</td>
+                <td class="tablet-only">[[#{${pet.sex.getLabel}}]]</td>
+
                 <td class="desktop-only" th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
                 <td class="desktop-only">[[${pet.passportNumber}]]</td>
                 <td class="desktop-only">[[${pet.chipTattooId}]]</td>

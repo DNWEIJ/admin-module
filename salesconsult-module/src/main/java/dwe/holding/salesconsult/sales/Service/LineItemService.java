@@ -48,6 +48,7 @@ public class LineItemService {
     }
 
     public List<LineItem> createConsultAnalyseLineItem(@NotNull Long costingId, @NotNull BigDecimal quantity, @NotNull Pet pet, Long analyseId) {
+        System.out.println("createCnsultAnalyseLineItem "+costingId + "|"+quantity+"|"+pet.getId());
         List<LineItem> lineItems = createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
         lineItems.forEach(lineItem -> lineItem.setId(analyseId));
         return lineItems;
@@ -61,9 +62,7 @@ public class LineItemService {
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
             if (AutorisationUtils.hasStatus(PersonnelStatusEnum.Vet)) {
                 Set<Visit> set = app.getVisits();
-                Iterator<Visit> iterator = set.iterator();
-                while (iterator.hasNext()) {
-                    Visit visit = iterator.next();
+                for (Visit visit : set) {
                     if (VisitStatusEnum.isClosed(visit.getStatus())) {
                         throw new SecurityException("Cannot add line items; Appointment or Visit status doesn't allow it");
                     }
@@ -170,7 +169,7 @@ public class LineItemService {
     }
 
     private void doExtraStuff(CostingPriceProjection cpp, Pet pet, Appointment appointment) {
-        //update balance
+        // TODO update balance
 //        getUserSession().setCustomerBalance(getUserSession().getCustomerBalance() - l.getTotal());
 
         // update visit total amount

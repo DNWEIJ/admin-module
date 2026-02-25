@@ -10,11 +10,11 @@
 
     <hr/>
     <div class="overflow-auto">
-        <table id="show-table" class="table-tight striped">
+        <table id="show-table" class=" striped">
             <thead>
             <tr>
-                <th>[[#{label.notes.petname}]]</th>
                 <th>[[#{label.notes.notedate}]]</th>
+                <th>[[#{label.notes.petname}]]</th>
                 <th>[[#{label.notes.purpose}]]</th>
                 <th>[[#{label.list.auditinfo}]]</th>
             </tr>
@@ -22,8 +22,8 @@
             <tbody>
             <th:block th:each="note : ${notes}">
                 <tr>
-                    <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}" th:utext="${note.pet.nameWithDeceased}"></a></td>
-                    <td th:attr="data-sort-value=${note.noteDate}" th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></td>
+                    <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}"  th:attr="data-sort-value=${note.noteDate}" th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></a></td>
+                    <td th:utext="${note.pet.nameWithDeceased}"></td>
                     <td>[[${note.purpose}]]</td>
                     <td>
                         <small th:data-tooltip="'Created by  '+${note.addedBy}+' on ' +${#temporals.format(note.addedOn, 'dd-MM-yy')}">

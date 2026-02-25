@@ -5,7 +5,7 @@
 <body>
 <section layout:fragment="content">
     <h3 th:text="#{${textLabel}}"></h3>
-    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(false, ${url}, ${salesType})}"></div>
+    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(false, ${customerSearchUrl}, ${salesType})}"></div>
 </section>
 </body>
 </html>

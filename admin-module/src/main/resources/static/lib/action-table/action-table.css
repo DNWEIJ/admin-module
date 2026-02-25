@@ -116,7 +116,7 @@ action-table :where(select,input,button) {
 
 action-table :where(input[type=search],select) {
     border: var(--border);
-    border-radius: var(--border-radius)
+    border-radius: var(--pico-border-radius)
 }
 
 action-table .selected {

@@ -2,6 +2,7 @@ package dwe.holding;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.admin.setup.SetupAdminService;
+import dwe.holding.vmas.local.UserLocaleResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Optional;
 
@@ -31,9 +33,15 @@ public class VmasApplication implements CommandLineRunner {
     @Autowired
     SetupAdminService setupAdminService;
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(VmasApplication.class, args);
     }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        return new UserLocaleResolver();
+    }
+
 
     @Bean
     public AuditorAware<String> auditorProvider() {

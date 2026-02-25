@@ -1,19 +1,20 @@
-<!-- todo refne a bit -->
+<form th:action="'/report/customer/'+${customer.id}+'/print/'+${visit.id}" method="post">
 <div class="right-left-space">
     <div class="grid">
         <span>invoice</span>
-        <th:block th:insert="~{fragments/elements/select::selectCheckBox('invoice','','','2')}" th:with="tooltip='invoice (checked) or receipt'"></th:block>
+        <th:block th:insert="~{fragments/elements/select::selectCheckBox('docTypeSwitch','','','2')}" th:with="tooltip='invoice (checked) or receipt'"></th:block>
         <span>receipt</span>
     </div>
     <span>&nbsp;</span>
     <div class="grid">
         <span>&nbsp;&nbsp;per&nbsp;&nbsp;</span>
-        <th:block th:insert="~{fragments/elements/select::selectCheckBox('single','','','3')}" th:with="tooltip='pet (checked) or all'"></th:block>
+        <th:block th:insert="~{fragments/elements/select::selectCheckBox('quantitySwitch','','','3')}" th:with="tooltip='pet (checked) or all'"></th:block>
         <span>&nbsp;&nbsp;all&nbsp;&nbsp;</span>
     </div>
     <span>&nbsp;</span>
     <div class="grid">
-        <button class="button-secondary">Print</button>
+        <button type="submit">Print</button>
     </div>
     <span>&nbsp;</span>
 </div>
+</form>

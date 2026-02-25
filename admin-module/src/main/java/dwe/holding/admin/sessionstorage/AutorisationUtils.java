@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -98,6 +99,11 @@ public class AutorisationUtils {
     public static Map<Long, String> getLocalMemberMap() {
         return AutorisationUtils.getCurrentMember().getLocalMembers()
                 .stream().collect(Collectors.toMap(LocalMember::getId, LocalMember::getLocalMemberName));
+    }
+
+    public static Map<Long, LocalMember> getFullLocalMemberMap() {
+        return AutorisationUtils.getCurrentMember().getLocalMembers()
+                .stream().collect(Collectors.toMap(LocalMember::getId, Function.identity()));
     }
 
     public static UserSettings getCurrentUserSettings() {

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <!-- Page title / suggested filename -->
+    <title>
+        Invoice or Receipt
+    </title>
+
+    <script>
+        window.PagedConfig =  {auto: true, before: undefined,
+            after: async function (done) {
+                doIt()
+            },
+            content: undefined, stylesheets: undefined, renderTo: undefined, settings: undefined};
+    </script>
+    <script src="/lib/polyfill.js"></script>
+    <link href="/lib/style/interface.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ---------------------------
+        PAGE SETUP
+     ---------------------------- */
+        @page :first {
+            @top-center {
+                content: none;
+            }
+            @top-left {
+                content: none;
+            }
+            @top-right {
+                content: none;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 20mm 10mm 20mm 10mm;
+
+            @top-left {
+                content: string(print-header-left);
+                font-size: 6pt;
+                font-weight: bold;
+            }
+
+            @top-center {
+                content: string(doc-title);
+                font-size: 6pt;
+                font-weight: bold;
+            }
+
+            @top-right {
+                content: string(pet-title);
+                font-size: 6pt;
+                font-weight: bold;
+            }
+
+            @bottom-left {
+                content: string(doc-footer);
+                font-size: 6pt;
+            }
+
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 6pt;
+            }
+        }
+
+        /* ---------------------------
+           BODY & TYPOGRAPHY
+        ---------------------------- */
+        body {
+            font-family:  Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            line-height: 1.1rem;
+        }
+
+        /* ---------------------------
+           HEADER / FOOTER SOURCES
+        ---------------------------- */
+        .print-header-left {
+            string-set: print-header-left content(text);
+            display: none;
+        }
+
+        .print-header-mid {
+            string-set: print-header-mid content(text);
+            display: none;
+        }
+
+        .print-header-right {
+            string-set: print-header-right content(text);
+            display: none;
+        }
+
+        .print-footer {
+            string-set: doc-footer content(text);
+            display: none;
+        }
+
+        /* ---------------------------
+           CLEANUP
+        ---------------------------- */
+        button, nav, header, footer, .toolbar, .controls {
+            display: none !important;
+        }
+
+        .avoid-print-break {
+            display: block;
+            white-space: pre-line;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+
+<body>
+<script>
+    function doIt(){}
+</script>
+<div id="paged-output"></div>
+
+<!--&lt;!&ndash; Hidden elements feeding header/footer &ndash;&gt;-->
+<!--<div class="print-header-left" th:text="${clinic_name}">Clinic Name</div>-->
+
+<!--<div class="print-header-mid">Invoice/Receipt Report</div>-->
+
+<!--<div class="print-header-right"-->
+<!--     th:text="${pet.name} + ' (' + ${pet.id} + ')'">-->
+<!--    SOAP Report – Patient name-->
+<!--</div>-->
+
+<div class="print-footer"
+     th:text="'Generated: ' + ${#temporals.format(#temporals.createNow(), 'dd-MM-yyyy HH:mm')}">
+    Generated: today
+</div>
+
+<main id="replaceByPages">
+    <section layout:fragment="content"></section>
+</main>
+</body>
+</html>

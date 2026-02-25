@@ -4,24 +4,24 @@
 <th:block th:if="${!isAnalyseItemsFromDb}">
     <form id="analyseForm" hx-ext="debug" th:hx-post="'/consult/visit/'+ ${visit.id} + '/analyse/copy'" hx-include="#analyseDropDown" hx-target="#analyseReplaceHtmx" hx-swap="innerHTML">
 </th:block>
-<table class="analyse no-sorting table-tight striped">
+<table class="analyse no-sorting striped">
     <thead>
     <tr>
-        <th th:text="#{analyses.label.nnbVet}">NNB Vet</th>
-        <th th:text="#{analyses.label.activity}">Activity</th>
-        <th th:text="#{analyses.label.nnbOwner}">NNB Owner</th>
+        <th th:text="#{analyses.label.nnbVet}"> </th>
+        <th th:text="#{analyses.label.activity}"></th>
+        <th th:text="#{analyses.label.nnbOwner}"> </th>
         <th:block th:if="${!isAnalyseItemsFromDb}">
-            <th th:text="#{analyses.label.exclPrice}">Excl. Price</th>
-            <th th:text="#{analyses.label.tax}">Tax</th>
+            <th th:text="#{analyses.label.exclPrice}"></th>
+            <th th:text="#{analyses.label.tax}">/th>
         </th:block>
 
-        <th th:text="#{analyses.label.quantity}">Quantity</th>
+        <th th:text="#{analyses.label.quantity}"></th>
 
         <th:block th:if="${!isAnalyseItemsFromDb}">
-            <th th:text="#{analyses.label.inclPrice}">Incl. Price</th>
+            <th th:text="#{analyses.label.inclPrice}"> </th>
         </th:block>
         <th:block th:if="${isAnalyseItemsFromDb}">
-            <th th:text="#{analyses.label.outcome}">Outcome</th>
+            <th th:text="#{analyses.label.outcome}"></th>
         </th:block>
     </tr>
     </thead>
@@ -83,7 +83,7 @@
                 </td>
                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.quantity},true)}"></th:block>
                 <td>
-                    <input class="number-font" style="padding:0;margin:0;height:1.4rem" placeholder="" type="number" min="0" step="0.01" autocomplete="off"
+                    <input class="number-font" style="padding:0;margin:0;height:1.4rem" placeholder="" type="input" autocomplete="off"
                            th:id="${'comment_'+ analyseItem.id}" th:name="${comment}" th:value="${analyseItem.comment}">
                 </td>
             </tr>

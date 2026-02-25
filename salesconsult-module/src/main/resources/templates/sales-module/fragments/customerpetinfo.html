@@ -1,9 +1,22 @@
 <th:block th:fragment="customerPetInfo(customer, pet, backbutton)" xmlns:th="http://www.w3.org/1999/html">
     <details id="customerpetinfo" open>
         <summary>
-            <span th:text="#{visit.customerinfo.title}"></span><a href="/info/customerpetinfo" title="More info" class="info-icon">ℹ️</a>
+            <span th:text="#{visit.customerinfo.title}"> </span>
+            <a href="/info/customerpetinfo" title="More info" class="emoji-icon">ℹ️</a>
         </summary>
+        <div style="text-align: center;">
+            <span style="font-size: 1rem" th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) >= 0}"
+                  th:text="${'Balance: €' + #numbers.formatDecimal(balanceInfo, 1, 2) + ' (' + #temporals.format(lastPayment, 'dd-MM-yyyy') + ')'}">
+            </span>
+            <th:block th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) < 0}">
+                <span class="emoji-icon wiggle">🚨</span>
+                <span class="red-text pulse" style="font-size: 1rem"
+                      th:text="${'Balance: €' + #numbers.formatDecimal(balanceInfo, 1, 2) + ' (' + #temporals.format(lastPayment, 'dd-MM-yyyy') + ')'}">
+                </span>
+                <span class="emoji-icon wiggle">🚨</span>
+            </th:block>
 
+        </div>
         <div th:if="${!backbutton and pet == null}" class="grid">
             <div></div>
             <div>
@@ -75,7 +88,7 @@
             }
         </script>
         <h6 th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''" th:class="${colorClass}"
-            th:Utext="${customer.customerName} +' ('+ ${customer.id} + ' - '+ ${customer.status.databaseField} + ' - '+ ${balanceInfo} + ')'">
+            th:utext="${customer.customerName} +' ('+ ${customer.id} + ' Status: '+ ${customer.status.databaseField} + ')'">
         </h6>
         <div><span id="copy-customer-email"
                    th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
@@ -86,7 +99,7 @@
         </div>
         <div th:if="${!#strings.isEmpty(customer.address2)  and !#strings.isEmpty(customer.address3)}">
             <span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.address3}"></span>
-            <a href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy addressl">📋</a>
+            <a href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy address">📋</a>
         </div>
         <div th:text="${(customer.homePhone != null ? customer.homePhone + ', ' : '') + (customer.workPhone != null ? customer.workPhone + ', ' : '') + (customer.mobilePhone ?: '')}">
         </div>

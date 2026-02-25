@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Controller
-@RequestMapping(path = "/cartracker")
+@RequestMapping("/cartracker")
 class OverviewController {
 
     final DriveService driveService;

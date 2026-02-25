@@ -10,7 +10,7 @@
 
         <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
 
-        <fieldset class="grid" role="presentation">
+        <fieldset class="grid">
             <input id="id" name="id" th:value="${product.id}" type="hidden"/>
             <input id="version" name="version" th:value="${product.version}" type="hidden"/>
             <input id="delete" name="delete" th:value="${product.deleted}" type="hidden"/>
@@ -19,69 +19,65 @@
             <legend>General Information</legend>
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('categoryId','label.costing.product.category',${categoryId}, ${categories}, true,'0')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.costing.product.invoiceInformation','product.nomenclature','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('salesPriceExTax','label.costing.product.cost','product.salesPriceExTax','4')}"></th:block>
-            <th:block
-                    th:insert="~{fragments/elements/input::inputHtmlLift('processingFeeExTax','label.costing.product.processingFee','product.processingFeeExTax','5')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','label.costing.product.taxedItem',${product.taxed},${taxTypes}, true, '0')}"></th:block>
+            <div class="grid">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('salesPriceExTax','label.costing.product.cost','product.salesPriceExTax','4')}"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('processingFeeExTax','label.costing.product.processingFee','product.processingFeeExTax','5')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','label.costing.product.taxedItem',${product.taxed},${taxTypes}, true, '0')}"></th:block>
+            </div>
         </fieldset>
+
         <fieldset class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','label.costing.product.quickReferenceCode','product.shortCode','2')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('barcode','label.costing.product.barcode','product.barcode','3')}"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.batch',${product.hasBatchNr},${yesNoOptions}, true, '0')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.batch',${product.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.spillageAccounted',${product.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
         </fieldset>
 
         <!-- Tabs Sections -->
+        <div th:if="${product.id == null}" style="font-style: italic"><b>[[#{label.costing.product.groupingExplenation}]]</b></div>
         <div class="tabs">
             <input type="radio" name="product-tabs" id="tab-reminder" checked>
             <label for="tab-reminder" th:text="#{label.costing.product.setReminder}">Set Reminder</label>
-
             <input type="radio" name="product-tabs" id="tab-supply">
             <label for="tab-supply" th:text="#{label.costing.product.supplyItems}">Supply Items</label>
 
+            <th:block if="${product.id != null}">
+                <label for="tab-groups" th:text="#{label.costing.product.grouping}">Grouping</label>
+                <input type="radio" name="product-tabs" id="tab-groups">
+            </th:block>
+
             <input type="radio" name="product-tabs" id="tab-certificate">
             <label for="tab-certificate" th:text="#{label.costing.product.certificate}">Certificate</label>
-
             <input type="radio" name="product-tabs" id="tab-instructions">
             <label for="tab-instructions" th:text="#{label.costing.product.instructions}">Instructions</label>
-
             <input type="radio" name="product-tabs" id="tab-prescription">
             <label for="tab-prescription" th:text="#{label.costing.product.prescriptionLabel}">Prescription Label</label>
-
             <input type="radio" name="product-tabs" id="tab-actions">
             <label for="tab-actions" th:text="#{label.costing.product.additionalActions}">Additional Actions</label>
 
             <div class="panels">
-
                 <section class="panel">
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('reminderNomenclature','label.costing.product.reminderDescription','product.reminderNomenclature','6')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('intervalInWeeks','label.costing.product.intervalInWeeks','product.intervalInWeeks','7')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('rRemovePendingRemindersContaining','label.costing.product.removePendingReminders','product.rRemovePendingRemindersContaining','8')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('reminderNomenclature','label.costing.product.reminderDescription','product.reminderNomenclature','6')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('intervalInWeeks','label.costing.product.intervalInWeeks','product.intervalInWeeks','7')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('rRemovePendingRemindersContaining','label.costing.product.removePendingReminders','product.rRemovePendingRemindersContaining','8')}"></th:block>
                 </section>
-
                 <section class="panel">
                     <th:block th:insert="~{fragments/elements/input::inputHtmlLift('distributor','label.costing.product.distributor','product.distributor','9')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('distributorDescription','label.costing.product.productName','product.distributorDescription','10')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('purchaseDistributorPrice','label.costing.product.distributorPrice','product.purchaseDistributorPrice','11')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('quantityPerPackage','label.costing.product.quantityPerPackage','product.quantityPerPackage','12')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('distributorDescription','label.costing.product.productName','product.distributorDescription','10')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purchaseDistributorPrice','label.costing.product.distributorPrice','product.purchaseDistributorPrice','11')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('quantityPerPackage','label.costing.product.quantityPerPackage','product.quantityPerPackage','12')}"></th:block>
                     <th:block th:insert="~{fragments/elements/input::inputHtmlLift('itemNumber','label.costing.product.articleNumber','product.itemNumber','13')}"></th:block>
                 </section>
-
+                <th:block if="${product.id != null}">
+                    <section class="panel">
+                        <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
+                    </section>
+                </th:block>
                 <section class="panel">
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','14')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','15')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','16')}"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','17')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','14')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','15')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','16')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','17')}"></th:block>
                 </section>
                 <section class="panel">
                     <label for="instructions" th:text="#{label.costing.product.instructions}"></label>

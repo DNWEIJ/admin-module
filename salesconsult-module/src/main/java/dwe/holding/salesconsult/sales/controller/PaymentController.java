@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping(path = "/sales")
+@RequestMapping("/sales")
 @Slf4j
 @AllArgsConstructor
 public class PaymentController {

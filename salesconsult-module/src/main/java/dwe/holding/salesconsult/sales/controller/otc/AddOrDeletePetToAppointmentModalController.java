@@ -4,9 +4,11 @@ import dwe.holding.admin.expose.UserService;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
+import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import dwe.holding.salesconsult.consult.repository.LookupRoomRepository;
+import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static dwe.holding.salesconsult.consult.controller.VisitController.VISIT_URL;
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateReasonsInModel;
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateRoomsInModel;
 
@@ -31,6 +34,7 @@ public class AddOrDeletePetToAppointmentModalController {
     private final CustomerService customerService;
     private final AppointmentVisitService appointmentVisitService;
     private final AppointmentRepository appointmentRepository;
+    private final VisitRepository visitRepository;
     private final LookupPurposeRepository lookupPurposeRepository;
     private final UserService userService;
     private final LookupRoomRepository lookupRoomRepository;
@@ -40,7 +44,7 @@ public class AddOrDeletePetToAppointmentModalController {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         if (customer == null) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");// todo set header for error
-            // todofix error hadnling
+            // todo fix error handling
             return "redirect:/sales/otc/search/";
         }
         Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
@@ -86,5 +90,20 @@ public class AddOrDeletePetToAppointmentModalController {
                 .addAttribute("petsOnAppointment", app.getVisits().stream().map(visit -> new PresentationElement(visit.getId(), visit.getPet().getNameWithDeceased())).toList());
         response.setHeader("HX-Trigger", "closeModal");
         return "sales-module/fragments/htmx/petselectpetdropdown";
+    }
+
+    @DeleteMapping("/customer/{customerId}/visit/{visitId}/pet/{petId}")
+    String deletePetFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long petId, HttpServletResponse response) {
+        CustomerService.Customer customer = customerService.searchCustomer(customerId);
+
+        Visit visit = appointmentVisitService.deletePetFromAppointment(
+                visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow()
+                , petId);
+
+        response.setHeader("HX-Trigger","{\"refreshPage\": {\"url\":\""
+                 + VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString())
+                +"?callFrom=customer\"}}" // customer / agenda are the options
+        );
+        return "fragments/elements/empty";
     }
 }

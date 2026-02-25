@@ -14,14 +14,14 @@
         </th:block>
         <th:block th:insert="~{salesconsult-generic-module/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, ${salesType}, true)}"></th:block>
         <fieldset class="grid">
+            <div>
+                <input type="submit" name="_save" form="createForm" th:value="#{label.button.next}"/>
+            </div>
             <div th:if="${salesType.isVisit}">
                 <input type="button" th:value="#{label.otc.sell.add.pet}"
                        th:hx-get="'/customer/customer/'+ ${customer.id} + '/pet'"
                        hx-target="#modal-container" hx-swap="innerHTML"
                        hx-on::after-request="addEventListenersForPetSelect()"/>
-            </div>
-            <div>
-                <input type="submit" name="_save" form="createForm" th:value="#{label.button.next}"/>
             </div>
         </fieldset>
         </form>

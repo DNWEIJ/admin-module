@@ -7,7 +7,7 @@ import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.customer.client.service.SessionStorageCustomer;
+import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @AllArgsConstructor
 @Slf4j
 public class CustomerController {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final CustomerForm customerForm;
-    private final SessionStorageCustomer sessionStorage;
+    private final CustomerFinancialInfo customerFinancialInfo;
 
     @GetMapping("/customer")
     String newRecord(@RequestParam(required = false) boolean isNew, Model model) {
-        if (isNew) customerReset();
+        if (isNew) customerFinancialInfo.customerReset(model);
         else {
-            Long customerId = sessionStorage.getCustomer().getId();
+            Long customerId = customerFinancialInfo.getCustomerId();
             if (customerId != null)
                 return "redirect:/customer/customer/" + customerId;
         }
@@ -52,11 +52,10 @@ public class CustomerController {
         Customer customer = customerRepository.findById(id).get();
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
-
-        sessionStorage.setCustomer(new SessionStorageCustomer.CustomerSettings(customer.getId(), customer.getCustomerNameWithId()));
-
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customer);
         return "customer-module/customer/action";
     }
+
 
     @PostMapping("/customer")
     String saveCustomer(@Valid Customer customerForm, RedirectAttributes redirect) {
@@ -104,10 +103,5 @@ public class CustomerController {
         model
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("statusList", CustomerStatusEnum.getWebList());
-    }
-
-    private void customerReset() {
-        sessionStorage.setCustomerId(null);
-        sessionStorage.setCustomerName(null);
     }
 }

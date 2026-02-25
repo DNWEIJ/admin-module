@@ -7,8 +7,9 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
+import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.customer.expose.CustomerService;
-import dwe.holding.salesconsult.consult.mapper.VisitMapper;
 import dwe.holding.salesconsult.consult.model.AnalyseItem;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
@@ -20,9 +21,11 @@ import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,19 +37,20 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.*;
-import static dwe.holding.salesconsult.sales.controller.ValidationHelper.validateAppointmenIsOk;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class VisitController {
-    public static final String VISIT_URL = "/consult/visit/customer/{customerId}/visit/{visitId}/lineitem/";
-    public static final String CONSULT_VISIT_SEARCH = "/consult/visit/search/";
+    public static final String VISIT_URL = "/consult/visit/customer/{customerId}/visit/{visitId}";
+    public static final String CONSULT_VISIT_SEARCH = "/consult/visit/search";
+
     private final VisitRepository visitRepository;
     private final LookupRoomRepository lookupRoomRepository;
     private final LookupPurposeRepository lookupPurposeRepository;
@@ -62,17 +66,18 @@ public class VisitController {
     private final CostingService costingService;
     private final ObjectMapper objectMapper;
     private final CustomerForm customerForm;
-    private final VisitMapper visitMapper;
     private final AppointmentRepository appointmentRepository;
+    private final CustomerFinancialInfo customerFinancialInfo;
+    private final CustomerRepository customerRepository;
+    private final MessageSource messageSource;
 
     @GetMapping("/visit/search")
     String firstStepCreateVisitFindCustomer(Model model, HttpServletRequest request) {
-
         model
                 .addAttribute("form", customerForm)
                 .addAttribute("customer", Customer.builder().newsletter(YesNoEnum.No).status(CustomerStatusEnum.NORMAL).build())
                 .addAttribute("textLabel", "label.title.visit")
-                .addAttribute("url", CONSULT_VISIT_SEARCH)
+                .addAttribute("customerSearchUrl", CONSULT_VISIT_SEARCH)
                 .addAttribute("salesType", SalesType.VISIT);
         if (getHtmxAndAddToModel(request, model)) {
             return "/salesconsult-generic-module/customersearchpagemodal";
@@ -81,7 +86,7 @@ public class VisitController {
         }
     }
 
-    // from the calander this will be called with a lot preset fields, due to the context the calander gives
+    // from the calendar this will be called with a lot preset fields, due to the context the calendar gives
     @GetMapping("/visit/search/{customerId}")
     String secondStepCustomerFoundShowPetsAndDateTimeAndLoc(@PathVariable @NotNull Long customerId,
                                                             @RequestParam(required = false) AgendaTypeEnum agendaType, @RequestParam(required = false) String resource,
@@ -93,6 +98,7 @@ public class VisitController {
         updateLocationsInModel(model, lookupLocationRepository);
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
         updateReasonsInModel(model, lookupPurposeRepository);
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
 
         Appointment appointment = Appointment.builder().visitDateTime(
                         (creationDate != null) ? creationDate : LocalDateTime.now()
@@ -143,7 +149,7 @@ public class VisitController {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         model
                 .addAttribute("customerId", customer.id())
-                .addAttribute("pets", customer.pets().stream().collect(Collectors.toMap(p -> p.id(), p -> p.deceased() ? p.name() + " &dagger;" : p.name())))
+                .addAttribute("pets", customer.pets().stream().collect(Collectors.toMap(CustomerService.Pet::id, p -> p.deceased() ? p.name() + " &dagger;" : p.name())))
                 .addAttribute("visits", visitRepository.findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(AutorisationUtils.getCurrentUserMid(), customer.pets().stream().map(CustomerService.Pet::id).toList()))
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
                 .addAttribute("activeMenu", "visits");
@@ -151,19 +157,25 @@ public class VisitController {
     }
 
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}")
-    String saveVisit(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Visit visitForm, Model model, RedirectAttributes redirect) {
+    String saveVisitXhtm(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Visit visitForm, HttpServletResponse response, Locale locale) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
-        if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
-            return "redirect:/consult/visit/search"; // todo: to far back, see if we can just refresh the page..so it shows no lineitems adding anymore
-
-        visitMapper.updateVisitFromForm(visitForm, visit);
-        return "redirect:/visit/customer/" + customer.id() + "/visit/" + visit.getId();
+//        if (!validateAppointmenIsOk(visit.getAppointment(), redirect)) {
+//            // message = "not succesfull;"
+//            response.setHeader("HX-Trigger", "{\"messageDisplay\":{\"messageText\":\""
+//                    + messageSource.getMessage("label.error", null, locale)
+//                    + "\"}}");
+//            return "fragments/elements/empty";        }
+        updateVisit(visit, visitForm);
+        visitRepository.save(visit);
+        response.setHeader("HX-Trigger", "{\"messageDisplay\":{\"messageText\":\""
+                + messageSource.getMessage("label.saved", null, locale)
+                + "\"}}");
+        return "fragments/elements/empty";
     }
 
     @GetMapping("/visit/customer/{customerId}/visit/{visitId}")
-    String editVisit(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @RequestParam String callFrom,
-                     Model model, RedirectAttributes redirect) {
+    String editVisit(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @RequestParam String callFrom, Model model) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
@@ -182,10 +194,9 @@ public class VisitController {
         List<Appointment> app =
                 switch (callFrom) {
                     case "agenda" -> appointmentRepository.findByVisitDateTimeBetweenAndOTCAndLocalMemberId(
-                            LocalDate.now().atStartOfDay(), LocalDate.now().atTime(LocalTime.MAX), YesNoEnum.No,AutorisationUtils.getCurrentUserMlid()
+                            LocalDate.now().atStartOfDay(), LocalDate.now().atTime(LocalTime.MAX), YesNoEnum.No, AutorisationUtils.getCurrentUserMlid()
                     );
-                    case "customer" ->
-                            appointmentRepository.findByMemberIdAndVisits_Pet_Customer_Id(AutorisationUtils.getCurrentUserMid(), customerId);
+                    case "customer" -> appointmentRepository.findByMemberIdAndVisits_Pet_Customer_Id(AutorisationUtils.getCurrentUserMid(), customerId);
                     default -> throw new IllegalArgumentException("Unsupported callFrom: " + callFrom);
                 };
 
@@ -205,7 +216,7 @@ public class VisitController {
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("url", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
+                .addAttribute("costingSearchUrl", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyseItems", analyseItems)
                 .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())
@@ -218,7 +229,21 @@ public class VisitController {
         return "consult-module/visit/action";
     }
 
+
     public record CreateVisitForm(List<AppointmentVisitService.CreatePet> formPet, Appointment appointment) {
+    }
+
+    private void updateVisit(Visit visit, Visit visitForm) {
+        visit.setPurpose(visitForm.getPurpose());
+
+        visit.setVeterinarian(visitForm.getVeterinarian());
+        visit.setRoom(visitForm.getRoom());
+        visit.setSentToInsurance(visitForm.getSentToInsurance());
+
+        visit.setWeight(visitForm.getWeight());
+        visit.setTemperature(visitForm.getTemperature());
+        visit.setGlucose(visitForm.getGlucose());
+        visit.setComments(visitForm.getComments());
     }
 
     private static boolean getHtmxAndAddToModel(HttpServletRequest request, Model model) {

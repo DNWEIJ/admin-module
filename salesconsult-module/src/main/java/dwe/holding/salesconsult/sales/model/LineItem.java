@@ -29,5 +29,4 @@ public class LineItem extends CostCalc {
     private Pet pet;
 
     private boolean hasPrintLabel;
-
 }

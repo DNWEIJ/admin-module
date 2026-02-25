@@ -65,10 +65,17 @@ public class CustomerService {
             String address1,
             String address2,
             String address3,
+            String street,
+            String streetNumber,
+            String city,
+            String zipCode,
             Long memberId,
             CustomerStatusEnum status,
             List<Pet> pets
     ) {
+        public String formattedHtmlAddress(){
+            return dwe.holding.customer.client.model.Customer.formattedHtmlAddress(street, streetNumber, zipCode, city);
+        }
     }
 
     public record Pet(
@@ -88,5 +95,30 @@ public class CustomerService {
             String insuredBy,
             LocalDate chipDate,
             String chipTattooId) {
+        public boolean hasAllergies() {
+            return allergies.booleanValue();
+        }
+
+        public boolean isDangerous() {
+            return gpwarning.booleanValue();
+        }
+
+        public boolean isInsured() {
+            return insured.booleanValue();
+        }
+
+        public String getWarningInfo() {
+            StringBuilder warning = new StringBuilder();
+            if (insured.equals(YesNoEnum.Yes)) {
+                warning.append("I: ").append(insuredBy).append('\n');
+            }
+            if (gpwarning.equals(YesNoEnum.Yes)) {
+                warning.append("D: ").append(gpwarningDescription).append('\n');
+            }
+            if (allergies.equals(YesNoEnum.Yes)) {
+                warning.append("A: ").append(allergiesDescription).append('\n');
+            }
+            return warning.toString();
+        }
     }
 }

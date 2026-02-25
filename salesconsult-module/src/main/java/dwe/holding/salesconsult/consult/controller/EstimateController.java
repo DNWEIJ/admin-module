@@ -39,7 +39,7 @@ public class EstimateController {
     String showEstimateListForCustomer(@PathVariable Long customerId, Model model) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         model
-                .addAttribute("pets", customer.pets().stream().collect(Collectors.toMap(p -> p.id(), p -> p.deceased() ? p.name() + " &dagger;" : p.name())))
+                .addAttribute("pets", customer.pets().stream().collect(Collectors.toMap(CustomerService.Pet::id, p -> p.deceased() ? p.name() + " &dagger;" : p.name())))
                 .addAttribute("activeMenu", "estimates")
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
                 .addAttribute("estimates", estimateService.listEstimatesForCustomerPets(
@@ -60,7 +60,7 @@ public class EstimateController {
     }
 
     @PostMapping("/customer/{customerId}/estimate")
-    String selectedPetsShowEstimate(@PathVariable Long customerId, PetsForm petsForm, Model model) {
+    String selectedPetsShowEstimate(@PathVariable Long customerId, PetsForm petsForm) {
         List<AppointmentVisitService.CreatePet> pets = petsForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked()).toList();
 
         Estimate estimate = estimateService.createEstimate(pets, customerId);
@@ -79,6 +79,7 @@ public class EstimateController {
         )).findFirst().orElseThrow();
 
         model
+                .addAttribute("activeMenu", "estimates")
                 .addAttribute("estimate", estimate)
                 .addAttribute("estimateForPet", estimateForPet)
                 .addAttribute("customer", customer)
@@ -87,7 +88,7 @@ public class EstimateController {
                 )
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
-                .addAttribute("url", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
+                .addAttribute("costingSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
                 .addAttribute("salesType", SalesType.ESTIMATE);
         ModelHelper.updateLineItemsInModel(model, estimateService.saveEstimateLineItems(estimate.getEstimatelineitems()));
         return "consult-module/estimate/estimateforpet";

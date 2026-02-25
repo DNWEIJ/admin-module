@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping(path = "/supplies")
+@RequestMapping("/supplies")
 @Slf4j
 @AllArgsConstructor
 public class ReminderController {
@@ -35,7 +35,10 @@ public class ReminderController {
     @GetMapping("/customer/{customerId}/reminders")
     String list(@PathVariable Long customerId, Model model) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        model.addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customer.id()));
+        model
+                .addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customer.id()))
+                .addAttribute("activeMenu", "reminders")
+        ;
         return "supplies-module/reminder/list";
     }
 
@@ -84,7 +87,6 @@ public class ReminderController {
     void setModel(Model model, CustomerService.Customer customer) {
         model
                 .addAttribute("reminders", reminderRepository.findByPet_Customer_IdOrderByDueDateDesc(customer.id()))
-
                 .addAttribute("petsList", petRepository.findByCustomer_IdOrderByDeceasedAsc(customer.id())
                         .stream().map(pet -> new PresentationElement(pet.getId(), pet.getNameWithDeceased(), true)).toList()
                 )

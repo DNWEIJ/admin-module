@@ -15,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class HtmxNoteController {
     private final NoteController noteController;

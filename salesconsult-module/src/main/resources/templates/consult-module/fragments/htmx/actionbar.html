@@ -1,6 +1,7 @@
 <style>
     .threecolumn-spread {
         grid-template-columns: 10fr 17fr 10fr;
+        padding-bottom: .5rem;
     }
 
     .column-wrapper {
@@ -24,7 +25,7 @@
         right: 0;
         padding-left: 0.1rem;
         padding-right: 0.1rem;
-
+        padding-top: 0.8rem;
         background: var(--pico-background-color);
         border: 1px solid;
         border-radius: var(--pico-border-radius);
@@ -41,6 +42,11 @@
                 opacity 400ms ease-out,
                 transform 400ms ease-out,
                 visibility 0ms linear 200ms;
+    }
+
+    .column-content .grid {
+        display: grid;
+        align-items: start;
     }
 
     .column-wrapper:hover .column-header {
@@ -62,23 +68,24 @@
 </style>
 <div class="threecolumn-spread">
     <div class="column-wrapper one">
-        <div class="column-header">Actions</div>
+        <div class="column-header" th:text="#{label.actionbar.visit.actions}">Actions</div>
         <div class="column-content">
             <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitStatusButtons}"/>
             <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitReactivateButtons}"/>
         </div>
     </div>
     <div class="column-wrapper two">
-        <div class="column-header">Status</div>
+        <div class="column-header" th:text="#{label.actionbar.visit.status}">Visit Status</div>
         <div class="column-content">
             <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::openVisitStatus}"/>
             <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::closedVisitStatus}"/>
         </div>
     </div>
     <div class="column-wrapper three">
-        <div class="column-header">Print</div>
+        <div class="column-header" th:text="#{label.actionbar.visit.print}">Print</div>
         <div class="column-content">
             <th:block th:insert="~{sales-module/fragments/htmx/printing}"/>
         </div>
     </div>
 </div>
+<hr/>

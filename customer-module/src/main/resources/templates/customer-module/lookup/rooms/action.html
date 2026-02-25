@@ -7,14 +7,13 @@
     <div th:replace="~{customer-module/fragments/lookup/links}"></div>
     <th:block
             th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${room.id}, #{label.title.room},'/customer/lookup/rooms','')}"></th:block>
-
     <form id="createForm" th:action="@{/customer/lookup/room}" method="post">
-
         <input id="id" name="id" th:value="${room.id}" type="hidden"/>
         <input id="version" name="version" th:value="${room.version}" type="hidden"/>
-
         <fieldset class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('room','label.room.room','room.room','1')}"></th:block>
+            <th:block th:if="${room.id == null}" th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"></th:block>
+            <input th:if="${room.id != null}" type="hidden" name="localMemberId" th:value="${room.localMemberId}"/>
         </fieldset>
     </form>
     <th:block th:insert="~{fragments/elements/audit::audit('room.addedBy','room.addedOn', 'room.lastEditedBy', 'room.lastEditedOn')}"></th:block>

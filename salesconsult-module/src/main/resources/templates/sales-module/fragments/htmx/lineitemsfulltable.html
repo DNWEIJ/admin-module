@@ -1,4 +1,4 @@
-<table id="lineItemsTable" class="no-sorting table-tight striped">
+<table id="lineItemsTable" class="no-sorting  striped">
     <thead>
     <tr>
         <th></th>
@@ -9,22 +9,17 @@
         <th class="right" th:text="#{label.otc.sell.amount}"></th>
         <th class="desktop-only right" th:text="#{label.otc.sell.taxed}"></th>
         <th class="right" th:text="#{label.otc.sell.total}"></th>
-        <th class="center">
-            <svg class="svg-icon">
-                <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
-            </svg>
-        </th>
+        <th title="print" class="center emoji-icon">🖨️</th>
     </tr>
     </thead>
     <tbody>
+    <th:block th:if="${#lists.size(lineItems) == 0}">
+        <tr><td colspan="9" class="center"><th:block th:text="#{label.not-found}"></th:block></td></tr>
+    </th:block>
     <th:block th:each="lineitem : ${lineItems}">
         <tr>
             <td class="center">
-                <a href="" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${url+lineitem.id}" hx-target="#lineItemsTable">
-                    <svg class="svg-icon">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
-                    </svg>
-                </a>
+                <a href="" class="emoji-icon"  title="delete" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${url} + ${lineitem.id}" hx-target="#lineItemsTable">🗑️</a>
             </td>
             <td th:text="${lineitem.nomenclature}"></td>
             <td th:text="${categoryNames.get(lineitem.categoryId)}" class="desktop-only"></td>
@@ -34,19 +29,7 @@
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.taxPortionOfProduct + lineitem.taxPortionOfProcessingFeeService}, true)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.totalIncTax},false)}"></th:block>
             <td class="center">
-                <a class="desktop-only center-align-svg" th:if="${lineitem.hasPrintLabel}" href="/todo/printLabel?id=${lineitem.id}">
-                    <svg class="svg-icon">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
-                    </svg>
-                </a>
-            </td>
-        </tr>
-    </th:block>
-
-    <th:block th:if="${#lists.size(lineItems) == 0}">
-        <tr>
-            <td colspan="9" class="center">
-                <th:block th:text="#{label.not-found}"></th:block>
+                <a class="desktop-only emoji-icon" title="print" th:if="${lineitem.hasPrintLabel}" href="/todo/printLabel?id=${lineitem.id}">🖨️</a>
             </td>
         </tr>
     </th:block>

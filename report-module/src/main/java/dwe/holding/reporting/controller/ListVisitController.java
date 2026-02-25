@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/report")
+@RequestMapping("/report")
 @Slf4j
 public class ListVisitController {
 

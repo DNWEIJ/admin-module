@@ -1,15 +1,81 @@
-/* ***************************************** */
-/** pico specific scaling issues for an app **/
-/* ***************************************** */
-/** Pending on the size of the screen, the will be overwritten in the @media queries */
-.desktop-only {
+/****************************************************/
+/**  Ability to hide column pending on screen size **/
+/****************************************************/
+/* MOBILE FIRST */
+
+/* Always hide desktop-only and tablet-only initially */
+td.desktop-only, th.desktop-only, td.tablet-only, th.tablet-only {
     display: none;
 }
 
-.mobile-only {
+div.desktop-only, div.tablet-only, div.desktop-tablet-only {
+    display: none
+}
+
+/* Mobile-only visible by default */
+td.mobile-only,
+th.mobile-only {
     display: table-cell;
 }
 
+div.mobile-only {
+    display: block
+}
+
+/* TABLET: ≥ 600px and < 900px */
+@media (min-width: 600px) and (max-width: 899px) {
+    /* Tablet-only column visible */
+    td.tablet-only,
+    th.tablet-only {
+        display: table-cell;
+    }
+
+    div.tablet-only, div.desktop-tablet-only {
+        display: block
+    }
+
+    /* Hide mobile-only and desktop-only */
+    td.mobile-only,
+    th.mobile-only,
+    td.desktop-only,
+    th.desktop-only {
+        display: none;
+    }
+
+    div.mobile-only, div.desktop-only {
+        display: none
+    }
+}
+
+/* DESKTOP: ≥ 900px */
+@media (min-width: 900px) {
+    /* Desktop-only column visible */
+    td.desktop-only,
+    th.desktop-only {
+        display: table-cell;
+    }
+
+    div.desktop-tablet-only, div.desktop-only {
+        display: block
+    }
+
+    /* Hide tablet-only and mobile-only */
+    td.tablet-only,
+    th.tablet-only,
+    td.mobile-only,
+    th.mobile-only {
+        display: none;
+    }
+
+    div.mobile-only, div.tablet-only {
+        display: none
+    }
+}
+
+
+/* ***************************************** */
+/** pico specific scaling issues for an app **/
+/* ***************************************** */
 :root {
     --pico-button-padding: 0.35rem 0.2rem;
     --pico-typography-spacing-vertical: .5rem;
@@ -47,14 +113,6 @@
     :root {
         --pico-font-size: 77.5%;
         /* Original: 112.5% */
-    }
-
-    .desktop-only {
-        display: table-cell;
-    }
-
-    .mobile-only {
-        display: none;
     }
 }
 
@@ -104,6 +162,57 @@ article > footer {
     /* Original: var(--pico-border-radius) */
 }
 
+
+input[type="checkbox"][role="switch"] {
+    margin-bottom: .2rem;
+}
+
+fieldset {
+    border: 1px solid var(--pico-primary);
+    border-radius: var(--pico-border-radius);
+    padding: 1rem .2rem 1.2rem;
+}
+
+fieldset legend {
+    font-size: 1.2rem;
+    font-weight: bold;
+    white-space: nowrap;
+    background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);
+}
+
+
+details {
+    margin: 0;
+    margin-bottom: .5rem;
+    background-color: #fafafa;
+    border: 1px solid var(--pico-primary);
+    border-radius: var(--pico-border-radius);
+}
+
+details summary {
+    font-size: 1.2rem;
+    font-weight: bold;
+    position: relative; /* needed for absolute positioning inside */
+    margin: 0;
+    text-align: center; /* keeps text centered */
+    background-color: color-mix(in srgb, var(--pico-primary-background) 5%, white);
+    line-height: 2rem;
+    border-radius: var(--pico-border-radius);
+    cursor: pointer;
+}
+
+td {
+    white-space: nowrap;
+}
+
+dialog article header {
+    line-height: 2.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--pico-color);
+    background-color: var(--pico-primary-focus);
+}
+
 /* STYLING FOR SPECIFIC Elements OF THIS APP */
 .hidden {
     display: none;
@@ -112,7 +221,84 @@ article > footer {
 .grid {
     padding-left: var(--pico-grid-column-gap);
     padding-right: var(--pico-grid-column-gap);
+    align-items: end; /* due to htmllift, we want to align at the bottom, not in the center */
 }
+
+/* Flexible row using Flexbox for dynamic columns */
+/* Container for a flexible row */
+.grid-row {
+    display: flex;
+    flex-wrap: wrap; /* allows multiple columns to wrap */
+    gap: 0.5rem; /* spacing between items */
+    align-items: end;
+    margin-left: var(--pico-grid-column-gap);
+    margin-right: var(--pico-grid-column-gap);
+}
+
+.grid-row > .align-center {
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* All direct children are flex items filling available space */
+.grid-row > * {
+    flex: 1 1 0; /* default: equal width columns */
+    min-width: 0; /* allows shrinking */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+/* Smaller columns */
+.grid-row > *.small {
+    flex: 0.5 1 0; /* roughly half width relative to normal items */
+}
+
+.grid-row > *.smaller {
+    flex: 0.4 1 0;
+}
+
+.grid-row > *.verysmall {
+    flex: 0.2 1 0;
+}
+
+.grid-row > *.supersmall {
+    flex: 0.05 1 0;
+}
+
+/* Make inputs/selects/textarea fill the column */
+.grid-row input,
+.grid-row select,
+.grid-row textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 600px) {
+    .grid-row > * {
+        flex: 1 1 100%;
+    }
+
+    .grid-row > *.small {
+        flex: 1 1 100%;
+    }
+
+    .grid-row > *.smaller {
+        flex: 1 1 100%;
+    }
+
+    .grid-row > *.verysmall {
+        flex: 1 1 100%;
+    }
+
+}
+
 
 /** big modal **/
 dialog.modal-xlg > article {
@@ -145,6 +331,10 @@ dialog.modal-xlg > article > footer {
     cursor: default;
 }
 
+[data-tooltip]::before {
+    width: max-content;
+    white-space: preserve-breaks;
+}
 .checkbox-group {
     display: flex;
     flex-direction: row;
@@ -250,7 +440,6 @@ dialog.modal-xlg > article > footer {
     overflow-y: auto;
 }
 
-
 .table-tight {
     width: 100%;
     margin-top: .5rem;
@@ -296,13 +485,12 @@ tbody tr.red-text td {
 .table-tight .center {
     text-align: center;
 }
+
 .table-tight .nowrap {
     white-space: nowrap;
 }
 
-
 /**** text alingment ****/
-
 .text-align-center {
     text-align: center;
 }
@@ -321,9 +509,11 @@ tbody tr.red-text td {
 .four-cols {
     grid-template-columns: repeat(4, 1fr);
 }
+
 .span-2 {
     grid-column: span 2;
 }
+
 @media (max-width: 480px) {
     .four-cols {
         grid-template-columns: 1fr;
@@ -421,22 +611,25 @@ tbody tr.red-text td {
 
 .field {
     position: relative;
+    margin-bottom: calc(var(--pico-spacing) * .375); /* from pico */
+    margin-top: .5rem;
 }
 
 /* Input */
 .field input {
-   transition: border-color var(--transition), box-shadow var(--transition);
+    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .field input:focus {
     box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.08);
 }
 
-
+/* location within the input field */
 .field label {
     position: absolute;
-    left: .2rem;
-    top: .4rem; /* startpositie = midden van input */
+    left: .4rem;
+    top: 30%;
+    transform: translateY(-35%);
     pointer-events: none;
     transition: all var(--transition);
     font-style: italic;
@@ -444,6 +637,7 @@ tbody tr.red-text td {
     padding: 0 .4rem;
     font-weight: bold;
 }
+
 /* any label should be the same as this one */
 label {
     color: var(--pico-primary-underline);
@@ -454,18 +648,23 @@ label {
 /* input field: place the label on top */
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
-    top: -.9rem;
-    left: .2rem;
+    left: .4rem;
+    top: -1.0rem; /* keep inside container */
+    transform: translateY(-10%);
+    transform-origin: left top;
+    background: var(--pico-background-color);
+    padding: 0 .4rem;
+
     font-weight: bold;
     color: var(--pico-primary-underline);
     background: var(--pico-background-color);
     border: 1px solid var(--pico-form-element-border-color);
-    border-bottom:none;
+    border-bottom: none;
     border-radius: var(--pico-border-radius);
     z-index: 100;
 }
-/* select field: to align with an input in a grid */
 
+/* select field: to align with an input in a grid */
 
 
 /***********************************************/
@@ -473,12 +672,12 @@ label {
 /***********************************************/
 
 /* picocss reset */
- .tabs input[type=radio] ~ label {
-     margin: 0;
-     padding: 1rem !important;
-     border: 1px solid color-mix(in srgb, var(--pico-primary-background) 15%, white);
-     border-bottom: 0;
- }
+.tabs input[type=radio] ~ label {
+    margin: 0;
+    padding: 1rem !important;
+    border: 1px solid color-mix(in srgb, var(--pico-primary-background) 15%, white);
+    border-bottom: 0;
+}
 
 .tabs input[type=radio] {
     display: none;
@@ -499,7 +698,7 @@ label {
 .tabs input:checked + label {
     font-weight: bold;
     white-space: nowrap;
-    background:  color-mix(in srgb, var(--pico-primary-background) 15%, white);
+    background: color-mix(in srgb, var(--pico-primary-background) 15%, white);
 }
 
 /* Container for panels */
@@ -534,10 +733,8 @@ label {
 .tabs .panels .panel .field {
     padding-bottom: 1rem;
 }
-/****************?
 
-
-
+/****************/
 .svg-header-icon {
     fill: currentColor;
     color: #aaa;
@@ -573,8 +770,10 @@ label {
     justify-content: center; /* horizontal */
 }
 
+
 .input-height-as-input-field {
-    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+    white-space: nowrap;
+    height: calc(1.1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
 }
 
 
@@ -665,56 +864,18 @@ tr.highlighted td {
 /****************************************/
 /******* Genric HTML definitions ********/
 /****************************************/
-
-input[type="checkbox"][role="switch"] {
-    margin-bottom: .2rem;
-}
-
-fieldset {
-    border: 1px solid var(--pico-primary);
-    border-radius: var(--pico-border-radius);
-    padding: 1rem .2rem 1.2rem;
-}
-
-fieldset legend {
-    font-size: 1.2rem;
-    font-weight: bold;
-    white-space: nowrap;
-    background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);
-}
-
-
-details {
-    margin: 0;
-    margin-bottom: .5rem;
-    background-color: #fafafa;
-    border: 1px solid var(--pico-primary);
-    border-radius: var(--pico-border-radius);
-}
-
-details summary {
-    font-size: 1.2rem;
-    font-weight: bold;
-    position: relative; /* needed for absolute positioning inside */
-    margin: 0;
-    text-align: center; /* keeps text centered */
-    background-color: color-mix(in srgb, var(--pico-primary-background) 15%, white);
-    line-height: 2rem;
-    border-radius: var(--pico-border-radius);
-    cursor: pointer;
-}
-
-details summary a.info-icon {
+details summary a.emoji-icon {
     position: absolute;
     right: 2.5rem;
     top: 50%;
     transform: translateY(-50%);
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
-.info-icon {
+.emoji-icon {
     text-decoration: none;
+    font-size: 1.4rem;
 }
 
 .three-elements {
@@ -734,7 +895,6 @@ details summary a.info-icon {
     font-size: 1.2em;
 }
 
-
 /* create fixed input field for smaller inputs that really do not need space, like nr below 100 */
 .small-input {
     width: 5rem;
@@ -743,8 +903,6 @@ details summary a.info-icon {
 .medium-input {
     width: 8rem;
 }
-
-
 
 /********************************************/
 /** PicoCSS alerting message                */
@@ -806,7 +964,6 @@ details summary a.info-icon {
 }
 
 
-
 [data-theme=light],
 :root:not([data-theme="dark"]) {
     --pico-table-row-stripped-background-color: rgba(111, 120, 135, 0.05);
@@ -820,4 +977,45 @@ details summary a.info-icon {
     body {
         color-scheme: dark;
     }
+}
+
+/*****************************************/
+/*****************************************/
+/**           ANIMATIONS                **/
+/*****************************************/
+/*****************************************/
+.pulse {
+    animation: pulseGlow 1s ease-in-out 2;
+}
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        font-size: 1rem;
+        text-shadow: none;
+    }
+    50% {
+        transform: scale(1.02); /* slightly less scale to balance font growth */
+        font-size: 1.1rem;      /* font grows */
+        text-shadow: 0 0 40px orange;
+    }
+    100% {
+        transform: scale(1);
+        font-size: 1rem;
+        text-shadow: none;
+    }
+}
+
+
+.wiggle {
+    display: inline-block;
+    animation: wiggle 0.6s ease-in-out 6;
+}
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(-15deg); }
+    30% { transform: rotate(15deg); }
+    45% { transform: rotate(-10deg); }
+    60% { transform: rotate(10deg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
 }

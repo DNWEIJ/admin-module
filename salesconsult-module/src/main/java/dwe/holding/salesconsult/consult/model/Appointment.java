@@ -67,24 +67,24 @@ public class Appointment extends TenantBaseBO {
     @Builder.Default
     private Set<Diagnose> diagnoses = new HashSet<>(0);
 
-    @Transient
     public boolean isCancelled() {
         return cancelled.equals(YesNoEnum.Yes);
     }
 
-    @Transient
     public boolean isCompleted() {
         return completed.equals(YesNoEnum.Yes);
     }
 
-    @Transient
     public boolean isPickedUp() {
         return pickedUp.equals(YesNoEnum.Yes);
     }
 
-    @Transient
     public boolean isOTC() {
         return OTC.equals(YesNoEnum.Yes);
+    }
+
+    public boolean hasLineItemsForPet(Long petId) {
+        return lineItems.stream().anyMatch(li -> li.getPet().getId().equals(petId));
     }
 
     @Transient

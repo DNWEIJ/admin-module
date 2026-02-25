@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @AllArgsConstructor
 @SessionAttributes("lineItems")
 public class PriceSellController {
-    public static final String SALES_PRICE_SELL = "/sales/price/sell/";
+    public static final String SALES_PRICE_SELL = "/sales/price/sell";
     private final LineItemService lineItemService;
     private final CostingService costingService;
     private final Appointment appointment = Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build();
@@ -68,7 +68,7 @@ public class PriceSellController {
         ModelHelper.updateLineItemsInModel(model, lineItems);
         model
                 .addAttribute("categoryNames", costingService.getCategories())
-                .addAttribute("url", SALES_PRICE_SELL)
+                .addAttribute("costingSearchUrl", SALES_PRICE_SELL)
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)
                 .addAttribute("salesType", SalesType.PRICE_INFO);

@@ -43,7 +43,6 @@ public class Visit extends MemberBaseBO {
     private String purpose;
 
     @NotNull
-    @Column(nullable = false)
     private String room;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
@@ -57,6 +56,16 @@ public class Visit extends MemberBaseBO {
     @Column(nullable = false)
     private Integer estimatedTimeInMinutes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum sentToInsurance;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Pet pet;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Appointment appointment;
+
     // TODO move to invoice handling
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = InvoiceStatusConverter.class)
@@ -67,15 +76,6 @@ public class Visit extends MemberBaseBO {
     private LocalDate reminderSendDate2;
     private LocalDate reminderSendDate3;
 
-    @Column(columnDefinition = "varchar(1)", nullable = false)
-    @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum sentToInsurance;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Pet pet;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Appointment appointment;
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "visit")
     @Builder.Default

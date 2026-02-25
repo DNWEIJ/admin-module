@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 
@@ -24,13 +25,19 @@ public class FinancialService implements FinancialServiceInterface {
     }
 
     public BigDecimal getCustomerBalance(Long customerId) {
-
-        BigDecimal amountPaid = paymentRepository.getSumAmountOfPayment(customerId, AutorisationUtils.getCurrentUserMid());
-        BigDecimal amountOutStanding = lineItemRepository.getSumAmountOfLineItem(customerId, AutorisationUtils.getCurrentUserMid());
+        BigDecimal amountPaid = paymentRepository.getSumAmountOfPayment(customerId, AutorisationUtils.getCurrentUserMid())
+                .setScale(6, RoundingMode.HALF_UP);
+        BigDecimal amountOutStanding = lineItemRepository.getSumAmountOfLineItem(customerId, AutorisationUtils.getCurrentUserMid())
+                .setScale(6, RoundingMode.HALF_UP);
         return amountPaid.subtract(amountOutStanding);
     }
 
     public LocalDate getLastestPaymentDate(Long customerId) {
-        return paymentRepository.getLatestPaymentDate(customerId, AutorisationUtils.getCurrentUserMid());
+        return paymentRepository.findMaxPaymentDate(AutorisationUtils.getCurrentUserMid(),customerId).getPaymentDate();
+    }
+
+    @Override
+    public BigDecimal getLastestPaymentAmount(Long customerId) {
+        return BigDecimal.valueOf(paymentRepository.findMaxPaymentDate(AutorisationUtils.getCurrentUserMid(),customerId).getAmount());
     }
 }

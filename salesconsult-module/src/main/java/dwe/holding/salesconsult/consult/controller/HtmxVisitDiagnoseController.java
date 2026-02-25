@@ -21,7 +21,7 @@ import static dwe.holding.salesconsult.sales.controller.ModelHelper.*;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class HtmxVisitDiagnoseController {
     private final LookupDiagnosesRepository lookupDiagnosesRepository;

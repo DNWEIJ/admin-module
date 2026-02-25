@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @Slf4j
 // TODO: Move to admin module or shared-module? This isn't customer...
 public class LookupRoomController {
@@ -26,15 +26,21 @@ public class LookupRoomController {
 
     @GetMapping("lookup/rooms")
     String list(Model model) {
-        model.addAttribute("rooms", lookupRoomRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid()));
-        model.addAttribute("activeMenu", "room");
+        model
+                .addAttribute("rooms", lookupRoomRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid()))
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
+                .addAttribute("activeMenu", "room")
+        ;
         return "customer-module/lookup/rooms/list";
     }
 
     @GetMapping("lookup/room")
     String newRecord(Model model) {
-        model.addAttribute("room", new LookupRoom());
-        model.addAttribute("activeMenu", "room");
+        model
+                .addAttribute("room", new LookupRoom())
+                .addAttribute("activeMenu", "room")
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
+        ;
         return "customer-module/lookup/rooms/action";
     }
 
@@ -54,6 +60,7 @@ public class LookupRoomController {
             lookupRoomRepository.save(
                     LookupRoom.builder()
                             .room(formRoom.getRoom())
+                            .localMemberId(formRoom.getLocalMemberId())
                             .build()
             );
         } else {

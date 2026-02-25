@@ -14,4 +14,9 @@ public class FinancialService implements FinancialServiceInterface {
     public LocalDate getLastestPaymentDate(Long customerId) {
         return null;
     }
+
+    @Override
+    public BigDecimal getLastestPaymentAmount(Long id) {
+        return null;
+    }
 }

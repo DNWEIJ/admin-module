@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Factuur</title>
+
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            width: 800px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .invoice-title {
+            text-align: right;
+            font-size: 26px;
+            color: #999;
+        }
+
+        .address {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 6px;
+        }
+
+        th {
+            border-bottom: 1px solid #000;
+            text-align: left;
+        }
+
+        .right { text-align:right; }
+        .center { text-align:center; }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .totals {
+            width: 300px;
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    Sterkliniek dierenartsen Amsterdam
+</div>
+
+<div class="invoice-title">FACTUUR</div>
+
+<div class="address">
+    <strong>Factuur voor:</strong><br>
+    ${FirstLastName}<br>
+    ${customer_ADDRESS1}<br>
+    ${customer_ADDRESS2}<br>
+    ${customer_ADDRESS3}
+</div>
+
+<div style="margin-top:20px;">
+    <b>Bezoek datum / behandelend Arts:</b>
+    ${Appointment_VISITDATE} — ${Visit_VETERINARIAN}
+</div>
+
+<div class="section-title">Huisdier Gegevens</div>
+
+<table>
+    <tr>
+        <th>Naam</th>
+        <th>Soort / Ras</th>
+        <th>Chip/Tattoo ID</th>
+        <th>Geslacht</th>
+        <th>Leeftijd</th>
+        <th>Gewicht</th>
+    </tr>
+    <tr>
+        <td>${Patient_PETNAME}</td>
+        <td>${Patient_SPECIES} / ${Patient_BREED}</td>
+        <td class="center">${Patient_CHIPTATTOOID}</td>
+        <td class="center">${Patient_SEX}</td>
+        <td>${Patient_BIRTHDAY}</td>
+        <td class="right">${Visit_WEIGHT}</td>
+    </tr>
+</table>
+
+<div class="section-title">Producten/Diensten</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Beschrijving</th>
+        <th class="center">Aantal</th>
+        <th class="right">Regel Totaal incl. BTW</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <!-- DETAIL BAND REPEATS -->
+    <tr>
+        <td>${LineItem_NOMENCLATURE}</td>
+        <td class="center">${LineItem_QUANTITY}</td>
+        <td class="right">€ ${LineItem_TOTAL}</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="totals">
+    <table>
+        <tr>
+            <td>Totaal BTW Laag:</td>
+            <td class="right">€ ${sumBTW_6}</td>
+        </tr>
+        <tr>
+            <td>Totaal BTW Hoog:</td>
+            <td class="right">€ ${sumBTW_19}</td>
+        </tr>
+        <tr>
+            <td><b>Factuur Totaal:</b></td>
+            <td class="right"><b>€ ${sumAmount}</b></td>
+        </tr>
+    </table>
+</div>
+
+<div style="clear:both;"></div>
+
+<div class="footer">
+    Gaarne betalen binnen 14 dagen onder vermelding van het factuurkenmerk.<br><br>
+
+    ${thau_MemberLocal_CLINIC} -
+    ${thau_MemberLocal_ADDRESS1} -
+    ${thau_MemberLocal_ADDRESS2} -
+    ${thau_MemberLocal_PHONE1}
+    <br><br>
+
+    IBAN: NL12ABNA0547810172 —
+    K.v.K: 632.50.046 —
+    BTW: NL1753 03125 B01
+</div>
+
+</body>
+</html>

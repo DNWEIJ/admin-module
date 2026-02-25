@@ -21,7 +21,7 @@ import java.util.Locale;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class HtmxSoapAndHistoryController {
     private final SoapAndHistoryService soapAndHistoryService;
@@ -66,13 +66,13 @@ public class HtmxSoapAndHistoryController {
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/soap")
     String returnSoapModal(@PathVariable Long customerId, @PathVariable Long petId, Model model) {
-        // get all details for petId
-        // validate customer and pet
+       // validate customer and pet
         customerService.searchCustomerAndPet(customerId, petId);
+
         model.addAttribute("appointments", soapAndHistoryService.getSoap(petId));
         model.addAttribute("memberLocals", AutorisationUtils.getLocalMemberMap());
         model.addAttribute("petId", petId);
-        model.addAttribute("petId", petId);
+        model.addAttribute("activeMenu", "pets");
         model.addAttribute("clinic_name", AutorisationUtils.getCurrentLocalMember().getLocalMemberName());
         model.addAttribute("clinic_address", editAddress(AutorisationUtils.getCurrentLocalMember()));
 

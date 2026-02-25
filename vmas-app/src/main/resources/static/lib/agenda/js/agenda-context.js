@@ -1,3 +1,4 @@
+/** holding the context menu (right click functionality ****/
 class AgendaContext {
     constructor(agendaState) {
         this.event = null
@@ -59,7 +60,6 @@ class AgendaContext {
                 e.stopPropagation();
 
                 let resultData = await this.updateAppointmentVisit(event.event.extendedProps.visitId, option)
-                console.log(resultData);
                 if (resultData.length === 1) {
                     agendaState.calendar.updateEvent(resultData[0]);
                 }

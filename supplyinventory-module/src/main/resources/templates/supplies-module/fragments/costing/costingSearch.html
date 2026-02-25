@@ -1,10 +1,11 @@
 <th:block th:fragment="costingSearch(saveButton)">
     <script th:inline="javascript">
         const messageNoCostingSelected = /*[[#{label.costing.search.nocostingselected}]]*/ "";
-        const isPriceInfo =   /*[[${salesType.isPriceInfo ?: false}]]*/ false;
-        const isEstimate =   /*[[${salesType.isEstimate ?: false}]]*/ false;
+        const isPriceInfo = /*[[${salesType.isPriceInfo}]]*/ false;
+        const isEstimate = /*[[${salesType.isEstimate}]]*/ false;
+        const isVisit = /*[[${salesType.isVisit}]]*/ false;
+        const isProduct = /*[[${salesType.isProduct}]]*/ false;
     </script>
-
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector("#costingSearchForm");
@@ -50,7 +51,7 @@
                         selectedFieldDataSet = selectedField.dataset
                     }
                 }
-                if (!isPriceInfo && !isEstimate) {
+                if (isVisit) {
                     // we're already setting the url, since we will lose the selected field test on hx-get being set instead
                     let costingBatchUrlGet = document.getElementById("batchNumberForCosting")
                     costingBatchUrlGet.setAttribute("hx-get", '/costing/costing/' + selectedFieldDataSet.id + '/batchnumbers')
@@ -60,13 +61,18 @@
                 document.getElementById("input-costingName").innerHTML = ""
                 document.getElementById("inputCostingId").value = selectedFieldDataSet.id
 
-                let element = document.getElementById("inputCostingQuantity")
-                element.focus()
-                element.select()
+                if (!isProduct) {
+                    let element = document.getElementById("inputCostingQuantity")
+                    element.focus()
+                    element.select()
+                } else {
+                    htmx.trigger("#costingSearchForm", "submit")
+                    resetForNextItem()
+                }
             }
 
             if (action === "costingAmount") {
-                if (!isPriceInfo && !isEstimate && selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
+                if (isVisit && selectedFieldDataSet !== undefined && selectedFieldDataSet.hasBatch === 'true') {
                     let element = document.getElementById("batchNumberForCosting")
                     let inputElement = document.getElementById("inputBatchNumber")
                     htmx.process(element)
@@ -104,12 +110,12 @@
         }
 
         function resetForNextItem() {
+            console.log('resetForNextItem')
             // global values
             selectedIndex = -1
             selectedFieldDataSet = undefined
 
-            document.getElementById("inputCostingQuantity").value = ''
-            if (!isPriceInfo && !isEstimate) {
+            if (isVisit) {
                 var element = document.getElementById("inputBatchNumber")
                 element.value = ''
                 element.setAttribute("disabled", true)
@@ -118,15 +124,19 @@
                 element.value = ''
                 element.setAttribute("disabled", true)
             }
-            document.getElementById("inputCostingQuantity").value = '1.0'
-            document.getElementById("productsFromCategory").innerHTML = ""
+            if (!isProduct) {
+                document.getElementById("inputCostingQuantity").value = '1.0'
+            }
 
             if (document.getElementById("holder-dropdown").classList.contains("hidden")) {
+                console.log('reset costingFind')
                 element = document.getElementById("costingFind")
                 element.value = ''
                 element.focus()
                 element.select()
             } else {
+                console.log('reset list')
+                document.getElementById("productsFromCategory").innerHTML = ""
                 document.getElementById("categoryList").focus()
                 document.getElementById("categoryList").select()
             }
@@ -158,7 +168,6 @@
                 const listItems = getAllItems()
                 if (listItems.length === 0) {
                     if (event.key === "Enter" || event.key === "Tab") {
-                        alert("start typing to search for a product")
                         event.preventDefault()
                         return
                     }
@@ -189,16 +198,18 @@
                 }
             })
 
-            document.getElementById("inputCostingQuantity").addEventListener("keydown", (event) => {
-                switch (event.key) {
-                    case "Enter":
-                    case "Tab":
-                        executeAction("costingAmount")
-                        event.preventDefault()
-                        break
-                }
-            })
-            if (!isPriceInfo && !isEstimate) {
+            if (!isProduct) {
+                document.getElementById("inputCostingQuantity").addEventListener("keydown", (event) => {
+                    switch (event.key) {
+                        case "Enter":
+                        case "Tab":
+                            executeAction("costingAmount")
+                            event.preventDefault()
+                            break
+                    }
+                })
+            }
+            if (isVisit) {
                 document.getElementById("inputBatchNumber").addEventListener("keydown", (event) => {
                     switch (event.key) {
                         case "Enter":
@@ -229,10 +240,12 @@
                     }
                 })
             }
-            document.getElementById("productsFromCategory").addEventListener("change", function (event) {
-                executeAction("find")
-                event.preventDefault()
-            });
+            if (!isProduct) {
+                document.getElementById("productsFromCategory").addEventListener("change", function (event) {
+                    executeAction("find")
+                    event.preventDefault()
+                });
+            }
         })
     </script>
     <style>
@@ -242,10 +255,9 @@
             justify-self: center; /* horizontal */
         }
     </style>
-    <form id="costingSearchForm" hx-post="" hx-target="#lineItemsTable" hx-swap="outerHTML">
-        <fieldset>
+    <form id="costingSearchForm" th:hx-post="${costingSearchUrl}" hx-target="#lineItemsTable" hx-swap="outerHTML">
+        <div>
             <div class="gridSearchCostingWithCheck">
-
                 <div class="checkbox-group">
                     <label for="useDropDown" th:data-tooltip="#{label.tooltip.costing.usedropdown}" data-placement="right">
                         <input id="useDropDown" role="switch" tabindex="0" type="checkbox" autocomplete="off"
@@ -275,22 +287,39 @@
                 </div>
                 <div id="holder-dropdown" class="hidden">
                     <!-- options will be filled by hx-target -->
-                    <fieldset class="grid">
-                        <div><select name="categoryId" id="categoryList" hx-post="/costing/costing/search/costing/dropdown/found/costing" hx-target="#productsFromCategory"
-                                     hx-swap="innerHTML">
-                        </select>
-                        </div>
-                        <div>
-                            <select tabindex="1" id="productsFromCategory">
-                                <option disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
-                            </select></div>
-                    </fieldset>
+                    <div class="grid">
+                        <th:block th:if="${salesType.isProduct}">
+                            <div>
+                                <select name="categoryId" id="categoryList"
+                                        hx-post="/costing/product/lineitem"
+                                        hx-target="#lineItemsTable"
+                                        hx-swap="outerHTML">
+                                </select>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${!salesType.isProduct}">
+                            <div>
+                                <select name="categoryId" id="categoryList"
+                                        hx-post="/costing/costing/list"
+                                        hx-target="#productsFromCategory"
+                                        hx-swap="innerHTML">
+                                </select>
+                            </div>
+                            <div>
+                                <select tabindex="1" id="productsFromCategory">
+                                    <option disabled readonly selected="true" value="" th:text="#{label.choose}"></option>
+                                </select>
+                            </div>
+                        </th:block>
+                    </div>
                 </div>
                 <div>
                     <input type="hidden" name="inputCostingId" id="inputCostingId"/>
-                    <input id="inputCostingQuantity" tabindex="2" name="inputCostingQuantity" size="2" type="number" value="1.0" autocomplete="off">
+                    <th:block th:if="${!salesType.isProduct}">
+                        <input id="inputCostingQuantity" tabindex="2" name="inputCostingQuantity" size="2" type="number" value="1.0" autocomplete="off">
+                    </th:block>
                 </div>
-                <th:block th:if="${!salesType.isPriceInfo && !salesType.isEstimate}">
+                <th:block th:if="${salesType.isVisit}">
                     <div id="costingBatchNumberContainer">
                         <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
                         <datalist id="batchNumberForCosting"
@@ -313,7 +342,7 @@
                     </div>
                 </th:block>
             </div>
-        </fieldset>
+        </div>
     </form>
     <script>
         document.getElementById('costingFind').addEventListener('htmx:configRequest', function (evt) {
@@ -339,6 +368,5 @@
         }
 
         alternateTextPlaceHolder();
-
     </script>
 </th:block>

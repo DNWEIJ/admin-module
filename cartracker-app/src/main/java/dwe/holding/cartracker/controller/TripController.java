@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 
 @Controller
-@RequestMapping(path = "/cartracker")
+@RequestMapping("/cartracker")
 class TripController {
 
     private final String[] gifies = {

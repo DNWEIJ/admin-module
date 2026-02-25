@@ -1,10 +1,4 @@
-<block th:if="${!salesType.isPriceInfo}">
-    <script th:inline="javascript">
-        document.getElementById('selectPetId').onchange = function () {
-            window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + this.value;
-        }
-    </script>
-</block>
+
 <th:block th:fragment="petDropDownAndButtons(petsOnAppointment, selectedPet, customer,visit, appointment, extraContent, disabled)">
     <div>
         <form method="post">
@@ -22,11 +16,19 @@
     </div>
     <div>
         <input  th:if="${petsOnAppointment.size()>1}"  type="button" th:value="#{label.otc.sell.delete}"
-               hx-include="#csrfParameterName"
                th:attrappend="disabled=${disabled} ? 'disabled' : null"
                th:hx-confirm="#{label.otc.pet.delete.confirm}"
-               th:hx-delete="'/sales/otc/search/'+ ${customer.id}+'/sell/'+ ${appointment.id}+'/' + ${selectedPet.id}"> <!-- returning hx-refresh header -->
-        <input  th:if="${petsOnAppointment.size()<2}"  type="button" th:value="#{label.otc.sell.delete}" style="cursor: not-allowed;"  disabled> <!-- returning hx-refresh header -->
+               th:hx-delete="'/generic/customer/'+ ${customer.id}+'/visit/'+ ${visit.id}+'/pet/' + ${selectedPet.id}">
+        <input  th:if="${petsOnAppointment.size()<2}"  type="button" th:value="#{label.otc.sell.delete}" style="cursor: not-allowed;"  disabled>
     </div>
     <th:block th:replace="${extraContent}"></th:block>
+    <th:block th:if="${!salesType.isPriceInfo()}">
+        <script th:inline="javascript">
+            document.getElementById('selectPetId').onchange = function () {
+                const url = window.location.href.split('?')[0];
+                const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+                window.location.href = baseUrl + this.value + window.location.search;
+            };
+        </script>
+    </th:block>
 </th:block>

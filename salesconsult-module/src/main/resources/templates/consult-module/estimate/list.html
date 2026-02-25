@@ -7,7 +7,7 @@
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.estimate},'/consult/customer/'+ ${customerId}+'/estimate', ${customerInformation})}"></th:block>
     <hr/>
-    <table class="table-tight striped" id="visit-table">
+    <table class=" striped" id="visit-table">
         <thead>
         <tr>
             <th th:text="#{estimate.header.action}"></th>
@@ -21,16 +21,8 @@
         <tbody>
         <tr th:each="estimateForPet : ${estimates}">
             <td>
-                <a href="" th:alt="#{estimate.transfer.print}">
-                    <svg class="svg-icon">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/printer.svg"></use>
-                    </svg>
-                </a>
-                <a th:if="${estimateForPet.canEdit}" href="" th:alt="#{estimate.transfer.alt}">
-                    <svg class="svg-icon">
-                        <use href="/lib/tabler-icons-3_35_0/icons/outline/transfer.svg"></use>
-                    </svg>
-                </a>
+                <a class="emoji-icon" href="/" th:title="#{estimate.transfer.print}">🖨️</a>
+                <a class="emoji-icon" th:if="${estimateForPet.canEdit}" href="" th:title="#{estimate.transfer.alt}">🔀️</a>
             <td>
                 <a th:href="'/consult/customer/'+ ${customerId} + '/estimate/'+ ${estimateForPet.id} + '/'+ ${estimateForPet.petId}" th:utext="${pets.get(estimateForPet.petId)}"></a>
             </td>

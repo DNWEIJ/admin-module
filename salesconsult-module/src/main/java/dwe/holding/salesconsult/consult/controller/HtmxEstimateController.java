@@ -50,7 +50,7 @@ public class HtmxEstimateController {
 
         // save estimate line items
         model
-                .addAttribute("url", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
+                .addAttribute("costingSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
                 .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
                 .addAttribute("categoryNames", costingService.getCategories());
         ModelHelper.updateLineItemsInModel(model, estimateService.getAllLineItems(estimateId, petId));

@@ -1,6 +1,6 @@
 <th:block th:fragment="Soap(appointments)">
     <style>
-        /* BEGIN Remove default triangle; speific for different browsers */
+        /* BEGIN Remove default triangle; specific for different browsers */
         summary::-webkit-details-marker {
             display: none;
         }
@@ -12,8 +12,28 @@
         .visit {
             margin-bottom: 0.5rem;
         }
-
         /* END Remove default triangle; specific for different browsers */
+        details{             border: none;}
+        details > summary {
+            list-style: none;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        /* Remove marker in WebKit (Chrome, Edge, Safari) */
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* Ensure no inherited centering */
+        details.visit > summary,
+        details.lineitem > summary {
+            text-align: left;
+        }
+
+        details > summary {
+            display: block;
+        }
     </style>
     <div class="soap-data">
         <hr/>

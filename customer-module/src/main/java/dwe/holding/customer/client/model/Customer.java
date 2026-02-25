@@ -123,4 +123,14 @@ public class Customer extends MemberBaseBO {
         }
         return phoneList.toString();
     }
+
+    public static String formattedHtmlAddress(String street, String streetNumber, String zipCode, String city) {
+        return street + "&nbsp;" + streetNumber + "<br/>" +
+                zipCode + "&nbsp;&nbsp;" + city + "<br/>";
+
+    }
+
+    public String formattedHtmlAddress() {
+        return formattedHtmlAddress(this.street, this.streetNumber, this.zipCode, this.city);
+    }
 }

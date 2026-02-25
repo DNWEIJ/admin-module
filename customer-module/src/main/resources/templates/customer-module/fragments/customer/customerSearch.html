@@ -28,7 +28,7 @@
             if ('[[${isHtmx}]]' === 'true' && agendaState) {
                 agendaState.handleModalSubmitForPetSelect(getId(getListItems()))
             } else {
-                window.location.href = `${window.location.origin}[[${url}]]` + getId(getListItems());
+                window.location.href = `${window.location.origin}[[${url}]]` + '/' + getId(getListItems());
             }
         }
 
@@ -77,7 +77,7 @@
                     }
                     event.preventDefault();
                 }
-                if (event.key === "Enter") {
+                if ((event.key === "Enter" || event.key === "Tab") && selectedIndex != -1) {
                     submitInfo()
                     event.preventDefault();
                 }
@@ -121,11 +121,10 @@
             <th:block th:insert="~{fragments/elements/select::checkBox('includePet','','form.includePet','0')}"
                       th:with="tooltip=#{label.tooltip.customer.pet}, switch='switch'"></th:block>
         </div>
-        <div role="group">
+        <div>
             <input th:if="${salesType == null}" class="secondary" name="_reset" type="button"
                    th:value="#{label.button.reset}"
                    onclick="window.location.href=window.location.origin + '/customer/customer?isNew=true'"/>
-            <input th:if="${saveButton}" name="_save" type="submit" th:value="#{label.button.save}" form="createForm"/>
         </div>
     </div>
     <script>

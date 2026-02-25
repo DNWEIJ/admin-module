@@ -1,12 +1,14 @@
 <style>
     .table-wrapper {
         overflow-y: auto;
+        border-radius: var(--pico-border-radius);
+        background: var(--pico-background-color);
     }
 
     #appointmentList {
         border-collapse: collapse;
         table-layout: auto; /* columns shrink to fit content */
-        width: 100%;        /* table fills wrapper width */
+        width: 100%; /* table fills wrapper width */
     }
 
     #appointmentList th,
@@ -20,7 +22,7 @@
     #appointmentList th:last-child,
     #appointmentList td:last-child {
         white-space: normal; /* allow wrapping */
-        width: 100%;         /* takes remaining space */
+        width: 100%; /* takes remaining space */
     }
 
     /* sticky header */
@@ -60,40 +62,41 @@
     }
     document.addEventListener('DOMContentLoaded', () => tableShowMax5Lines([[${visit.id}]]))
 </script>
-
-<div id="class-wrapper-list-app" class="table-wrapper">
-    <table id="appointmentList" class="table-tight  striped">
-        <thead>
-        <tr>
-            <th th:text="#{label.consultlist.date}">Date</th>
-            <th th:text="#{label.consultlist.status}">Status</th>
-            <th th:text="#{label.consultlist.owner}">Owner</th>
-            <th th:text="#{label.consultlist.pet}">Pet</th>
-            <th th:text="#{label.consultlist.type}">Type</th>
-            <th th:text="#{label.consultlist.veterinarianRoom}">Veterinarian / Room</th>
-            <th th:text="#{label.consultlist.purpose}">Purpose</th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="app : ${appointmentList}">
-            <th:block th:each="visit : ${app.visits}">
-                <tr th:id="${visit.id}">
-                    <td>
-                        <a th:href="'/consult/visit/customer/'+ ${customerId}+ '/visit/'+ ${visit.id} + '?callFrom=customer'">
+<fieldset>
+    <div id="class-wrapper-list-app" class="table-wrapper">
+        <table id="appointmentList" class="table-tight striped">
+            <thead>
+            <tr>
+                <th th:text="#{label.consultlist.date}">Date</th>
+                <th th:text="#{label.consultlist.status}">Status</th>
+                <th th:text="#{label.consultlist.owner}">Owner</th>
+                <th th:text="#{label.consultlist.pet}">Pet</th>
+                <th th:text="#{label.consultlist.type}">Type</th>
+                <th th:text="#{label.consultlist.veterinarianRoom}">Veterinarian / Room</th>
+                <th th:text="#{label.consultlist.purpose}">Purpose</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="app : ${appointmentList}">
+                <th:block th:each="visit : ${app.visits}">
+                    <tr th:id="${visit.id}">
+                        <td>
+                            <a th:href="'/consult/visit/customer/'+ ${customerId}+ '/visit/'+ ${visit.id} + '?callFrom=customer'">
                         <span th:text="${#temporals.format(app.visitDateTime, 'dd-MM-yyyy HH:mm')}"
                               th:remove="tag"></span>
-                        </a>
-                    </td>
-                    <td th:style="${'background-color:' + visit.backgroundColor + '; color:' + visit.textColor}" th:text="#{__${visit.status.label}__}"></td>
-                    <td th:text="${visit.pet.customer.customerName}"></td>
-                    <td th:text="${visit.pet.name + ' ' + visit.pet.age}"></td>
-                    <td th:text="${visit.pet.species + '/'+visit.pet.breed }"></td>
-                    <td th:text="${visit.veterinarian + '/' + visit.room}"></td>
-                    <td th:text="${visit.purpose}"></td>
-                </tr>
+                            </a>
+                        </td>
+                        <td th:style="${'background-color:' + visit.backgroundColor + '; color:' + visit.textColor}" th:text="#{__${visit.status.label}__}"></td>
+                        <td th:text="${visit.pet.customer.customerName}"></td>
+                        <td th:text="${visit.pet.name + ' ' + visit.pet.age}"></td>
+                        <td th:text="${visit.pet.species + '/'+visit.pet.breed }"></td>
+                        <td th:text="${visit.veterinarian + '/' + visit.room}"></td>
+                        <td th:text="${visit.purpose}"></td>
+                    </tr>
+                </th:block>
             </th:block>
-        </th:block>
-        </tbody>
-        <tfoot></tfoot>
-    </table>
-</div>
+            </tbody>
+
+        </table>
+    </div>
+</fieldset>

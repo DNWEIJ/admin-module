@@ -12,9 +12,12 @@ import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +86,26 @@ public class AppointmentVisitService {
         appointmentRepository.save(appointment);
     }
 
+    @Transactional
+    public Visit deleteLineItemFromVisit(Visit visit, Long lineItemId){
+        Appointment app = visit.getAppointment();
+        app.getLineItems().removeIf(lItem -> lItem.getId().equals(lineItemId));
+        appointmentRepository.save(app);
+        return visit;
+    }
+
+    @Transactional
+    public Visit deletePetFromAppointment(Visit visit, Long petId){
+        Appointment app = visit.getAppointment();
+
+        if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
+            return null;
+        }
+        app.getVisits().removeIf(vist -> vist.getPet().getId().equals(petId));
+        app.getLineItems().removeIf(lineItem -> lineItem.getPet().getId().equals(petId));
+        app = appointmentRepository.save(app);
+        return app.getVisits().iterator().next();
+    }
 
     public record CreatePet(@NotNull Long id, Boolean checked, String purpose, String timeNeeded, String vet, String room) {
         public CreatePet {

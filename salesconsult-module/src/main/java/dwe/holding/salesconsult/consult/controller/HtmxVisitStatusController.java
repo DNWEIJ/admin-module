@@ -25,11 +25,10 @@ import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateVisitS
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class HtmxVisitStatusController {
     private final VisitRepository visitRepository;
-    private final CustomerService customerService;
     private final AppointmentVisitService appointmentVisitService;
     private final AppointmentRepository appointmentRepository;
 
@@ -69,27 +68,33 @@ public class HtmxVisitStatusController {
         Appointment appointment = appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow();
 
         if (visit.isOpen()) {
-            if (action.toLowerCase().equals("cancel")) {
+            if (action.equalsIgnoreCase("cancel")) {
                 visit.getAppointment().setCancelled(YesNoEnum.Yes);
                 visit = visitRepository.save(visit);
             }
-            if (action.toLowerCase().equals("complete")) {
-                boolean okToUpdate = UpdateIfValidationOk(appointment, visitId);
-                if (okToUpdate) visit = visitRepository.save(visit);
+            if (action.equalsIgnoreCase("complete")) {
+                boolean okToUpdate = UpdateIfValidationOk(appointment);
+                if (okToUpdate) {
+                    visit.getAppointment().setCompleted(YesNoEnum.Yes);
+                    visit = visitRepository.save(visit);
+                }
             }
-
         } else {
-            if (action.toLowerCase().equals("reactivate")) {
-                checkAndUpdate(visit);
+            if (action.equalsIgnoreCase("reactivate")) {
+                if (!visit.isOpen()) {
+                    visit.getAppointment().setCancelled(YesNoEnum.No);
+                    visit.getAppointment().setCompleted(YesNoEnum.No);
+                    visit.setStatus(VisitStatusEnum.PAYMENT);
+                    visit = visitRepository.save(visit);
+                }
             }
-            visit = visitRepository.save(visit);
         }
         // TODO on error, set message do not return header onyl message and replace.
         response.setHeader("HX-Trigger", "refreshPage");
         return "fragments/elements/empty";
     }
 
-    boolean UpdateIfValidationOk(Appointment app, Long vistiId) {
+    boolean UpdateIfValidationOk(Appointment app) {
         // app visitstatus should be finished OR not finished without lineItems
         Optional<Visit> found = app.getVisits().stream()
                 .filter(visit -> !visit.getStatus().equals(VisitStatusEnum.FINISHED))
@@ -124,13 +129,4 @@ public class HtmxVisitStatusController {
         response.setHeader("HX-Trigger", "closeModal");
         return "fragments/elements/empty";
     }
-
-    private void checkAndUpdate(Visit visit) {
-        if (!visit.isOpen()) {
-            visit.getAppointment().setCancelled(YesNoEnum.No);
-            visit.getAppointment().setCompleted(YesNoEnum.No);
-            visit.setStatus(VisitStatusEnum.PAYMENT);
-        }
-    }
-
 }

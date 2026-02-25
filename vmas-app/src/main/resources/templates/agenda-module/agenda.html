@@ -70,38 +70,16 @@
             dayMaxEvents: true,
             nowIndicator: true,
             selectable: true,
+            lazyFetching: false,
+            datesAboveResources: false,
+            allDaySlot: false,
             customScrollbars: /Mac/i.test(navigator.userAgent),
+
             headerToolbar: {
                 start: 'prevButton,nextButton,todayButton,dateButton',
                 center: 'backButton otcButton',
                 end: 'locationButton, roomButton, resourceTimeGridWeek, colorsButton'
             },
-            date: /*[[${initialDate}]]*/ '2016-01-01',
-            dateClick: newAppointment,
-            resources: {url: '[[${ulResources}]]', method: 'post', extraParams: getParams},
-            eventSources: [{url: '[[${urlEvents}]]', method: 'post', extraParams: getParams}],
-
-            buttonText: {
-                close: /*[[#{label.agenda.close}]]*/ 'Close',
-                dayGridDay: /*[[#{label.agenda.dayGridDay}]]*/ 'Day',
-                dayGridMonth: /*[[#{label.agenda.dayGridMonth}]]*/ 'Month',
-                dayGridWeek: /*[[#{label.agenda.dayGridWeek}]]*/ 'Week',
-                listDay: /*[[#{label.agenda.listDay}]]*/ 'List',
-                listMonth: /*[[#{label.agenda.listMonth}]]*/ 'List',
-                listWeek: /*[[#{label.agenda.listWeek}]]*/ 'List',
-                listYear: /*[[#{label.agenda.listYear}]]*/ 'List',
-                resourceTimeGridDay: /*[[#{label.agenda.resourceTimeGridDay}]]*/ 'Resources Day',
-                resourceTimeGridWeek: /*[[#{label.agenda.resourceTimeGridWeek}]]*/ 'Resources Week',
-                resourceTimelineDay: /*[[#{label.agenda.resourceTimelineDay}]]*/ 'Timeline',
-                resourceTimelineMonth: /*[[#{label.agenda.resourceTimelineMonth}]]*/ 'Timeline',
-                resourceTimelineWeek: /*[[#{label.agenda.resourceTimelineWeek}]]*/ 'Timeline',
-                timeGridDay: /*[[#{label.agenda.timeGridDay}]]*/ 'Day',
-                timeGridWeek: /*[[#{label.agenda.timeGridWeek}]]*/ 'Week',
-                today: /*[[#{label.agenda.today}]]*/ 'Today'
-            },
-            lazyFetching: false,
-            datesAboveResources: false,
-            allDaySlot: false,
             customButtons: {
                 colorsButton: {
                     text: {html: /*[[${colorModal}]]*/ 'hallo'},
@@ -139,7 +117,34 @@
                     click: todayButtonF
                 }
             },
+            buttonText: {
+                close: /*[[#{label.agenda.close}]]*/ 'Close',
+                dayGridDay: /*[[#{label.agenda.dayGridDay}]]*/ 'Day',
+                dayGridMonth: /*[[#{label.agenda.dayGridMonth}]]*/ 'Month',
+                dayGridWeek: /*[[#{label.agenda.dayGridWeek}]]*/ 'Week',
+                listDay: /*[[#{label.agenda.listDay}]]*/ 'List',
+                listMonth: /*[[#{label.agenda.listMonth}]]*/ 'List',
+                listWeek: /*[[#{label.agenda.listWeek}]]*/ 'List',
+                listYear: /*[[#{label.agenda.listYear}]]*/ 'List',
+                resourceTimeGridDay: /*[[#{label.agenda.resourceTimeGridDay}]]*/ 'Resources Day',
+                resourceTimeGridWeek: /*[[#{label.agenda.resourceTimeGridWeek}]]*/ 'Resources Week',
+                resourceTimelineDay: /*[[#{label.agenda.resourceTimelineDay}]]*/ 'Timeline',
+                resourceTimelineMonth: /*[[#{label.agenda.resourceTimelineMonth}]]*/ 'Timeline',
+                resourceTimelineWeek: /*[[#{label.agenda.resourceTimelineWeek}]]*/ 'Timeline',
+                timeGridDay: /*[[#{label.agenda.timeGridDay}]]*/ 'Day',
+                timeGridWeek: /*[[#{label.agenda.timeGridWeek}]]*/ 'Week',
+                today: /*[[#{label.agenda.today}]]*/ 'Today'
+            },
+
+            date: /*[[${initialDate}]]*/ '2016-01-01',
+            dateClick: newAppointment,
+            select: createEvent,
+            eventDragStop: moveAppointment,
             eventClick: goToConsult,
+
+            resources: {url: [[${ulResources}]], method: 'post', extraParams: getParams},
+            eventSources: [{url: [[${urlEvents}]], method: 'post', extraParams: getParams}],
+
             eventContent: function (info) {
                 return {html: info.event.extendedProps.bodyText}
             },
@@ -150,9 +155,23 @@
                 agendaContext.setEvent(null)
             },
         })
-
-
     agendaState.setCalendar(calendar)
+
+    function createEvent(info) {
+        console.log("creteEvent")
+        console.log(info)
+    }
+    function moveAppointment(info) {
+        console.log("moveAppointment")
+        console.log(info)
+        return false;
+        // cannot be in the past
+        // if (info.date.getTime() < Date.now()) return;
+        // let inputField = document.getElementById('modalCommunication')
+        // inputField.value = info.dateStr
+        // agendaState.setNewAppointment(info)
+        // htmx.trigger(inputField, 'change');
+    }
 
     function newAppointment(info) {
         // cannot be in the past
@@ -184,6 +203,7 @@
         // todo if (otc) go to otc screen
         window.location.href = '/consult/visit/customer/' + info.event.extendedProps.customerId + '/visit/' + info.event.extendedProps.visitId + '?callFrom=agenda'
     }
+
     // called from the modal
     function processData(event) {
         agendaState.processData(event.detail.xhr.responseText)

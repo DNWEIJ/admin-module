@@ -1,7 +1,7 @@
 <th:block th:fragment="petSelect(customer, pets, deceasedPets, salesType, showPetLink)">
     <details id="selectpets" open>
         <summary>
-            <span th:text="#{label.otc.petList}"></span><a href="/info/selectpets" title="More info" class="info-icon">ℹ️</a>
+            <span th:text="#{label.otc.petList}"></span><a href="/info/selectpets" title="More info" class="emoji-icon">ℹ️</a>
         </summary>
         <table id="show-table" class="table-tight striped">
             <thead>
@@ -23,12 +23,15 @@
                                 th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
                     </td>
                     <td th:if="${showPetLink}">
-                        <a href="" th:text="${pet.name} + ' (' + ${pet.species()} + ')'"
+                        <a href=""th:text="${pet.name} + ' (' + ${pet.species()} + ') '"
                            hx-target="#modal-container" hx-swap="innerHTML" th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}">
-
                         </a>
+                        <span th:if="${pet.warningInfo != ''}"   th:data-tooltip="${pet.warningInfo}"  class="emoji-icon wiggle">🚨</span>
                     </td>
-                    <td th:if="${!showPetLink}" th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
+                    <td th:if="${!showPetLink}">
+                        <span th:text="${pet.name} + ' ('+ ${pet.species()} + ')'"></span>
+                        <span th:if="${pet.warningInfo != ''}"   th:data-tooltip="${pet.warningInfo}"  class="emoji-icon wiggle">🚨</span>
+                    </td>
 
                     <td th:if="${salesType.isVisit}">
                         <th:block
@@ -87,8 +90,6 @@
                                     th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${pets.size() + iStat.index} + '].checked','','','1')}"></th:block>
                         </td>
                         <td th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
-
-
                         <td th:if="${salesType.isVisit}">
                             <th:block
                                     th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"
@@ -108,7 +109,7 @@
                         <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
                         <td>
                             <th:block
-                                    th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${pets.size() + iStat.index}+'],reason', '', '', ${reasons}, true,'-1')}"
+                                    th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${pets.size() + iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}"
                                     th:with="required=false"></th:block>
                         </td>
                         <td>

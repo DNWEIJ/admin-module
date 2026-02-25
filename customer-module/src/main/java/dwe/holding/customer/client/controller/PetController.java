@@ -1,6 +1,7 @@
 package dwe.holding.customer.client.controller;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import dwe.holding.admin.util.ControllerHelper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.lookup.LookupBreeds;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 import static java.util.Comparator.comparing;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @Slf4j
 @AllArgsConstructor
 public class PetController {
@@ -49,18 +50,19 @@ public class PetController {
     @GetMapping("/customer/{customerId}/pet")
     String setupForNewRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect, HttpServletRequest request) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
 
         // on error, we have a form
         if (model.containsAttribute("petForm")) {
             setModel(model, customer.getId(), (Pet) model.getAttribute("petForm"));
-            return getHtmxAndAddToModel(request, model) ? "admin-module/modal/error" : "customer-module/pet/action";
+            return  isHtmx ? "admin-module/modal/error" : "customer-module/pet/action";
         } else {
             setModel(model, customer.getId(), Pet.builder()
                     .allergies(YesNoEnum.No).deceased(YesNoEnum.No).gpwarning(YesNoEnum.No).insured(YesNoEnum.No)
                     .build()
             );
         }
-        return getHtmxAndAddToModel(request, model) ? "customer-module/pet/petformmodal" : "customer-module/pet/action";
+        return isHtmx ? "customer-module/pet/petformmodal" : "customer-module/pet/action";
     }
 
     @PostMapping("/customer/{customerId}/pet/{petId}")
@@ -92,7 +94,7 @@ public class PetController {
         pet.setComments(petForm.getComments());
 
         petRepository.save(pet);
-        return getHtmxAndAddToModel(request, model) ? "customer-module/pet/petformmodal" : "redirect:/customer/customer/" + customerId + "/pets";
+        return ControllerHelper.getHtmxAndAddToModel(request, model) ? "customer-module/pet/petformmodal" : "redirect:/customer/customer/" + customerId + "/pets";
     }
 
     @PostMapping("/customer/pet/breed/{id}")
@@ -108,6 +110,8 @@ public class PetController {
 
     @PostMapping("/customer/{customerId}/pet")
     String saveNewPet(@PathVariable Long customerId, @Valid Pet petForm, RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response, Model model) {
+        final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
+
         if (petForm.getId() != null) {
             return savePet(customerId, petForm.getId(), petForm, redirect, request, model);
         }
@@ -120,17 +124,14 @@ public class PetController {
                 )
         ) {
             // pet already exisits; error case
-            boolean isHtmx = getHtmxAndAddToModel(request, model);
             if (isHtmx) {
                 model.addAttribute("message", "pet.error.name");
                 model.addAttribute("messageClass", "alert-error");
-                setModel(model, customer.getId(), petForm);
-                return "customer-module/pet/petformmodal";
+                return "admin-module/modal/message::notification";
             }
             redirect.addFlashAttribute("message", "pet.error.name");
             redirect.addFlashAttribute("messageClass", "alert-error");
             redirect.addFlashAttribute("petForm", petForm);
-
             return "redirect:/customer/customer/" + customerId + "/pet";
         }
 
@@ -152,7 +153,6 @@ public class PetController {
         customer.getPets().add(savedPet);
         customerRepository.save(customer);
         redirect.addFlashAttribute("message", "label.saved");
-        boolean isHtmx = getHtmxAndAddToModel(request, model);
         if (isHtmx) {
             response.setHeader("HX-Trigger", "closeModal");
         }
@@ -164,7 +164,7 @@ public class PetController {
         Pet pet = petRepository.findById(petId).orElseThrow();
         model.addAttribute("pet", pet.getCustomer().getId().equals(customerId) ? pet : new Pet());
         setModel(model, pet.getCustomer().getId(), pet);
-        boolean isHtmx = getHtmxAndAddToModel(request, model);
+        final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
         return isHtmx ? "customer-module/pet/petformmodal" : "customer-module/pet/action";
     }
 
@@ -181,11 +181,5 @@ public class PetController {
                 )
                 .sorted(comparing(PresentationElement::getName)).toList()
         );
-    }
-
-    private static boolean getHtmxAndAddToModel(HttpServletRequest request, Model model) {
-        final boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
-        model.addAttribute("isHtmx", isHtmx);
-        return isHtmx;
     }
 }

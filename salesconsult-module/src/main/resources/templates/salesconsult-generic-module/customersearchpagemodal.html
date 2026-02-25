@@ -1,12 +1,15 @@
 <dialog id="create-new-appointment-modal" class="modal-xlg" open>
     <article>
         <header>
-            <button aria-label="Close" rel="prev" data-target="create-new-appointment-modal"
-                    onclick="toggleModal(event)"></button>
+            <div>
+                <span th:text="#{label.customer.search.title}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+
         </header>
         <p id="modalPetFormPart">
         <form name="createForm" id="createForm" action="#">
-            <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(false, ${url}, ${salesType})}"></div>
+            <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(false, ${customerSearchUrl}, ${salesType})}"></div>
         </form>
         </p>
 

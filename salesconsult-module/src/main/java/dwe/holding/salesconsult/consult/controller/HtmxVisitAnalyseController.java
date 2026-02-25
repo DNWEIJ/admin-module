@@ -32,7 +32,7 @@ import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateLineIt
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class HtmxVisitAnalyseController {
     private final VisitRepository visitRepository;
@@ -73,19 +73,22 @@ public class HtmxVisitAnalyseController {
 
         Map<Long, AnalyseItemForm> userMap = analyseForm.analyseItems.stream().collect(Collectors.toMap(element -> element.costingId, element -> element));
         List<AnalyseItem> analyseItemToBeSaved = new ArrayList<>();
-        List<LineItem> lineItemsToBeSaved = definedAnalyseList.stream().flatMap(a ->
-                lineItemService.createConsultAnalyseLineItem(a.getCosting().getId(), a.getQuantity(), visit.getPet(), null).stream()
-                        // find records that do not have a vet or owner NO (being the true on the checkbox)
-                        .filter(lineItem -> {
-                                    AnalyseItemForm rec = userMap.get(lineItem.getCostingId());
-                                    if (rec == null) {
-                                        throw new RuntimeException("AnalyseForm doesn't contain costingId");
-                                    }
 
-                                    mapFormToAnalyseItem(analyseItemToBeSaved, lineItem, rec, visit);
-                                    return (rec.ownerIndicator == null || rec.ownerIndicator.booleanValue() == false) && (rec.vetIndicator == null || rec.vetIndicator.booleanValue() == false);
-                                }
-                        )
+        List<LineItem> lineItemsToBeSaved = definedAnalyseList.stream().flatMap(formAnalyse ->
+                    lineItemService.createConsultAnalyseLineItem(formAnalyse.getCosting().getId(),
+                                    userMap.get(formAnalyse.getCosting().getId()).quantity(), // get Form quantity
+                                    visit.getPet(), null).stream()
+                            // find records that do not have a vet or owner NO (being the true on the checkbox)
+                            .filter(lineItem -> {
+                                        AnalyseItemForm rec = userMap.get(lineItem.getCostingId());
+                                        if (rec == null) {
+                                            throw new RuntimeException("AnalyseForm doesn't contain costingId");
+                                        }
+
+                                        mapFormToAnalyseItem(analyseItemToBeSaved, lineItem, rec, visit);
+                                        return (rec.ownerIndicator == null || rec.ownerIndicator.booleanValue() == false) && (rec.vetIndicator == null || rec.vetIndicator.booleanValue() == false);
+                                    }
+                            )
         ).toList();
 
         updateLineItemsInModel(model, lineItemService.saveAnalyseAndLineItem(analyseItemToBeSaved, lineItemsToBeSaved, visit));
@@ -96,7 +99,7 @@ public class HtmxVisitAnalyseController {
                 .addAttribute("isAnalyseItemsFromDb", true)
                 .addAttribute("customerId", visit.getPet().getCustomer().getId())
                 .addAttribute("petId", visit.getPet().getId())
-                .addAttribute("url", VisitController.VISIT_URL.replace("{customerId}", visit.getPet().getCustomer().getId().toString()).replace("{visitId}", visit.getId().toString()))
+                .addAttribute("costingSearchUrl", VisitController.VISIT_URL.replace("{customerId}", visit.getPet().getCustomer().getId().toString()).replace("{visitId}", visit.getId().toString()))
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("salesType", SalesType.VISIT);
         return "/consult-module/fragments/htmx/replaceanalyseandlineitems";

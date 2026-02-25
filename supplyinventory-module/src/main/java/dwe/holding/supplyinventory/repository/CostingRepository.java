@@ -26,7 +26,7 @@ public interface CostingRepository extends JpaRepository<Costing, Long> {
 
     List<CostingProjection> findByNomenclatureContainsAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no);
 
-    List<CostingProjection> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long currentUserMid);
+    List<CostingProjection> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long memberId);
 
     List<CostingProjection> findByReminderNomenclatureIsNotNullAndReminderNomenclatureIsNotEmptyAndMemberIdOrderByReminderNomenclature(Long memberId);
 
@@ -40,4 +40,32 @@ public interface CostingRepository extends JpaRepository<Costing, Long> {
                order by reminderText
             """)
     List<String> findWithNonEmptyReminderNomenclature(Long memberId);
+
+    @Query("""
+            select new dwe.holding.supplyinventory.repository.CostingDto(
+                c,
+                case when exists ( select 1 from CostingGroup cg where cg.parentCostingId = c.id )
+                    then true
+                    else false 
+                end
+            )
+            from Costing c
+            where c.id = :id and c.memberId = :memberId
+            """)
+    CostingDto findByIdAndMemberIdToDto(Long id, Long memberId);
+
+    @Query("""
+            select new dwe.holding.supplyinventory.repository.CostingDto(
+                c,
+                case when exists ( select 1 from CostingGroup cg where cg.parentCostingId = c.id )
+                    then true
+                    else false 
+                end
+            )
+            from Costing c
+            where c.lookupCostingCategory.id = :lookupId and c.memberId = :memberId
+            order by c.nomenclature
+            """)
+    List<CostingDto> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclatureToDto(Long lookupId, Long memberId);
+
 }

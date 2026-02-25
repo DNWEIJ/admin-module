@@ -103,4 +103,19 @@ public class Pet extends MemberBaseBO {
             return getBirthday() == null ? "" : "(" + getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months)";
         }
     }
+
+    public String getWarningInfo() {
+        StringBuilder warning = new StringBuilder();
+        if (insured.equals(YesNoEnum.Yes)) {
+            warning.append("I: ").append(insuredBy).append('\n');
+        }
+        if (gpwarning.equals(YesNoEnum.Yes)) {
+            warning.append("D: ").append(gpwarningDescription).append('\n');
+        }
+        if (allergies.equals(YesNoEnum.Yes)) {
+            warning.append("A: ").append(allergiesDescription).append('\n');
+        }
+        return warning.toString();
+    }
+
 }

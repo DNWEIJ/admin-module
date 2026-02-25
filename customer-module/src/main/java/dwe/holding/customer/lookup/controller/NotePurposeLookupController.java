@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "/customer")
+@RequestMapping("/customer")
 @Slf4j
 public class NotePurposeLookupController {
     private final NotePurposeLookupRepository notePurposeLookupRepository;
@@ -42,7 +42,7 @@ public class NotePurposeLookupController {
         LookupNotePurpose notePurposes = notePurposeLookupRepository.findById(notePurposeId).orElseThrow();
         model.addAttribute("notepurpose", notePurposes.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? notePurposes : new LookupNotePurpose());
         model.addAttribute("activeMenu", "notepurpose");
-        ; //AutorisationUtils.getCurrentUserMid()
+        //AutorisationUtils.getCurrentUserMid()
         return "customer-module/lookup/notepurposes/action";
     }
 

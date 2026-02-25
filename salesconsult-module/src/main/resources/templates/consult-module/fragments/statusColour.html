@@ -2,7 +2,7 @@
     <dialog id="statusColourDisplay" close>
         <article>
             <header>
-                <button aria-label="Close" rel="prev" data-target="statusColourDisplay" onclick="toggleModal(event)"></button>
+              <div>Colours</div>
             </header>
             <table>
                 <tbody>
@@ -17,16 +17,15 @@
                     <td th:text="#{label.visit.status.completed}">Completed</td>
                 </tr>
                 <tr>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).PLANNED.color}"></td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).WAITING.color}"></td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).PLANNED.color}">&nbsp;</td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).WAITING.color}">&nbsp;</td>
                     <td colspan="3"
-                        th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).CONSULT.color}">
-                    </td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).FINISHED_CONSULT.color}"></td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).PAYMENT.color}"></td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).FINISHED.color}"></td>
-                    <td style="background-color:#9999FF"></td>
-                    <td style="background-color:#0A640A"></td>
+                        th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).CONSULT.color}">&nbsp;</td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).FINISHED_CONSULT.color}">&nbsp;</td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).PAYMENT.color}">&nbsp;</td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).FINISHED.color}">&nbsp;</td>
+                    <td style="background-color:#9999FF">&nbsp;</td>
+                    <td style="background-color:#0A640A">&nbsp;</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -43,9 +42,9 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).INTAKE.color}"></td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).OPERATION.color}"></td>
-                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).RECOVERY.color}"></td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).INTAKE.color}">&nbsp;</td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).OPERATION.color}">&nbsp;</td>
+                    <td th:style="'background-color:' + ${T(dwe.holding.salesconsult.consult.model.type.VisitStatusEnum).RECOVERY.color}">&nbsp;</td>
                     <td></td>
                     <td></td>
                     <td></td>

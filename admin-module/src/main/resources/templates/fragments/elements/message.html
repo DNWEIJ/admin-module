@@ -1,7 +1,7 @@
+<th:block th:fragment="message()">
 <!-- notification message with fadein fadeout -->
-<div  id="notification-message" class="notification-message box alert-success" role="alert"
-         th:classappend="${messageClass}" th:text="${message != null} ? #{${message}} : ''"></div>
-
+<div id="notification-message" class="notification-message box alert-success" role="alert"
+     th:classappend="${messageClass}" th:text="${message != null} ? #{${message}} : ''"></div>
 
 <script>
     function messageDisplay(messageText) {
@@ -18,4 +18,10 @@
     document.addEventListener("DOMContentLoaded", () => {
         messageDisplay();
     });
+    // From the backend push a message for e.g. after save
+    document.body.addEventListener("messageDisplay", function (event) {
+        console.log('sow the message to display: '+event.data);
+        messageDisplay(event.detail.messageText);
+    });
 </script>
+</th:block>

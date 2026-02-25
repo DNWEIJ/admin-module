@@ -4,6 +4,7 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
+import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.supplyinventory.expose.CostingService;
@@ -25,13 +26,14 @@ import static dwe.holding.salesconsult.sales.controller.ValidationHelper.validat
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/consult")
+@RequestMapping("/consult")
 @Slf4j
 public class HtmxVisitLineItemsController {
     private final VisitRepository visitRepository;
     private final CustomerService customerService;
     private final LineItemService lineItemService;
     private final CostingService costingService;
+    private final AppointmentVisitService appointmentVisitService;
 
     @DeleteMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
     String deleteLineItemViaHTmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @PathVariable Long lineItemId, Model model, RedirectAttributes redirect) {
@@ -44,7 +46,8 @@ public class HtmxVisitLineItemsController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/visit/search";
         }
-        lineItemService.delete(lineItemId);
+
+        visit = appointmentVisitService.deleteLineItemFromVisit(visit, lineItemId);
 
         updateModel(model, visit, customerId);
         return "sales-module/fragments/htmx/lineitemsfulltable";
@@ -76,6 +79,6 @@ public class HtmxVisitLineItemsController {
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("visit", visit)
                 .addAttribute("salesType", SalesType.VISIT)
-                .addAttribute("url", "/visit/customer/" + customerId + "/visit/" + visit.getId() + "/lineitem/");
+                .addAttribute("costingSearchUrl", "/visit/customer/" + customerId + "/visit/" + visit.getId() + "/lineitem/");
     }
 }

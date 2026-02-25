@@ -1,0 +1,19 @@
+<tbody id="lineItemsTable">
+<th:block th:each="product : ${products}">
+    <tr>
+        <td>
+            <a th:href="'/costing/product/'+${product.costing.id}">📝️</a>
+        </td>
+        <td th:text="${product.costing.nomenclature}"></td>
+        <td th:text="${product.costing.lookupCostingCategory.category}"></td>
+        <td th:text="${product.costing.shortCode}"></td>
+        <td th:text="${product.costing.barcode}"></td>
+        <td th:text="${product.costing.itemNumber}"></td>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.quantityPerPackage}, false)}"></th:block>
+        <td th:text="${product.groupedProduct} ? #{label.yesno.yes} : #{label.yesno.no}"></td>
+        <td th:text="#{${product.costing.hasBatchNr.label}}"></td>
+        <td th:text="#{${product.costing.hasSpillage.label}}"></td>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.salesPriceExTax}, false)}"></th:block>
+    </tr>
+</th:block>
+</tbody>
