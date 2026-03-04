@@ -50,9 +50,8 @@
                     <th:block
                             th:insert="~{fragments/elements/dropdown::propDropdown('sentToInsurance','visit.insurance',${visit.sentToInsurance}, ${ynvaluesList}, false, '0')}"></th:block>
                 </div>
-
                 <div class="grid-row">
-                            <a href="#" class="emoji-icon align-center verysmall"
+                            <a href="#" class="emoji-icon align-center verysmall" th:title="#{label.history.weight.history}"
                                th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/weight'}"
                                hx-target="#modal-container" hx-swap="innerHTML"/>📜</a>
                             <th:block
@@ -65,7 +64,6 @@
                             th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','0')}"
                             th:with="required=false"></th:block>
                 </div>
-
                 <th:block
                         th:insert="~{/consult-module/fragments/templatelocalmemberpref::template('template', ${templates})}"></th:block>
                 <th:block
@@ -83,30 +81,23 @@
                 <th:include th:replace="~{consult-module/visit/analyse}"></th:include>
             </div>
         </details>
-        <details id="lineitems" open>
 
+        <details id="lineitems" open>
             <summary class="three-elements">
                 <a href="" th:title="#{visit.lineitems.history}"
-                   th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}"
+                   th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + visit.pet.id + '/history/product'}"
                    hx-target="#modal-container"
                    hx-swap="innerHTML">️🛒</a>
                 <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
                 <a href="/info/lineiteminfo" title="More info" class="emoji-icon">ℹ️</a>
             </summary>
-
-            <table id="lineItemsTable" class="no-sorting striped">
-
-                <!-- body and footer -->
-                <div id="lineItemsOverviewReplaceHtmx">
-                    <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
-                </div>
-            </table>
+            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
             <!-- TODO: Check on visit isOpen -->
             <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.isCompleted)}"
                  th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></div>
         </details>
-        <details id="diagnose" open>
 
+        <details id="diagnose" open>
             <summary class="three-elements">
                 <a href="" th:title="#{visit.diagnose.history}"
                    th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/diagnose'}"
@@ -114,7 +105,6 @@
                 <span class="center-text" th:text="#{label.diagnose}"></span>
                 <a href="/info/visitinfo" title="More info" class="emoji-icon">ℹ️</a>
             </summary>
-
             <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>
         </details>
     </div>

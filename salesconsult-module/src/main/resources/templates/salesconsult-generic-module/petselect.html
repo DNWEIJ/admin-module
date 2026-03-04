@@ -3,73 +3,42 @@
         <summary>
             <span th:text="#{label.otc.petList}"></span><a href="/info/selectpets" title="More info" class="emoji-icon">ℹ️</a>
         </summary>
-        <table id="show-table" class="table-tight striped">
-            <thead>
-            <tr>
-                <th>[[#{label.otc.add}]]</th>
-                <th>[[#{label.otc.petName}]]</th>
-                <th th:if="${salesType.isVisit}" th:text="#{label.visit.timeNeeded}"></th>
-                <th th:if="${salesType.isVisit}" th:text="#{label.visit.vet}"></th>
-                <th th:if="${salesType.isVisit}" th:text="#{label.visit.room}"></th>
-                <th>[[#{label.otc.reason}]]</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:each="pet, iStat : ${pets}">
+<!--        <div class="desktop-tablet-only">-->
+            <table id="show-alive-table" class="table-tight striped">
+                <thead>
                 <tr>
-                    <td>
-                        <th:block
-                                th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
-                    </td>
-                    <td th:if="${showPetLink}">
-                        <a href=""th:text="${pet.name} + ' (' + ${pet.species()} + ') '"
-                           hx-target="#modal-container" hx-swap="innerHTML" th:hx-get="'/customer/customer/'+${customer.id}+'/pet/'+ ${pet.id}">
-                        </a>
-                        <span th:if="${pet.warningInfo != ''}"   th:data-tooltip="${pet.warningInfo}"  class="emoji-icon wiggle">🚨</span>
-                    </td>
-                    <td th:if="${!showPetLink}">
-                        <span th:text="${pet.name} + ' ('+ ${pet.species()} + ')'"></span>
-                        <span th:if="${pet.warningInfo != ''}"   th:data-tooltip="${pet.warningInfo}"  class="emoji-icon wiggle">🚨</span>
-                    </td>
-
-                    <td th:if="${salesType.isVisit}">
-                        <th:block
-                                th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].timeNeeded', '', '', ${timeList}, true, ${2+iStat.index})}"
-                                th:with="required=false,class='small-input'"></th:block>
-                    </td>
-                    <td th:if="${salesType.isVisit}">
-                        <th:block
-                                th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].vet', '', ${selectedVet}, ${staffList}, true, ${3+iStat.index})}"
-                                th:with="required=false"></th:block>
-                    </td>
-                    <td th:if="${salesType.isVisit}">
-                        <th:block
-                                th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${iStat.index}+'].room', '',  ${selectedRoom}, ${rooms}, true,${4+iStat.index})}"
-                                th:with="required=false"></th:block>
-                    </td>
-
-                    <input th:name="'formPet[' + ${iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
-                    <td>
-                        <th:block
-                                th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}"
-                                th:with="required=false"></th:block>
-                    </td>
-                    <td>
-                        <th:block
-                                th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+${iStat.index}+'].purpose', 'label.title.purpose', '','-1')}"
-                                th:with="required=false"></th:block>
-                    </td>
+                    <th>[[#{label.otc.add}]]</th>
+                    <th>[[#{label.otc.petName}]]</th>
+                    <th th:if="${salesType.isVisit}" th:text="#{label.visit.timeNeeded}"></th>
+                    <th th:if="${salesType.isVisit}" th:text="#{label.visit.vet}"></th>
+                    <th th:if="${salesType.isVisit}" th:text="#{label.visit.room}"></th>
+                    <th>[[#{label.otc.reason}]]</th>
+                    <th></th>
                 </tr>
-            </th:block>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <!-- the offset will be increased continously since we will have desktop AND mobile in the same screen; this means IDs need to be unique -->
+                <th:block th:with="offset=0" th:each="pet, iStat : ${pets}">
+                    <th:block th:replace="~{salesconsult-generic-module/petselectrow ::petRow}"></th:block>
+                </th:block>
+                </tbody>
+            </table>
+            <script>
+
+            </script>
+<!--        </div>-->
+<!--        <div class="mobile-only">-->
+<!--            &lt;!&ndash; offset required for deceased pets &ndash;&gt;-->
+<!--            <th:block th:with="offset=${pets.size()}" th:each="pet, iStat : ${pets}">-->
+<!--                <th:block th:replace="~{salesconsult-generic-module/petselectmobile :: petMobile}"></th:block>-->
+<!--            </th:block>-->
+<!--        </div>-->
     </details>
     <details th:if="${!deceasedPets.isEmpty()}">
         <summary>
             [[#{label.otc.pet.deceased.showhide}]]
         </summary>
-        <fieldset role="group">
+<!--        <div class="desktop-tablet-only">-->
             <table id="show-deceased-table" class="table-tight striped" th:if="${deceasedPets.size() > 0}">
                 <thead>
                 <tr>
@@ -83,44 +52,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="pet, iStat : ${deceasedPets}">
-                    <tr>
-                        <td>
-                            <th:block
-                                    th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${pets.size() + iStat.index} + '].checked','','','1')}"></th:block>
-                        </td>
-                        <td th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
-                        <td th:if="${salesType.isVisit}">
-                            <th:block
-                                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].timeNeeded', '', '', ${timeList}, true,'1')}"
-                                    th:with="required=false"></th:block>
-                        </td>
-                        <td th:if="${salesType.isVisit}">
-                            <th:block
-                                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].vet', '', '', ${staffList}, true,'1')}"
-                                    th:with="required=false"></th:block>
-                        </td>
-                        <td th:if="${salesType.isVisit}">
-                            <th:block
-                                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${pets.size() + iStat.index}+'].room', '', '', ${rooms}, true,'1')}"
-                                    th:with="required=false"></th:block>
-                        </td>
-
-                        <input th:name="'formPet[' + ${pets.size() + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
-                        <td>
-                            <th:block
-                                    th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${pets.size() + iStat.index}+'].reason', '', '', ${reasons}, true,'-1')}"
-                                    th:with="required=false"></th:block>
-                        </td>
-                        <td>
-                            <th:block
-                                    th:insert="~{fragments/elements/input::inputHtmlLift('formPet['+ ${pets.size() + iStat.index}+'].purpose', 'label.title.purpose', '','1')}"
-                                    th:with="required=false"></th:block>
-                        </td>
-                    </tr>
+                <th:block th:with="offset=${pets.size()}" th:each="pet, iStat : ${deceasedPets}">
+                    <th:block th:replace="~{salesconsult-generic-module/petselectrow ::petRow}"></th:block>
                 </th:block>
                 </tbody>
             </table>
-        </fieldset>
+<!--        </div>-->
+<!--        <div class="mobile-only">-->
+<!--            &lt;!&ndash; offset required for deceased pets &ndash;&gt;-->
+<!--            <th:block th:with="offset=${pets.size()+ pets.size() + pets.size()}" th:each="pet, iStat : ${pets}">-->
+<!--                <th:block th:replace="~{salesconsult-generic-module/petselectmobile :: petMobile}"></th:block>-->
+<!--            </th:block>-->
+<!--        </div>-->
     </details>
 </th:block>

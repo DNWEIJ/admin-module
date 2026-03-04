@@ -46,7 +46,7 @@ public class PriceSellController {
         return "salesconsult-generic-module/productpage";
     }
 
-    @PostMapping("/price/sell")
+    @PostMapping("/price/sell/lineitem")
     String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingQuantity,
                                           @ProjectedPayload @ModelAttribute(value = "lineItems") List<LineItem> lineItems, Model model) {
         List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingQuantity);
@@ -58,7 +58,7 @@ public class PriceSellController {
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
-    @DeleteMapping("/price/sell/{lineItemId}")
+    @DeleteMapping("/price/sell/lineitem/{lineItemId}")
     String deleteProductFromLineItemsViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
         updateModel(model, lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
         return "sales-module/fragments/htmx/lineitemsfulltable";

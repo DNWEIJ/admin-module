@@ -3,12 +3,12 @@
     <tr>
         <th></th>
         <th class="left" th:text="#{label.otc.sell.description}"></th>
-        <th class="desktop-only left" th:text="#{label.otc.sell.category}"></th>
-        <th class="desktop-only right" th:text="#{label.otc.sell.costproduct}"></th>
-        <th class="desktop-only right" th:text="#{label.otc.sell.costservice}"></th>
-        <th class="right" th:text="#{label.otc.sell.amount}"></th>
-        <th class="desktop-only right" th:text="#{label.otc.sell.taxed}"></th>
-        <th class="right" th:text="#{label.otc.sell.total}"></th>
+        <th class="desktop-only align-left" th:text="#{label.otc.sell.category}"></th>
+        <th class="desktop-only align-right" th:text="#{label.otc.sell.costproduct}"></th>
+        <th class="desktop-only align-right" th:text="#{label.otc.sell.costservice}"></th>
+        <th class="align-right" th:text="#{label.otc.sell.amount}"></th>
+        <th class="desktop-only align-right" th:text="#{label.otc.sell.taxed}"></th>
+        <th class="align-right" th:text="#{label.otc.sell.total}"></th>
         <th title="print" class="center emoji-icon">🖨️</th>
     </tr>
     </thead>
@@ -19,7 +19,7 @@
     <th:block th:each="lineitem : ${lineItems}">
         <tr>
             <td class="center">
-                <a href="" class="emoji-icon"  title="delete" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${url} + ${lineitem.id}" hx-target="#lineItemsTable">🗑️</a>
+                <a href="" class="emoji-icon"  title="delete" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${costingSearchUrl + '/lineitem/' + lineitem.id}" hx-target="#lineItemsTable">🗑️</a>
             </td>
             <td th:text="${lineitem.nomenclature}"></td>
             <td th:text="${categoryNames.get(lineitem.categoryId)}" class="desktop-only"></td>

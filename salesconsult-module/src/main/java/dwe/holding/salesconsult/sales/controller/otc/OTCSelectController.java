@@ -7,6 +7,7 @@ import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
+import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
@@ -71,7 +72,7 @@ public class OTCSelectController {
         }
         Appointment app = appointmentVisitService.createAppointmentVisit(pets, customerId, SalesType.OTC);
         // start selling for the first pet in the list...
-        return "redirect:/sales/otc/search/" + customerId + "/sell/" + app.getId() + "/" + app.getVisits().iterator().next().getPet().getId();
+        return "redirect:/sales/otc/customer/" + customerId + "/visit/" + app.getVisits().iterator().next().getId();
     }
 
     public record PetsForm(List<AppointmentVisitService.CreatePet> formPet) {

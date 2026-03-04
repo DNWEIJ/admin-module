@@ -304,13 +304,9 @@ dialog article header {
 dialog.modal-xlg > article {
     width: 95vw;
     max-width: 1000px;
-    height: 55vh;
+    height: 75vh;
     display: flex;
     flex-direction: column;
-}
-
-dialog.modal-xlg > article > header {
-    background-color: var(--pico-form-element-spacing-vertical);
 }
 
 dialog.modal-xlg > article > body {
@@ -335,6 +331,7 @@ dialog.modal-xlg > article > footer {
     width: max-content;
     white-space: preserve-breaks;
 }
+
 .checkbox-group {
     display: flex;
     flex-direction: row;
@@ -447,10 +444,17 @@ dialog.modal-xlg > article > footer {
     max-width: 100%;
 }
 
+.table-tight select, .table-tight  input {
+    padding: 0.1rem;
+    margin-right: 0.1rem;
+    height: min-content;
+}
+
 .table-tight td,
 .table-tight th {
     text-align: left;
-    padding: 0 0.3rem 0.3rem 0;
+    padding: 0;
+    padding-right: .4rem;
     white-space: nowrap;
     margin: 0;
     background-color: #fafafa;
@@ -459,18 +463,13 @@ dialog.modal-xlg > article > footer {
 .table-tight th:last-child,
 .table-tight td:last-child {
     white-space: normal;
-    width: 100%;
+    width: 20%;
 }
 
 .table-tight footer {
     margin: .5rem;
     padding: 0;
     border: 2px black;
-}
-
-tbody tr.red-text td {
-    color: var(--pico-color-red-500);
-    font-weight: bold;
 }
 
 .table-tight .right {
@@ -488,6 +487,12 @@ tbody tr.red-text td {
 
 .table-tight .nowrap {
     white-space: nowrap;
+}
+
+
+tbody tr.red-text td {
+    color: var(--pico-color-red-500);
+    font-weight: bold;
 }
 
 /**** text alingment ****/
@@ -818,6 +823,10 @@ html, body {
     white-space: nowrap;
 }
 
+.min-width {
+    min-width: 14rem;
+}
+
 /** show the required fields with a red border */
 :required {
     box-shadow: 1px 1px 3px rgba(100, 0, 0, 0.85);
@@ -987,6 +996,7 @@ details summary a.emoji-icon {
 .pulse {
     animation: pulseGlow 1s ease-in-out 2;
 }
+
 @keyframes pulseGlow {
     0% {
         transform: scale(1);
@@ -995,7 +1005,7 @@ details summary a.emoji-icon {
     }
     50% {
         transform: scale(1.02); /* slightly less scale to balance font growth */
-        font-size: 1.1rem;      /* font grows */
+        font-size: 1.1rem; /* font grows */
         text-shadow: 0 0 40px orange;
     }
     100% {
@@ -1010,12 +1020,28 @@ details summary a.emoji-icon {
     display: inline-block;
     animation: wiggle 0.6s ease-in-out 6;
 }
+
 @keyframes wiggle {
-    0% { transform: rotate(0deg); }
-    15% { transform: rotate(-15deg); }
-    30% { transform: rotate(15deg); }
-    45% { transform: rotate(-10deg); }
-    60% { transform: rotate(10deg); }
-    75% { transform: rotate(-5deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    15% {
+        transform: rotate(-15deg);
+    }
+    30% {
+        transform: rotate(15deg);
+    }
+    45% {
+        transform: rotate(-10deg);
+    }
+    60% {
+        transform: rotate(10deg);
+    }
+    75% {
+        transform: rotate(-5deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }
+

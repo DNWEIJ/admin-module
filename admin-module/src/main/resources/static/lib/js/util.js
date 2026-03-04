@@ -13,41 +13,6 @@ function toggleAllCheckBoxesInSurroundingElement(masterCheckbox, surroundingElem
     });
 }
 
-
-/** Global vars **/
-const STORAGE_KEY = 'pico-theme';
-const DEFAULT_THEME = 'grey';
-const BASE_PATH = '/lib/pico/pico.';
-const POST_FIX = '.min.css';
-
-
-function applyTheme(color) {
-
-    let link = document.getElementById('pico-theme');
-
-    if (!link) {
-        link = document.createElement('link');
-        link.id = 'pico-theme';
-        link.rel = 'stylesheet';
-
-        const customCss = document.querySelector('link[href*="style.css"]');
-        document.head.insertBefore(link, customCss);
-    }
-
-    link.href = BASE_PATH + color + POST_FIX;
-    localStorage.setItem(STORAGE_KEY, color);
-
-    // remove aria-current from all
-    document.querySelectorAll('[data-color]').forEach(el => el.removeAttribute('aria-current'));
-
-    // set aria-current on selected
-    const active = document.querySelector(`[data-color="${color}"]`);
-    if (active) active.setAttribute('aria-current', 'page');
-}
-applyTheme(localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME);
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
 
     document.body.addEventListener("refreshPage", function (evt) {

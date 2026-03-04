@@ -1,7 +1,10 @@
 <dialog id="customer-note-modal" open>
     <article>
         <header>
-            <button aria-label="Close" rel="prev" data-target="customer-note-modal" onclick="toggleModal(event)"></button>
+            <div>
+                <span th:text="#{label.create} +' '+ #{label.title.notes}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
         </header>
         <p id="customer-note-modal-part">
         <div class="notification-message text-align-center alert "
@@ -23,7 +26,6 @@
         document.body.addEventListener("closeModal", () => {
             const modal = document.getElementById("customer-note-modal")
             closeModal(modal)
-            location.reload();
         });
     </script>
 </dialog>

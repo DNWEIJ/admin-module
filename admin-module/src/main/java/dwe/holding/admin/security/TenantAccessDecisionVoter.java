@@ -45,7 +45,7 @@ public class TenantAccessDecisionVoter {
         String uri = request.getRequestURI();
         log.info("------------------>> vote called for uri=" + uri);
 
-        if (uri.compareToIgnoreCase(request.getContextPath()) == 0) {
+        if (uri.compareToIgnoreCase(request.getContextPath()) == 0 || uri.compareToIgnoreCase(request.getContextPath()+ '/') == 0) {
             return ACCESS_GRANTED;
         }
         uri = uri.substring(request.getContextPath().length());
@@ -57,7 +57,7 @@ public class TenantAccessDecisionVoter {
         if (uri.startsWith(request.getContextPath() + "/admin")) {
             authorizationAttribute = findAuthoirzationAttributeForCRUD(method, getLastPart(uri), uri, request.getParameterMap());
         } else {
-            authorizationAttribute = findAuthoirzationAttributeForOther(method, getLastPart(uri), uri, request.getParameterMap());
+            authorizationAttribute = findAuthoirzationAttributeForOther(method, getLastPart(uri), uri);
         }
 
         int accessLevel = checkAuthorizationAttribute(authorizationAttribute, authentication.getAuthorities());
@@ -147,7 +147,7 @@ public class TenantAccessDecisionVoter {
     // *  AJAX Calls:
     // *  DELETE  ->
     // ******************************************
-    private String findAuthoirzationAttributeForOther(HttpMethod method, String last, String uri, Map<String, String[]> params) {
+    private String findAuthoirzationAttributeForOther(HttpMethod method, String last, String uri, Map<String) {
         if (HttpMethod.GET.equals(method)) {
             if (last.endsWith("index"))  return last+"_"+ATTRIBUTE_READ;
         }

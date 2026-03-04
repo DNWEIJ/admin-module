@@ -1,10 +1,58 @@
-<script>
+<script inline="javascript">
+    const colorSetFromGlobal = '[[${color}]]'
+</script>
+<script th:inline="none">
+    /** Global vars **/
+    const STORAGE_KEY = 'pico-theme';
+
+    const BASE_PATH = '/lib/pico/pico.';
+    const POST_FIX = '.min.css';
+
+    function applyTheme(themeColor) {
+
+        let link = document.getElementById('pico-theme');
+
+        if (!link) {
+            link = document.createElement('link');
+            link.id = 'pico-theme';
+            link.rel = 'stylesheet';
+
+            const customCss = document.querySelector('link[href*="style.css"]');
+            document.head.insertBefore(link, customCss);
+        }
+
+        link.href = BASE_PATH + themeColor + POST_FIX;
+        localStorage.setItem(STORAGE_KEY, themeColor);
+
+        // remove aria-current from all
+        document.querySelectorAll('[data-color]').forEach(el => el.removeAttribute('aria-current'));
+
+        // set aria-current on selected
+        const active = document.querySelector(`[data-color="${themeColor}"]`);
+        if (active) active.setAttribute('aria-current', 'page');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        // set inital value:
+        const active = document.querySelector(`[data-color="${colorSetFromGlobal}"]`);
+        if (active) active.setAttribute('aria-current', 'page');
+
+
         // click handling
         document.addEventListener('click', e => {
             const el = e.target.closest('[data-color]');
             if (!el) return;
-            applyTheme(el.dataset.color);
+            userPreferences_color.value= el.dataset.color;
+            htmx.ajax('POST', '/vmas/userpreferences/color', {
+                target: document.getElementById('modal-container'),
+                source: document.body,
+                values: {
+                    color: el.dataset.color,
+                    _csrf: document.querySelector('meta[name="_csrf"]').content
+                },
+                headers: {'HX-Request': 'true'}
+            })
+            applyTheme(el.dataset.color)
         })
     })
 </script>
@@ -35,6 +83,7 @@
     }
 
 </style>
+<input type="hidden" id="userPreferences_color" name="userPreferences.color">
 <div class="heightdef">
     <span class="pico-background-red" data-color="red">&nbsp;</span>
     <span class="pico-background-pink" data-color="pink">&nbsp;</span>

@@ -52,8 +52,8 @@ public class HtmxVisitAnalyseController {
         model
                 .addAttribute("visit", visit)
                 .addAttribute("analyseItems", result)
-                .addAttribute("analyseTotalAmount", result.stream().map(CostCalc::getTotalIncTax).reduce(BigDecimal::add).get())
-                .addAttribute("analyseTotalVatAmount", result.stream().map(c -> c.getTaxPortionOfProduct().add(c.getTaxPortionOfProcessingFeeService())).reduce(BigDecimal::add).get())
+                .addAttribute("analyseTotalAmount", result.stream().map(CostCalc::getTotalIncTax).reduce(BigDecimal::add).orElse(BigDecimal.ZERO))
+                .addAttribute("analyseTotalVatAmount", result.stream().map(c -> c.getTaxPortionOfProduct().add(c.getTaxPortionOfProcessingFeeService())).reduce(BigDecimal::add).orElse(BigDecimal.ZERO))
                 .addAttribute("isAnalyseItemsFromDb", false);
 
         return "consult-module/visit/analyselist";
@@ -86,7 +86,7 @@ public class HtmxVisitAnalyseController {
                                         }
 
                                         mapFormToAnalyseItem(analyseItemToBeSaved, lineItem, rec, visit);
-                                        return (rec.ownerIndicator == null || rec.ownerIndicator.booleanValue() == false) && (rec.vetIndicator == null || rec.vetIndicator.booleanValue() == false);
+                                        return (rec.ownerIndicator == null || rec.ownerIndicator == false) && (rec.vetIndicator == null || rec.vetIndicator == false);
                                     }
                             )
         ).toList();

@@ -3,7 +3,7 @@ INSERT INTO supply_costing_price_promotion
  version,
  costing_id,
  start_date, end_date,
- sell_ex_tax_price,
+ sales_price_ex_tax,
  processing_fee,
  reduction_percentage,
  member_id,

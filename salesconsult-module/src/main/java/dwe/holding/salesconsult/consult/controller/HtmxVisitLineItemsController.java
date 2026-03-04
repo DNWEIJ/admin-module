@@ -36,13 +36,14 @@ public class HtmxVisitLineItemsController {
     private final AppointmentVisitService appointmentVisitService;
 
     @DeleteMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
-    String deleteLineItemViaHTmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @PathVariable Long lineItemId, Model model, RedirectAttributes redirect) {
+    public String deleteLineItemViaHTmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @PathVariable Long lineItemId, Model model, RedirectAttributes redirect) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
             return "redirect:/consult/visit/search"; // todo: to far back, see if we can just refresh the page..so it shows no lineitems adding anymore
 
         CustomerService.Customer customer = customerService.searchCustomerFromPet(visit.getPet().getId());
         if (!customer.id().equals(customerId)) {
+            // TODO: should redirect to otc
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/visit/search";
         }
@@ -55,7 +56,7 @@ public class HtmxVisitLineItemsController {
 
 
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem")
-    String postLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId,
+   public  String postLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId,
                                @NotNull BigDecimal inputCostingQuantity, String inputBatchNumber, Long inputCostingId, String spillageName, Model model, RedirectAttributes redirect) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
@@ -79,6 +80,6 @@ public class HtmxVisitLineItemsController {
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("visit", visit)
                 .addAttribute("salesType", SalesType.VISIT)
-                .addAttribute("costingSearchUrl", "/visit/customer/" + customerId + "/visit/" + visit.getId() + "/lineitem/");
+                .addAttribute("costingSearchUrl", "/consult/visit/customer/" + customerId + "/visit/" + visit.getId());
     }
 }

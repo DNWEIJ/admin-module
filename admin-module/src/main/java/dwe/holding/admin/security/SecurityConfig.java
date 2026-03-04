@@ -1,6 +1,7 @@
 package dwe.holding.admin.security;
 
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,9 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -21,6 +24,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -45,7 +49,7 @@ public class SecurityConfig {
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
-        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, "/admin/login"));
+        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, contextPath +"/admin/login"));
         authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(contextPath + "/admin/index"));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler(contextPath + "/admin/login?error=true"));
 
@@ -70,40 +74,49 @@ public class SecurityConfig {
                 };
 
         http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(new CookieCsrfTokenRepository().withHttpOnlyFalse())
-                )
-
-                .authorizeHttpRequests(authz -> authz
-                        .anyRequest().access(compositeAuthManager)
-                )
+                .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository()).csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                .authorizeHttpRequests(authz -> authz.anyRequest().access(compositeAuthManager))
                 .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login?error=true"))
-                                .authenticationEntryPoint((req, resp, authException) -> {
-                                    resp.sendRedirect(contextPath + "/admin/login?error=true");
-                                })
-                                .accessDeniedHandler((req, res, e) -> res.sendRedirect(contextPath + "/admin/login")) // authenticated but forbidden
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login")) // ⬅️ custom!
+                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
                 )
-
                 // required to persist the security context between requests
-                .securityContext(securityContext ->
-                        securityContext
-                                .requireExplicitSave(false) // ensures context is stored automatically
-                )
-                // Session management
-                .sessionManagement(session ->
-                        session
-                                .sessionCreationPolicy(IF_REQUIRED)
-                                .maximumSessions(1) // limit concurrent sessions
-                                .maxSessionsPreventsLogin(false)
-                )
-                .logout(logout -> logout
-                        .invalidateHttpSession(true)
-                        .addLogoutHandler(clearSiteData)
-                )
-                .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
+                .securityContext(securityContext ->securityContext.requireExplicitSave(false)) // ensures context is stored automatically
 
+                // Session management
+                .sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false) )
+                .logout(logout -> logout.invalidateHttpSession(true).addLogoutHandler(clearSiteData))
+                .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+    @Bean
+    AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, ex) -> {
+
+            String loginUrl = contextPath + "/admin/login";
+
+            if ("true".equals(request.getHeader("HX-Request"))) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setHeader("HX-Redirect", loginUrl);
+            } else {
+                response.sendRedirect(loginUrl);
+            }
+        };
+    }
+
+    @Bean
+    AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+
+            String loginUrl = contextPath + "/admin/login?error=true";
+
+            if ("true".equals(request.getHeader("HX-Request"))) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setHeader("HX-Redirect", loginUrl);
+            } else {
+                response.sendRedirect(loginUrl);
+            }
+        };
     }
 
     @Bean

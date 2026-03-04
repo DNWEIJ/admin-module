@@ -1,0 +1,7 @@
+<th:block th:each="appointment : ${appointments}">
+    <th:block th:each="visit: ${appointment.visits}">
+        <th:block th:replace="~{consult-module/soap/fragments/note :: note(${appointment.notes}, ${appointment.visitDateTime}, true)}"></th:block>
+        <th:block th:replace="~{consult-module/soap/fragments/visit :: Visit(${visit}, ${memberLocals}) }" )></th:block>
+        <th:block th:replace="~{consult-module/soap/fragments/note :: note(${appointment.notes}, ${appointment.visitDateTime}, false) }"></th:block>
+    </th:block>
+</th:block>

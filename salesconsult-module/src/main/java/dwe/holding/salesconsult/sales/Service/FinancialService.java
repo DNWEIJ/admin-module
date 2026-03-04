@@ -2,6 +2,7 @@ package dwe.holding.salesconsult.sales.Service;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.service.intrfce.FinancialServiceInterface;
+import dwe.holding.salesconsult.sales.model.Payment;
 import dwe.holding.salesconsult.sales.repository.LineItemRepository;
 import dwe.holding.salesconsult.sales.repository.PaymentRepository;
 import org.springframework.context.annotation.Primary;
@@ -33,11 +34,15 @@ public class FinancialService implements FinancialServiceInterface {
     }
 
     public LocalDate getLastestPaymentDate(Long customerId) {
-        return paymentRepository.findMaxPaymentDate(AutorisationUtils.getCurrentUserMid(),customerId).getPaymentDate();
+        return paymentRepository.findMaxPaymentDate(AutorisationUtils.getCurrentUserMid(),customerId).orElse(new Payment()).getPaymentDate();
     }
 
     @Override
     public BigDecimal getLastestPaymentAmount(Long customerId) {
-        return BigDecimal.valueOf(paymentRepository.findMaxPaymentDate(AutorisationUtils.getCurrentUserMid(),customerId).getAmount());
+        Payment payment = paymentRepository.findMaxPaymentDate(AutorisationUtils.getCurrentUserMid(), customerId).orElse(new Payment());
+        if (payment == null) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(payment.getAmount()).setScale(6, RoundingMode.HALF_UP);
     }
 }

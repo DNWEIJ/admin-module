@@ -9,7 +9,7 @@
     <th:block
             th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${customer.id}, #{label.title.customer},'', ${customerInformation})}"></th:block>
     <hr/>
-    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, '/customer/customer', null)}"></div>
+    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, ${contextPath} + '/customer/customer', null)}"></div>
     <hr/>
     <form id="createForm" th:action="@{/customer/customer}" method="post">
 
@@ -39,7 +39,7 @@
                 <th:block th:utext="#{customer.legend.addressInformation}"/>
             </legend>
             <div class="field small">
-                <button id="lookupAddress" class="input-height-as-input-field" hx-get="/customer/search/customer/address"
+                <button id="lookupAddress" class="input-height-as-input-field" th:hx-get="@{'/customer/search/customer/address'}"
                         hx-target="#modal-container" hx-swap="innerHTML" th:text="#{customer.search.zipcode}"></button>
                 <label>&nbsp;</label>
             </div>

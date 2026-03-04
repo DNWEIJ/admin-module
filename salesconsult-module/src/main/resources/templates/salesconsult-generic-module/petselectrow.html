@@ -1,0 +1,34 @@
+<th:block th:fragment="petRow">
+    <tr>
+        <td>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${offset + iStat.index} + '].checked','','','1')}"></th:block>
+        </td>
+        <td th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
+        <td th:if="${salesType.isVisit}">
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${offset + iStat.index}+'].timeNeeded', '', '', ${timeList},  false,'-1')}"
+                    th:with="required=false"></th:block>
+        </td>
+        <td th:if="${salesType.isVisit}">
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${offset + iStat.index}+'].vet', '', '', ${staffList},  false,'-1')}"
+                    th:with="required=false"></th:block>
+        </td>
+        <td th:if="${salesType.isVisit}">
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${offset + iStat.index}+'].room', '', '', ${rooms},  false,'-1')}"
+                    th:with="required=false"></th:block>
+        </td>
+
+        <input th:name="'formPet[' + ${offset + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
+        <td>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement('reasonList['+${offset + iStat.index}+'].reason', '', '', ${reasons}, false,'-1')}"
+                    th:with="required=false"></th:block>
+        </td>
+        <td>
+            <input type="text" th:id="'formPet['+ ${offset + iStat.index}+'].purpose'" th:name="'formPet['+ ${offset + iStat.index}+'].purpose'"
+                           th:placeholder="#{label.title.purpose}" autocomplete="off">
+        </td>
+    </tr>
+</th:block>

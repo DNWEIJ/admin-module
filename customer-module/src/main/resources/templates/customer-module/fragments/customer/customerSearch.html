@@ -93,7 +93,7 @@
             <input list="input-customerName" id="customerFind" class="no-break" type="search" name="searchCriteria"
                    th:placeholder="#{label.customer.search.placeholder}"
                    th:data-alternatetext="#{label.customer.search.explenation}" autofocus
-                   hx-get="/customer/search/customer"
+                   th:hx-get="@{'/customer/search/customer'}"
                    hx-trigger="input[this.value.length >=2] changed delay:500ms, keyup[key=='Enter'], load"
                    hx-target="#input-customerName"
                    hx-indicator="#searching-indicator"

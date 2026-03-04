@@ -18,7 +18,6 @@ spring:
   messages:
     basename: admin.messages, shared.messages, customer.messages, lookup.messages,  supplyinventory.messages, sales.messages, consult.messages, vmas.messages, report.messages
   jpa:
-
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       naming:
@@ -27,10 +26,12 @@ spring:
     show-sql: false
     generate-ddl: false
     database: mysql
+# Create statements of tables
 #    properties:
-#      hibernate:
-#        generate-ddl: no
-#        show_sql: true
+#      javax.persistence.schema-generation.create-source: metadata
+#      javax.persistence.schema-generation.scripts.action: create
+#      javax.persistence.schema-generation.scripts.create-target: create_new-vmas.sql
+  #        show_sql: true
 #        use_sql_comments: true
 #        format_sql: true
   ssl:
@@ -52,8 +53,8 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
+    org.springframework.web: debug
+    org.springframework.security: debug
     org.hibernate.tool.schema: INFO
 #    org.hibernate.SQL: DEBUG
 #    org.hibernate.orm.jdbc.bind: TRACE
@@ -61,7 +62,7 @@ server:
   servlet:
     session:
       timeout: 15m
-  #    context-path: /gwz-vmas
+#    context-path: /gwz-vmas
 
   http2:
     enabled: true

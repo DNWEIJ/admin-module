@@ -22,16 +22,14 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId, @Param("memberId") Long memberId);
 
     @Query("""
-    SELECT sp
-    FROM Payment sp
-    WHERE sp.customer.id = :customerId AND sp.memberId = :memberId
-      AND sp.paymentDate = (
-          SELECT MAX(sp2.paymentDate)
-          FROM Payment sp2
-          WHERE sp2.customer.id = :customerId AND sp2.memberId = :memberId
-      )
-""")
-    Payment findMaxPaymentDate(
-            Long memberId, Long customerId
-    );
+                SELECT sp
+                FROM Payment sp
+                WHERE sp.customer.id = :customerId AND sp.memberId = :memberId
+                  AND sp.paymentDate = (
+                      SELECT MAX(sp2.paymentDate)
+                      FROM Payment sp2
+                      WHERE sp2.customer.id = :customerId AND sp2.memberId = :memberId
+                  )
+            """)
+    Optional <Payment> findMaxPaymentDate(Long memberId, Long customerId);
 }

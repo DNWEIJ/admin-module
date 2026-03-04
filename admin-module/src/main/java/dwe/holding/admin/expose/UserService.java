@@ -9,6 +9,7 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.admin.transactional.TransactionalUserService;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

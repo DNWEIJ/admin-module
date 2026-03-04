@@ -55,13 +55,15 @@ public class VmasUserPreferences {
 
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showDiagnoses = YesNoEnum.Yes;
+    private String color;
 
     public VmasUserPreferences valid() {
         // if there is a null field, we are not correct and need to reset
         if (
                 agendaVet1 == null || agendaVet2 == null || agendaVet3 == null
                         || searchCustStart == null || searchCustStreet == null || searchCustNameTelephone == null || searchCustPet == null
-                        || showVisitTotal == null || showCustomerPet == null || showConsult == null || showAnalyse == null || showProducts == null || showDiagnoses == null) {
+                        || showVisitTotal == null || showCustomerPet == null || showConsult == null || showAnalyse == null
+                        || showProducts == null || showDiagnoses == null || color == null) {
             return new VmasUserPreferences(); // one or more fields are null → invalid
         }
         return this; // all fields are non-null → valid

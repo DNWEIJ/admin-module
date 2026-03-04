@@ -38,6 +38,7 @@ public class AddOrDeletePetToAppointmentModalController {
     private final LookupPurposeRepository lookupPurposeRepository;
     private final UserService userService;
     private final LookupRoomRepository lookupRoomRepository;
+    public static final String OTC_URL = "/sales/otc/customer/{customerId}/visit/{visitId}";
 
     @GetMapping("/customer/{customerId}/appointment/{appointmentId}/addpet/{salesType}")
     String getModalAddPetHtmxModal(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId, @NotNull @PathVariable SalesType salesType, Model model, RedirectAttributes redirect) {
@@ -93,17 +94,26 @@ public class AddOrDeletePetToAppointmentModalController {
     }
 
     @DeleteMapping("/customer/{customerId}/visit/{visitId}/pet/{petId}")
-    String deletePetFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long petId, HttpServletResponse response) {
+    String deletePetFromAppointment(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long petId,
+                                    HttpServletResponse response,    @RequestHeader(value = "HX-Current-URL", required = false) String hxCurrentUrl) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
 
         Visit visit = appointmentVisitService.deletePetFromAppointment(
                 visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow()
                 , petId);
+        // no modal call
+        if(hxCurrentUrl == null || hxCurrentUrl.isEmpty()) {
+            response.setHeader("HX-Trigger", "{\"refreshPage\": {\"url\":\""
+                    + VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString())
+                    + "?callFrom=customer\"}}" // customer / agenda are the options
+            );
+        } else  {
+            response.setHeader("HX-Trigger", "{\"refreshPage\": {\"url\":\""
+                    + OTC_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString())
+                    + "?callFrom=customer\"}}" // customer / agenda are the options
+            );
 
-        response.setHeader("HX-Trigger","{\"refreshPage\": {\"url\":\""
-                 + VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString())
-                +"?callFrom=customer\"}}" // customer / agenda are the options
-        );
+        }
         return "fragments/elements/empty";
     }
 }

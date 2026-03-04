@@ -4,7 +4,7 @@
     <div role="icons">
         <ul>
             <li>
-                <a href="/consult/visit/search" data-tooltip="New appointment" data-placement="right">
+                <a th:href="@{/consult/visit/search}" data-tooltip="New appointment" data-placement="right">
                     <svg class="svg-header-icon"
                          xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24"
@@ -20,7 +20,7 @@
                 </a>
             </li>
             <li>
-                <a href="/sales/otc/search" data-tooltip="OTC" data-placement="bottom">
+                <a th:href="@{/sales/otc/search}" data-tooltip="OTC" data-placement="bottom">
                     <svg class="svg-header-icon"
                          xmlns="http://www.w3.org/2000/svg"
 
@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li>
-                <a href="/sales/price/sell" data-tooltip="Price Information" data-placement="bottom">
+                <a th:href="@{/sales/price/sell}" data-tooltip="Price Information" data-placement="bottom">
                     <svg class="svg-header-icon"
                          xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24"
@@ -58,7 +58,7 @@
                 </a>
             </li>
             <li>
-                <a href="/agenda/agenda" data-tooltip="Agenda" data-placement="bottom">
+                <a th:href="@{/agenda/agenda}" data-tooltip="Agenda" data-placement="bottom">
                     <svg class="svg-header-icon"
                          xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24"
@@ -74,7 +74,7 @@
                 </a>
             </li>
             <li>
-                <a href="/customer/customer" data-tooltip="Customer & Pet" data-placement="bottom">
+                <a th:href="@{/customer/customer}" data-tooltip="Customer & Pet" data-placement="bottom">
                     <svg class="svg-header-icon"
                          xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24"
@@ -97,11 +97,11 @@
                 <details name="menu-items">
                     <summary>Task</summary>
                     <ul>
-                        <li><a href="/report/visit/list">Consult list</a></li>
-                        <li><a href="/report/reminders">Report Reminders</a></li>
-                        <li><a href="/admin/user">Agenda Tasks</a></li>
-                        <li><a href="/report/email">(E)mail customers</a></li>
-                        <li><a href="/admin/user">Reports</a></li>
+                        <li><a th:href="@{/report/visit/list}">Consult list</a></li>
+                        <li><a th:href="@{/report/reminders}">Report Reminders</a></li>
+                        <li><a th:href="@{/admin/user}">Agenda Tasks</a></li>
+                        <li><a th:href="@{/report/email}">(E)mail customers</a></li>
+                        <li><a th:href="@{/admin/user}">Reports</a></li>
                     </ul>
                 </details>
             </li>
@@ -109,11 +109,11 @@
                 <details name="menu-items">
                     <summary>Supplies</summary>
                     <ul>
-                        <li><a href="/supplies/distributor">Distributor</a></li>
-                        <li><a href="/supplies/supplies/list">Inventory</a></li>
-                        <li><a href="/costing/category">Category Maintenance</a></li>
-                        <li><a href="/costing/product">Product Maintenance</a></li>
-                        <li><a href="/admin/user">Maintenance Prices</a></li>
+                        <li><a th:href="@{/supplies/distributor}">Distributor</a></li>
+                        <li><a th:href="@{/supplies/supplies/list}">Inventory</a></li>
+                        <li><a th:href="@{/costing/category}">Category Maintenance</a></li>
+                        <li><a th:href="@{/costing/product}">Product Maintenance</a></li>
+                        <li><a th:href="@{/admin/user}">Maintenance Prices</a></li>
                     </ul>
                 </details>
             </li>
@@ -121,14 +121,14 @@
                 <details name="menu-items">
                     <summary>Financials</summary>
                     <ul>
-                        <li><a href="/report/paymentsr">Payments</a></li>
-                        <li><a href="/admin/user">Cash Flow</a></li>
-                        <li><a href="/admin/user">Cash Basis</a></li>
-                        <li><a href="/admin/user">Accounts Receivable</a></li>
-                        <li><a href="/admin/user">Misc Expenses</a></li>
-                        <li><a href="/admin/user">Refunds</a></li>
-                        <li><a href="/admin/user">Misc Transactions</a></li>
-                        <li><a href="/admin/user">Reminder Invoice</a></li>
+                        <li><a th:href="@{/report/paymentsr}">Payments</a></li>
+                        <li><a th:href="@{/admin/user}">Cash Flow</a></li>
+                        <li><a th:href="@{/admin/user}">Cash Basis</a></li>
+                        <li><a th:href="@{/admin/user}">Accounts Receivable</a></li>
+                        <li><a th:href="@{/admin/user}">Misc Expenses</a></li>
+                        <li><a th:href="@{/admin/user}">Refunds</a></li>
+                        <li><a th:href="@{/admin/user}">Misc Transactions</a></li>
+                        <li><a th:href="@{/admin/user}">Reminder Invoice</a></li>
                     </ul>
                 </details>
             </li>
@@ -136,23 +136,23 @@
                 <details name="menu-items">
                     <summary>Admin</summary>
                     <ul>
-                        <li><a href="/admin/localmember">Local Member</a></li>
-                        <li><a href="/admin/user">User</a></li>
+                        <li><a th:href="@{/admin/localmember}">Local Member</a></li>
+                        <li><a th:href="@{/admin/user}">User</a></li>
                         <li>
                             <details>
                                 <summary>Lookup</summary>
                                 <ul>
-                                    <li><a href="/customer/lookup/diagnosis">Diagnose</a></li>
-                                    <li><a href="/customer/lookup/purposes">Purpose</a></li>
-                                    <li><a href="/customer/lookup/rooms">Room</a></li>
-                                    <li><a href="/customer/lookup/species">Species</a></li>
-                                    <li><a href="/customer/lookup/notepurposes">Notes</a></li>
+                                    <li><a th:href="@{/customer/lookup/diagnosis}">Diagnose</a></li>
+                                    <li><a th:href="@{/customer/lookup/purposes}">Purpose</a></li>
+                                    <li><a th:href="@{/customer/lookup/rooms}">Room</a></li>
+                                    <li><a th:href="@{/customer/lookup/species}">Species</a></li>
+                                    <li><a th:href="@{/customer/lookup/notepurposes}">Notes</a></li>
                                 </ul>
                             </details>
                         </li>
-                        <li><a href="/admin/user">Analyses</a></li>
-                        <li><a href="/admin/user">Labels</a></li>
-                        <li><a href="/admin/user">Indicators</a></li>
+                        <li><a th:href="@{/admin/user}">Analyses</a></li>
+                        <li><a th:href="@{/admin/user}">Labels</a></li>
+                        <li><a th:href="@{/admin/user}">Indicators</a></li>
                     </ul>
                 </details>
             </li>
@@ -160,10 +160,10 @@
                 <details name="menu-items">
                     <summary>SuperAdmin</summary>
                     <ul>
-                        <li><a href="/admin/member">Member</a></li>
-                        <li><a href="/admin/function">Function</a></li>
-                        <li><a href="/admin/role">Role</a></li>
-                        <li><a href="/admin/role">Reports</a></li>
+                        <li><a th:href="@{/admin/member}">Member</a></li>
+                        <li><a th:href="@{/admin/function}">Function</a></li>
+                        <li><a th:href="@{/admin/role}">Role</a></li>
+                        <li><a th:href="@{/admin/role}">Reports</a></li>
                     </ul>
                 </details>
             </li>
@@ -171,24 +171,22 @@
                 <details name="menu-items">
                     <summary>Lookup</summary>
                     <ul>
-                        <li><a href="/admin/localmember">Diagnose</a></li>
-                        <li><a href="/admin/user">Purpose</a></li>
-                        <li><a href="/admin/user">Room</a></li>
-                        <li><a href="/admin/user">Species</a></li>
-                        <li><a href="/admin/user">Notes</a></li>
+                        <li><a th:href="@{/customer/lookup/diagnosis}">Diagnose</a></li>
+                        <li><a th:href="@{/customer/lookup/purposes}">Purpose</a></li>
+                        <li><a th:href="@{/customer/lookup/rooms}">Room</a></li>
+                        <li><a th:href="@{/customer/lookup/species}">Species</a></li>
+                        <li><a th:href="@{/customer/lookup/notepurposes}">Notes</a></li>
                     </ul>
                 </details>
             </li>
-
         </ul>
     </div>
     <div role="buttons">
         <ul>
             <li>
-                <button class="" onclick="/admin/logout">Logout</button>
-                <button class="" onclick="/admin/something">Something</button>
+                <button th:onclick="|window.location.href='@{/admin/logout}'|">Logout</button>
+                <button th:onclick="|window.location.href='@{/admin/something}'|">Something</button>
             </li>
         </ul>
     </div>
 </nav>
-

@@ -3,8 +3,10 @@ package dwe.holding.salesconsult.sales.controller.otc;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.expose.CustomerService;
+import dwe.holding.salesconsult.consult.controller.HtmxVisitLineItemsController;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
+import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
@@ -28,6 +30,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateLineItemsInModel;
+import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateVisitStatusInModel;
 import static dwe.holding.salesconsult.sales.controller.ValidationHelper.validateAppointmenIsOk;
 
 @RequestMapping("/sales")
@@ -40,6 +43,8 @@ public class OTCSellController {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentVisitService appointmentVisitService;
     private final VisitRepository visitRepository;
+    private final HtmxVisitLineItemsController htmxVisitLineItemsController;
+
 
     @GetMapping("/otc/customer/{customerId}/visit/{visitId}")
     String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Model model, RedirectAttributes redirect) {
@@ -52,6 +57,7 @@ public class OTCSellController {
         Appointment app = visit.getAppointment();
         HashSet<Long> listPetsOnAppointment = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
 
+        updateVisitStatusInModel(model, visit.getStatus());
         model
                 .addAttribute("customer", customer)
                 // using the visit Id so switching between the pets is going ok since we change the url
@@ -60,8 +66,8 @@ public class OTCSellController {
                 .addAttribute("selectedPet", visit.getPet())
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && !pet.deceased()))
                 .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && pet.deceased()))
-                .addAttribute("costingSearchUrl", "/otc/customer/"+ customer.id() +"/visit/" + visit.getId());
-        updateModel(model, visit.getPet().getId(),customer.id(), visit);
+        ;
+        updateModel(model, visit, customer.id());
         return "salesconsult-generic-module/productpage";
     }
 
@@ -85,38 +91,47 @@ public class OTCSellController {
 
     @DeleteMapping("/otc/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
     String deleteLineItem(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @NotNull @PathVariable Long lineItemId, RedirectAttributes redirect, Model model) {
-        CustomerService.Customer customer = customerService.searchCustomer(customerId);
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
+            return "redirect:/sales/otc/search/"; // todo: to far back, see if we can just refresh the page..so it shows no lineitems adding anymore
+
+        CustomerService.Customer customer = customerService.searchCustomerFromPet(visit.getPet().getId());
+        if (!customer.id().equals(customerId)) {
+            // TODO: should redirect to otc
+            redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
+        }
 
         visit = appointmentVisitService.deleteLineItemFromVisit(visit, lineItemId);
-        updateModel(model, visit.getPet().getId(),customer.id(), visit);
+
+        updateModel(model, visit, customerId);
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
-    // TODO do we need to add version ?
-    @PostMapping("/otc/customer/{customerId}/visit/{visitId}")
-    String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @PathVariable Long appointmentId, @PathVariable Long petId,
+    @PostMapping("/otc/customer/{customerId}/visit/{visitId}/lineitem")
+    String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @PathVariable Long visitId,
                                           @NotNull BigDecimal inputCostingQuantity, @NotNull Long inputCostingId,
                                           String inputBatchNumber, String spillageName, Model model, RedirectAttributes redirect) {
-        CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
+        Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
+        if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
+            return "redirect:/sales/otc/search/";// todo: to far back, see if we can just refresh the page..so it shows no lineitems adding anymore
+
+        CustomerService.Customer customer = customerService.searchCustomerFromPet(visit.getPet().getId());
         if (!customer.id().equals(customerId)) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
         }
-        Appointment app = appointmentRepository.findByIdAndMemberId(appointmentId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        lineItemService.createOtcLineItem(app, petId, inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
-        updateModel(model, petId, customer.id(), app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get());
+        lineItemService.createOtcLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
+        updateModel(model, visit, customerId);
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
 
-    private void updateModel(Model model, Long petId, Long customerId, Visit visit) {
+    private void updateModel(Model model,  Visit visit,Long customerId) {
 
-        updateLineItemsInModel(model, lineItemService.getLineItemsForPet(petId, visit.getAppointment().getId()));
+        updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
-                .addAttribute("costingSearchUrl",  "/otc/customer/"+ customerId +"/visit/" + visit.getId())
+                .addAttribute("costingSearchUrl", "/sales/otc/customer/" + customerId + "/visit/" + visit.getId())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("categoryNames", costingService.getCategories())

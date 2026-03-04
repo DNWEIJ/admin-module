@@ -1,0 +1,44 @@
+<dialog id="soap-modal" class="modal-xlg" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.create} +' '+ #{label.soap.title}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <style>
+            details.visit > :not(summary) {
+                margin-left: 1.5rem;
+            }
+
+            details.note > :not(summary) {
+                margin-left: 1.5rem;
+            }
+
+            .lineitem {
+                margin-top: .5rem;
+            }
+
+            summary {
+                font-weight: bold;
+                list-style: none;
+                cursor: default;
+                background-color: white;
+            }
+        </style>
+        <div th:replace="~{consult-module/soap/fragments/soap::SoapData}"></div>
+        <footer>
+            <div class="grid">
+                <button onclick="document.querySelectorAll('.visit , .note ').forEach(d => d.open = !d.open);">Toggle Open/Close</button>
+                <button data-target="soap-modal" onclick="toggleModal(event)" th:text="#{label.button.close}"></button>
+            </div>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("soap-modal")
+            closeModal(modal)
+        });
+    </script>
+</dialog>

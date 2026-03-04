@@ -5,9 +5,11 @@ import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.vmas.model.enums.ColorEnum;
 import dwe.holding.vmas.model.VmasUserPreferences;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
@@ -52,6 +54,14 @@ public class VmasUserPreferencesController {
         );
 
         return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
+    }
+
+    @PostMapping("/userpreferences/color")
+    String color(@NotNull ColorEnum color) {
+        VmasUserPreferences prefData = objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), VmasUserPreferences.class).valid();
+        prefData.setColor(color.getValue());
+        userService.saveUserSettings(objectMapper.writeValueAsString(prefData));
+        return "fragments/elements/empty";
     }
 
     record SettingsForm(Long localMemberId, LanguagePrefEnum language, String username, String email, VmasUserPreferences userPreferences) {

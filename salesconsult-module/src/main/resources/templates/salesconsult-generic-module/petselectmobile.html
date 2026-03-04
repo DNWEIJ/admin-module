@@ -1,0 +1,33 @@
+<th:block th:fragment="petMobile">
+    <div class="mobile-card">
+        asdasd[[${offset}]]adasd
+        <div class="mobile-card-header">
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox( 'formPet[' + ${offset + iStat.index} + '].checked','','',${1+iStat.index})}"></th:block>
+            <strong th:text="${pet.name} + ' (' + ${pet.species()} + ')'"></strong>
+            <span th:if="${pet.warningInfo != ''}" th:data-tooltip="${pet.warningInfo}" class="emoji-icon wiggle">🚨</span>
+        </div>
+        <input th:name="'formPet[' + ${offset + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
+        <div th:if="${salesType.isVisit}" class="mobile-field">
+            <label>[[#{label.visit.timeNeeded}]]</label>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown( 'formPet['+${offset + iStat.index}+'].timeNeeded', '', '', ${timeList}, false, '-1')}"></th:block>
+        </div>
+        <div th:if="${salesType.isVisit}" class="mobile-field">
+            <label>[[#{label.visit.vet}]]</label>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown( 'formPet['+${offset + iStat.index}+'].vet', '', ${selectedVet}, ${staffList}, false, '-1')}"></th:block>
+        </div>
+        <div th:if="${salesType.isVisit}" class="mobile-field">
+            <label>[[#{label.visit.room}]]</label>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown( 'formPet['+${offset + iStat.index}+'].room', '', ${selectedRoom}, ${rooms}, false, '-1')}"></th:block>
+        </div>
+        <div class="mobile-field">
+            <label>[[#{label.otc.reason}]]</label>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdownWithDataElement( 'reasonList['+${offset + iStat.index}+'].reason', '', '', ${reasons}, false, '-1')}"></th:block>
+        </div>
+        <div class="mobile-field">
+            <th:block th:insert="~{fragments/elements/input::inputHtml( 'formPet['+${offset + iStat.index}+'].purpose', 'label.title.purpose','','-1')}"
+                      th:with="required=false, extraClass='min-width'">
+
+            </th:block>
+        </div>
+    </div>
+</th:block>

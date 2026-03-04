@@ -1,6 +1,10 @@
 <th:block th:fragment="template(name, list)">
-    <div><h6><strong>Consult comments</strong></h6></div>
+    <label th:text="#{label.consult.comments}"></label>
     <div class="grid-row">
+        <div class="supersmall align-center">
+            <th:block th:insert="~{fragments/elements/select::checkBox('enlargeComment','','false','0')}"
+                      th:with="placement='right',tooltip=#{label.consult.comment.increase}, switch='switch'"></th:block>
+        </div>
         <div class="supersmall align-center">
             <th:block th:insert="~{fragments/elements/select::checkBox('overwriteText','','true','0')}"
                       th:with="placement='right',tooltip=#{visit.template.overwrite}, switch='switch'"></th:block>
@@ -15,7 +19,7 @@
         </div>
     </div>
     <div class="grid-row">
-    <textarea cols="110" id="comments" name="comments" rows="10" th:utext="${visit.comments}"></textarea>
+    <textarea style="width:100%; height:12rem;" id="comments" name="comments" th:utext="${visit.comments}"></textarea>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -24,6 +28,9 @@
                     document.getElementById("comments").value =
                         this.selectedOptions[0].dataset.element || "";
                 }
+            });
+            enlargeComment.addEventListener("change", function () {
+                document.getElementById("comments").style.height = this.checked ? "40rem": "12rem";
             });
         });
     </script>

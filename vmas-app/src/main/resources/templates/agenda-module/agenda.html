@@ -39,7 +39,8 @@
 
 <input type="hidden" id="modalCommunication" name="creationDate" hx-trigger="change" hx-target="#modal-container-agenda"
        data-originalUrl="/consult/visit/search" hx-get="/consult/visit/search"
-       data-originalAfterRequest="prepareAll()" hx-on::after-request="prepareAll()" >
+       data-originalAfterRequest="prepareAll()" hx-on::after-request="prepareAll()">
+
 <div id="modal-container-agenda"></div>
 <div id="modal-container"></div>
 <div th:replace="~{/fragments/elements/sessiontimeout}"></div>
@@ -158,13 +159,25 @@
     agendaState.setCalendar(calendar)
 
     function createEvent(info) {
-        console.log("creteEvent")
-        console.log(info)
+        htmx.ajax('POST', '/agenda/event/initial', {
+            target: document.getElementById('modal-container'),
+            source: document.body,
+            values: {
+                startDate: info.startStr,
+                endDate: info.endStr,
+                resource: info.resource.id,
+                _csrf: document.querySelector('meta[name="_csrf"]').content
+            },
+            headers: { 'HX-Request': 'true' }
+        });
     }
+
     function moveAppointment(info) {
         console.log("moveAppointment")
         console.log(info)
         return false;
+        // todo implement!!
+
         // cannot be in the past
         // if (info.date.getTime() < Date.now()) return;
         // let inputField = document.getElementById('modalCommunication')

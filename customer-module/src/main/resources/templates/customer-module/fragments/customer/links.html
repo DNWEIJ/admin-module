@@ -1,32 +1,36 @@
 <th:block th:if="${customerId != null}" th:fragment="customerLinks">
     <div class="desktop-tablet-only">
         <div role="group">
-            <a role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/pets'" th:text="#{label.title.pet}"></a>
-            <a role="button" th:class="${activeMenu == 'visits'} ? 'secondary' : null" th:href="'/consult/visit/customer/'+${customerId}+'/visits'"
-               th:text="#{label.title.visit}"></a>
-            <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null" th:href="'/sales/customer/'+${customerId}+'/payments'"
-               th:text="#{label.title.payment}"></a>
-            <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null" th:href="'/supplies/customer/'+${customerId}+'/reminders'"
-               th:text="#{label.title.reminder}"></a>
-            <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/notes'" th:text="#{label.title.notes}"></a>
-            <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null" th:href="'/consult/customer/'+${customerId}+'/estimates'"
-               th:text="#{label.title.estimate}"></a>
+            <a role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null"
+               th:href="@{/customer/customer/{customerId}/pets(customerId=${customerId})}" th:text="#{label.title.pet}"></a>
+            <a role="button" th:class="${activeMenu == 'visits'} ? 'secondary' : null"
+               th:href="@{/consult/visit/customer/{customerId}/visits(customerId=${customerId})}" th:text="#{label.title.visit}"></a>
+            <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null"
+               th:href="@{/sales/customer/{customerId}/payments(customerId=${customerId})}" th:text="#{label.title.payment}"></a>
+            <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null"
+               th:href="@{/supplies/customer/{customerId}/reminders(customerId=${customerId})}" th:text="#{label.title.reminder}"></a>
+            <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null"
+               th:href="@{/customer/customer/{customerId}/notes(customerId=${customerId})}" th:text="#{label.title.notes}"></a>
+            <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null"
+               th:href="@{/consult/customer/{customerId}/estimates(customerId=${customerId})}" th:text="#{label.title.estimate}"></a>
         </div>
     </div>
     <div class="mobile-only">
         <div role="group">
-            <a role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/pets'" th:text="#{label.title.pet}"></a>
-            <a role="button" th:class="${activeMenu == 'visits'} ? 'secondary' : null" th:href="'/consult/visit/customer/'+${customerId}+'/visits'"
-               th:text="#{label.title.visit}"></a>
-            <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null" th:href="'/sales/customer/'+${customerId}+'/payments'"
-               th:text="#{label.title.payment}"></a>
+            <a role="button" th:class="${activeMenu == 'pets'} ? 'secondary' : null"
+               th:href="@{/customer/customer/{customerId}/pets(customerId=${customerId})}" th:text="#{label.title.pet}"></a>
+            <a role="button" th:class="${activeMenu == 'visits'} ? 'secondary' : null"
+               th:href="@{/consult/visit/customer/{customerId}/visits(customerId=${customerId})}" th:text="#{label.title.visit}"></a>
+            <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null"
+               th:href="@{/sales/customer/{customerId}/payments(customerId=${customerId})}" th:text="#{label.title.payment}"></a>
         </div>
         <div role="group">
-            <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null" th:href="'/supplies/customer/'+${customerId}+'/reminders'"
-               th:text="#{label.title.reminder}"></a>
-            <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null" th:href="'/customer/customer/'+${customerId}+'/notes'" th:text="#{label.title.notes}"></a>
-            <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null" th:href="'/consult/customer/'+${customerId}+'/estimates'"
-               th:text="#{label.title.estimate}"></a>
+            <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null"
+               th:href="@{/supplies/customer/{customerId}/reminders(customerId=${customerId})}" th:text="#{label.title.reminder}"></a>
+            <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null"
+               th:href="@{/customer/customer/{customerId}/notes(customerId=${customerId})}" th:text="#{label.title.notes}"></a>
+            <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null"
+               th:href="@{/consult/customer/{customerId}/estimates(customerId=${customerId})}" th:text="#{label.title.estimate}"></a>
         </div>
     </div>
     <hr/>

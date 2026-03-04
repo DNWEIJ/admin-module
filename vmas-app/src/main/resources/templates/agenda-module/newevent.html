@@ -1,0 +1,40 @@
+<dialog id="create-event-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.create} +' '+ #{label.title.event}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <form id="eventForm" action="/agenda/event" method="post">
+            <input id="id" name="id" th:value="${event.id}" type="hidden"/>
+            <input id="version" name="version" th:value="${event.version}" type="hidden"/>
+
+            [[${#temporals.format(event.from, 'yyyy-MM-dd hh:mm')}]]
+
+
+            <fieldset>
+                <legend>Event</legend>
+                <input id="eventDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01" th:value="${#temporals.format(event.from, 'yyyy-MM-dd hh:mm')}">
+                <input id="eventDuration" name="duration" required autofocus type="number" autocomplete="off" th:value="${event.duration}">
+                <div class="grid">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','event.title','event.title','1')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','event.decsription','event.description','1')}"></th:block>
+                </div>
+            </fieldset>
+        <footer>
+            <div class="grid">
+                <input name="_save" type="submit" form="eventForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="create-event-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </div>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("create-event-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

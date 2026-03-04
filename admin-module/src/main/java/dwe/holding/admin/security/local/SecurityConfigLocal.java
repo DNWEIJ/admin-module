@@ -5,6 +5,7 @@ import dwe.holding.admin.security.AdminAuthorizationManager;
 import dwe.holding.admin.security.RedirectToLoginEntryPoint;
 import dwe.holding.admin.security.TenantAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -39,6 +40,9 @@ public class SecurityConfigLocal {
     @Autowired
     private TenantAuthenticationProvider customAuthenticationProvider;
 
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, AdminAuthorizationManager adminAuthorizationManager) throws Exception {
 
@@ -53,11 +57,11 @@ public class SecurityConfigLocal {
 
         RequestMatcher publicEndpoints = request -> {
             String req = request.getRequestURI();
-            return req.startsWith("/admin/login") ||
-                    req.startsWith("/admin/logout") ||
-                    req.startsWith("/admin/error") ||
-                    req.startsWith("/lib/") ||
-                    req.startsWith("/images/");
+            return req.startsWith(contextPath + "/admin/login") ||
+                    req.startsWith(contextPath + "/admin/logout") ||
+                    req.startsWith(contextPath + "/admin/error") ||
+                    req.startsWith(contextPath + "/lib/") ||
+                    req.startsWith(contextPath + "/images/");
         };
 
         // Composite AuthorizationManager
@@ -69,30 +73,22 @@ public class SecurityConfigLocal {
                     return adminAuthorizationManager.authorize(authenticationSupplier, context);
                 };
         http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(new CookieCsrfTokenRepository())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-
-                .authorizeHttpRequests(authz -> authz
-                        .anyRequest().access(compositeAuthManager)
-                )
+                .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository()).csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                .authorizeHttpRequests(authz -> authz.anyRequest().access(compositeAuthManager))
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login")) // ⬅️ custom!
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint(contextPath + "/admin/login")) // ⬅️ custom!
+                        .accessDeniedHandler((req, res, e) -> res.sendRedirect(contextPath + "/admin/login")) // authenticated but forbidden
                 )
                 // required to persist the security context between requests
-                .securityContext(securityContext ->
-                        securityContext
-                                .requireExplicitSave(false) // ensures context is stored automatically
+                .securityContext(securityContext ->securityContext.requireExplicitSave(false) // ensures context is stored automatically
                 )
                 // Session management
                 .sessionManagement(session ->
                         session
-                                .sessionCreationPolicy(IF_REQUIRED)
-                                .maximumSessions(1) // limit concurrent sessions
-                                .maxSessionsPreventsLogin(false)
+                                .sessionCreationPolicy(IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false)
                 )
                 .logout(logout -> logout
+
                         .invalidateHttpSession(true)
                         .addLogoutHandler(clearSiteData)
                 )

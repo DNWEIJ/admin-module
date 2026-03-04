@@ -15,13 +15,18 @@
         <div th:text="${appointment.id} + ' - ' + ${selectedPet.name}"></div>
     </div>
 
+    <div id="actionbar">
+        <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
+    </div>
+    
     <block th:if="${!salesType.isPriceInfo}">
         <fieldset role="group" class="grid">
             <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
         </fieldset>
         <fieldset class="grid">
             <th:block th:with="extras=~{sales-module/fragments/extrabuttons::historySoapNoteButtons}">
-                <th:block th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${selectedPet}, ${customer}, ${visit}, ${appointment}, ${extras}, false)}"></th:block>
+                <th:block
+                        th:insert="~{sales-module/fragments/petdropdownandbuttons::petDropDownAndButtons(${petsOnAppointment}, ${selectedPet}, ${customer}, ${visit}, ${appointment}, ${extras}, false)}"></th:block>
             </th:block>
         </fieldset>
         <hr/>
@@ -29,7 +34,8 @@
 
     <details id="lineitems" open>
         <summary class="three-elements">
-            <a href="" th:title="#{visit.lineitems.history}" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}" hx-target="#modal-container"
+            <a href="" th:title="#{visit.lineitems.history}" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}"
+               hx-target="#modal-container"
                hx-swap="innerHTML">️🛒</a>
             <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
             <a href="/info/lineiteminfo" title="More info" class="emoji-icon">ℹ️</a>

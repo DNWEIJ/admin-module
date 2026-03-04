@@ -2,11 +2,13 @@ package dwe.holding.salesconsult.consult.controller;
 
 import dwe.holding.admin.model.tenant.LocalMember;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import dwe.holding.admin.util.ControllerHelper;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.SoapAndHistoryService;
 import dwe.holding.supplyinventory.expose.CostingService;
 import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -57,6 +59,10 @@ public class HtmxSoapAndHistoryController {
                         .addAttribute("fragment", "consult-module/visit/dialog/history/diagnosehistory");
                 break;
             }
+//            case "all": {
+//                model.addAttribute()
+//            }
+
             default: {
                 model.addAttribute("fragment", "");
             }
@@ -65,9 +71,10 @@ public class HtmxSoapAndHistoryController {
     }
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/soap")
-    String returnSoapModal(@PathVariable Long customerId, @PathVariable Long petId, Model model) {
+    String returnSoapModal(@PathVariable Long customerId, @PathVariable Long petId, Model model, HttpServletRequest request) {
        // validate customer and pet
         customerService.searchCustomerAndPet(customerId, petId);
+        final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
 
         model.addAttribute("appointments", soapAndHistoryService.getSoap(petId));
         model.addAttribute("memberLocals", AutorisationUtils.getLocalMemberMap());
@@ -77,19 +84,22 @@ public class HtmxSoapAndHistoryController {
         model.addAttribute("clinic_address", editAddress(AutorisationUtils.getCurrentLocalMember()));
 
         model.addAttribute("pet", petRepository.findByIdAndMemberId(petId, AutorisationUtils.getCurrentUserMid()));
+        if (isHtmx) {
+            return "consult-module/soap/soapmodal";
+        }
         return "consult-module/soap/soap";
     }
 
     @PostMapping("/visit/customer/{customerId}/pet/{petId}/soap")
-    String printSoapModal(@PathVariable Long customerId, @PathVariable Long petId, String extraComment, Model model) {
-        returnSoapModal(customerId, petId, model);
+    String printSoapModal(@PathVariable Long customerId, @PathVariable Long petId, String extraComment, Model model,HttpServletRequest request) {
+        returnSoapModal(customerId, petId, model, request);
         model.addAttribute("extraComment", extraComment);
         return "consult-module/soap/soapprint";
     }
 
 
     private String editAddress(LocalMember memberLocal) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append((memberLocal.getAddress1() == null ? "" : memberLocal.getAddress1()));
         if (StringUtils.isNotEmpty(memberLocal.getAddress1())) {
             sb.append(" - ");

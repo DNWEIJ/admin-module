@@ -18,6 +18,7 @@
 <body>
 
 <section layout:fragment="content" class="login-page">
+    <img th:src="@{/images/logo.png}">
     <article>
         <header><h2 th:text="#{login.signin}"></h2></header>
         <div th:if="${param.error}">

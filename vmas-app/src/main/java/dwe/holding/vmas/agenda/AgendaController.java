@@ -5,10 +5,13 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -35,12 +38,32 @@ public class AgendaController {
                 .addAttribute("colorModal", colorModalButton())
                 .addAttribute("changeRoomVet", roomVetDropDown())
                 .addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid())
-                .addAttribute("ulResources","/agenda/resources")
+                .addAttribute("ulResources", "/agenda/resources")
                 .addAttribute("urlEvents", "/agenda/events")
         ;
-
         return "agenda-module/agenda";
     }
+
+    @PostMapping("/event/initial")
+    public String eventModalScreen(Model model, EventForm eventForm) {
+        model.addAttribute("event", new Event(null, 0, null, null,
+                        eventForm.startDate,
+                        Duration.between(eventForm.startDate, eventForm.endDate).toMinutes()
+                )
+        );
+        return "agenda-module/newevent";
+    }
+
+    @PostMapping("/event")
+    public String eventSave() {
+        return "agenda-module/event";
+    }
+
+    @DeleteMapping("/event")
+    public String eventDelete() {
+        return "agenda-module/event";
+    }
+
 
     private String selectDate(String date) {
         return """
@@ -86,6 +109,12 @@ public class AgendaController {
                 .reduce("", String::concat);
 
         return str.formatted(options);
+    }
+
+    public record EventForm(LocalDateTime startDate, LocalDateTime endDate, Long resourceId) {
+    }
+
+    public record Event(Long id, long version, String title, String description, LocalDateTime from, long duration) {
     }
 }
 

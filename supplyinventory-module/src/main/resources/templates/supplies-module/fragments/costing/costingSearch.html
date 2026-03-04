@@ -110,7 +110,6 @@
         }
 
         function resetForNextItem() {
-            console.log('resetForNextItem')
             // global values
             selectedIndex = -1
             selectedFieldDataSet = undefined
@@ -129,13 +128,11 @@
             }
 
             if (document.getElementById("holder-dropdown").classList.contains("hidden")) {
-                console.log('reset costingFind')
-                element = document.getElementById("costingFind")
+                 element = document.getElementById("costingFind")
                 element.value = ''
                 element.focus()
                 element.select()
             } else {
-                console.log('reset list')
                 document.getElementById("productsFromCategory").innerHTML = ""
                 document.getElementById("categoryList").focus()
                 document.getElementById("categoryList").select()

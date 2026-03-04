@@ -10,7 +10,7 @@
 
 <fieldset>
     <div>
-    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selectOnChange','label.notes.purpose.select', ${note.purpose}, ${purposeList}, true,'1')}"></th:block>
+    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selecPurposetOnChange','label.notes.purpose.select', ${note.purpose}, ${purposeList}, true,'1')}"></th:block>
     <!-- on the modal, there is another purpose field, so we need to have a different id here -->
     <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','label.notes.purpose','note.purpose','0')}"></th:block>
     <br/>
@@ -20,9 +20,8 @@
 
 <script>
     function setPurposeFillFromDropDown() {
-        console.log('setPurposeFillFromDropDown loading');
-        document.getElementById('selectOnChange').onchange = function () {
-            document.getElementById('notepurpose').value = this.options[this.selectedIndex].text;
+        document.getElementById('selecPurposetOnChange').onchange = function () {
+            createForm.querySelector('input[name="purpose"]').value = this.options[this.selectedIndex].text;
         }
     }
 
