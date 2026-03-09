@@ -35,7 +35,7 @@ public class NoteController {
     private final NotePurposeLookupRepository notePurposeLookupRepository;
 
     @GetMapping("/customer/{customerId}/notes")
-    String list(@PathVariable Long customerId, Model model, RedirectAttributes redirect) {
+    String list(@PathVariable Long customerId, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         model.addAttribute("notes", noteRepository.findByPet_Customer_IdOrderByNoteDateDesc(customer.getId()));
         setModel(model, customerId);
@@ -59,7 +59,7 @@ public class NoteController {
 
 
     @GetMapping("/customer/{customerId}/notes/{notesId}")
-    String editRecord(@PathVariable Long customerId, @PathVariable Long notesId, Model model, RedirectAttributes redirect) {
+    String editRecord(@PathVariable Long customerId, @PathVariable Long notesId, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Note note = noteRepository.findById(notesId).orElseThrow();
         model.addAttribute("note", note.getPet().getCustomer().getId().equals(customer.getId()) ? note : new Note());
@@ -77,18 +77,22 @@ public class NoteController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/customer/customer/" + customerId + "/reminders";
         }
-        if (formNote.isNew()) {
-            noteRepository.save(
-                    Note.builder().textnote(formNote.getTextnote().trim())
-                            .noteDate(formNote.getNoteDate())
-                            .pet(pet)
-                            .purpose(formNote.getPurpose().trim())
-                            .staffMember(formNote.getStaffMember())
-                            .build()
-            );
-        } else {
-            noteRepository.save(formNote);
+
+        Note note = Note.builder()
+                .textnote(formNote.getTextnote().trim())
+                .noteDate(formNote.getNoteDate())
+                .pet(pet)
+                .notepurpose(formNote.getNotepurpose().trim())
+                .staffMember(formNote.getStaffMember()).build();
+        if (!formNote.isNew()) {
+            note = noteRepository.findById(formNote.getId()).orElseThrow();
+            note.setTextnote(formNote.getTextnote().trim());
+            note.setNoteDate(formNote.getNoteDate());
+            note.setNotepurpose(formNote.getNotepurpose().trim());
+            note.setStaffMember(formNote.getStaffMember());
         }
+        noteRepository.save(note);
+
         return "redirect:/customer/customer/" + customerId + "/notes";
     }
 

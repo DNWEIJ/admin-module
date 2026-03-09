@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Task</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+
+<main class="container">
+    <div id="task">
+        <h1>Daily Task</h1>
+        <form>
+            <!-- Location and Assign Staff side by side -->
+            <div class="grid">
+                <div>
+                    <label for="dailytasksgroup.mlid">Location</label>
+                    <select id="dailytasksgroup.mlid" name="dailytasksgroup.mlid">
+                        <option value="">&lt;&lt; Please choose &gt;&gt;</option>
+                        <option value="89" selected>Stadskliniek Uiterwaardenstraat</option>
+                        <option value="90">Stadskliniek Krugerplein</option>
+                        <option value="91">Stadskliniek Elpermeer</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="dailytasksgroup.staffmember">Assign Staff</label>
+                    <select id="dailytasksgroup.staffmember" name="dailytasksgroup.staffmember">
+                        <option value="">&lt;&lt; Please choose &gt;&gt;</option>
+                        <option value="Drs. A. de Bruin">Drs. A. de Bruin</option>
+                        <option value="Drs. A. Lafuente Ramos">Drs. A. Lafuente Ramos</option>
+                        <option value="Chantal van Hoekelen">Chantal van Hoekelen</option>
+                        <option value="daniel">daniel</option>
+                        <option value="Daphne Ruggenberg">Daphne Ruggenberg</option>
+                        <option value="Eva de Boer">Eva de Boer</option>
+                        <option value="Herman Rozengarden">Herman Rozengarden</option>
+                        <option value="Jane Doe">Jane Doe</option>
+                        <option value="Drs. J. Hoekstra">Drs. J. Hoekstra</option>
+                        <option value="Kim Broertjes">Kim Broertjes</option>
+                        <option value="Drs. L.W.H. Nouws">Drs. L.W.H. Nouws</option>
+                        <option value="Drs. E.E.D. Winius">Drs. E.E.D. Winius</option>
+                        <option value="Rosanne Meijer">Rosanne Meijer</option>
+                        <option value="Wendy Oudenbroek">Wendy Oudenbroek</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Task full line -->
+            <div>
+                <label for="dailytasksgroup.task">Task</label>
+                <input id="dailytasksgroup.task" name="dailytasksgroup.task" type="text" size="44" maxlength="50">
+            </div>
+
+            <!-- Task Notes full line -->
+            <div>
+                <label for="dailytasksgroup.tasknotes">Task Notes</label>
+                <textarea id="dailytasksgroup.tasknotes" name="dailytasksgroup.tasknotes" rows="6" cols="80"></textarea>
+            </div>
+
+
+            <div class="grid">
+                <div>
+                    <label for="dateDto.startDate">Start Date</label>
+                    <input type="date" id="dateDto.startDate" name="dateDto.startDate" value="">
+                </div>
+                <div>
+                    <label for="dateDto.startTime">Start Time</label>
+                    <input type="time" id="dateDto.startTime" name="dateDto.startTime" value="">
+                </div>
+            </div>
+
+
+            <div class="grid">
+                <div>
+                    <label for="dateDto.endDate">End Date</label>
+                    <input type="date" id="dateDto.endDate" name="dateDto.endDate" value="">
+                </div>
+                <div>
+                    <label for="dateDto.endTime">End Time</label>
+                    <input type="time" id="dateDto.endTime" name="dateDto.endTime" value="">
+                </div>
+            </div>
+
+            <select id="recurrence" onchange="document.getElementById('custom_recurrence').style.display = this.value === 'Custom...' ? 'block' : 'none'">
+                <option selected>Does not repeat</option>
+                <option>Daily</option>
+                <option>Weekly on Thursday</option>
+                <option>Monthly on the first Thursday</option>
+                <option>Annually on March 5</option>
+                <option>Every weekday (Monday to Friday)</option>
+                <option>Custom...</option>
+            </select>
+
+            <div id="custom_recurrence" style="display: none">
+                <h2>Custom Recurrence</h2>
+                <div class="grid">
+                    <label>
+                        <input type="radio" name="repeat" value="on">
+                        Repeat every
+                    </label>
+                    <input type="number" id="interval" min="1" value="1">
+                    <select>
+                        <option value="DAILY">Day</option>
+                        <option value="WEEKLY" selected>Week</option>
+                        <option value="MONTHLY">Month</option>
+                        <option value="YEARLY">Year</option>
+                    </select>
+                </div>
+                <div class="grid" style="text-wrap: nowrap">
+                    <label>
+                        <input type="radio" name="repeat" value="on">
+                        Repeat on
+                    </label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Sun"> Sun</label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Mon"> Mon</label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Tue"> Tue</label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Wed"> Wed</label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Thu"> Thu</label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Fri"> Fri</label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Sat"> Sat</label>
+                </div>
+                <h4>Ends</h4>
+                <label>
+                    <input type="radio" name="ending" value="never" checked>
+                    Never
+                </label>
+                <div class="grid">
+                    <label>
+                        <input type="radio" name="ending" value="on">
+                        On
+                    </label>
+                    <input type="date" value="2026-06-04">
+                </div>
+                <div class="grid">
+                    <label>
+                        <input type="radio" name="ending" value="on">
+                        Occurrences
+                    </label>
+                    <input type="number" id="occurrences" min="1" value="1">
+                </div>
+            </div>
+            <div class="grid">
+                <button type="reset">Cancel</button>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</main>
+<script>
+    // Set today's date and current time as defaults
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const hh = String(today.getHours()).padStart(2, '0');
+    const min = String(today.getMinutes()).padStart(2, '0');
+
+    document.getElementById('dateDto.startDate').value = `${yyyy}-${mm}-${dd}`;
+    document.getElementById('dateDto.startTime').value = `${hh}:${min}`;
+    document.getElementById('dateDto.endDate').value = `${yyyy}-${mm}-${dd}`;
+    document.getElementById('dateDto.endTime').value = `${hh}:${min}`;
+</script>
+
+</body>
+</html>

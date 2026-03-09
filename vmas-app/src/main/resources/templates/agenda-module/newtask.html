@@ -1,0 +1,120 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title th:text="#{label.title.event}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <div th:replace="~{customer-module/fragments/customer/customerSearch::customerSearch(true, ${contextPath} + '/customer/customer', null)}"></div>
+    <form id="taskForm" action="" type="post">
+        <fieldset>
+            <legend></legend>
+            <div class="grid">
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${localMemberId}, ${localMembersList}, true,'1')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('veterinarian','visit.staff','', ${staffList}, false, '0')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('room','visit.room','', ${rooms}, false, '0')}"></th:block>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend></legend>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('task','label.task.description', 'taskDescription','0')}"></th:block>
+            <div>
+                <label for="dailytasksgroup.tasknotes" th:text="#{label.task.notes}"></label>
+                <textarea id="dailytasksgroup.tasknotes" name="dailytasksgroup.tasknotes" rows="6" cols="80"></textarea>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend></legend>
+            <div class="grid">
+                <label><input type="radio" name="datetime" value="on" th:text="#{label.task.specific.nodate}"></label>
+            </div>
+            <div class="grid">
+                <label><input type="radio" name="datetime" value="on" th:text="#{label.task.specific.datetime}"></label>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('start','label.task.startDateTime', 'startDate','5')}" th:with="type='datetime-local'"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('end','label.task.endDateTime', 'endDate','5')}" th:with="type='datetime-local'"></th:block>
+            </div>
+            <div class="grid">
+                <label><input type="radio" name="datetime" value="on" th:text="#{label.task.specific.date}"></label>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('start','label.task.startDate', 'startDate','5')}" th:with="type='date'"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('end','label.task.endDate', 'endDate','5')}" th:with="type='date'"></th:block>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend></legend>
+            <select id="recurrence"
+                    onchange="document.getElementById('custom_recurrence').style.display = this.value === 'custom' ? 'block' : 'none'">
+
+                <option value="none" th:text="#{label.task.recurrence.none}" selected></option>
+                <option value="daily" th:text="#{label.task.recurrence.daily}"></option>
+                <option value="weekly" th:text="#{label.task.recurrence.weekly}"></option>
+                <option value="monthly" th:text="#{label.task.recurrence.monthly}"></option>
+                <option value="annually" th:text="#{label.task.recurrence.annually}"></option>
+                <option value="weekdays" th:text="#{label.task.recurrence.weekdays}"></option>
+                <option value="custom" th:text="#{label.task.recurrence.custom}"></option>
+
+            </select>
+
+            <div id="custom_recurrence" style="display: none">
+                <h2 th:text="#{label.task.recurrence.custom}"></h2>
+
+                <div class="grid">
+                    <label>
+                        <input type="radio" name="repeat" value="on">
+                        <span th:text="#{label.task.recurrence.repeat.every}"></span>
+                    </label>
+
+                    <input type="number" id="interval" min="1" value="1">
+
+                    <select>
+                        <option value="DAILY" th:text="#{label.task.recurrence.unit.day}"></option>
+                        <option value="WEEKLY" selected th:text="#{label.task.recurrence.unit.week}"></option>
+                        <option value="MONTHLY" th:text="#{label.task.recurrence.unit.month}"></option>
+                        <option value="YEARLY" th:text="#{label.task.recurrence.unit.year}"></option>
+                    </select>
+                </div>
+
+                <div class="grid" style="text-wrap: nowrap">
+                    <label>
+                        <input type="radio" name="repeat" value="on">
+                        <span th:text="#{label.task.recurrence.repeat.on}"></span>
+                    </label>
+
+                    <label class="button"><input type="checkbox" name="weekday" value="Sun"> <span th:text="#{label.task.recurrence.day.sun}"></span></label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Mon"> <span th:text="#{label.task.recurrence.day.mon}"></span></label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Tue"> <span th:text="#{label.task.recurrence.day.tue}"></span></label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Wed"> <span th:text="#{label.task.recurrence.day.wed}"></span></label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Thu"> <span th:text="#{label.task.recurrence.day.thu}"></span></label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Fri"> <span th:text="#{label.task.recurrence.day.fri}"></span></label>
+                    <label class="button"><input type="checkbox" name="weekday" value="Sat"> <span th:text="#{label.task.recurrence.day.sat}"></span></label>
+                </div>
+
+                <h4 th:text="#{label.task.recurrence.ends}"></h4>
+
+                <label>
+                    <input type="radio" name="ending" value="never" checked>
+                    <span th:text="#{label.task.recurrence.ends.never}"></span>
+                </label>
+
+                <div class="grid">
+                    <label>
+                        <input type="radio" name="ending" value="on">
+                        <span th:text="#{label.task.recurrence.ends.on}"></span>
+                    </label>
+                    <input type="date" value="2026-06-04">
+                </div>
+
+                <div class="grid">
+                    <label>
+                        <input type="radio" name="ending" value="on">
+                        <span th:text="#{label.task.recurrence.ends.occurrences}"></span>
+                    </label>
+                    <input type="number" id="occurrences" min="1" value="1">
+                </div>
+            </div>
+        </fieldset>
+        <div class="grid">
+            <input name="_save" type="submit" form="taskForm" th:value="#{label.button.save}"/>
+        </div>
+    </form>
+</section>

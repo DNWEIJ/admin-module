@@ -4,7 +4,7 @@
   member_id,
  note_date,
  textnote,
- purpose,
+ notepurpose,
  staff_member,
  pet_id,
  added_by,

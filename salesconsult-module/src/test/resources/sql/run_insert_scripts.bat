@@ -17,3 +17,6 @@
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_analyse.sql
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_analyse_description.sql
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_analyse_item.sql
+
+# update printLabel and costing on lineitem and estimatelineitem
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\update_lineitem_estimatelineitem.sql

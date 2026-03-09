@@ -2,32 +2,124 @@
 header {
     position: sticky;
     top: 0;
-    z-index: 999;
 }
 
 /* tooltip set align */
 [data-tooltip]::before {
-
-    width: 100%;
-    white-space: break-spaces;
     text-indent: 0;
     text-align: left;
     font-family: 'JetBrains Mono', monospace;
     font-variant-ligatures: none; /* prevent ligatures from breaking alignment */
+    width: 100%;
+    min-width: 20rem;
 }
 
+.calendar-tooltip {
+    flex: 0 0 auto; /* do not grow, take natural height */
+    min-width: min-content;
+}
 
+.calendar-list-wrapper {
+    text-align: left;
+    width: 100%;
+}
+
+.calendar-list-body {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.calendar-list-title {
+    margin: 0;
+    padding: 0;
+
+    font-size: 110%;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Title stays on top */
 .calendar-title {
     margin: 0;
     padding: 0;
     background: dodgerblue;
     font-size: 110%;
     font-weight: bold;
+    color: white;
 }
 
-.ec-events article {
+
+
+
+.ec-event-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.calendar-title {
+    flex: 0 0 auto;
     margin: 0;
     padding: 0;
+    background: dodgerblue;
+    font-size: 110%;
+    font-weight: bold;
+    color: white;
+    line-height: 1.2em;
+}
+
+.calendar-body-wrapper {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+}
+
+.calendar-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+
+
+
+
+
+
+.global-tooltip {
+    position: fixed;
+    display: none;
+    padding: 0.25rem 0.5rem;
+    background-color: rgb(51, 51, 51); /* Pico dark tooltip background */
+    color: #fff; /* Tooltip text color */
+    font-size: 0.875rem;
+    border-radius: 0.25rem; /* Pico border-radius */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* don’t block hover */
+    z-index: 9999;
+    white-space: pre-line; /* preserve newlines in tooltip text */
+    max-width: 280px; /* optional max width like Pico */
+    line-height: 1.4;
+}
+.global-tooltip::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(51, 51, 51);
+    transform: rotate(45deg);
+    /* position will need to be adjusted dynamically depending on top/bottom/left/right */
+}
+
+.global-context {
+    position: fixed;
+    display: none;
 }
 
 /*Context menu */
@@ -42,11 +134,14 @@ header {
     background-color: rgb(245, 245, 245);
     border-radius: 10px;
     border: 3px solid darkgray;
-    z-index: 999;
+}
+
+hr {
+    border: 1px solid darkgray;
 }
 
 .contextmenu-item {
-    background-color: rgb(245, 245, 245);
+
     padding: 0.5rem 0.8rem;
     border-radius: 5px;
     margin: 0.05rem;
@@ -56,7 +151,11 @@ header {
 
 .contextmenu-item:hover {
     border: 1px solid rgb(219, 219, 219);
-    background-color: rgb(255, 255, 255);
+    background-color: darkgray;
+}
+
+.contextmenu-item:hover a {
+    color:rgb(245, 245, 245);
 }
 
 .active {
@@ -70,3 +169,6 @@ header {
     font-size: 14px;
 }
 
+.ec-event-tag {
+    inline-size: 1.5rem;
+}

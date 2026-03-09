@@ -147,7 +147,7 @@ public class TenantAccessDecisionVoter {
     // *  AJAX Calls:
     // *  DELETE  ->
     // ******************************************
-    private String findAuthoirzationAttributeForOther(HttpMethod method, String last, String uri, Map<String) {
+    private String findAuthoirzationAttributeForOther(HttpMethod method, String last, String uri) {
         if (HttpMethod.GET.equals(method)) {
             if (last.endsWith("index"))  return last+"_"+ATTRIBUTE_READ;
         }

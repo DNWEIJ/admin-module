@@ -21,14 +21,12 @@ public interface CostingRepository extends JpaRepository<Costing, Long> {
     List<CostingProjection> findByBarcodeOrShortCodeStartsWithOrNomenclatureContainsAndMemberId(Long searchStringOne, String searchStringTwo, String searchStringThee, Long memberId);
 
     default List<CostingProjection> getCostingOnNomenclature(String searchString, Long memberId) {
-        return findByNomenclatureContainsAndMemberIdAndDeleted(searchString, memberId, YesNoEnum.No);
+        return findByNomenclatureContainsAndMemberIdAndDeletedOrShortCodeAndMemberIdAndDeleted(searchString, memberId, YesNoEnum.No, searchString, memberId, YesNoEnum.No);
     }
 
-    List<CostingProjection> findByNomenclatureContainsAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no);
+    List<CostingProjection> findByNomenclatureContainsAndMemberIdAndDeletedOrShortCodeAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no, String searchString1, Long memberId1, YesNoEnum no1);
 
     List<CostingProjection> findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long memberId);
-
-    List<CostingProjection> findByReminderNomenclatureIsNotNullAndReminderNomenclatureIsNotEmptyAndMemberIdOrderByReminderNomenclature(Long memberId);
 
     @Query("""
                 select DISTINCT c.reminderNomenclature as reminderText

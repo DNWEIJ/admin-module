@@ -1,1 +1,0 @@
--- Create Extra needed indexes, that can't be created via hibernate mapping file

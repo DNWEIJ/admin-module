@@ -1,10 +1,12 @@
-/** holding the context menu (right click functionality ****/
 class AgendaContext {
+    static openInNewWindow = 'open in new window';
+
     constructor(agendaState) {
-        this.event = null
-        this.agendaState = agendaState
-        this.addContextMenu()
-        this.addClick()
+        this.event = null;
+        this.agendaState = agendaState;
+        this.contextContainer = document.getElementById('global-context');
+        this.addContextMenu();
+        this.addClick();
     }
 
     setEvent(event) {
@@ -13,61 +15,92 @@ class AgendaContext {
 
     addContextMenu() {
         window.addEventListener('contextmenu', (e) => {
+            if (this.isNoContext()) return;
 
-            if (this.isNoContext())
-                return;
             e.preventDefault();
 
-            if (document.querySelector('.contextmenu-container')) {
-                document.querySelector('.contextmenu-container').remove()
-            }
-            this.createMenu(this.createMenuOptions(this.event.event.extendedProps.contextStatus), this.event);
+            // Clear previous menu items but keep container
+            this.clearMenu();
+
+            const menuOptions = this.createMenuOptions(this.event.event.extendedProps.contextStatus);
+            this.createMenu(menuOptions, this.event, e.clientX, e.clientY);
         });
     }
 
     addClick() {
-        window.addEventListener('click', (e) => {
-            if (document.querySelector('.contextmenu-container')) {
-                document.querySelector('.contextmenu-container').remove()
-            }
-        })
+        window.addEventListener('click', () => {
+            this.clearMenu();
+        });
     }
 
     isNoContext() {
-        if (this.event === null) return true
-        return this.event.event.extendedProps.contextStatus === "no-context";
+        return !this.event || this.event.event.extendedProps.contextStatus === "no-context";
     }
 
     createMenuOptions(contextStatus) {
-        return ['cancel', contextStatus]
+        return ['cancel', contextStatus, '--', AgendaContext.openInNewWindow];
     }
 
-    createMenu(menuOptions, event) {
-        let menuContainer = document.createElement('div');
+    clearMenu() {
+        while (this.contextContainer.firstChild) {
+            this.contextContainer.removeChild(this.contextContainer.firstChild);
+        }
+    }
+
+    createMenu(menuOptions, event, x, y) {
+        const menuContainer = document.createElement('div');
         menuContainer.classList.add("contextmenu-container");
-        menuContainer.id = "contextmenu-container";
+        menuContainer.style.position = 'absolute';
+        menuContainer.style.display = 'block';
+        menuContainer.style.zIndex = 9999;
 
-        menuOptions.forEach((option, index) => {
-            let menuItem = document.createElement('div');
-            menuItem.classList.add("contextmenu-item");
+        // Position the menu at the click
+        menuContainer.style.top = `${y}px`;
+        menuContainer.style.left = `${x}px`;
 
-            let menuContent = document.createElement('a');
-            menuContent.textContent = option;
+        menuOptions.forEach(option => {
+            const menuItem = document.createElement('div');
 
-            menuItem.append(menuContent);
-            menuItem.addEventListener('click', async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            if (option.startsWith('-')) {
+                const menuContent = document.createElement('div');
+                menuContent.append(document.createElement('hr'));
+                menuItem.append(menuContent);
+            } else {
+                menuItem.classList.add("contextmenu-item");
+                const menuContent = document.createElement('a');
+                menuContent.textContent = option;
+                menuItem.append(menuContent);
 
-                let resultData = await this.updateAppointmentVisit(event.event.extendedProps.visitId, option)
-                if (resultData.length === 1) {
-                    agendaState.calendar.updateEvent(resultData[0]);
+                if (option === AgendaContext.openInNewWindow) {
+                    menuItem.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.clearMenu();
+                        const props = event.event.extendedProps;
+                        if (props.otc) {
+                            window.open(`/sales/otc/customer/${props.customerId}/visit/${props.visitId}`, "_blank");
+                        } else {
+                            window.open(`/consult/visit/customer/${props.customerId}/visit/${props.visitId}?callFrom=agenda`, "_blank");
+                        }
+                    });
+                } else {
+                    menuItem.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const resultData = await this.updateAppointmentVisit(event.event.extendedProps.visitId, option);
+                        if (resultData.length === 1) {
+                            this.agendaState.calendar.updateEvent(resultData[0]);
+                        }
+                        this.clearMenu();
+                    });
                 }
-                document.getElementById("contextmenu-container").remove()
-            });
+            }
+
             menuContainer.appendChild(menuItem);
         });
-        event.el.appendChild(menuContainer);
+
+        this.contextContainer.appendChild(menuContainer);
+        this.contextContainer.style.display = 'block';
     }
 
     async updateAppointmentVisit(visitId, option) {
@@ -76,6 +109,7 @@ class AgendaContext {
         formData.append('option', option);
         formData.append('agendaType', agendaState.agendaType);
         formData.append('localMemberId', agendaState.localMemberId);
+        formData.append('isList', calendar.getOption('view').startsWith('list'));
 
         formData.append('start', agendaState.calendar.getOption('date').toISOString().split('T')[0] + 'T00:00:00');
         formData.append('end', agendaState.calendar.getOption('date').toISOString().split('T')[0] + 'T00:00:00');

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Tooltip Example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picocss@2.1.3/dist/pico.min.css">
+
+</head>
+<body>
+
+<div class="calendar">
+    <article class="ec-event" data-tooltip="Tijd: 09:00 - 09:25<br>Klant: de Vries, R.<br>Huisdier: Henkie - Feline" tabindex="0">
+        09:00 - 09:25 de Vries, R.
+    </article>
+
+    <article class="ec-event" data-tooltip="Tijd: 10:00 - 10:30<br>Klant: Jansen, M.<br>Huisdier: Bella - Dog" tabindex="0">
+        10:00 - 10:30 Jansen, M.
+    </article>
+
+    <article class="ec-event" data-tooltip="Tijd: 11:00 - 11:45<br>Klant: Pieters, L.<br>Huisdier: Simba - Cat" tabindex="0">
+        11:00 - 11:45 Pieters, L.
+    </article>
+</div>
+
+<div id="global-tooltip"></div>
+
+<script>
+    const tooltip = document.getElementById('global-tooltip');
+
+    function positionTooltip(target) {
+        tooltip.innerHTML = target.getAttribute('data-tooltip');
+        tooltip.style.display = 'block';
+
+        const rect = target.getBoundingClientRect();
+        const scrollX = window.scrollX;
+        const scrollY = window.scrollY;
+        const tooltipRect = tooltip.getBoundingClientRect();
+
+        let top = rect.top - tooltipRect.height - 5 + scrollY;
+        let left = rect.left + scrollX;
+
+        // Vertical flip if too high
+        if (top < scrollY) top = rect.bottom + 5 + scrollY;
+
+        // Horizontal adjustment if offscreen left/right
+        if (left < scrollX) left = scrollX + 5;
+        if (left + tooltipRect.width > scrollX + window.innerWidth) {
+            left = scrollX + window.innerWidth - tooltipRect.width - 5;
+        }
+
+        tooltip.style.top = top + 'px';
+        tooltip.style.left = left + 'px';
+    }
+
+    document.querySelectorAll('.ec-event').forEach(eventEl => {
+        eventEl.addEventListener('mouseenter', () => positionTooltip(eventEl));
+        eventEl.addEventListener('focus', () => positionTooltip(eventEl));
+        eventEl.addEventListener('mouseleave', () => tooltip.style.display = 'none');
+        eventEl.addEventListener('blur', () => tooltip.style.display = 'none');
+    });
+</script>
+
+</body>
+</html>

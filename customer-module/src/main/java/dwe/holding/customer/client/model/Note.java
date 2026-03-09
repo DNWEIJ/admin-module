@@ -31,7 +31,7 @@ public class Note extends MemberBaseBO {
 
     @NotBlank
     @Column(nullable = false)
-    private String purpose;
+    private String notepurpose;
 
     @Column(nullable = false)
     private String staffMember;

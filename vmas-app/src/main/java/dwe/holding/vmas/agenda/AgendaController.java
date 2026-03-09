@@ -13,7 +13,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @RequestMapping("/agenda")
@@ -32,7 +31,7 @@ public class AgendaController {
         model
                 .addAttribute("initialDate", date.toLocalDate().toString())
                 .addAttribute("selectDate", selectDate(date.toLocalDate().toString()))
-                .addAttribute("scrollToTime", date.minusHours(1).format(DateTimeFormatter.ofPattern("HH:mm:ss")))
+                //       .addAttribute("scrollToTime", date.minusHours(1).format(DateTimeFormatter.ofPattern("HH:mm:ss")))
                 .addAttribute("agendaType", prefMemberData.getRoomAgenda().toString())
                 .addAttribute("locationDropdown", locationDropDown())
                 .addAttribute("colorModal", colorModalButton())
@@ -51,6 +50,7 @@ public class AgendaController {
                         Duration.between(eventForm.startDate, eventForm.endDate).toMinutes()
                 )
         );
+        // TODO resource can be null when we are in week view
         return "agenda-module/newevent";
     }
 

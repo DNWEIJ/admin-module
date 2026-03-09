@@ -16,18 +16,16 @@ import java.util.*;
 public class AgendaHelper {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter FULL_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public record DataForm(@NotNull LocalDateTime start, @NotNull LocalDateTime end, AgendaTypeEnum agendaType,
-                           @NotNull Long localMemberId) {
+                           @NotNull Long localMemberId, @NotNull boolean isList) {
     }
 
-    public static List<CalendarEvent> fromAppointmentList(List<Appointment> appList, Locale locale, MessageSource messageSource, DataForm dataForm, Set<String> excludedRooms, Set<String> excludedStaff) {
+    public static List<CalendarEvent> fromAppointmentList(List<Appointment> appList, Locale locale, MessageSource messageSource, DataForm dataForm, Set<String> assignedRooms, Set<String> assignedStaff) {
         return appList.stream().map(appointment -> {
-                    Map<String, String> map = getTooltipAndBody(appointment, locale, messageSource);
-                    return CalendarEvent.fromAppointment(
-                            appointment, map.get("tooltip"), map.get("body"), dataForm.agendaType,
-                            excludedRooms, excludedStaff
-                    );
+                    Map<String, String> map = getTooltipAndBody(appointment, locale, messageSource, dataForm.isList);
+                    return CalendarEvent.fromAppointment(appointment, map.get("body"), dataForm.agendaType, dataForm.isList, assignedRooms, assignedStaff);
                 }
         ).toList();
     }
@@ -39,7 +37,7 @@ public class AgendaHelper {
 // Pet: James - Male (Neutered) (Canine,Kruising 10- 25 kg)|
 // Purpose: bult op de borst "
 // When there are multiple visits on a appointment, we will agregate information in tooltip
-    private static Map<String, String> getTooltipAndBody(Appointment appointment, Locale locale, MessageSource messageSource) {
+    private static Map<String, String> getTooltipAndBody(Appointment appointment, Locale locale, MessageSource messageSource, boolean isList) {
 
         StringBuilder petTooltipBuilder = new StringBuilder();
         StringBuilder petTextBodyBuilder = new StringBuilder();
@@ -78,6 +76,7 @@ public class AgendaHelper {
         }
 
         String startTime = appointment.getVisitDateTime().format(TIME_FORMATTER);
+        String fullDateTimeStart = appointment.getVisitDateTime().format(FULL_TIME_FORMATTER);
         String endTime = appointment.getVisitDateTime().plusMinutes(duration).format(TIME_FORMATTER);
 
         String timeLine = messageSource.getMessage("label.agenda.time", new Object[]{
@@ -87,20 +86,34 @@ public class AgendaHelper {
 
 
         String toolTip = alignOnFirstColon(String.join("\n", timeLine, customerString, petTooltipBuilder.toString()));
-        String bodyText = """
-                <div data-tooltip="%s" data-placement="%s">
-                <div class="calendar-title"><strong>%s - %s %s</strong><br/></div
-                <div class="calendar-body">%s</div>
-                </div>
-                
-                """.formatted(
-                toolTip,
-                "Top",
-                startTime,
-                endTime,
-                customerNameId + (appointment.isOTC() ? " OTC" : ""),
-                petTextBodyBuilder.toString()
-        );
+        String bodyText = isList ?
+                """
+                        <div class="calendar-list-wrapper">
+                            <time class="calendar-list-title" datetime="%s">%s–%s</time>
+                            <div class="calendar-list-body">%s</div>
+                        </div>
+                        """.formatted(
+                 fullDateTimeStart,
+                        startTime, endTime,
+                        customerNameId + (appointment.isOTC() ? " OTC " : " ") + petTextBodyBuilder
+                ) :
+
+                """
+                        <div class="calendar-tooltip" data-cal-tooltip="%s" data-cal-tooltip-placement="%s">
+                            <div class="calendar-title"><strong>%s - %s %s</strong><br/>
+                            </div>
+                            <div class="calendar-body-wrapper">
+                                <div class="calendar-body">%s</div>
+                            </div>
+                        <div>
+                        """.formatted(
+                        toolTip,
+                        "Top",
+                        startTime,
+                        endTime,
+                        customerNameId + (appointment.isOTC() ? " OTC" : ""),
+                        petTextBodyBuilder.toString()
+                );
         return Map.of(
                 "tooltip", toolTip,
                 "body", bodyText

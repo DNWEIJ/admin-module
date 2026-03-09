@@ -37,8 +37,7 @@ public class EventAndResourceController {
 
     @PostMapping("/events")
     public List<CalendarEvent> returnEventData(AgendaHelper.DataForm dataForm, Locale locale) {
-        return createList(dataForm, locale,
-                appointmentRepository.findByVisitDateTimeBetweenAndLocalMemberId(dataForm.start(), dataForm.end(), dataForm.localMemberId())
+        return createList(objectMapper, messageSource, dataForm, locale, appointmentRepository.findByVisitDateTimeBetweenAndLocalMemberId(dataForm.start(), dataForm.end(), dataForm.localMemberId())
         );
     }
 
@@ -48,8 +47,7 @@ public class EventAndResourceController {
         LocalMemberPreferences prefMemberData = objectMapper.readValue(AutorisationUtils.getCurrentLocalMember().getMetaLocalMemberPreferences().getPreferencesJson(), LocalMemberPreferences.class);
 
         return switch (dataForm.agendaType()) {
-            case Room ->
-                    createResources(prefMemberData.getRoom1(), prefMemberData.getRoom2(), prefMemberData.getRoom3());
+            case Room -> createResources(prefMemberData.getRoom1(), prefMemberData.getRoom2(), prefMemberData.getRoom3());
             case Vet -> createResources(prefData.getAgendaVet1(), prefData.getAgendaVet2(), prefData.getAgendaVet3());
             case Week -> "";
         };
@@ -57,8 +55,8 @@ public class EventAndResourceController {
 
     @PostMapping("/appointment/{id}")
     public List<CalendarEvent> getEventForAppointment(@PathVariable Long id, AgendaHelper.DataForm dataForm, Locale locale) {
-        Appointment app = appointmentRepository.findByIdAndMemberId(id,AutorisationUtils.getCurrentUserMid()).orElseThrow();
-        return createList(dataForm, locale, List.of(app));
+        Appointment app = appointmentRepository.findByIdAndMemberId(id, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        return createList(objectMapper, messageSource, dataForm, locale, List.of(app));
     }
 
     @PostMapping("/visit")
@@ -69,7 +67,7 @@ public class EventAndResourceController {
             visit.getAppointment().setCancelled(YesNoEnum.Yes);
             Appointment appointment = appointmentRepository.save(visit.getAppointment());
 
-            return createList(dataForm, locale, List.of(appointment));
+            return createList(objectMapper, messageSource, dataForm, locale, List.of(appointment));
         } else {
             Visit visit = visitRepository.findById(visitId).orElseThrow();
             if (VisitStatusEnum.WAITING.equals(visit.getStatus()) || VisitStatusEnum.PLANNED.equals(visit.getStatus())) {
@@ -78,38 +76,31 @@ public class EventAndResourceController {
                 if (option.equalsIgnoreCase(VisitStatusEnum.WAITING.toString()))
                     visit.setStatus(VisitStatusEnum.WAITING);
                 visit = visitRepository.save(visit);
-                return createList(dataForm, locale, List.of(appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow()));
+                return createList(objectMapper, messageSource, dataForm, locale, List.of(appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow()));
             }
             return null;
         }
     }
 
-    private List<CalendarEvent> createList(AgendaHelper.DataForm dataForm, Locale locale, List<Appointment> appointments) {
+    public static List<CalendarEvent> createList(ObjectMapper objectMapper, MessageSource messageSource, AgendaHelper.DataForm dataForm, Locale locale, List<Appointment> appointments) {
         VmasUserPreferences prefData = objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), VmasUserPreferences.class).valid();
         LocalMemberPreferences prefMemberData = objectMapper.readValue(AutorisationUtils.getCurrentLocalMember().getMetaLocalMemberPreferences().getPreferencesJson(), LocalMemberPreferences.class);
 
-        Set<String> excludedStaff = Stream.of(
-                prefData.getAgendaVet1(), prefData.getAgendaVet2(), prefData.getAgendaVet3()
-        ).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<String> assignedStaff = Stream.of(prefData.getAgendaVet1(), prefData.getAgendaVet2(), prefData.getAgendaVet3()).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<String> assignedRooms = Stream.of(prefMemberData.getRoom1(), prefMemberData.getRoom2(), prefMemberData.getRoom3()).filter(Objects::nonNull).collect(Collectors.toSet());
 
-        Set<String> excludedRooms = Stream.of(
-                prefMemberData.getRoom1(), prefMemberData.getRoom2(), prefMemberData.getRoom3()
-        ).filter(Objects::nonNull).collect(Collectors.toSet());
-
-        return fromAppointmentList(appointments, locale, messageSource, dataForm, excludedRooms, excludedStaff
-        );
+        return fromAppointmentList(appointments, locale, messageSource, dataForm, assignedRooms, assignedStaff);
     }
 
-    private String createResources(String row1, String row2, String row3) {
+    public static String createResources(String row1, String row2, String row3) {
         String template = """
                 {"id": "%s", "title": "%s"}
                 """;
+
         return "[" + template.formatted(row1, row1)
                 + "," + template.formatted(row2, row2)
                 + "," + template.formatted(row3, row3)
                 + "," + template.formatted("other", "other")
                 + "]";
     }
-
-
 }

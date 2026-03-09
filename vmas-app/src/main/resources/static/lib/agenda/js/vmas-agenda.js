@@ -64,6 +64,7 @@ class AgendaState {
         });
     }
 
+    // used from customerSearch
     handleModalSubmitForPetSelect(customerId) {
         let inputField = document.getElementById('modalCommunication')
         let urlQueryParams = '?' +
@@ -83,6 +84,8 @@ class AgendaState {
     changeLocation(localMemberId) {
         this.setLocalMemberId(localMemberId)
         calendar.refetchEvents()
+        scrollNowIndicator()
+
     }
 
     changeResourceType(resource) {
@@ -93,15 +96,23 @@ class AgendaState {
 
     moveDate(option) {
         let calendarDate = this.calendar.getOption('date');
-        if (option == '>') {
-            calendarDate.setDate(calendarDate.getDate() + 1)
+        if (option === '>') {
+            if (calendar.getView().type.includes('Week')) {
+                calendarDate.setDate(calendarDate.getDate() + 7)
+            } else {
+                calendarDate.setDate(calendarDate.getDate() + 1)
+            }
             this.changeDate(this.formatDate(calendarDate))
         }
-        if (option == '<') {
-            calendarDate.setDate(calendarDate.getDate() - 1)
+        if (option === '<') {
+            if (calendar.getView().type.includes('Week')) {
+                calendarDate.setDate(calendarDate.getDate() - 7)
+            } else {
+                calendarDate.setDate(calendarDate.getDate() - 1)
+            }
             this.changeDate(this.formatDate(calendarDate))
         }
-        if (option == 'today') {
+        if (option === 'today') {
             this.changeDate(this.formatDate(new Date()))
         }
     }
@@ -126,25 +137,19 @@ class AgendaState {
 }
 
 // ensure we always send the csrf back
-const
-    originalFetch = window.fetch
-window
-    .fetch = function (input, init = {}) {
+const originalFetch = window.fetch
+window.fetch = function (input, init = {}) {
     const token = document.querySelector('meta[name="_csrf"]')?.content
     const header = document.querySelector('meta[name="_csrf_header"]')?.content
-
     init.headers = new Headers(init.headers || {})
 
     if (token && header) {
         init.headers.set(header, token)
     }
     return originalFetch(input, init)
-
 }
 
-function
-
-scrollNowIndicator() {
+function scrollNowIndicator() {
     const el = document.querySelector('.ec-now-indicator');
     if (el) {
         el.scrollIntoView({

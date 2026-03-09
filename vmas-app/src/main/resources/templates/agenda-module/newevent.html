@@ -9,10 +9,6 @@
         <form id="eventForm" action="/agenda/event" method="post">
             <input id="id" name="id" th:value="${event.id}" type="hidden"/>
             <input id="version" name="version" th:value="${event.version}" type="hidden"/>
-
-            [[${#temporals.format(event.from, 'yyyy-MM-dd hh:mm')}]]
-
-
             <fieldset>
                 <legend>Event</legend>
                 <input id="eventDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01" th:value="${#temporals.format(event.from, 'yyyy-MM-dd hh:mm')}">

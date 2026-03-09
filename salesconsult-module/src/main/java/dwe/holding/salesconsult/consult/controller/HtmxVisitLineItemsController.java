@@ -72,8 +72,6 @@ public class HtmxVisitLineItemsController {
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
-
-
     private void updateModel(Model model, Visit visit, Long customerId) {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
