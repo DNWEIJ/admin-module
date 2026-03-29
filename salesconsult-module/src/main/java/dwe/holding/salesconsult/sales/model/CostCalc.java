@@ -62,23 +62,25 @@ public abstract class CostCalc extends MemberBaseBO {
     @Column(precision = 38, scale = 4)
     private BigDecimal totalIncTax;
 
-    public BigDecimal calculateTotal(BigDecimal reduction) {
+    public BigDecimal calculateTotal(BigDecimal reductionPercentage) {
         BigDecimal hundred = new BigDecimal("100.0");
-        BigDecimal goodTax = new BigDecimal("0.0");
+
+        // this is for the product part, service is always serviceTax
+        BigDecimal useTaxPercentage = new BigDecimal("0.0");
 
         if (TaxedTypeEnum.GOOD.equals(taxedTypeEnum)) {
-            goodTax = getTaxGoodPercentage().divide(hundred, 4, RoundingMode.HALF_UP);
+            useTaxPercentage = getTaxGoodPercentage().divide(hundred, 4, RoundingMode.HALF_UP);
         }
         if (TaxedTypeEnum.SERVICE.equals(taxedTypeEnum)) {
-            goodTax = getTaxServicePercentage().divide(hundred, 4, RoundingMode.HALF_UP);
+            useTaxPercentage = getTaxServicePercentage().divide(hundred, 4, RoundingMode.HALF_UP);
         }
 
         BigDecimal realCost = salesPriceExTax; //real price
-        if (reduction != null) {
-            //  realCost = realCost * (1 - reduction / 100);
+        if (reductionPercentage != null) {
+            //  realCost = realCost * (1 - reductionPercentage / 100);
             realCost = realCost.multiply(
                     ((BigDecimal.ONE).subtract(
-                            reduction.divide(hundred, 4, RoundingMode.HALF_UP))
+                            reductionPercentage.divide(hundred, 4, RoundingMode.HALF_UP))
                     )
             );
         }
@@ -86,7 +88,7 @@ public abstract class CostCalc extends MemberBaseBO {
         //  result = ( (realCost * quantity * (goodTtax + 1)) + (processingFeeExTax + processingFeeExTax * (taxServicePercentage / 100.0)) );
         BigDecimal part1 = realCost
                 .multiply(quantity)
-                .multiply(goodTax.add(BigDecimal.ONE));
+                .multiply(useTaxPercentage.add(BigDecimal.ONE));
         // processingFeeExTax + processingFeeExTax * (taxServicePercentage / 100)
         BigDecimal part2 =
                 processingFeeExTax

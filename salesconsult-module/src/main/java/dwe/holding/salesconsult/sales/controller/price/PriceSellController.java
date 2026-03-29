@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @RequestMapping("/sales")
 @Controller
@@ -60,7 +61,7 @@ public class PriceSellController {
 
     @DeleteMapping("/price/sell/lineitem/{lineItemId}")
     String deleteProductFromLineItemsViaHtmx(@NotNull @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
-        updateModel(model, lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).toList());
+        updateModel(model, lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).collect(Collectors.toList()));
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 

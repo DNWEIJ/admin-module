@@ -1,42 +1,33 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Distributor lijst</title>
+    <title th:text="#{distributor.distributor}"></title>
 </head>
 <body>
 <section layout:fragment="content">
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Distributor','/supplies/distributor')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Distributor','/supplies/distributor')}"></th:block>
 
-<style>
-    .colgroup {
-        width: 100%
-    }
-</style>
-
-<table id="show-table">
-    <thead>
-    <tr>
-        <th>Name</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:each="distributor : ${distributors}">
+    <table class="table-tight striped" id="show-table" data-no-export>
+        <thead>
         <tr>
-            <td><a th:href="@{'/supplies/distributor/'+ ${distributor.id}}">[[${distributor.distributorName}]]</a></td>
+            <th>[[#{distributor.distributorName}]]</th>
+            <th>[[#{distributor.email}]]</th>
+            <th>[[#{distributor.phone}]]</th>
+            <th>[[#{distributor.address}]]</th>
+            <th>[[#{distributor.city}]]</th>
+            <th>[[#{distributor.zipCode}]]</th>
         </tr>
-    </th:block>
-    </tbody>
-    <tfoot>
-    <tr>
-        <td></td>
-    </tr>
-    </tfoot>
-</table>
-<script>
-    var table = new Tabulator("#show-table",
-        {
-            columns: [ //set column definitions for imported table data
-                {title: "Name", formatter: "html"}
-            ]
-        });
-</script>
+        </thead>
+        <tbody>
+        <th:block th:each="distributor : ${distributors}">
+            <tr>
+                <td><a th:href="@{'/supplies/distributor/'+ ${distributor.id}}">[[${distributor.distributorName}]]</a></td>
+                <th>[[${distributor.email}]]</th>
+                <th>[[${distributor.phone}]]</th>
+                <th>[[${distributor.address}]]</th>
+                <th>[[${distributor.city}]]</th>
+                <th>[[${distributor.zipCode}]]</th>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
 </section>

@@ -8,14 +8,14 @@
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.reminder},'/supplies/customer/'+ ${customerId} + '/reminder', ${customerInformation})}"></th:block>
 
     <hr/>
-    <table class="table-tight striped" id="show-table">
+    <table class="table-tight striped" id="show-table" data-no-export>
         <thead>
         <tr>
         <tr>
             <th>[[#{label.reminder.petname}]]</th>
             <th>[[#{label.reminder.duedate}]]</th>
             <th>[[#{label.reminder.reminder}]]</th>
-            <th>[[#{label.list.auditinfo}]]</th>
+            <th class="desktop-only">[[#{label.list.auditinfo}]]</th>
         </tr>
         </thead>
         <tbody>
@@ -24,11 +24,8 @@
                 <td><a th:href="'/supplies/customer/'+ ${customerId}+ '/reminder/'+ ${reminder.id}" th:utext="${reminder.pet.nameWithDeceased}"></a></td>
                 <td th:attr="data-sort-value=${reminder.dueDate}" th:text="${#temporals.format(reminder.dueDate, 'dd-MM-yyyy')}"></td>
                 <td>[[${reminder.reminderText}]]</td>
-                <td>
-                    <small th:data-tooltip="'Created by  '+${reminder.addedBy}+' on ' +${#temporals.format(reminder.addedOn, 'dd-MM-yy')}">
-                        [[${reminder.lastEditedBy}]] • [[${#temporals.format(reminder.lastEditedOn, 'dd-MM-yy')}]]
-                    </small>
-                </td>
+                <th:block
+                        th:insert="~{fragments/elements/audit::lastEditedByOn_td(${reminder.addedBy},${reminder.addedOn},${reminder.lastEditedBy},${reminder.lastEditedOn})}"></th:block>
             </tr>
         </th:block>
         </tbody>

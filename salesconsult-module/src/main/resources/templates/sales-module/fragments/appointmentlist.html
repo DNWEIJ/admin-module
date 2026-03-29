@@ -77,6 +77,9 @@
             </tr>
             </thead>
             <tbody>
+            <th:block th:if="${appointmentList.size == 0}">
+                <tr><td>&nbsp;</td><td colspan="6">[[#{label.not-found}]]</td></tr>
+            </th:block>
             <th:block th:each="app : ${appointmentList}">
                 <th:block th:each="visit : ${app.visits}">
                     <tr th:id="${visit.id}">
@@ -88,7 +91,7 @@
                         </td>
                         <td th:style="${'background-color:' + visit.backgroundColor + '; color:' + visit.textColor}" th:text="#{__${visit.status.label}__}"></td>
                         <td th:text="${visit.pet.customer.customerName}"></td>
-                        <td th:text="${visit.pet.name + ' ' + visit.pet.age}"></td>
+                        <td><th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}" th:text="${visit.pet.name + ' ' + visit.pet.getAgePresentation(year, month)}"/></td>
                         <td th:text="${visit.pet.species + '/'+visit.pet.breed }"></td>
                         <td th:text="${visit.veterinarian + '/' + visit.room}"></td>
                         <td th:text="${visit.purpose}"></td>

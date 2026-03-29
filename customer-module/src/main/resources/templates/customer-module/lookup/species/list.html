@@ -5,11 +5,11 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/lookup/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.species},'/customer/lookup/specy', '')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.title.species},'/customer/lookup/specy')}"></th:block>
 
     <hr/>
     <div class="overflow-auto">
-        <table id="show-table" class=" striped">
+        <table id="show-table" data-no-export class=" striped">
             <thead>
             <tr>
                 <th>[[#{label.species.species}]]</th>
@@ -19,7 +19,12 @@
             <tbody>
             <th:block th:each="specy : ${species}">
                 <tr>
-                    <td><a th:href="'/customer/lookup/specy/'+ ${specy.id}">[[${specy.species}]]</a></td>
+                    <th:block th:if="${specy.memberId == -1}">
+                        <td th:text="${specy.species}"></td>
+                    </th:block>
+                    <th:block th:unless="${specy.memberId == -1}">
+                        <td><a th:href="'/customer/lookup/specy/'+ ${specy.id}">[[${specy.species}]]</a></td>
+                    </th:block>
                     <td>
                         <small th:data-tooltip="'Created by  '+${specy.addedBy}+' on ' +${#temporals.format(specy.addedOn, 'dd-MM-yy')}">
                             [[${specy.lastEditedBy}]] • [[${#temporals.format(specy.lastEditedOn, 'dd-MM-yy')}]]

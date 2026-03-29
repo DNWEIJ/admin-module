@@ -14,6 +14,20 @@ public interface LineItemRepository extends JpaRepository<LineItem, Long> {
     @Query("SELECT COALESCE(sum(l.totalIncTax), 0.0) from LineItem as l WHERE l.pet.customer.id = :customerId and l.memberId = :memberId")
     BigDecimal getSumAmountOfLineItem(@Param("customerId") Long customerId, @Param("memberId") Long memberId);
 
+    @Query("SELECT COALESCE(sum(l.totalIncTax), 0.0) from LineItem as l WHERE l.pet.customer.id = :customerId")
+    BigDecimal getSumAmountOfLineItem(@Param("customerId") Long customerId);
+
+    // The following three queries can be within a native join.... if it will start costing to much time
+    @Query("SELECT COALESCE(sum(l.totalIncTax), 0.0) from LineItem as l WHERE l.pet.id = :petId and l.appointment.id = :appId")
+    BigDecimal getSumAmountOfLineItemOnVisit(@Param("petId") Long petId, @Param("appId") Long appId);
+
+    @Query("SELECT COALESCE(sum(l.taxPortionOfProcessingFeeService), 0.0) from LineItem as l WHERE l.pet.id = :petId and l.appointment.id = :appId")
+    BigDecimal getSumAmountOfLineItemServiceOnVisit(@Param("petId") Long petId, @Param("appId") Long appId);
+
+    @Query("SELECT COALESCE(sum(l.taxPortionOfProduct), 0.0) from LineItem as l WHERE l.pet.id = :petId and l.appointment.id = :appId")
+    BigDecimal getSumAmountOfLineItemProductOnVisit(@Param("petId") Long petId, @Param("appId") Long appId);
+
+
     @Query("SELECT COALESCE(sum(l.totalIncTax), 0.0) from LineItem as l WHERE l.pet.customer.id = :customerId and l.memberId = :memberId and l.appointment.visitDateTime <= :limitDate")
     BigDecimal getSumAmountOfLineItem(@Param("customerId") Long customerId, @Param("limitDate") LocalDateTime limitDate, @Param("memberId") Long memberId);
 

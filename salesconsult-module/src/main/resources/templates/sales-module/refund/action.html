@@ -1,0 +1,57 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.refund}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${refund.id}, #{label.title.refund},'/sales/price/customer/'+ ${customerId}+ '/refunds', ${customerInformation})}"></th:block>
+    <div
+    <div>&nbsp;</div>
+    <form id="createForm" th:action="'/sales/price/customer/'+${customerId}+ '/refund'" method="post">
+        <input id="id" name="id" th:value="${refund.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${refund.version}" type="hidden"/>
+        <fieldset>
+            <legend>[[#{label.refund.details}]]</legend>
+
+            <div class="grid-row">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.refund.amount',${totalAmount},'0')}"  th:with="type='number'"></th:block></th:block>
+                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId', 'userpreferences.clinic', ${refund.localMemberId}, ${localMembersList}, true,'0')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('refundDate','label.refund.refundDate','refund.refundDate','0')}"></th:block>
+                </div>
+            </div>
+            <div class="grid">
+                <label for="comments">
+                    <th:block th:utext="#{label.refund.comments}"/>
+                    <textarea cols="110" id="comments" name="comments" rows="8" tabindex="5" th:utext="${refund.comments}"></textarea>
+                </label>
+            </div>
+        </fieldset>
+    </form>
+    <fiedlset>
+
+        <details id="lineitems" open>
+            <summary class="three-elements">
+                <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
+                <a href="/info/lineiteminfo" title="More info" class="emoji-icon">ℹ️</a>
+            </summary>
+            <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
+            <hr/>
+            <div id="replacePartForCostingSearch" th:replace="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}">
+            </div>
+        </details>
+    </fiedlset>
+    <th:block th:insert="~{fragments/elements/audit::audit('refund.addedBy','refund.addedOn', 'refund.lastEditedBy', 'refund.lastEditedOn')}"></th:block>
+
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function(evt) {
+            const moneyElement = document.querySelector('[data-field-money-total="true"]');
+            if (moneyElement) {
+                document.getElementById("amount").value = moneyElement.textContent.trim().replace(',','.')
+            }
+        });
+    </script>
+</section>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.consult.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Estimate extends TenantBaseBO {
+public class Estimate extends LocalAndMemberBaseBO {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "estimate")
     private Set<Estimatelineitem> estimatelineitems = new HashSet<>();

@@ -27,7 +27,6 @@ function toggleTableColumns(tableId, columns, visible) {
 
 
 function sortingTables() {
-
     const SORTABLE_SELECTOR = 'table:not(.no-sorting) > thead th:not(.no-sorting)';
 
     const style = document.createElement("style");
@@ -108,6 +107,47 @@ function sortingTables() {
     });
 }
 
+
+
+function enableTableKeyboardNavigation(table) {
+    let currentRow = null;
+    function setActiveRow(row) {
+        if (!row) return;
+
+        if (currentRow) {
+            currentRow.classList.remove('table-row-active');
+        }
+
+        currentRow = row;
+        currentRow.classList.add('table-row-active');
+        currentRow.scrollIntoView({ block: 'nearest' });
+    }
+
+    // Click to activate row
+    table.addEventListener('click', (e) => {
+        const row = e.target.closest('tr');
+        if (row && row.parentElement.tagName === 'TBODY') {
+            setActiveRow(row);
+        }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (!currentRow) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            const next = currentRow.nextElementSibling;
+            if (next) setActiveRow(next);
+        }
+
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prev = currentRow.previousElementSibling;
+            if (prev) setActiveRow(prev);
+        }
+    });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     sortingTables()

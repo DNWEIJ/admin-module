@@ -4,6 +4,7 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.lookup.LookupPurpose;
 import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/customer")
 @Slf4j
+@AllArgsConstructor
 public class LookupPurposeController {
     private final LookupPurposeRepository lookupPurposeRepository;
-
-    public LookupPurposeController(LookupPurposeRepository lookupPurposeRepository) {
-        this.lookupPurposeRepository = lookupPurposeRepository;
-    }
 
     @GetMapping("lookup/purposes")
     String list(Model model) {

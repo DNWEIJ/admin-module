@@ -1,11 +1,12 @@
 <th:block th:fragment="Pet(pet)">
     <style>
-        .mobile-info-grid {
+        .pet-info-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             width: 100%;
+            padding-left: 1.5rem;
         }
-        .mobile-info-cell {
+        .pet-info-cell {
 
         }
     </style>
@@ -29,10 +30,10 @@
         <div th:text="#{__${pet.sex.label}__}"></div>
         <div><span th:text="|#{label.soap.Allergies}: #{__${pet.allergies.label}__} ${pet.allergiesDescription != null ? pet.allergiesDescription : ''}|"></span></div>
         <!-- Row 3 -->
-        <div th:text="${pet.customer.address3 ?: ''}"></div>
+        <div th:text="${(pet.customer.zipcode ?: '') + (pet.customer.city ?: '')}"></div>
         <div>
             <span th:text="${pet.birthday != null ? #temporals.format(pet.birthday,'dd-MM-yyyy') : ''}"></span>
-            <span th:text="' ' + ${pet.getAge}"></span>
+            <span><th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}"  th:text="' ' + ${pet.getAgePresentation(year,month)}"></th:block></span>
         </div>
         <div>
             <span th:text="|#{pet.gpwarning}: #{__${pet.gpwarning.label}__} ${pet.gpwarningDescription != null ? pet.gpwarningDescription : ''}|"></span>

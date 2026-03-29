@@ -42,21 +42,10 @@ public class ReminderListDsl {
                 .join(reminder.pet, pet)
                 .join(pet.customer, customer);
 
-        // conditional joins
-//        boolean withVisit = "after".equals(visitDateBeforeAfterDueDate) || "notAfter".equals(visitDateBeforeAfterDueDate);
-//        if (withVisit) {
-//            query
-//                    .from(appointment).where(reminder.originatingAppointmentId.eq(appointment.id));
-//                    query.join(visit.appointment, appointment);
-//        }
-
         // memberId filters
         where.and(reminder.memberId.eq(memberId)
                 .and(pet.memberId.eq(memberId))
                 .and(customer.memberId.eq(memberId)));
-//        if (withVisit) {
-//            where.and(visit.memberId.eq(memberId)).and(appointment.memberId.eq(memberId));
-//        }
 
         // species filter
         if (species != null && !species.isEmpty()) {
@@ -68,10 +57,13 @@ public class ReminderListDsl {
             where.and(reminder.reminderText.in(reminders));
         }
         // pet Alive filter
-        if (petsAreAlive == true) {
+        if (petsAreAlive) {
             where.and(pet.deceased.eq(YesNoEnum.No));
         }
-
+        // lastname
+        if (lastName != null && !lastName.isEmpty()) {
+            where.and(customer.lastName.startsWith(lastName));
+        }
         // date filters
         if (fromDate != null) {
             where.and(reminder.dueDate.goe(fromDate));
@@ -83,14 +75,6 @@ public class ReminderListDsl {
         // projection
         query.select(Projections.constructor(
                 RemindersListProjection.class,
-//                appointment.id,
-//                appointment.visitDateTime,
-//                appointment.cancelled,
-//                appointment.completed,
-//                appointment.OTC,
-//
-//                visit.id,
-
                 pet.id,
                 pet.name,
                 pet.species,
@@ -112,31 +96,8 @@ public class ReminderListDsl {
         ));
 
         query.where(where)
-                .groupBy(reminder.id);
-
-// HAVING clauses
-//        if ("after".equals(visitDateBeforeAfterDueDate)) {
-//            query.having(reminder.dueDate.lt(
-//                    Expressions.dateTemplate(
-//                            LocalDate.class,
-//                            "DATE({0}) + 1",
-//                            appointment.visitDateTime
-//                    )
-//            ));
-//        }
-//        if ("notAfter".equals(visitDateBeforeAfterDueDate)) {
-//            query.having(reminder.dueDate.gt(
-//                    Expressions.dateTemplate(
-//                            LocalDate.class,
-//                            "DATE({0}) + 1",
-//                            appointment.visitDateTime
-//                    )
-//            ));
-//        }
-
-// ORDER BY
-        query.orderBy(reminder.dueDate.asc());
-
+                .groupBy(reminder.id)
+                .orderBy(reminder.dueDate.asc());
         return query.fetch();
 
     }

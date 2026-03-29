@@ -13,10 +13,10 @@
     <!--    </script>-->
 
     <div id="visit-page">
+         <th:block th:insert="~{sales-module/fragments/appointmentlist}"></th:block>
         <div id="actionbar">
             <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
         </div>
-         <th:block th:insert="~{sales-module/fragments/appointmentlist}"></th:block>
         <th:block
                 th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${visit.pet}, false)}"></th:block>
 

@@ -1,7 +1,7 @@
 package dwe.holding.cartracker.model;
 
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Trip extends TenantBaseBO {
+public class Trip extends LocalAndMemberBaseBO {
     @Transient
     LocalDateTime driveDateLocalDate;
     String driveDate;

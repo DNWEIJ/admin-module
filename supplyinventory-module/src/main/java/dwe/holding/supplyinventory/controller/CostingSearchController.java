@@ -30,7 +30,7 @@ public class CostingSearchController {
     // cached version of the costingCategories
     private Map<Long, String> costingCategories;
 
-    @GetMapping("/costing/search/costing/dropdown")
+    @GetMapping("/costing/search/category/dropdown")
     public String searchLookupCostingDropdown(Model model) {
 
         if (costingCategories == null || costingCategories.isEmpty()) {

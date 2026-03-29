@@ -1,6 +1,6 @@
 package dwe.holding.supplyinventory.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SuppliesLocal extends TenantBaseBO {
+public class SuppliesLocal extends LocalAndMemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)

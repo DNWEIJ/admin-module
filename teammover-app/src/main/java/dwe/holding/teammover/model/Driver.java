@@ -1,6 +1,6 @@
 package dwe.holding.teammover.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import dwe.holding.teammover.model.type.DriveOptionEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Driver extends TenantBaseBO {
+public class Driver extends LocalAndMemberBaseBO {
     String accountName;
     int nrOfTeamMembers;
     int nrOfEmptySpots;

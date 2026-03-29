@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/reporting-module/print/invoiceprint.html}">
+<head>
+    <title>print list</title>
+    <style>
+        @page {
+            size: A4;
+        }
+        .new-page {
+            page-break-after: always;
+            break-after: page;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:each="element : ${elementList}">
+        <div class="new-page" th:utext="${element}"></div>
+    </th:block>
+</section>
+</body>
+</html>

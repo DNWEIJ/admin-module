@@ -4,19 +4,22 @@
             <span th:text="#{visit.customerinfo.title}"> </span>
             <a href="/info/customerpetinfo" title="More info" class="emoji-icon">ℹ️</a>
         </summary>
-        <div style="text-align: center;">
-            <span style="font-size: 1rem" th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) >= 0}"
-                  th:text="${'Balance: €' + #numbers.formatDecimal(balanceInfo, 1, 2) + ' (' + #temporals.format(lastPayment, 'dd-MM-yyyy') + ')'}">
-            </span>
-            <th:block th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) < 0}">
-                <span class="emoji-icon wiggle">🚨</span>
-                <span class="red-text pulse" style="font-size: 1rem"
-                      th:text="${'Balance: €' + #numbers.formatDecimal(balanceInfo, 1, 2) + ' (' + #temporals.format(lastPayment, 'dd-MM-yyyy') + ')'}">
-                </span>
-                <span class="emoji-icon wiggle">🚨</span>
-            </th:block>
 
+
+        <div class="threecolumn-spread">
+            <div class="one">
+                <div th:if="${visit != null and visit.appointment != null}"
+                     th:text="${#temporals.format(visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' (' +appointment.id+ ')'}">
+                </div>
+            </div>
+            <div class="two">
+                <div id="balancePaymentReplace">
+                    <th:block th:replace="~{::balanceLastPayment}"/>
+                </div>
+            </div>
+            <div class="three">Payment connected: TODO</div>
         </div>
+
         <div th:if="${!backbutton and pet == null}" class="grid">
             <div></div>
             <div>
@@ -87,8 +90,11 @@
                 setTimeout(() => span.innerText = text, 800);
             }
         </script>
-        <h6 th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''" th:class="${colorClass}"
-            th:utext="${customer.customerName} +' ('+ ${customer.id} + ' Status: '+ ${customer.status.databaseField} + ')'">
+        <h6>
+            <a th:hx-get="${'/customer/customer/'+ customer.id}" hx-target="#modal-container" hx-swap="innerHTML"
+               th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''" th:class="${colorClass}"
+               th:utext="${customer.customerName} +' ('+ ${customer.id} + ' Status: '+ ${customer.status.databaseField} + ')'">
+            </a>
         </h6>
         <div><span id="copy-customer-email"
                    th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
@@ -97,8 +103,8 @@
                title="Copy email">📋</a>
             <a th:if="${!#strings.isEmpty(customer.email)}" title="Send email" th:href="'mailto:' + ${customer.email}">✉️</a>
         </div>
-        <div th:if="${!#strings.isEmpty(customer.address2)  and !#strings.isEmpty(customer.address3)}">
-            <span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.address3}"></span>
+        <div th:if="${!#strings.isEmpty(customer.address2)  and !#strings.isEmpty(customer.zipCode)}">
+            <span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.zipCode} + '&nbsp;&nbsp;' +${customer.city}"></span>
             <a href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy address">📋</a>
         </div>
         <div th:text="${(customer.homePhone != null ? customer.homePhone + ', ' : '') + (customer.workPhone != null ? customer.workPhone + ', ' : '') + (customer.mobilePhone ?: '')}">
@@ -107,12 +113,38 @@
     </th:block>
 </th:block>
 
-
 <th:block th:fragment="petInfo">
     <th:block th:if="${pet != null}">
-        <h6 th:utext="${pet.nameWithDeceasedAndDate} "></h6>
+        <h6>
+            <a th:hx-get="${'/customer/customer/'+ customer.id + '/pet/' + pet.id}" hx-target="#modal-container" hx-swap="innerHTML"
+               th:utext="${pet.nameWithDeceasedAndDate} "> </a>
+        </h6>
+
         <div th:text="#{__${pet.sex.label}__}"></div>
-        <div th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' '+ ${pet.age}"></div>
+
+        <div>
+            <th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}"
+                      th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')} +' '+ ${pet.getAgePresentation(year,month)}"></th:block>
+        </div>
         <div th:text="${pet.idealWeight != null} ? #{pet.idealWeight} + ': ' + ${pet.idealWeight} : #{pet.idealWeight} + ': '"></div>
     </th:block>
+</th:block>
+
+<th:block th:fragment="balanceLastPayment">
+    <div style="text-align: center; margin-bottom: .3rem;">
+        <th:block th:with="noDate=#{label.paymentdate},paymentDate=${lastPaymentDate != null ? #temporals.format(lastPaymentDate, 'dd-MM-yyyy') : noDate}">
+                            <span style="font-size: 1.1rem" th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) >= 0}"
+                                  th:text="${'Balance: €' + #numbers.formatDecimal(balanceInfo, 1, 2) + ' (' + paymentDate + ')'}">
+                            </span>
+        </th:block>
+        <th:block th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) < 0}">
+            <span class="emoji-icon wiggle">🚨</span>
+            <th:block th:with="noDate=#{label.paymentdate},paymentDate=${lastPaymentDate != null ? #temporals.format(lastPaymentDate, 'dd-MM-yyyy') : noDate}">
+                                <span class="red-text pulse" style="font-size: 1rem"
+                                      th:text="${'Balance: €' + #numbers.formatDecimal(balanceInfo, 1, 2) + ' (' + paymentDate + ')'}">
+                                </span>
+            </th:block>
+            <span class="emoji-icon wiggle">🚨</span>
+        </th:block>
+    </div>
 </th:block>

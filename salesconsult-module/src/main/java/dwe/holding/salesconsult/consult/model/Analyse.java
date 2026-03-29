@@ -21,12 +21,12 @@ import java.math.BigDecimal;
 @Setter
 public class Analyse extends MemberBaseBO {
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "analyse_description_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "analyse_description_id")
     private AnalyseDescription analyseDescription;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "costing_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "costing_id")
     private Costing costing;
 
     @Column(nullable = false)

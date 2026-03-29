@@ -2,12 +2,11 @@ package dwe.holding.salesconsult.sales.controller.otc;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
+import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.customer.expose.CustomerService;
-import dwe.holding.salesconsult.consult.controller.HtmxVisitLineItemsController;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
-import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
-import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
@@ -40,11 +39,10 @@ public class OTCSellController {
     private final CustomerService customerService;
     private final LineItemService lineItemService;
     private final CostingService costingService;
-    private final AppointmentRepository appointmentRepository;
     private final AppointmentVisitService appointmentVisitService;
     private final VisitRepository visitRepository;
-    private final HtmxVisitLineItemsController htmxVisitLineItemsController;
-
+    private final CustomerFinancialInfo customerFinancialInfo;
+    private final CustomerRepository customerRepository;
 
     @GetMapping("/otc/customer/{customerId}/visit/{visitId}")
     String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Model model, RedirectAttributes redirect) {
@@ -52,12 +50,12 @@ public class OTCSellController {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
 
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
-        if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
-            return "redirect:/sales/otc/search/";
         Appointment app = visit.getAppointment();
         HashSet<Long> listPetsOnAppointment = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
 
-        updateVisitStatusInModel(model, visit.getStatus());
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
+
+        updateVisitStatusInModel(model, visit.getStatus(), SalesType.OTC);
         model
                 .addAttribute("customer", customer)
                 // using the visit Id so switching between the pets is going ok since we change the url
@@ -81,12 +79,12 @@ public class OTCSellController {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
             return new ResponseEntity<>(responseHeaders, HttpStatus.FORBIDDEN);
-        visit = appointmentVisitService.deletePetFromAppointment(visit, petId);
-        if (visit == null) {
-            return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);
-        }
 
-        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+        if (appointmentVisitService.deletePetFromAppointment(visit, petId) == null) {
+            return new ResponseEntity<>(responseHeaders, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/otc/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
@@ -102,7 +100,7 @@ public class OTCSellController {
             return "redirect:/sales/otc/search/";
         }
 
-        visit = appointmentVisitService.deleteLineItemFromVisit(visit, lineItemId);
+        visit = lineItemService.deleteLineItemFromVisit(visit, lineItemId);
 
         updateModel(model, visit, customerId);
         return "sales-module/fragments/htmx/lineitemsfulltable";
@@ -121,14 +119,17 @@ public class OTCSellController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
         }
-        lineItemService.createOtcLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
+        boolean visitChanged = lineItemService.createOtcAndConsultLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
         updateModel(model, visit, customerId);
-        return "sales-module/fragments/htmx/lineitemsfulltable";
+        if (visitChanged) {
+            updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
+            return "sales-module/fragments/htmx/lineitemsfulltableplusactionbar";
+        } else {
+            return "sales-module/fragments/htmx/lineitemsfulltable";
+        }
     }
 
-
-    private void updateModel(Model model,  Visit visit,Long customerId) {
-
+    private void updateModel(Model model, Visit visit, Long customerId) {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
                 .addAttribute("costingSearchUrl", "/sales/otc/customer/" + customerId + "/visit/" + visit.getId())
@@ -136,6 +137,5 @@ public class OTCSellController {
                 .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("categoryNames", costingService.getCategories())
                 .addAttribute("salesType", SalesType.OTC);
-
     }
 }

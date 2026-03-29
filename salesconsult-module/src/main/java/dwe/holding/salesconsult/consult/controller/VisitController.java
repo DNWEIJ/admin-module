@@ -29,7 +29,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
@@ -188,15 +187,17 @@ public class VisitController {
         updateLocationsInModel(model, lookupLocationRepository);
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
         updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());
-        updateVisitStatusInModel(model, visit.getStatus());
+        updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
         List<AnalyseItem> analyseItems = analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId());
+
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
 
         List<Appointment> app =
                 switch (callFrom) {
                     case "agenda" -> appointmentRepository.findByVisitDateTimeBetweenAndOTCAndLocalMemberId(
                             LocalDate.now().atStartOfDay(), LocalDate.now().atTime(LocalTime.MAX), YesNoEnum.No, AutorisationUtils.getCurrentUserMlid()
                     );
-                    case "customer" -> appointmentRepository.findByMemberIdAndVisits_Pet_Customer_Id(AutorisationUtils.getCurrentUserMid(), customerId);
+                    case "customer" -> appointmentRepository.findByMemberIdAndVisits_Id(AutorisationUtils.getCurrentUserMid(), customerId);
                     default -> throw new IllegalArgumentException("Unsupported callFrom: " + callFrom);
                 };
 
@@ -214,7 +215,6 @@ public class VisitController {
                 .addAttribute("analyseDescription", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("templates", pref.getConsultTextRecords(objectMapper))
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
-                .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("costingSearchUrl", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))

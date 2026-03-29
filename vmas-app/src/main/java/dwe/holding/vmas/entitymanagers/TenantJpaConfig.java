@@ -28,6 +28,7 @@ import java.util.Map;
                 "dwe.holding.customer.lookup.repository",
                 "dwe.holding.salesconsult.sales.repository",
                 "dwe.holding.salesconsult.consult.repository",
+                "dwe.holding.reporting.repository",
                 "dwe.holding.supplyinventory.repository"
         },
         entityManagerFactoryRef = "tenantEntityManagerFactory",
@@ -63,7 +64,8 @@ public class TenantJpaConfig {
                         "dwe.holding.shared.model",
                         "dwe.holding.salesconsult.sales.model",
                         "dwe.holding.salesconsult.consult.model",
-                        "dwe.holding.supplyinventory.model"
+                        "dwe.holding.supplyinventory.model",
+                        "dwe.holding.reporting.model"
                 )
                 .persistenceUnit("tenant")
                 .properties(props)

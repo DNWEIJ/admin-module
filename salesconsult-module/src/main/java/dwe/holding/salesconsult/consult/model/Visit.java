@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,6 +66,15 @@ public class Visit extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Appointment appointment;
+
+    // The following three fields are duplicating information from line-items as summations.
+    // Using visit instead of line-items will reduce reporting time considerably
+    @Column(nullable = false)
+    private BigDecimal totalAmountIncTax = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private BigDecimal totalServiceTax = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private BigDecimal totalProductTax = BigDecimal.ZERO;
 
     // TODO move to invoice handling
     @Column(columnDefinition = "varchar(1)", nullable = false)

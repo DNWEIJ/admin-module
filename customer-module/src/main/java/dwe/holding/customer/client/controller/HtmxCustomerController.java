@@ -37,11 +37,13 @@ public class HtmxCustomerController {
             <ul>%s</ul>
             """;
 
+    /* using the lookup for address via external service, we add the data elements here */
     private final String mainpart = """
             <div class="text-align-center" id="message">%s:</div>
             <div class="text-align-center" id="addressData" data-street="%s" data-number="%s" data-zipcode="%s" data-city="%s">%s</div>
             <div class="text-align-center" id="options">%s</div>
             """;
+
     private static final Pattern EMPTY_CASE_INSENSITIVE = Pattern.compile("", Pattern.CASE_INSENSITIVE);
 
     @GetMapping("/search/customer/address")
@@ -51,11 +53,12 @@ public class HtmxCustomerController {
 
     @GetMapping("/search/customer/address/{zipCode}/{houseNumber}")
     @ResponseBody
-    public String searchAddressHtmx(Model model, @PathVariable String houseNumber, @PathVariable String zipCode, Locale locale) {
+    public String searchAddressHtmx(@PathVariable String houseNumber, @PathVariable String zipCode, Locale locale) {
         Optional<ZipCodeApi.Address> optionalAddress = zipCodeApi.getAddress(zipCode, houseNumber);
         if (optionalAddress.isEmpty()) {
             return mainpart.formatted(messageSource.getMessage("address.notfound", null, locale), "", "", "", "", "", "");
         }
+
         ZipCodeApi.Address address = optionalAddress.get();
         if (address.street() == null && address.houseNumber() != null) {
             return mainpart.formatted(
@@ -95,7 +98,7 @@ public class HtmxCustomerController {
     private List<String> IfCustomerRecordExists(String zipCode, String houseNumber) {
         Pattern pattern = Pattern.compile(Pattern.quote(zipCode), Pattern.CASE_INSENSITIVE);
         List<Customer> list = customerRepository.findByZipCodeAndMemberId(zipCode, AutorisationUtils.getCurrentUserMid());
-        return list.stream().filter(customer -> customer.getStreetNumber().contains(houseNumber)).map(f -> getOption(f, pattern)).toList();
+        return list.stream().filter(customer -> customer.getStreetNumber().contains(houseNumber)).map(f -> getOption(f, pattern, new Selectors(false,false,false, false))).toList();
     }
 
     @GetMapping("/search/customer")
@@ -106,6 +109,8 @@ public class HtmxCustomerController {
      *   Two boolean fields to increase the search scope: startLastName and includeStreetName.
      */
     public String searchCustomerHtmx(Model model, String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet, Locale locale) {
+        Selectors falseSelectors = new Selectors(false,false,false, false);
+
         if (searchCriteria == null || searchCriteria.isEmpty()) {
             model.addAttribute("flatData", "");
             model.addAttribute("form", new CustomerForm(startLastName, includeStreetName, includeFirstTel, includePet));
@@ -116,7 +121,7 @@ public class HtmxCustomerController {
                 try {
                     Optional<Customer> maybeCustomer = customerRepository.findById(Long.parseLong(searchCriteria.substring(1)));
                     if (maybeCustomer.isPresent()) {
-                        model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), EMPTY_CASE_INSENSITIVE)), locale));
+                        model.addAttribute("flatData", wrap(List.of(getOption(maybeCustomer.get(), EMPTY_CASE_INSENSITIVE, falseSelectors)), locale));
                         return "fragments/elements/flatData";
                     }
                 } catch(NumberFormatException e) {
@@ -133,11 +138,11 @@ public class HtmxCustomerController {
                                     searchCriteriaParts[1],
                                     AutorisationUtils.getCurrentUserMid()
                             )
-                            .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern)
+                            .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern, falseSelectors)
                             ).toList();
                 } else {
                     maybeCustomer = customerRepository.findByZipCodeAndMemberId(searchCriteria.substring(1).toUpperCase(), AutorisationUtils.getCurrentUserMid())
-                            .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern)
+                            .stream().sorted(Comparator.comparing(Customer::getLastName)).map(f -> getOption(f, pattern, falseSelectors)
                             ).toList();
                 }
                 if (!maybeCustomer.isEmpty()) {
@@ -153,40 +158,41 @@ public class HtmxCustomerController {
 
     private List<String> getCustomers(String searchCriteria, boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet) {
         List<String> listCustomers = new ArrayList<>();
+        Selectors selectors = new Selectors(startLastName, includeStreetName, includeFirstTel, includePet);
 
         Pattern pattern = Pattern.compile(Pattern.quote(searchCriteria), Pattern.CASE_INSENSITIVE);
 
         if (startLastName) {
             listCustomers.addAll(customerRepository.getCustomerStartLastName(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
-                            f -> getOption(f, pattern)
+                            f -> getOption(f, pattern, selectors)
                     ).toList()
             );
         } else {
             listCustomers.addAll(customerRepository.getCustomerSomewhereLastName(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
-                            f -> getOption(f, pattern)
+                            f -> getOption(f, pattern, selectors)
                     ).toList()
             );
         }
         if (includeStreetName) {
             listCustomers.addAll(customerRepository.findByAddress2ContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
-                            f -> getOption(f, pattern)
+                            f -> getOption(f, pattern, selectors)
                     ).toList()
             );
         }
         if (includeFirstTel) {
             listCustomers.addAll(customerRepository.findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
-                            f -> getOption(f, pattern)
+                            f -> getOption(f, pattern, selectors)
                     ).toList()
             );
         }
         if (includePet) {
             listCustomers.addAll(customerRepository.findByPet(searchCriteria, AutorisationUtils.getCurrentUserMid())
                     .stream().map(
-                            f -> getOption(f.customer(), pattern, f.pet())
+                            f -> getOption(f.customer(), pattern, f.pet(), selectors)
                     ).toList()
             );
         }
@@ -200,37 +206,31 @@ public class HtmxCustomerController {
                 foundCustomers.formatted(messageSource.getMessage("customer.notfound", null, locale));
     }
 
-    private String getOption(Customer customer, Pattern pattern) {
-        return getOption(customer, pattern, null);
+    private String getOption(Customer customer, Pattern pattern, Selectors selectors) {
+        return getOption(customer, pattern, null,selectors);
     }
 
-    private String getOption(Customer customer, Pattern pattern, Pet pet) {
-        StringBuilder result = new StringBuilder();
-        Matcher matcher = pattern.matcher(customer.getLastName());
-        while (matcher.find()) {
-            String match = matcher.group();
-            matcher.appendReplacement(result, "<strong>" + match + "</strong>");
-        }
-        matcher.appendTail(result);
-        // must look like:  <li class="ac_even">♦<strong>van der Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
+    private String getOption(Customer customer, Pattern pattern, Pet pet, Selectors selectors) {
+
+            // must look like:  <li class="ac_even">♦<strong>van der Weij</strong>, D. - Fahrenheitsingel 86 - 1097NV</li>
         return "<li  data-id=" + customer.getId() + ">"
                 + (customer.getStatus().equals(CustomerStatusEnum.CLOSED) ? "&#9670;" : "")
-                + getStringText(customer.getSurName()) + result + ", "
+                + getStringText(customer.getSurName()) + highlightMatches(pattern, customer.getLastName(), true) + ", "
                 + customer.getFirstName()
-                + " - " + getStringText(customer.getAddress2())
+                + " - " + getStringText(highlightMatches(pattern, customer.getAddress2(), selectors.includeStreetName))
                 + " - " + customer.getZipCode()
-                + petDetails(pet)
+                + petDetails(pet, pattern, selectors.includePet)
                 + "</li>";
     }
 
-    private String petDetails(Pet pet) {
+    private String petDetails(Pet pet, Pattern pattern, boolean needMatching) {
         if (pet == null) {
             return "";
         } else {
             return " - "
-                    + pet.getNameWithDeceased()
-                    + (pet.getChipTattooId() != null && !pet.getChipTattooId().isEmpty() ? " - " + pet.getChipTattooId() : "")
-                    + (pet.getPassportNumber() != null && !pet.getPassportNumber().isEmpty() ? " - " + pet.getPassportNumber() : "")
+                    + highlightMatches(pattern, pet.getNameWithDeceased(), needMatching)
+                    + " - " + getStringText(highlightMatches(pattern, pet.getChipTattooId(), needMatching))
+                    + " - " + getStringText(highlightMatches(pattern, pet.getPassportNumber(), needMatching))
                     ;
         }
     }
@@ -244,4 +244,17 @@ public class HtmxCustomerController {
         model.addAttribute("statusList", CustomerStatusEnum.getWebList());
     }
 
+    private String highlightMatches(Pattern pattern, String input, boolean needMatching) {
+        if (!needMatching) return input;
+
+        StringBuffer result = new StringBuffer();
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            matcher.appendReplacement(result, "<strong>" + matcher.group() + "</strong>");
+        }
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    record Selectors(boolean startLastName, boolean includeStreetName, boolean includeFirstTel, boolean includePet){}
 }

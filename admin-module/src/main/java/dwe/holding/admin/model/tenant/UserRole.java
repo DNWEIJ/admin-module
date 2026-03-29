@@ -1,7 +1,7 @@
 package dwe.holding.admin.model.tenant;
 
 
-import dwe.holding.admin.model.base.BaseBO;
+import dwe.holding.admin.model.base.MemberBaseBO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRole extends BaseBO {
+public class UserRole extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

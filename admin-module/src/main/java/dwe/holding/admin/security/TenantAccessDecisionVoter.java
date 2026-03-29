@@ -10,7 +10,10 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 @Component
@@ -54,11 +57,11 @@ public class TenantAccessDecisionVoter {
 
 
         String authorizationAttribute = "";
-        if (uri.startsWith(request.getContextPath() + "/admin")) {
-            authorizationAttribute = findAuthoirzationAttributeForCRUD(method, getLastPart(uri), uri, request.getParameterMap());
-        } else {
+// TODO fix        if (uri.startsWith(request.getContextPath() + "/admin")) {
+//            authorizationAttribute = findAuthoirzationAttributeForCRUD(method, getLastPart(uri), uri, request.getParameterMap());
+//        } else {
             authorizationAttribute = findAuthoirzationAttributeForOther(method, getLastPart(uri), uri);
-        }
+//        }
 
         int accessLevel = checkAuthorizationAttribute(authorizationAttribute, authentication.getAuthorities());
 
@@ -152,6 +155,7 @@ public class TenantAccessDecisionVoter {
             if (last.endsWith("index"))  return last+"_"+ATTRIBUTE_READ;
         }
         uriList.add(method.name() + " " + uri);
+        // TODO FIX THIS
         return "index_"+ATTRIBUTE_READ;
     }
 

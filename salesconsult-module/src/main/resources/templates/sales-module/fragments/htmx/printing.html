@@ -1,20 +1,46 @@
-<form th:action="'/report/customer/'+${customer.id}+'/print/'+${visit.id}" method="post">
-<div class="right-left-space">
-    <div class="grid">
-        <span>invoice</span>
-        <th:block th:insert="~{fragments/elements/select::selectCheckBox('docTypeSwitch','','','2')}" th:with="tooltip='invoice (checked) or receipt'"></th:block>
-        <span>receipt</span>
+<form target="_blank" th:action="'/report/customer/'+${visit.pet.customer.id}+'/print/'+${visit.id}" method="post">
+    <div class="right-left-space">
+        <!-- THE JS IS HIGHLY DEPENDING ON THE CURRENT HTML SETUP OF THE PRINT STUFF -->
+        <div class="grid">
+            <span class="printActive">invoice</span>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox('docTypeSwitch','','','2')}" th:with="tooltip='invoice (checked) or receipt'"></th:block>
+            <span>receipt</span>
+        </div>
+        <span>&nbsp;</span>
+        <div class="grid">
+            <span class="printActive">&nbsp;&nbsp;per&nbsp;&nbsp;</span>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBox('quantitySwitch','','','3')}" th:with="tooltip='pet (checked) or all'"></th:block>
+            <span>&nbsp;&nbsp;all&nbsp;&nbsp;</span>
+        </div>
+        <span>&nbsp;</span>
+        <div class="grid">
+            <button type="submit">Print</button>
+        </div>
+        <span>&nbsp;</span>
     </div>
-    <span>&nbsp;</span>
-    <div class="grid">
-        <span>&nbsp;&nbsp;per&nbsp;&nbsp;</span>
-        <th:block th:insert="~{fragments/elements/select::selectCheckBox('quantitySwitch','','','3')}" th:with="tooltip='pet (checked) or all'"></th:block>
-        <span>&nbsp;&nbsp;all&nbsp;&nbsp;</span>
-    </div>
-    <span>&nbsp;</span>
-    <div class="grid">
-        <button type="submit">Print</button>
-    </div>
-    <span>&nbsp;</span>
-</div>
 </form>
+<style>
+    .printActive {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: var(--pico-primary-background); /* or whatever highlight color fits your design */
+    }
+</style>
+<script>
+    // NOTE THIS IS HIGHLY DEPENDING ON THE CURRENT SETUP OF THE PRINT STUFF
+    ['docTypeSwitch', 'quantitySwitch'].forEach(name => {
+        const checkbox = document.querySelector(`input[name="${name}"]`)
+        const grid = checkbox.closest('.grid');
+        const spans = grid.querySelectorAll('span');
+        const leftSpan = spans[0];
+        const rightSpan = spans[2];
+
+        function updateHighlight() {
+            leftSpan.classList.toggle('printActive', !checkbox.checked);
+            rightSpan.classList.toggle('printActive', checkbox.checked);
+        }
+
+        updateHighlight(); // set initial state
+        checkbox.addEventListener('change', updateHighlight);
+    });
+</script>

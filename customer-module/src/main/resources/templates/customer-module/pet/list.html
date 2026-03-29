@@ -8,7 +8,7 @@
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.pet},'/customer/customer/'+ ${customerId}+ '/pet', ${customerInformation})}"></th:block>
     <hr/>
-    <table class=" striped" id="show-table">
+    <table class=" striped" id="show-table" data-no-export>
         <thead>
         <tr>
             <th>Action</th>

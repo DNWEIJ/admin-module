@@ -1,0 +1,26 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.analyse}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.title.analyse},'/admin/analyse/description')}"></th:block>
+    <hr/>
+    <table class="striped" id="show-table" data-no-export>
+        <thead>
+        <tr>
+            <th class="asc" th:text="#{label.analyse.invoiceinfo}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="analysedescription : ${analyses}">
+            <tr>
+                <td>
+                    <a th:href="'/admin/analyse/description/' + ${analysedescription.id}" th:text="${analysedescription.description}"></a>
+                </td>
+
+        </th:block>
+        </tbody>
+    </table>
+</section>

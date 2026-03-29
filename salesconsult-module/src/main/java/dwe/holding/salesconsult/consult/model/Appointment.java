@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.consult.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import dwe.holding.customer.client.model.Note;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.converter.YesNoEnumConverter;
@@ -16,7 +16,8 @@ import java.util.Set;
 
 @Table(name = "CONSULT_APPOINTMENT",
         indexes = {
-                @Index(name = "idx_appointment_member_local_date", columnList = "member_id, local_member_id, visit_date_time, id")
+                @Index(name = "idx_appointment_member_local_date", columnList = "member_id, local_member_id, visit_date_time, id"),
+                @Index(name = "idx_appointment_member_local_date", columnList = "member_id, visit_date_time, id")
         }
 )
 
@@ -27,7 +28,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Appointment extends TenantBaseBO {
+public class Appointment extends LocalAndMemberBaseBO {
 
     public static final String CANCELLED_COLOUR = "#9999FF";
     public static final String CANCELLED_LABEL_TEXT = "label.visit.status.canceled";
@@ -59,7 +60,7 @@ public class Appointment extends TenantBaseBO {
     @Builder.Default
     private Set<Visit> visits = new HashSet<>(0);
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "appointment")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "appointment")
     @Builder.Default
     private Set<LineItem> lineItems = new HashSet<>(0);
 

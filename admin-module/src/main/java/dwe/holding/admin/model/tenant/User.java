@@ -1,7 +1,7 @@
 package dwe.holding.admin.model.tenant;
 
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import dwe.holding.admin.model.converter.LanguagePrefEnumConverter;
 import dwe.holding.admin.model.converter.PersonnelStatusEnumConverter;
 import dwe.holding.admin.model.notenant.Member;
@@ -30,7 +30,7 @@ import java.util.Set;
 @SuperBuilder(toBuilder = true)
 @Getter
 @Setter
-public class User extends TenantBaseBO {
+public class User extends LocalAndMemberBaseBO {
     @NotEmpty
     @Column(nullable = false)
     private String account;

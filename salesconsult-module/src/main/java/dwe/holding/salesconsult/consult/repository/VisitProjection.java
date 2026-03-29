@@ -4,16 +4,21 @@ import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
-public record VisitProjection (
-    Long id,
-    Long petId,
-    Long appointmentId,
-    @Value("#{target.appointment.OTC}")
-    YesNoEnum appointmentOTC,
-    LocalDateTime appointmentVisitDateTime,
-    Long appointmentLocalMemberId,
-    String purpose,
-    VisitStatusEnum status) {}
+public record VisitProjection(
+        Long id,
+        Long petId,
+        Long appointmentId,
+        @Value("#{target.appointment.OTC}")
+        YesNoEnum appointmentOTC,
+        LocalDateTime appointmentVisitDateTime,
+        Long appointmentLocalMemberId,
+        String purpose,
+        BigDecimal totalAmountIncTax,
+        BigDecimal totalServiceTax,
+        BigDecimal totalProductTax,
+        VisitStatusEnum status) {
+}

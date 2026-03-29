@@ -37,7 +37,6 @@
         transform: translateY(-6px);
         visibility: hidden;
         pointer-events: none;
-
         transition: opacity 400ms ease-out,
         transform 400ms ease-out,
         visibility 0ms linear 200ms;
@@ -67,31 +66,31 @@
 </style>
 
 <div class="threecolumn-spread">
-    <div class="column-wrapper one">
+    <div class="column-wrapper">
         <div class="column-header" th:text="#{label.actionbar.visit.actions}">Actions</div>
-        <th:block th:if="${salesType.isPriceInfo}">
+        <th:block th:if="${salesType.isPriceInfo or salesType.isOtc }">
             <div></div>
         </th:block>
-        <th:block th:if="${!salesType.isPriceInfo}">
+        <th:block th:unless="${salesType.isPriceInfo}">
             <div class="column-content">
                 <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitStatusButtons}"/>
                 <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitReactivateButtons}"/>
             </div>
         </th:block>
     </div>
-    <div class="column-wrapper two">
+    <div class="column-wrapper">
         <div class="column-header" th:text="#{label.actionbar.visit.status}">Visit Status</div>
-        <th:block th:if="${salesType.isPriceInfo}">
+        <th:block th:if="${salesType.isPriceInfo or salesType.isOtc}">
             <div></div>
         </th:block>
-        <th:block th:if="${!salesType.isPriceInfo}">
+        <th:block th:unless="${salesType.isPriceInfo}">
             <div class="column-content">
                 <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::openVisitStatus}"/>
                 <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::closedVisitStatus}"/>
             </div>
         </th:block>
     </div>
-    <div class="column-wrapper three">
+    <div class="column-wrapper">
         <div class="column-header" th:text="#{label.actionbar.visit.print}">Print</div>
         <th:block th:if="${salesType.isPriceInfo}">
             <div></div>

@@ -4,27 +4,33 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
-    <a href="/costing/product/0">
-        <input type="button" class="outline" value="New Product">
-    </a>
+    <div class="grid">
+        <div>
+            <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
+        </div>
+        <div>
+            <a href="/costing/product/0">
+                <input type="button" class="outline" value="New Product">
+            </a>
+        </div>
+    </div>
     <hr/>
     <table class="table table-striped">
-    <thead>
-    <tr>
-        <th></th>
-        <th th:text="#{label.costing.product.invoiceInformation}"></th>
-        <th th:text="#{label.costing.product.category}"></th>
-        <th th:text="#{label.costing.product.code}"></th>
-        <th th:text="#{label.costing.product.barcode}"></th>
-        <th th:text="#{label.costing.product.article}"></th>
-        <th th:text="#{label.costing.product.inventoryUnit}"></th>
-        <th th:text="#{label.costing.product.groupedProduct}"></th>
-        <th th:text="#{label.costing.product.batchRegistered}"></th>
-        <th th:text="#{label.costing.product.spillageAccounted}"></th>
-        <th th:text="#{label.costing.product.inventoryAvailable}"></th>
-    </tr>
-    </thead>
+        <thead>
+        <tr>
+            <th></th>
+            <th th:text="#{label.costing.product.invoiceInformation}"></th>
+            <th th:text="#{label.costing.product.category}"></th>
+            <th th:text="#{label.costing.product.code}"></th>
+            <th th:text="#{label.costing.product.barcode}"></th>
+            <th th:text="#{label.costing.product.article}"></th>
+            <th th:text="#{label.costing.product.inventoryUnit}"></th>
+            <th th:text="#{label.costing.product.groupedProduct}"></th>
+            <th th:text="#{label.costing.product.batchRegistered}"></th>
+            <th th:text="#{label.costing.product.spillageAccounted}"></th>
+            <th th:text="#{label.costing.product.inventoryAvailable}"></th>
+        </tr>
+        </thead>
         <th:block th:insert="~{supplies-module/product/htmx/productsbody}"></th:block>
         <tfoot></tfoot>
     </table>

@@ -3,7 +3,6 @@ package dwe.holding.admin.authorisation.tenant.user;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.model.base.BaseBO;
-import dwe.holding.admin.model.base.ToString;
 import dwe.holding.admin.model.tenant.Role;
 import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.model.tenant.UserRole;
@@ -16,9 +15,6 @@ import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -170,12 +166,5 @@ public class UserController {
         return user.getId();
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    class Form extends ToString {
-        User user = new User();
-        List<PresentationElement> checkedFunctions = new ArrayList<>();
-    }
-
+    record Form(User user, List<PresentationElement> checkedFunctions){}
 }

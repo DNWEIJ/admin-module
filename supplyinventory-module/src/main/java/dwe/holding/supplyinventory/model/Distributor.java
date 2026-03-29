@@ -1,13 +1,11 @@
 package dwe.holding.supplyinventory.model;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -15,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class Distributor extends MemberBaseBO {
@@ -32,9 +31,27 @@ public class Distributor extends MemberBaseBO {
     private String fax;
     private String email;
     private String url;
+    @Lob
     private String comments;
 
-    public Distributor() {
+    public String getAddress() {
+        String address = address1;
 
+        if (address2 != null && !address2.isEmpty()) {
+            address = address + " " + address2;
+        }
+        if (address3 != null && !address3.isEmpty()) {
+            address = address + " " + address3;
+        }
+        return address;
+    }
+
+    public String getPhone() {
+        String phone = phone1;
+
+        if (phone2 != null && !phone2.isEmpty()) {
+            phone = phone + " " + phone2;
+        }
+        return phone;
     }
 }

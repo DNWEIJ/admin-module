@@ -5,10 +5,19 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block
-            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${payment.id}, #{label.title.payment},'/sales/customer/'+ ${customerId}+ '/payments', ${customerInformation})}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${payment.id}, #{label.title.payment},'/sales/customer/'+ ${customerId}+ '/payments', ${customerInformation})}"></th:block><div
+    <div>&nbsp;</div>
+    <div><h5 th:text="#{label.payment.useconsult}"></h5></div>
+    <div>&nbsp;</div>
+    <fieldset class="grid">
+        <legend>[[#{label.payment.information}]]</legend>
+        <div>
+            <label text="#{label.balance}">Balance</label>
+            <span text="${payment.balance}">€0.0</span>
+        </div>
+    </fieldset>
     <form id="createForm" th:action="'/sales/customer/'+${customerId}+ '/payment'" method="post">
-        <th:block th:insert="~{sales-module/payment/paymentform}"></th:block>
+        <th:block th:insert="~{sales-module/payment/paymentform::paymentform}"></th:block>
     </form>
     <th:block th:insert="~{fragments/elements/audit::audit('payment.addedBy','payment.addedOn', 'payment.lastEditedBy', 'payment.lastEditedOn')}"></th:block>
 </section>

@@ -1,0 +1,21 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title th:text="#{category.category}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Category','/product/category/list')}"></th:block>
+
+<form th:action="@{/supplies/distributor}" method="post">
+
+    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+
+    <input id="id" name="id" th:value="${category.id}" type="hidden">
+    <input id="version" name="version" th:value="${category.version}" type="hidden">
+
+    <fieldset class="grid">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('categoryName', 'category.category', 'category.category','0')}"></th:block>
+    </fieldset>
+</form>
+</section>

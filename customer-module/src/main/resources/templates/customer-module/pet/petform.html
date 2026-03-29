@@ -10,7 +10,7 @@
     <input id="isHtmx" name="isHtmx" th:value="${isHtmx}" type="hidden"/>
 
     <fieldset>
-        <legend>Pet</legend>
+        <legend th:text="#{label.title.pet}"></legend>
         <div class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','pet.name','pet.name','1')}" th:with="shouldFocus=true"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('birthday','pet.birthday','pet.birthday','2')}" th:with="type='date',required=false"></th:block>
@@ -25,7 +25,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>Information</legend>
+        <legend th:text="#{customer.legend.otherInformation}"></legend>
         <div>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('briefDescription','pet.briefDescription','pet.briefDescription','7')}"
                       th:with="required=false"></th:block>

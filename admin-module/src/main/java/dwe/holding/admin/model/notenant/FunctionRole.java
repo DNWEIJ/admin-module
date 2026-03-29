@@ -1,7 +1,7 @@
 package dwe.holding.admin.model.notenant;
 
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FunctionRole extends TenantBaseBO {
+public class FunctionRole extends LocalAndMemberBaseBO {
     @Column(nullable = false)
     private Long functionId;
 

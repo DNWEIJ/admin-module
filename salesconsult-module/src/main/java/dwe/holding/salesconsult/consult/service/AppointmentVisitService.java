@@ -12,12 +12,9 @@ import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +47,7 @@ public class AppointmentVisitService {
                                 .purpose(formPet.purpose())
                                 .estimatedTimeInMinutes(formPet.timeNeeded().isEmpty() ? 0 : Integer.parseInt(formPet.timeNeeded()))
                                 .veterinarian(AutorisationUtils.getCurrentUserAccount())
-                                .status(VisitStatusEnum.WAITING)
+                                .status(salesType.isOtc()? VisitStatusEnum.FINISHED_CONSULT : VisitStatusEnum.WAITING)
                                 .sentToInsurance(YesNoEnum.No)
                                 .invoiceStatus(InvoiceStatusEnum.NEW)
                                 .build()
@@ -84,14 +81,6 @@ public class AppointmentVisitService {
         appointment.setVisitDateTime(visitDateTime);
         appointment.setLocalMemberId(localMemberId);
         appointmentRepository.save(appointment);
-    }
-
-    @Transactional
-    public Visit deleteLineItemFromVisit(Visit visit, Long lineItemId){
-        Appointment app = visit.getAppointment();
-        app.getLineItems().removeIf(lItem -> lItem.getId().equals(lineItemId));
-        appointmentRepository.save(app);
-        return visit;
     }
 
     @Transactional

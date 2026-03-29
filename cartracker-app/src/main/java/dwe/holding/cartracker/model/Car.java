@@ -1,8 +1,10 @@
 package dwe.holding.cartracker.model;
 
 
-import dwe.holding.admin.model.base.TenantBaseBO;
-import jakarta.persistence.*;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Car extends TenantBaseBO {
+public class Car extends LocalAndMemberBaseBO {
      String name;
     int kmTotal;
     @Column(name="km_per_liter",columnDefinition = "integer default 0")

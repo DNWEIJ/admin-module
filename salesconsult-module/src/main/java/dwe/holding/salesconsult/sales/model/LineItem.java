@@ -3,17 +3,18 @@ package dwe.holding.salesconsult.sales.model;
 
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.salesconsult.consult.model.Appointment;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "SALES_LINE_ITEM")
+@Table(name = "SALES_LINE_ITEM",
+        indexes = {
+                @Index(name = "idx_lineitem_category_id", columnList = "member_id, category_id")
+        }
+)
 @Entity
 @SuperBuilder
 @NoArgsConstructor

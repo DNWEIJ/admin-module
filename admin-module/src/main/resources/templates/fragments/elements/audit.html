@@ -1,22 +1,19 @@
 <th:block th:fragment="audit(addedBy,addedOn,lastEditedBy,lastEditedOn)">
-            <fieldset>
-                <legend>[[#{label.audit.info}]]</legend>
-                <div>
-                <span>[[#{label.audit.addedbyOn}]]: [[${__${addedBy}__}]]&nbsp;<span><small>([[${#temporals.format(__${addedOn}__, 'yyyy-MM-dd''T''HH:mm')}]])</small></span></span>
-                <span>[[#{label.audit.lasteditedbyOn}]]: [[${__${lastEditedBy}__}]]&nbsp;<span><small>([[${__${lastEditedOn}__}]])</small></span></span>
-                </div>
-            </fieldset>
+    <fieldset>
+        <legend>[[#{label.audit.info}]]</legend>
+        <div>
+            <span th:with="label=#{label.audit.addedbyOn}" th:utext="${label + ': ' +  __${addedBy}__}"></span>&nbsp;<small
+                th:utext="${'(' + #temporals.format(__${addedOn}__, 'yyyy-MM-dd''T''HH:mm') + ')'}"></small>
+            <span th:with="label=#{label.audit.lasteditedbyOn}" th:utext="${label + ': ' + __${lastEditedBy}__}"></span>&nbsp;<small
+                th:utext="${'(' + #temporals.format(__${lastEditedOn}__, 'yyyy-MM-dd''T''HH:mm') + ')'}"
+        </div>
+    </fieldset>
 </th:block>
 
 <th:block th:fragment="auditWithButtons(addedBy,addedOn,lastEditedBy,lastEditedOn)">
     <div class="fourcolumn-spread">
         <div class="one">
-            <fieldset>
-                <legend>[[#{label.audit.info}]]</legend>
-                <span>[[#{label.audit.addedbyOn}]]: [[${__${addedBy}__}]]&nbsp;<span><small>([[${__${addedOn}__}]])</small></span></span>
-                <span>[[#{label.audit.lasteditedbyOn}]]: [[${__${lastEditedBy}__}]]&nbsp;<span><small>([[${__${lastEditedOn}__}]])</small></span></span>
-            </fieldset>
-
+            <th:block th:replace="~{this::audit(addedBy,addedOn,lastEditedBy,lastEditedOn)}"></th:block>
         </div>
         <div class="two">
         </div>
@@ -30,9 +27,9 @@
 </th:block>
 
 <th:block th:fragment="lastEditedByOn_td(addedBy,addedOn,lastEditedBy,lastEditedOn)">
-<td class="desktop-only">
-    <small th:data-tooltip="#{label.audit.createby}+${addedBy}+#{label.audit.on}+${#temporals.format(addedOn, 'dd-MM-yy')}">
-        [[${lastEditedBy}]] • [[${#temporals.format(lastEditedOn, 'dd-MM-yy')}]]
-    </small>
-</td>
+    <td class="desktop-only">
+        <small th:data-tooltip="#{label.audit.createby}+${addedBy}+#{label.audit.on}+${#temporals.format(addedOn, 'dd-MM-yy')}">
+            [[${lastEditedBy}]] • [[${#temporals.format(lastEditedOn, 'dd-MM-yy')}]]
+        </small>
+    </td>
 </th:block>

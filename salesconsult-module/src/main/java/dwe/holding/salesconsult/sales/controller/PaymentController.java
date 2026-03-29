@@ -3,6 +3,9 @@ package dwe.holding.salesconsult.sales.controller;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.salesconsult.consult.model.Visit;
+import dwe.holding.salesconsult.consult.repository.VisitRepository;
+import dwe.holding.salesconsult.sales.Service.PaymentService;
 import dwe.holding.salesconsult.sales.model.Payment;
 import dwe.holding.salesconsult.sales.repository.PaymentRepository;
 import dwe.holding.shared.model.type.PaymentMethodEnum;
@@ -11,13 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/sales")
@@ -26,6 +28,8 @@ import java.time.LocalDate;
 public class PaymentController {
     private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
+    private final VisitRepository visitRepository;
+    private final PaymentService paymentService;
 
     @PostMapping("/customer/{customerId}/payment")
     String newOrUpdateRecord(@PathVariable Long customerId, Payment paymentForm, RedirectAttributes redirect) {
@@ -45,7 +49,8 @@ public class PaymentController {
                             .comments(paymentForm.getComments())
                             .referenceNumber(paymentForm.getReferenceNumber())
                             .customer(customer)
-                            .localMemberId(AutorisationUtils.getCurrentUserMid())
+                            .memberId(AutorisationUtils.getCurrentUserMid())
+                            .localMemberId(AutorisationUtils.getCurrentUserMlid())
                             .build()
             );
             customerRepository.save(customer);
@@ -80,15 +85,15 @@ public class PaymentController {
     }
 
     @GetMapping("/customer/{customerId}/payment")
-    public String getPaymentRecord(@PathVariable Long customerId, Model model) {
+    public String getNewPaymentRecord(@PathVariable Long customerId, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         model.addAttribute("payment",
                 Payment.builder()
                         .method(PaymentMethodEnum.PIN)
                         .paymentDate(LocalDate.now())
-                        .amount(0.0)
+                        .amount(BigDecimal.ZERO)
                         .build());
-        setModel(model, customerId);
+        setModel(model, customer.getId());
         return "sales-module/payment/action";
     }
 
@@ -99,6 +104,28 @@ public class PaymentController {
         model.addAttribute("payment", payment.getCustomer().getId().equals(customerId) ? payment : new Payment());
         setModel(model, payment.getCustomer().getId());
         return "sales-module/payment/action";
+    }
+
+    @DeleteMapping("/payment/{paymentId}/visit/{visitId}")
+    String deleteHtmxVisitPaymentLink(@PathVariable Long paymentId, @PathVariable Long visitId, Model model) {
+        Payment payment = paymentRepository.findById(paymentId).get();
+        Optional<Visit> optionalVisit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId);
+        model.addAttribute("payment", paymentService.deleteVisitPaymentFromPayment(payment, optionalVisit.get()));
+        return "sales-module/payment/paymentform::paymentVisitConnection";
+    }
+
+    @PostMapping("/payment/{paymentId}/add")
+    String addHtmxVisitPaymentLink(@PathVariable Long paymentId, Long newVisitId, Model model) {
+        Payment payment = paymentRepository.findById(paymentId).get();
+        Optional<Visit> optionalVisit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(),newVisitId);
+        if (optionalVisit.isPresent()) {
+            model.addAttribute("payment", paymentService.addVisitPaymentToPayment(payment, optionalVisit.get()));
+            return "sales-module/payment/paymentform::paymentVisitConnection";
+        } else {
+            model.addAttribute("error", true);
+            model.addAttribute("payment", payment);
+            return "sales-module/payment/paymentform::paymentVisitConnection";
+        }
     }
 
     void setModel(Model model, Long customerId) {

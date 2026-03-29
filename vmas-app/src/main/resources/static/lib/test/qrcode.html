@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #0088ff;
+            --dark: #0a0e1a;
+            --darker: #050810;
+            --text: #e8f0ff;
+            --text-dim: #7a8ba0;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                    linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridScroll 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scanner-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(10, 14, 26, 0.6);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+            box-shadow:
+                    0 0 40px rgba(0, 255, 136, 0.1),
+                    inset 0 0 20px rgba(0, 255, 136, 0.05);
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .camera-label {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 255, 136, 0.9);
+            color: var(--darker);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 20;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #reader {
+            width: 100%;
+            border: none;
+            min-height: 300px;
+            position: relative;
+        }
+
+        #reader video {
+            border-radius: 18px;
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+        }
+
+        #reader canvas {
+            display: none !important;
+        }
+
+        #reader__scan_region {
+            position: relative !important;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg,
+            transparent,
+            var(--primary) 20%,
+            var(--primary) 80%,
+            transparent);
+            box-shadow: 0 0 20px var(--primary);
+            animation: scanAnimation 2s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes scanAnimation {
+            0%, 100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-color: var(--primary);
+            border-style: solid;
+            opacity: 0.6;
+        }
+
+        .corner.top-left {
+            top: 20px;
+            left: 20px;
+            border-width: 3px 0 0 3px;
+            border-radius: 4px 0 0 0;
+        }
+
+        .corner.top-right {
+            top: 20px;
+            right: 20px;
+            border-width: 3px 3px 0 0;
+            border-radius: 0 4px 0 0;
+        }
+
+        .corner.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            border-width: 0 0 3px 3px;
+            border-radius: 0 0 0 4px;
+        }
+
+        .corner.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-width: 0 3px 3px 0;
+            border-radius: 0 0 4px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        button:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: rgba(122, 139, 160, 0.2);
+            color: var(--text);
+            border: 1px solid rgba(122, 139, 160, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(122, 139, 160, 0.3);
+            border-color: rgba(122, 139, 160, 0.5);
+        }
+
+        .results {
+            background: rgba(10, 14, 26, 0.6);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            animation: fadeIn 1.2s ease-out 0.6s both;
+        }
+
+        .results h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-item {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            animation: slideIn 0.4s ease-out;
+            word-break: break-all;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            line-height: 1.5;
+        }
+
+        .result-time {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 40px 20px;
+            font-size: 0.9rem;
+        }
+
+        .status {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .status.error {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .status.info {
+            background: rgba(0, 136, 255, 0.15);
+            color: var(--secondary);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        /* Hide only the dashboard controls, keep video visible */
+        #reader__dashboard_section {
+            display: none !important;
+        }
+
+        #reader__dashboard_section_csr {
+            display: none !important;
+        }
+
+        #reader__header_message {
+            display: none !important;
+        }
+
+        #reader__camera_selection {
+            display: none !important;
+        }
+
+        /* Ensure scan region is visible */
+        #reader__scan_region {
+            border: none !important;
+        }
+
+        #reader__scan_region video {
+            border: none !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Scan</h1>
+        <div class="subtitle">Mobile Scanner</div>
+    </header>
+
+    <div id="status-message"></div>
+
+    <div class="scanner-container" id="scanner-wrapper" style="display: none;">
+        <div class="camera-label">📷 LIVE CAMERA</div>
+        <div id="reader"></div>
+        <div class="scan-line"></div>
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+    </div>
+
+    <div class="controls">
+        <button id="start-btn" class="btn-primary">Start Scanner</button>
+        <button id="stop-btn" class="btn-secondary" style="display: none;">Stop Scanner</button>
+        <button id="clear-btn" class="btn-secondary">Clear Results</button>
+    </div>
+
+    <div class="results">
+        <h2>Scan Results</h2>
+        <div id="results-list">
+            <div class="empty-state">No scans yet. Start scanning to see results here.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let html5QrCode = null;
+    let isScanning = false;
+    const scannedCodes = [];
+
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const scannerWrapper = document.getElementById('scanner-wrapper');
+    const resultsList = document.getElementById('results-list');
+    const statusMessage = document.getElementById('status-message');
+
+    function showStatus(message, type = 'info') {
+        statusMessage.innerHTML = `<div class="status ${type}">${message}</div>`;
+        setTimeout(() => {
+            statusMessage.innerHTML = '';
+        }, 3000);
+    }
+
+    function addResult(decodedText, format) {
+        const timestamp = new Date().toLocaleString();
+        const isDuplicate = scannedCodes.some(code =>
+            code.text === decodedText &&
+            Date.now() - code.time < 500 // Ignore duplicates within 5 seconds
+        );
+
+        if (isDuplicate) {
+            return;
+        }
+
+        scannedCodes.unshift({
+            text: decodedText,
+            format: format,
+            time: Date.now(),
+            timestamp: timestamp
+        });
+
+        // Keep only last 10 scans
+        if (scannedCodes.length > 10) {
+            scannedCodes.pop();
+        }
+
+        updateResultsList();
+        showStatus('✓ Code scanned successfully!', 'success');
+
+        // Vibrate if available
+        if (navigator.vibrate) {
+            navigator.vibrate(100);
+        }
+    }
+
+    function updateResultsList() {
+        if (scannedCodes.length === 0) {
+            resultsList.innerHTML = '<div class="empty-state">No scans yet. Start scanning to see results here.</div>';
+            return;
+        }
+
+        resultsList.innerHTML = scannedCodes.map(code => `
+                <div class="result-item">
+                    <div class="result-label">Format: ${code.format}</div>
+                    <div class="result-value">${code.text}</div>
+                    <div class="result-time">${code.timestamp}</div>
+                </div>
+            `).join('');
+    }
+
+    async function startScanner() {
+        try {
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+
+            const config = {
+                fps: 20,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0,
+                videoConstraints: {
+                    facingMode: "environment",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            };
+
+            await html5QrCode.start(
+                { facingMode: "environment" }, // Use back camera
+                config,
+                (decodedText, decodedResult) => {
+                    addResult(decodedText, decodedResult.result.format.formatName);
+                }
+            );
+
+            isScanning = true;
+            scannerWrapper.style.display = 'block';
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'block';
+            showStatus('✓ Camera active - You can see the live preview above', 'success');
+
+        } catch (err) {
+            console.error('Error starting scanner:', err);
+            showStatus('Unable to access camera. Please check permissions.', 'error');
+        }
+    }
+
+    async function stopScanner() {
+        if (html5QrCode && isScanning) {
+            try {
+                await html5QrCode.stop();
+                isScanning = false;
+                scannerWrapper.style.display = 'none';
+                startBtn.style.display = 'block';
+                stopBtn.style.display = 'none';
+                showStatus('Scanner stopped', 'info');
+            } catch (err) {
+                console.error('Error stopping scanner:', err);
+            }
+        }
+    }
+
+    function clearResults() {
+        scannedCodes.length = 0;
+        updateResultsList();
+        showStatus('Results cleared', 'info');
+    }
+
+    startBtn.addEventListener('click', startScanner);
+    stopBtn.addEventListener('click', stopScanner);
+    clearBtn.addEventListener('click', clearResults);
+
+    // Request camera permission on load for better UX
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(() => {
+                console.log('Camera permission granted');
+            })
+            .catch(() => {
+                showStatus('Camera permission needed for scanning', 'info');
+            });
+    }
+</script>
+</body>
+</html>

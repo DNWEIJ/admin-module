@@ -16,6 +16,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findByVisitDateTimeBetweenAndOTCAndLocalMemberId(LocalDateTime start, LocalDateTime end, YesNoEnum otc, Long mlid);
 
-    List<Appointment> findByMemberIdAndVisits_Pet_Customer_Id(Long memberId, Long customerId);
-
+    List<Appointment> findByMemberIdAndVisits_Id(Long memberId, Long visitId);
 }

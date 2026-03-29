@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface LookupBreedsRepository extends JpaRepository<LookupBreeds, Long> {
-    List<LookupBreeds> findByMemberIdIn(Collection<Long> memberIds);
+    List<LookupBreeds> findByMemberIdIn(List<Long> memberIds);
 
 
 }

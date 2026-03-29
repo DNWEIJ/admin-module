@@ -1,6 +1,6 @@
 package dwe.holding.teammover.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Game extends TenantBaseBO {
+public class Game extends LocalAndMemberBaseBO {
     // https://waterpolo.knzb.nl/waterpolo/verenigingen/poule/11200/8507/DHS138S/
     @NotEmpty
     String whereIsTheGame;

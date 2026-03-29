@@ -1,0 +1,25 @@
+<dialog id="customers-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.update} +' '+ #{label.title.customer}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <th:block th:insert="~{customer-module/customer/customerform}"></th:block>
+        <footer>
+            <div class="grid">
+                <input name="_save" type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="customers-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </div>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("customers-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

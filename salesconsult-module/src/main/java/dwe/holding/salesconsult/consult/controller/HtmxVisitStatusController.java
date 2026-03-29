@@ -1,13 +1,13 @@
 package dwe.holding.salesconsult.consult.controller;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
+import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -37,7 +37,7 @@ public class HtmxVisitStatusController {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
 
         if (!visit.isOpen()) {
-            updateVisitStatusInModel(model, visit.getStatus());
+            updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
             model.addAttribute("visit", visit);
             model.addAttribute("message", "Something went wrong. Please try again; or refresh browser");
             return "sales-module/fragments/htmx/visitstatus::closedVisitStatus";
@@ -55,7 +55,7 @@ public class HtmxVisitStatusController {
             }
         }
         visit = visitRepository.save(visit);
-        updateVisitStatusInModel(model, visit.getStatus());
+        updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
         model.addAttribute("visit", visit);
         if (pageRefreshNeeded) response.setHeader("HX-Trigger", "refreshPage");
         return "consult-module/fragments/htmx/actionbar";

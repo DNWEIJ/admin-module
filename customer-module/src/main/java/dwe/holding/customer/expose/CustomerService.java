@@ -7,10 +7,12 @@ import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -37,9 +39,7 @@ public class CustomerService {
     }
 
     public Customer searchCustomerFromPet(Long petId) {
-        return customerMapper.toCustomer(
-                customerRepository.findByPets_IdAndMemberId(petId, AutorisationUtils.getCurrentUserMid())
-        );
+        return customerMapper.toCustomer(customerRepository.findByPets_IdAndMemberId(petId, AutorisationUtils.getCurrentUserMid()));
     }
 
     public dwe.holding.customer.client.model.Pet getPet(Long customerId, Long petId) {
@@ -55,26 +55,31 @@ public class CustomerService {
         petRepository.save(pet);
     }
 
+    @Transactional
+    public void updateCustomerBalance(Long customerId, BigDecimal balance) {
+        dwe.holding.customer.client.model.Customer customer = customerRepository.findById(customerId).orElseThrow();
+        customer.setBalance(balance);
+        customerRepository.save(customer);
+    }
+
     public record Customer(
             Long id,
+            String customerSalutation,
             String customerName,
             String email,
             String homePhone,
             String workPhone,
             String mobilePhone,
-            String address1,
-            String address2,
-            String address3,
-            String street,
-            String streetNumber,
+            String address2, // TODO rename to streetAndNumberAndExtention
             String city,
             String zipCode,
             Long memberId,
             CustomerStatusEnum status,
-            List<Pet> pets
+            List<Pet> pets,
+            BigDecimal balance
     ) {
-        public String formattedHtmlAddress(){
-            return dwe.holding.customer.client.model.Customer.formattedHtmlAddress(street, streetNumber, zipCode, city);
+        public String formattedHtmlAddress() {
+            return dwe.holding.customer.client.model.Customer.formattedHtmlAddress(address2, zipCode, city);
         }
     }
 
@@ -82,7 +87,6 @@ public class CustomerService {
             Long id,
             String name,
             LocalDate birthday,
-            String age,
             boolean deceased,
             String species,
             SexTypeEnum sex,
@@ -107,16 +111,35 @@ public class CustomerService {
             return insured.booleanValue();
         }
 
+        public boolean hasWarning() {
+            return gpwarning.booleanValue() || allergies.booleanValue();
+        }
+
+        public String getWarningShort() {
+            return "<span>" +
+                    (insured.equals(YesNoEnum.Yes)  ? "I " : "<span class='red-text'>I </span>") +
+                    (gpwarning.equals(YesNoEnum.No) ? "D " : "<span class='red-text'>D </span>") +
+                    (allergies.equals(YesNoEnum.No) ? "A " : "<span class='red-text'>A </span>") +
+                    "</span>";
+        }
+
+        // duplicate in Pet
         public String getWarningInfo() {
             StringBuilder warning = new StringBuilder();
             if (insured.equals(YesNoEnum.Yes)) {
                 warning.append("I: ").append(insuredBy).append('\n');
+            } else {
+                warning.append("I: ").append('\n');
             }
             if (gpwarning.equals(YesNoEnum.Yes)) {
                 warning.append("D: ").append(gpwarningDescription).append('\n');
+            } else {
+                warning.append("D: ").append('\n');
             }
             if (allergies.equals(YesNoEnum.Yes)) {
                 warning.append("A: ").append(allergiesDescription).append('\n');
+            } else {
+                warning.append("A: ").append('\n');
             }
             return warning.toString();
         }

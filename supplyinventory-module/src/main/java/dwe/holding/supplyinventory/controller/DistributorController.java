@@ -32,6 +32,8 @@ public class DistributorController {
 
     @PostMapping("/distributor")
     String save(@Valid Distributor distributor, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+        // todo add duplicate check / catch duplicate
+        // check on id != null
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/distributor/action";
@@ -42,7 +44,7 @@ public class DistributorController {
         Distributor savedDistributor = distributorRepository.save(distributor);
 
         redirect.addFlashAttribute("message", "Function saved successfully!");
-        return getRedirectFor(request, savedDistributor.getId(), "redirect:/distributor");
+        return getRedirectFor(request, savedDistributor.getId(), "redirect:/supplies/distributor");
     }
 
     @GetMapping("/distributor")

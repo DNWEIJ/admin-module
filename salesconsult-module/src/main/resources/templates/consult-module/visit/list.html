@@ -9,10 +9,12 @@
 
     <hr/>
 
-    <table class=" striped" id="visit-table">
+    <table class=" striped" id="visit-table" data-no-export>
         <thead>
         <tr>
-            <th th:text="#{visit.header.visitDate}"></th>
+            <th class="asc" th:text="#{visit.header.visitDate}"></th>
+            <th th:text="#{visit.headerlist.status}"></th>
+            <th th:text="#{visit.headerlist.totalamount}"></th>
             <th th:text="#{visit.header.petName}"></th>
             <th th:text="#{visit.header.purpose}"></th>
             <th th:text="#{visit.header.location}"></th>
@@ -21,9 +23,17 @@
         <tbody>
         <tr th:each="visit : ${visits}">
             <td  th:attr="data-sort-value=${visit.appointmentVisitDateTime}">
-                <a th:href="'/consult/visit/customer/'+ ${customerId} + '/visit/'+ ${visit.id} + '?callFrom=customer'"
-                   th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                <th:block th:if="${visit.appointmentOTC.booleanValue}">
+                <a th:href="'/sales/otc/customer/'+ ${customerId} + '/visit/'+ ${visit.id} + '?callFrom=customer'"
+                   th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm') + (visit.appointmentOTC.booleanValue ? ' OTC':'')}"></a>
+                </th:block>
+                <th:block th:unless="${visit.appointmentOTC.booleanValue}">
+                    <a th:href="'/consult/visit/customer/'+ ${customerId} + '/visit/'+ ${visit.id} + '?callFrom=customer'"
+                       th:text="${#temporals.format(visit.appointmentVisitDateTime, 'dd-MM-yyyy HH:mm') + (visit.appointmentOTC.booleanValue ? ' OTC':'')}"></a>
+                </th:block>
             </td>
+            <td th:text="#{${visit.status.label}}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${visit.totalAmountIncTax}, true)}"></th:block>
             <td th:utext="${pets.get(visit.petId)}"></td>
             <td th:text="${visit.purpose}"></td>
             <td th:text="${localMembersList.get(visit.appointmentLocalMemberId)}"></td>

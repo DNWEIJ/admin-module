@@ -48,7 +48,7 @@ public class HtmxVisitLineItemsController {
             return "redirect:/sales/visit/search";
         }
 
-        visit = appointmentVisitService.deleteLineItemFromVisit(visit, lineItemId);
+        visit = lineItemService.deleteLineItemFromVisit(visit, lineItemId);
 
         updateModel(model, visit, customerId);
         return "sales-module/fragments/htmx/lineitemsfulltable";
@@ -67,9 +67,13 @@ public class HtmxVisitLineItemsController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/visit/search";
         }
-        lineItemService.createOtcLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
+        boolean visitChanged =lineItemService.createOtcAndConsultLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
         updateModel(model, visit, customerId);
-        return "sales-module/fragments/htmx/lineitemsfulltable";
+        if (visitChanged) {
+            return "sales-module/fragments/htmx/lineitemsfulltableplusactionbar";
+        }else {
+            return "sales-module/fragments/htmx/lineitemsfulltable";
+        }
     }
 
     private void updateModel(Model model, Visit visit, Long customerId) {

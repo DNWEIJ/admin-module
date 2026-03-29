@@ -2,6 +2,7 @@ package dwe.holding.vmas.model;
 
 import dwe.holding.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -25,34 +26,44 @@ public class VmasUserPreferences {
     @NotBlank
     private String agendaVet3;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum searchCustStart = YesNoEnum.Yes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum searchCustStreet = YesNoEnum.No;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum searchCustNameTelephone = YesNoEnum.No;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum searchCustPet = YesNoEnum.No;
 
     // consult screen
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showVisitTotal = YesNoEnum.Yes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showCustomerPet = YesNoEnum.Yes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showConsult = YesNoEnum.Yes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showAnalyse = YesNoEnum.Yes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showProducts = YesNoEnum.Yes;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum showDiagnoses = YesNoEnum.Yes;
     private String color;

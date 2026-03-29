@@ -6,7 +6,7 @@
 <section layout:fragment="content">
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Role','/admin/admin/role')}"></th:block>
-    <table id="show-table">
+    <table id="show-table" data-no-export>
         <thead>
         <tr>
             <th>[[#{role.name}]]</th>

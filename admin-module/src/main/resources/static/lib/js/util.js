@@ -1,4 +1,3 @@
-
 function toggleAllCheckBoxesInSurroundingElement(masterCheckbox, surroundingElement) {
 
     const fieldset = masterCheckbox.closest(surroundingElement);
@@ -20,8 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const url = detail.url;
 
         if (url) {
+            console.log("refresh with url");
             window.location.href = url;
         } else {
+            console.log("refresh without url");
             window.location.reload();
 
         }
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         location.reload();
     });
 
-    document.addEventListener('htmx:configRequest', e => {
+    document.body.addEventListener('htmx:configRequest', e => {
         const token = document.querySelector('meta[name="_csrf"]')?.content;
         const header = document.querySelector('meta[name="_csrf_header"]')?.content;
         if (token && header) {
@@ -47,6 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "/admin/login";
         }
     });
+
+    /** every table has a highlight on it **/
+    document.querySelectorAll('table:not([data-no-highlight]) tbody tr').forEach(row => {
+        row.addEventListener('mouseover', () => row.classList.add('highlight'));
+        row.addEventListener('mouseout', () => row.classList.remove('highlight'));
+    });
+
 
     // todo this makes the tool tip blink but it doesnt go away.
     // document.querySelectorAll('[data-tooltip]').forEach(el => {

@@ -13,7 +13,7 @@
         }
     </style>
 
-    <table id="show-table">
+    <table id="show-table" data-no-export>
         <thead>
         <tr>
             <th>Nomenclature</th>
@@ -32,12 +32,4 @@
         </tr>
         </tfoot>
     </table>
-    <script>
-        var table = new Tabulator("#show-table",
-            {
-                columns: [ //set column definitions for imported table data
-                    {title: "Nomenclature", formatter: "html"}
-                ]
-            });
-    </script>
 </section>

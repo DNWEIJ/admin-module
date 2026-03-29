@@ -2,7 +2,7 @@
 <th:block th:each="diagnose : ${allDiagnoses}">
     <tr>
         <td class="center">
-            <a href="" th:if="${(visit.isOpen)}" th:hx-delete="${url+diagnose.id}" hx-include="#csrfParameterName">
+            <a href="" th:if="${(visit.isOpen)}" th:hx-delete="${url+diagnose.id}" th:hx-confirm="#{label.otc.sell.delete.confirm}"  hx-include="#csrfParameterName">
                 <svg class="svg-icon">
                     <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
                 </svg>

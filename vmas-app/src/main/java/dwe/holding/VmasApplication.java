@@ -3,6 +3,7 @@ package dwe.holding;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.admin.setup.SetupAdminService;
 import dwe.holding.vmas.local.UserLocaleResolver;
+import dwe.holding.vmas.setup.UpdateDatabase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.LocaleResolver;
 
@@ -28,10 +31,14 @@ import java.util.Optional;
 })
 
 @Slf4j
+@EnableAsync
 public class VmasApplication implements CommandLineRunner {
 
     @Autowired
     SetupAdminService setupAdminService;
+
+    @Autowired
+    UpdateDatabase updateDatabase;
 
     static void main(String[] args) {
         SpringApplication.run(VmasApplication.class, args);
@@ -58,5 +65,7 @@ public class VmasApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         setupAdminService.init();
+        updateDatabase.processAllCustomerBalance();
+        updateDatabase.processAllVisitsBalance();
     }
 }

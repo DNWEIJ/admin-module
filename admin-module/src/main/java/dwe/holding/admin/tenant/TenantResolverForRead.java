@@ -12,7 +12,7 @@ public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
         if (AutorisationUtils.isLoggedIn()) {
             return AutorisationUtils.getCurrentUserMid().toString();
         } else {
-            return "0";
+            return "77";
         }
     }
 

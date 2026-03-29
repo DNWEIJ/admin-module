@@ -45,10 +45,10 @@
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.soap.title},'', ${customerInformation})}"></th:block>
 
     <button th:onclick="'printFromUrl(\'/consult/visit/customer/' + ${customerId} + '/pet/' + ${petId} + '/soap\')'" th:text="#{label.button.print}"></button>
-
     <button onclick="document.querySelectorAll('.visit , .note ').forEach(d => d.open = !d.open);">Toggle Open/Close</button>
     <form id="form">
         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <br/>
         <label>[[#{label.soap.extracomments}]]
             <textarea name="extraComment" id="extra-comment"></textarea>
         </label>

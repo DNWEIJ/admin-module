@@ -2,6 +2,8 @@ package dwe.holding.customer.client.model;
 
 
 import dwe.holding.admin.model.base.MemberBaseBO;
+import dwe.holding.shared.model.converter.YesNoEnumConverter;
+import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,4 +39,7 @@ public class Reminder extends MemberBaseBO {
     private String reminderText;
 
     private Long originatingAppointmentId;
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum hasBeenNotified;
 }

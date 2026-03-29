@@ -3,8 +3,11 @@ package dwe.holding.customer.client.repository;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +62,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
                ORDER BY   c.lastName ASC, c.firstName ASC
             """)
     List<CustomerPetDto> findByPet(String searchCriteria, long memberId);
+
+    @Query("SELECT c.id FROM Customer c ")
+    List<Long> findAllIds();
+
+    @Modifying
+    @Query("UPDATE Customer c SET c.balance = :balance WHERE c.id = :id")
+    void updateBalance(@Param("id") Long id, @Param("balance") BigDecimal balance);
+
+    long countByBalanceIsNull();
 
     public record CustomerPetDto(Customer customer, Pet pet) {
     }

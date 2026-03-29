@@ -2,11 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <!-- Page title / suggested filename -->
     <title>
         Invoice or Receipt
     </title>
-
     <script>
         window.PagedConfig =  {auto: true, before: undefined,
             after: async function (done) {
@@ -120,17 +118,6 @@
     function doIt(){}
 </script>
 <div id="paged-output"></div>
-
-<!--&lt;!&ndash; Hidden elements feeding header/footer &ndash;&gt;-->
-<!--<div class="print-header-left" th:text="${clinic_name}">Clinic Name</div>-->
-
-<!--<div class="print-header-mid">Invoice/Receipt Report</div>-->
-
-<!--<div class="print-header-right"-->
-<!--     th:text="${pet.name} + ' (' + ${pet.id} + ')'">-->
-<!--    SOAP Report – Patient name-->
-<!--</div>-->
-
 <div class="print-footer"
      th:text="'Generated: ' + ${#temporals.format(#temporals.createNow(), 'dd-MM-yyyy HH:mm')}">
     Generated: today

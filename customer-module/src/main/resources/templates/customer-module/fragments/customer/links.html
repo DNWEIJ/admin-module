@@ -13,6 +13,8 @@
                th:href="@{/customer/customer/{customerId}/notes(customerId=${customerId})}" th:text="#{label.title.notes}"></a>
             <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null"
                th:href="@{/consult/customer/{customerId}/estimates(customerId=${customerId})}" th:text="#{label.title.estimate}"></a>
+            <a role="button" th:class="${activeMenu == 'refunds'} ? 'secondary' : null"
+               th:href="@{/sales/price/customer/{customerId}/refunds(customerId=${customerId})}" th:text="#{label.title.refund}"></a>
         </div>
     </div>
     <div class="mobile-only">
@@ -31,6 +33,9 @@
                th:href="@{/customer/customer/{customerId}/notes(customerId=${customerId})}" th:text="#{label.title.notes}"></a>
             <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null"
                th:href="@{/consult/customer/{customerId}/estimates(customerId=${customerId})}" th:text="#{label.title.estimate}"></a>
+            <a role="button" th:class="${activeMenu == 'refunds'} ? 'secondary' : null"
+               th:href="@{/sales/price/customer/{customerId}/refunds(customerId=${customerId})}" th:text="#{label.title.refund}"></a>
+
         </div>
     </div>
     <hr/>

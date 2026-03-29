@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
+
 @Component
 @AllArgsConstructor
 public class CustomerFinancialInfo {
@@ -30,7 +32,7 @@ public class CustomerFinancialInfo {
         customerStorage.setCustomer(new SessionStorageCustomer.CustomerSettings(customer.getId(), customer.getCustomerNameWithId()));
         financialsStorage.setFinancials(
                 new SessionStorageFinancials.FinancialSettings(
-                        financialService.getCustomerBalance(customer.getId()),
+                        customer.getBalance() == null? BigDecimal.ZERO : customer.getBalance(),
                         financialService.getLastestPaymentDate(customer.getId()),
                         financialService.getLastestPaymentAmount(customer.getId())
                 )

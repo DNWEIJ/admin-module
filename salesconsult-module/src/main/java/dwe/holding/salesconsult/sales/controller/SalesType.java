@@ -5,7 +5,7 @@ public enum SalesType {
     PRICE_INFO,
     VISIT,
     ESTIMATE,
-    PRODUCT;
+    COSTINGPRODUCT;
 
     public boolean isOtc() {
         return this.equals(OTC);
@@ -23,7 +23,7 @@ public enum SalesType {
         return this.equals(ESTIMATE);
     }
 
-    public boolean isProduct() {
-        return this.equals(PRODUCT);
+    public boolean isCostingProduct() {
+        return this.equals(COSTINGPRODUCT);
     }
 }

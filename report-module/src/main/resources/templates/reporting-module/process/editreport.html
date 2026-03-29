@@ -1,0 +1,67 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
+    <script type="module" th:src="@{/lib/js/report/ckeditor.js}"></script>
+
+    <style>
+        .ck-editor__editable {
+            height: calc(100vh - 200px - 60px);  /* 200px header + 60px footer */
+        }
+        .placeholder-token {
+            background: #eef;
+            border: 1px solid #99c;
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin: 0 2px;
+            white-space: nowrap;
+        }
+    </style>
+    <title>Template</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:if="${template == null}">
+        <fieldset>
+            <legend>Template</legend>
+            <form action="/report/retrieve/selectedreport">
+                <div>
+                    <input type="hidden" name="reportType" th:value="${reportType}">
+                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('templateId','label.template.purpose', ${templateId}, ${reportList}, false,'0')}"></th:block>
+                </div>
+                <div><input type="submit" th:value="#{label.button.next}"></div>
+            </form>
+        </fieldset>
+    </th:block>
+    <th:block th:if="${template != null}">
+        <fieldset>
+            <form id="previousPage" action="/report/process/selectreport">
+            <input type="hidden"  name="reportType" th:value="${reportType}">
+            </form>
+            <form th:action="${callBackUrl} + '/selectedreport/action'" method="post"  onsubmit="document.getElementById('contentToSave').value = window.editor.getData();">
+
+                <fieldset class="grid" role="group">
+                    <button name="submitButton" value="_back" form="previousPage" type="submit" th:text="#{label.button.previous}"></button>
+                    <button name="submitButton" value="_save" type="submit" th:text="#{label.button.next}"></button>
+                    <button name="submitButton" value="_preview" type="submit" formtarget="_blank" th:text="#{label.button.preview}"></button>
+                </fieldset>
+
+                <input type="hidden" id="contentToSave" name="content"/>
+                <input type="hidden" name="templateId" th:value="${template.id}"/>
+                <input type="hidden" name="reportType" th:value="${template.reportType}"/>
+            </form>
+            <div>
+                <div id="editor" th:utext="${template.content}"></div>
+            </div>
+        </fieldset>
+    </th:block>
+</section>
+</body>
+</html>

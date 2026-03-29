@@ -1,0 +1,41 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.breeds}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.title.breeds},'/customer/lookup/breed')}"></th:block>
+    TODO: showeditable only
+    <hr/>
+    <div class="overflow-auto">
+        <table id="show-table" data-no-export class=" striped">
+            <thead>
+            <tr>
+                <th>[[#{label.species.species}]]</th>
+                <th>[[#{label.breeds.breeds}]]</th>
+                <th>[[#{label.list.auditinfo}]]</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="breed : ${breeds}">
+                <tr>
+                    <td th:text="${breed.speciesName}"></td>
+                    <th:block th:if="${breed.memberId == -1}">
+                        <td th:text="${breed.breed}"></td>
+                    </th:block>
+                    <th:block th:unless="${breed.memberId == -1}">
+                    <td><a th:href="'/customer/lookup/breed/'+ ${breed.id}">[[${breed.breed}]]</a></td>
+                    </th:block>
+                    <td>
+                        <small th:data-tooltip="'Created by  '+${breed.addedBy}+' on ' +${#temporals.format(breed.addedOn, 'dd-MM-yy')}">
+                            [[${breed.lastEditedBy}]] • [[${#temporals.format(breed.lastEditedOn, 'dd-MM-yy')}]]
+                        </small>
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+</section>

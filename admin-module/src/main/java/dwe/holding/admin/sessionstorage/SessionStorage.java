@@ -6,8 +6,12 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 
+/** registered in webconfig
+ *
+ *  Generic module to store information into the session.
+ *  See implementation that uses SessionStorageCustomer, SessionStorageFinancials
+ */
 
-// registered in webconfig
 @Component
 public class SessionStorage {
 
@@ -24,7 +28,6 @@ public class SessionStorage {
             return Optional.empty();
         }
     }
-
 
     public <T> void updateModule(String moduleName, T newSettings) {
         try {

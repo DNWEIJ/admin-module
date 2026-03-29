@@ -1,0 +1,20 @@
+<table id="lineItemsTable" class="striped">
+    <thead>
+    <tr>
+        <th class="no-sorting"><input role="switch" type="checkbox" th:checked="false" onchange="toggleAllCheckBoxesInSurroundingElement(this, 'table')"></th>
+        <th th:text="#{label.analyse.category}"></th>
+        <th th:text="#{label.analyse.invoiceInformation}"></th>
+        <th th:text="#{label.analyse.cost}"></th>
+        <th th:text="#{label.analyse.quantity}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="analyse : ${analyses}">
+        <td><input role="switch" type="checkbox" name="analyseSelected" th:value="${analyse.id}"/></td>
+        <td th:text="${analyse.lookupCostingCategoryId}">
+        <td th:text="${analyse.costing.nomenclature}">
+        <td th:text="${analyse.costing.salesPriceExTax}">
+        <td th:text="${analyse.quantity}">
+    </tr>
+    </tbody>
+</table>

@@ -2,6 +2,7 @@ package dwe.holding.customer.client.controller;
 
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import dwe.holding.admin.util.ControllerHelper;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.mapper.CustomerMapper;
 import dwe.holding.customer.client.model.Customer;
@@ -9,6 +10,7 @@ import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +45,8 @@ public class CustomerController {
     }
 
     @GetMapping("/customer/{id}")
-    String editRecord(@PathVariable Long id, Model model) {
+    String editRecord(@PathVariable Long id, Model model,HttpServletRequest request) {
+        final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
         if (id == 0) {
             return newRecord(true, model);
         }
@@ -53,9 +56,12 @@ public class CustomerController {
         model.addAttribute("customer", customer);
         model.addAttribute("customerId", customer.getId());
         customerFinancialInfo.updateCustomerAndFinancialInfo(model, customer);
-        return "customer-module/customer/action";
+        if (isHtmx) {
+            return "customer-module/fragments/customer/customermodal";
+        } else {
+            return "customer-module/customer/action";
+        }
     }
-
 
     @PostMapping("/customer")
     String saveCustomer(@Valid Customer customerForm, RedirectAttributes redirect) {

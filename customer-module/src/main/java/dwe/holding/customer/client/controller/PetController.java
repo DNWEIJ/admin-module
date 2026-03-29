@@ -48,7 +48,7 @@ public class PetController {
     }
 
     @GetMapping("/customer/{customerId}/pet")
-    String setupForNewRecord(@PathVariable Long customerId, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String setupForNewRecord(@PathVariable Long customerId, Model model, HttpServletRequest request) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
 
@@ -66,7 +66,8 @@ public class PetController {
     }
 
     @PostMapping("/customer/{customerId}/pet/{petId}")
-    String savePet(@PathVariable Long customerId, @PathVariable Long petId, @Valid Pet petForm, RedirectAttributes redirect, HttpServletRequest request, Model model) {
+    String savePet(@PathVariable Long customerId, @PathVariable Long petId, @Valid Pet petForm,
+                   RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response, Model model) {
         Pet pet = petRepository.findById(petForm.getId()).orElseThrow();
         if (!pet.getMemberId().equals(AutorisationUtils.getCurrentUserMid())) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
@@ -94,7 +95,11 @@ public class PetController {
         pet.setComments(petForm.getComments());
 
         petRepository.save(pet);
-        return ControllerHelper.getHtmxAndAddToModel(request, model) ? "customer-module/pet/petformmodal" : "redirect:/customer/customer/" + customerId + "/pets";
+        final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
+        if (isHtmx) {
+            response.setHeader("HX-Trigger", "closeModal");
+        }
+        return isHtmx ? "fragments/elements/empty" : "redirect:/customer/customer/" + customerId + "/pets";
     }
 
     @PostMapping("/customer/pet/breed/{id}")
@@ -113,7 +118,7 @@ public class PetController {
         final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
 
         if (petForm.getId() != null) {
-            return savePet(customerId, petForm.getId(), petForm, redirect, request, model);
+            return savePet(customerId, petForm.getId(), petForm, redirect, request, response, model);
         }
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (customer.getPets().stream()

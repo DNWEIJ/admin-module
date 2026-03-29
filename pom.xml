@@ -41,11 +41,7 @@
                 <artifactId>spring-boot-starter</artifactId>
                 <version>4.0.2</version>
             </dependency>
-            <dependency>
-                <groupId>nz.net.ultraq.thymeleaf</groupId>
-                <artifactId>thymeleaf-layout-dialect</artifactId>
-                <version>3.4.0</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.thymeleaf.extras</groupId>
                 <artifactId>thymeleaf-extras-springsecurity6</artifactId>
@@ -80,6 +76,12 @@
                 <groupId>io.github.openfeign.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>7.1</version>
+            </dependency>
+            <!-- Jsoup for HTML to text conversion -->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.17.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 // , uniqueConstraints = @UniqueConstraint(name = "uk_parent_name", columnNames = "NAME"))
@@ -73,15 +74,27 @@ public class Pet extends MemberBaseBO {
 //     */
 //    private Set<Estimatespecific> estimatespecifics = new HashSet<Estimatespecific>(0);
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pet")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     @Builder.Default
     private Set<Reminder> reminders = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pet")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     @Builder.Default
     private Set<Note> notepads = new HashSet<>(0);
 
-    @Transient
+    /***********************************/
+    public String getPassportNumber() {
+        return passportNumber == null ? "" : passportNumber;
+    }
+
+    public String getInsuredBy() {
+        return insuredBy == null ? "" : insuredBy;
+    }
+
+    public String getChipTattooId() {
+        return chipTattooId == null ? "" : chipTattooId;
+    }
+
     public String getNameWithDeceased() {
         return (deceased.name().equals(YesNoEnum.No.name())) ? getName() : getName() + " ✟";
     }
@@ -93,29 +106,93 @@ public class Pet extends MemberBaseBO {
                 getNameWithDeceased() + formattedDate : getNameWithDeceased();
     }
 
-    @Transient
-    // TODO make the years and month variables to be replaced in the string in the controller
-    public String getAge() {
+    public String getAgePresentation(String yearsLabel, String monthsLabel) {
         if (deceased.equals(YesNoEnum.Yes)) {
-            return getBirthday() == null || getDeceasedDate() == null ? "" : "(" + getBirthday().until(deceasedDate).getYears() + " years " + getBirthday().until(deceasedDate).getMonths() + " months)";
+            return getBirthday() == null || getDeceasedDate() == null ? "" :
+                    "(" + getBirthday().until(deceasedDate).getYears() + " " + yearsLabel + " " + getBirthday().until(deceasedDate).getMonths() + " " + monthsLabel + ")";
         } else {
             LocalDate today = LocalDate.now();
-            return getBirthday() == null ? "" : "(" + getBirthday().until(today).getYears() + " years " + getBirthday().until(today).getMonths() + " months)";
+            return getBirthday() == null ? "" :
+                    "(" + getBirthday().until(today).getYears() + " " + yearsLabel + " " + getBirthday().until(today).getMonths() + " " + monthsLabel + ")";
         }
     }
 
-    public String getWarningInfo() {
+    public boolean hasWarning() {
+        return !insured.booleanValue() || gpwarning.booleanValue() || allergies.booleanValue();
+    }
+
+    public String getWarningInfoHtml() {
         StringBuilder warning = new StringBuilder();
         if (insured.equals(YesNoEnum.Yes)) {
             warning.append("I: ").append(insuredBy).append('\n');
+        } else {
+            warning.append("I: ").append('\n');
         }
         if (gpwarning.equals(YesNoEnum.Yes)) {
             warning.append("D: ").append(gpwarningDescription).append('\n');
+        } else {
+            warning.append("D: ").append('\n');
         }
         if (allergies.equals(YesNoEnum.Yes)) {
             warning.append("A: ").append(allergiesDescription).append('\n');
+        } else {
+            warning.append("A: ").append('\n');
         }
         return warning.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pet)) return false;
+        Pet pet = (Pet) o;
+        return getId() != null && Objects.equals(getId(), pet.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    public Pet(
+            Long id,
+            String name,
+            LocalDate birthday,
+            YesNoEnum deceased,
+            LocalDate deceasedDate,
+            YesNoEnum allergies,
+            String allergiesDescription,
+            YesNoEnum gpwarning,
+            String gpwarningDescription,
+            YesNoEnum insured,
+            String insuredBy,
+            String passportNumber,
+            LocalDate chipDate,
+            String chipTattooId,
+            String briefDescription,
+            String species,
+            String breed,
+            SexTypeEnum sex,
+            String idealWeight
+    ) {
+        this.setId(id);
+        this.name = name;
+        this.birthday = birthday;
+        this.deceased = deceased;
+        this.deceasedDate = deceasedDate;
+        this.allergies = allergies;
+        this.allergiesDescription = allergiesDescription;
+        this.gpwarning = gpwarning;
+        this.gpwarningDescription = gpwarningDescription;
+        this.insured = insured;
+        this.insuredBy = insuredBy;
+        this.passportNumber = passportNumber;
+        this.chipDate = chipDate;
+        this.chipTattooId = chipTattooId;
+        this.briefDescription = briefDescription;
+        this.species = species;
+        this.breed = breed;
+        this.sex = sex;
+        this.idealWeight = idealWeight;
+    }
 }

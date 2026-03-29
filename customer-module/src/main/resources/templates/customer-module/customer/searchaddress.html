@@ -2,11 +2,15 @@
     <!-- HX-Trigger-After-Settle::-->
     <article>
         <header>
-            <button aria-label="Close" rel="prev" data-target="address-search-modal" onclick="toggleModal(event)"></button>
+            <div>
+                <span th:text="#{label.search.address}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
         </header>
         <form hx-get="/customer/search/customer/address/{searchZipCode}/{searchHouseNumber}" hx-include="#searchZipCode, #searchHouseNumber"
               hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
             <fieldset class="grid">
+                <legend th:text="#{label.search.zip}"></legend>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchZipCode','customer.zipcode','','')}"
                           th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
                 </th:block>
@@ -17,6 +21,7 @@
         <form hx-get="/customer/search/customer/address/street/{searchStreet2}/{searchHouseNumber2}/{searchCity2}" hx-include="#searchStreet2,#searchHouseNumber2, #searchCity2"
               hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
             <fieldset class="grid addressLayout">
+                <legend th:text="#{label.search.address}"></legend>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchStreet2','customer.street','','')}"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber2','customer.street.number','','')}"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchCity2','customer.city','','')}"></th:block>
@@ -24,7 +29,8 @@
             </fieldset>
         </form>
         <fieldset>
-            <div id="addressResult">-- -- --</div>
+            <legend th:text="#{label.search.result}"></legend>
+            <div id="addressResult" th:text="#{label.not-found}">div>
         </fieldset>
         <footer>
             <fieldset class="grid">

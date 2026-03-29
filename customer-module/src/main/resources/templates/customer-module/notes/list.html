@@ -10,13 +10,13 @@
 
     <hr/>
     <div class="overflow-auto">
-        <table id="show-table" class=" striped">
+        <table id="show-table" data-no-export class=" striped">
             <thead>
             <tr>
                 <th>[[#{label.notes.notedate}]]</th>
                 <th>[[#{label.notes.petname}]]</th>
                 <th>[[#{label.notes.purpose}]]</th>
-                <th>[[#{label.list.auditinfo}]]</th>
+                <th class="desktop-only">[[#{label.list.auditinfo}]]</th>
             </tr>
             </thead>
             <tbody>
@@ -24,12 +24,9 @@
                 <tr>
                     <td><a th:href="'/customer/customer/'+ ${customerId}+ '/notes/'+ ${note.id}"  th:attr="data-sort-value=${note.noteDate}" th:text="${#temporals.format(note.noteDate, 'dd-MM-yyyy')}"></a></td>
                     <td th:utext="${note.pet.nameWithDeceased}"></td>
-                    <td>[[${note.purpose}]]</td>
-                    <td>
-                        <small th:data-tooltip="'Created by  '+${note.addedBy}+' on ' +${#temporals.format(note.addedOn, 'dd-MM-yy')}">
-                            [[${note.lastEditedBy}]] • [[${#temporals.format(note.lastEditedOn, 'dd-MM-yy')}]]
-                        </small>
-                    </td>
+                    <td th:utext="${note.notepurpose}"> </td>
+                    <th:block
+                            th:insert="~{fragments/elements/audit::lastEditedByOn_td(${note.addedBy},${note.addedOn},${note.lastEditedBy},${note.lastEditedOn})}"></th:block>
                 </tr>
             </th:block>
             </tbody>

@@ -19,7 +19,6 @@ import java.util.Map;
 @EnableJpaRepositories(
         // <-- all repos servicing model without having the memberId defined
         basePackages = "dwe.holding.admin.authorisation.notenant",
-
         entityManagerFactoryRef = "globalEntityManagerFactory",
         transactionManagerRef = "globalTransactionManager"
 )
@@ -41,15 +40,7 @@ public class GlobalNoTenantJpaConfig {
         return builder
                 .dataSource(dataSource)
                 // <-- global ENTITIES ONLY (Member, etc.)
-                .packages(
-                        "dwe.holding.admin.model.notenant",
-                        "dwe.holding.customer.client.model",
-                        "dwe.holding.customer.model.lookup",
-                        "dwe.holding.shared.model",
-                        "dwe.holding.salesconsult.sales.model",
-                        "dwe.holding.salesconsult.consult.model",
-                        "dwe.holding.supplyinventory.model"
-                )
+                .packages("dwe.holding.admin.model.notenant")
                 .persistenceUnit("global")
                 .properties(props)
                 .build();

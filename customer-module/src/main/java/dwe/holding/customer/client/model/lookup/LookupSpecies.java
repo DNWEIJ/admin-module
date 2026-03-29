@@ -17,11 +17,12 @@ import java.util.Set;
 @Getter
 @Setter
 public class LookupSpecies extends MemberBaseBO {
+    @NotEmpty
+    @Column(nullable = false)
+    private String species; // todo make it specy
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "species")
     @Builder.Default
     private Set<LookupBreeds> breeds = new HashSet<>(0);
-    @NotEmpty
-    @Column(nullable = false)
-    // todo plural -> single
-    private String species;
+
 }

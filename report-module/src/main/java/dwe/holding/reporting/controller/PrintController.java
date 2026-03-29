@@ -74,7 +74,7 @@ public class PrintController {
                         , AutorisationUtils.getCurrentUserMid()
                         , LocalDate.now())
                 )
-                .addAttribute("balanceInfo", financialService.getCustomerBalance(customer.id()))
+                .addAttribute("balanceInfo", customer.balance())
                 .addAttribute("lastPaymentDate", financialService.getLastestPaymentDate(customer.id()))
                 .addAttribute("lastPaymentAmount", financialService.getLastestPaymentAmount(customer.id()))
         ;

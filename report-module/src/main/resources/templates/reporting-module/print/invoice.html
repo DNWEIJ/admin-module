@@ -116,6 +116,19 @@
             right: 0;
         }
 
+        /**** text alingment ****/
+        .text-align-center {
+            text-align: center;
+        }
+
+        .text-align-right {
+            text-align: right;
+        }
+
+        .text-align-left {
+            text-align: left;
+        }
+
         /* Multi-page: show only on last page at bottom */
         @page :last {
             @bottom-center {
@@ -140,8 +153,11 @@
             <div class="absoluteright invoice-title">KWITANTIE</div>
         </th:block>
     </div>
+
     <div class="invoice-date" th:text="${printDate}"></div>
+
     <div style="line-height: 180%">&nbsp;</div>
+
     <fieldset class="addess">
         <th:block th:if="${printType == 'invoice'}">
             <div class="invoice-label" th:text="#{label.print.invoice.customer}"></div>
@@ -179,7 +195,7 @@
     </fieldset>
 
     <fieldset>
-        <table>
+        <table data-no-export>
             <tr>
                 <td style="vertical-align: top;width:35%">
                     <b th:text="#{label.print.invoice.reminder-five}"></b></td>
@@ -210,8 +226,7 @@
         </table>
     </fieldset>
 
-    <th:block th:each="visitFromList : ${appointment.visits}"
-              th:if="${quantityType == 'all' || visitFromList.id == visit.id}">
+    <th:block th:each="visitFromList : ${appointment.visits}" th:if="${quantityType == 'all' || visitFromList.id == visit.id}">
         <fieldset style="break-inside: avoid; page-break-inside: avoid; border-top: 1px solid #000;">
             <fieldset>
                 <div class="section-title" th:text="#{label.print.invoice.petInfo}"></div>
@@ -235,7 +250,7 @@
                         </td>
                         <td th:text="${visitFromList.pet.chipTattooId}"></td>
                         <td th:text="#{__${visitFromList.pet.sex.label}__}"></td>
-                        <td th:text="${visitFromList.pet.age}"></td>
+                        <td><th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}"  th:text="${visitFromList.pet.getAgePresentation(year,month)}"></th:block></td>
                         <td class="right" th:text="${visitFromList.weight}"></td>
                     </tr>
                     </tbody>
@@ -321,7 +336,6 @@
     <th:block th:if="${printType == 'receipt'}">
         <th:block th:insert="~{reporting-module/print/fragments/footer_receipt}"></th:block>
     </th:block>
-
 </section>
 </body>
 </html>

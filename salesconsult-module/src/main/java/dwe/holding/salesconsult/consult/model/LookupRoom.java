@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.consult.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LookupRoom extends TenantBaseBO {
+public class LookupRoom extends LocalAndMemberBaseBO {
     @NotEmpty
     @Column(nullable = false)
     private String room;

@@ -3,6 +3,7 @@ package dwe.holding.admin.tenant;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Slf4j
 public class TenantEntityListener {
 
     private static final Map<Class<?>, List<Field>> TENANT_FIELDS_CACHE = new ConcurrentHashMap<>();
@@ -26,10 +28,7 @@ public class TenantEntityListener {
 
         if (entity == null) return;
 
-        List<Field> tenantFields = TENANT_FIELDS_CACHE.computeIfAbsent(
-                entity.getClass(),
-                this::findTenantFields
-        );
+        List<Field> tenantFields = TENANT_FIELDS_CACHE.computeIfAbsent(entity.getClass(), this::findTenantFields);
 
         tenantFields.stream()
                 .filter(Objects::nonNull)
@@ -37,8 +36,12 @@ public class TenantEntityListener {
                     ReflectionUtils.makeAccessible(field);
                     Object current = ReflectionUtils.getField(field, entity);
                     if (current == null) {
-                        // TODO remove the current check for null; always set it, but for now we need to survice the setup
-                        ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
+                        // TODO remove the current check for null; always set it, but for now we need to survive the setup
+                        if (AutorisationUtils.isLoggedIn() == true) {
+                            ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
+                        } else{
+                            ReflectionUtils.setField(field, entity, 77L);
+                        }
                     }
                 });
     }

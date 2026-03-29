@@ -5,11 +5,11 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/lookup/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.purpose},'/customer/lookup/purpose', '')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.title.purpose},'/customer/lookup/purpose')}"></th:block>
 
     <hr/>
     <div class="overflow-auto">
-        <table id="show-table" class=" striped">
+        <table id="show-table" data-no-export class=" striped">
             <thead>
             <tr>
                 <th>[[#{label.purpose.definedPurpose}]]</th>

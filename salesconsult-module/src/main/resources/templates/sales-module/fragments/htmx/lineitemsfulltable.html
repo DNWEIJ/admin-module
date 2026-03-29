@@ -1,14 +1,14 @@
-<table id="lineItemsTable" class="no-sorting  striped">
+<table id="lineItemsTable" data-no-export class="no-sorting  striped">
     <thead>
     <tr>
         <th></th>
         <th class="left" th:text="#{label.otc.sell.description}"></th>
-        <th class="desktop-only align-left" th:text="#{label.otc.sell.category}"></th>
-        <th class="desktop-only align-right" th:text="#{label.otc.sell.costproduct}"></th>
-        <th class="desktop-only align-right" th:text="#{label.otc.sell.costservice}"></th>
-        <th class="align-right" th:text="#{label.otc.sell.amount}"></th>
-        <th class="desktop-only align-right" th:text="#{label.otc.sell.taxed}"></th>
-        <th class="align-right" th:text="#{label.otc.sell.total}"></th>
+        <th class="desktop-only text-align-left" th:text="#{label.otc.sell.category}"></th>
+        <th class="desktop-only text-align-right" th:text="#{label.otc.sell.costproduct}"></th>
+        <th class="desktop-only text-align-right" th:text="#{label.otc.sell.costservice}"></th>
+        <th class="text-align-right" th:text="#{label.otc.sell.amount}"></th>
+        <th class="desktop-only text-align-right" th:text="#{label.otc.sell.taxed}"></th>
+        <th class="text-align-right" th:text="#{label.otc.sell.total}"></th>
         <th title="print" class="center emoji-icon">🖨️</th>
     </tr>
     </thead>
@@ -29,11 +29,28 @@
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.taxPortionOfProduct + lineitem.taxPortionOfProcessingFeeService}, true)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.totalIncTax},false)}"></th:block>
             <td class="center">
-                <a class="desktop-only emoji-icon" title="print" th:if="${lineitem.hasPrintLabel}" href="/todo/printLabel?id=${lineitem.id}">🖨️</a>
+                   <a class="desktop-only emoji-icon" title="print" th:if="${lineitem.hasPrintLabel}" href="/todo/printLabel?id=${lineitem.id}">🖨️</a>
             </td>
         </tr>
     </th:block>
     </tbody>
+    <th:block th:if="${#lists.size(lineItems) == 0}">
+        <tfoot>
+        <tr></tr>
+        <tr>
+            <th></th>
+            <th class="left"></th>
+            <th class="desktop-only left"></th>
+            <th class="desktop-only right"></th>
+            <th class="desktop-only right"></th>
+            <th style="font-size: 120%" class="right" th:text="#{label.otc.sell.total}"></th>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td('0.00', true,'')}" th:with="increaseFont=120"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td('0.00', false,'')}" th:with="dataFieldMoneyTotal=true, increaseFont=120"></th:block>
+            <th class="right"></th>
+        </tr>
+        </tfoot>
+    </th:block>
+
     <th:block th:if="${#lists.size(lineItems) != 0}">
         <tfoot>
         <tr></tr>
@@ -44,8 +61,8 @@
             <th class="desktop-only right"></th>
             <th class="desktop-only right"></th>
             <th style="font-size: 120%" class="right" th:text="#{label.otc.sell.total}"></th>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${totalVatAmount}, true)}" th:with="increaseFont=120"></th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${totalAmount}, false)}" th:with="increaseFont=120"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${totalVatAmount}, true,'')}" th:with="increaseFont=120"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${totalAmount}, false,'')}" th:with="dataFieldMoneyTotal=true, increaseFont=120"></th:block>
             <th class="right"></th>
         </tr>
         </tfoot>

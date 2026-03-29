@@ -81,7 +81,11 @@ public class CostingController {
             return false;
         }
 
-        public boolean isProduct() {
+        public boolean isOtc() {
+            return false;
+        }
+
+        public boolean isCostingProduct() {
             return true;
         }
     }

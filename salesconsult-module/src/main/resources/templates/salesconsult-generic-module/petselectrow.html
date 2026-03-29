@@ -3,7 +3,9 @@
         <td>
             <th:block th:insert="~{fragments/elements/select::selectCheckBox('formPet[' + ${offset + iStat.index} + '].checked','','','1')}"></th:block>
         </td>
-        <td th:text="${pet.name} + ' ('+ ${pet.species()}+')'"></td>
+
+        <th:block th:replace="~{this::petName}"></th:block>
+
         <td th:if="${salesType.isVisit}">
             <th:block
                     th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${offset + iStat.index}+'].timeNeeded', '', '', ${timeList},  false,'-1')}"
@@ -31,4 +33,13 @@
                            th:placeholder="#{label.title.purpose}" autocomplete="off">
         </td>
     </tr>
+</th:block>
+
+<th:block th:fragment="petName">
+    <th:block th:if="${pet.hasWarning}">
+        <td class="red-text" th:utext="${pet.name} + '&nbsp;&nbsp;'+ ${pet.species ?: ''} +' ' + ${pet.warningShort}" th:data-tooltip="${pet.warningInfo}"></td>
+    </th:block>
+    <th:block th:if="${!pet.hasWarning}">
+        <td th:utext="${pet.name} + ' '+ ${pet.species()}+'&nbsp;&nbsp;' + ${pet.warningShort}"></td>
+    </th:block>
 </th:block>

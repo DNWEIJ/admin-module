@@ -1,0 +1,40 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title th:text="#{label.title.emailtemplate}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Templates','/report/template')}"></th:block>
+    <div class="overflow-auto">
+        <table id="show-table" data-no-export class="striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th th:text="#{label.template.purpose}"></th>
+                <th th:text="#{label.template.reporttype}"></th>
+                <th th:text="#{label.template.subject}"></th>
+                <th class="desktop-only" th:text="#{label.list.auditinfo}"></th>
+            </tr>
+            </thead>
+            <th:block th:insert="~{this::tableBody}"></th:block>
+        </table>
+    </div>
+</section>
+
+<th:block th:fragment="tableBody">
+    <tbody id="tableBody">
+    <th:block th:each="template : ${templates}">
+        <tr><td>
+            <a class="emoji-icon" href="" hx-target="#tableBody" hx-swap="outerHTML"
+               th:hx-delete="${'/report/template/'  + template.id}" th:title="#{label.button.delete}" th:hx-confirm="#{label.otc.sell.delete.confirm}"> 🗑️</a>
+        </td>
+            <td><a th:href="'/report/template/'+ ${template.id}" th:text="${template.purpose}"></a></td>
+            <td th:text="#{${template.reportType.label}}"></td>
+            <td th:text="${template.subject}"></td>
+            <th:block
+                    th:insert="~{fragments/elements/audit::lastEditedByOn_td(${template.addedBy},${template.addedOn},${template.lastEditedBy},${template.lastEditedOn})}"></th:block>
+        </tr>
+    </th:block>
+    </tbody>
+</th:block>

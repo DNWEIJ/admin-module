@@ -2,7 +2,7 @@
           th:with="type=${type}?:'text', required=${required}?:true, placeholder=${placeholder}?:${label}, text=${text}?:${text}">
     <label th:for="${name}" th:text="${label}"></label>
     <input th:id="${name}" th:name="${name}" th:placeholder="${placeholder}" th:required="${required}"
-           th:tabindex="${tabindex}" th:type="${type}" th:value="${__${dbField}__}"
+           th:tabindex="${tabindex}" th:type="${type}" th:step="${type == 'number'}?:'0.01'"  th:value="${__${dbField}__}"
            th:text="${text}"
     autocomplete="off">
 </th:block>
@@ -14,7 +14,7 @@
     <div class="field" th:classappend="${extraClass}">
         <input th:id="${name}" th:name="${name}" th:required="${required}" th:attr="onblur=''+ ${onblur}"
                th:autofocus="${shouldFocus}" th:pattern="${pattern}" th:tabindex="${tabindex}"
-               th:type="${type}" th:value="${__${dbField}__ ?: ''}"
+               th:type="${type}"  th:step="${type == 'number' ? '0.01' : null}"    th:value="${__${dbField}__ ?: ''}"
                placeholder="" autocomplete="off">
         <label th:for="${name}" th:utext="#{${label}}"></label>
     </div>

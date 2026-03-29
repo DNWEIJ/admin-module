@@ -24,6 +24,14 @@
                th:tabindex="${tabindex}" type="checkbox"/><span class="no-break">[[${label}]]</span></label>
 </th:block>
 
+
+<th:block th:fragment="switch(name, value)" th:with="tooltip=${tooltip}?:''">
+    <label th:for="${name}">
+        <input role="switch" th:value="${value}" th:id="${name}" th:name="${name}" type="checkbox"/>
+        <span class="no-break">[[${label}]]</span>
+    </label>
+</th:block>
+
 <th:block th:fragment="selectCheckBoxDisabled(name, label, dbField, tabindex)" th:with="tooltip=${tooltip}?:''">
     <label th:for="${name}">
         <input role="switch"

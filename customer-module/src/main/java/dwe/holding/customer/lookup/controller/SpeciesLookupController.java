@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/customer")
 @Slf4j
@@ -25,7 +27,8 @@ public class SpeciesLookupController {
 
     @GetMapping("lookup/species")
     String list(Model model) {
-        model.addAttribute("species", speciesLookupRepository.getByMemberId(AutorisationUtils.getCurrentUserMid())); // todo replace with
+
+        model.addAttribute("species", speciesLookupRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L)));
         model.addAttribute("activeMenu", "specy");
         return "customer-module/lookup/species/list";
     }

@@ -16,8 +16,7 @@
  added_by,
  added_on,
  last_edited_by,
- last_edited_on,
- color)
+ last_edited_on)
  SELECT USER_ID,
        VERSION,
        ACCOUNT,
@@ -35,7 +34,6 @@
        ADDED_BY,
        ADDED_ON,
        LAST_EDITED_BY,
-       LAST_EDITED_ON,
-       'grey'
+       LAST_EDITED_ON
 FROM
     vmas.thau_user WHERE MEMBER_ID = 77;

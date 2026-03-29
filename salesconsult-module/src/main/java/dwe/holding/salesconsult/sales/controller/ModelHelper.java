@@ -66,14 +66,16 @@ public class ModelHelper {
         return model;
     }
 
-    public static Model updateVisitStatusInModel(Model model, VisitStatusEnum current) {
+    public static Model updateVisitStatusInModel(Model model, VisitStatusEnum current, SalesType salesType) {
         record StatusNav(
                 VisitStatusEnum previous,
                 VisitStatusEnum current,
                 Set<VisitStatusEnum> next
         ) {
         }
-        model.addAttribute("statusProgress", new StatusNav(current.previous().orElse(null), current, current.nextOptions()));
+        model
+                .addAttribute("statusProgress", new StatusNav(current.previous().orElse(null), current, current.nextOptions()))
+                .addAttribute("salesType", salesType);
         return model;
     }
 

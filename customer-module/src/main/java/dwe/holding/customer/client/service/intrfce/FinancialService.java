@@ -7,9 +7,6 @@ import java.time.LocalDate;
 
 @Component
 public class FinancialService implements FinancialServiceInterface {
-    public BigDecimal getCustomerBalance(Long customerId) {
-        return null;
-    }
 
     public LocalDate getLastestPaymentDate(Long customerId) {
         return null;
@@ -19,4 +16,10 @@ public class FinancialService implements FinancialServiceInterface {
     public BigDecimal getLastestPaymentAmount(Long id) {
         return null;
     }
+
+    @Override
+    public void updateCustomerBalanceAndVisitTotal(Long customerId, Long visitId) {
+
+    }
+
 }

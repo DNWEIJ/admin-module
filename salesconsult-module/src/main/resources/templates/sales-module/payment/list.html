@@ -5,31 +5,43 @@
 <body>
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.payment},'/sales/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.payment},'/sales/customer/'+ ${customerId}+'/payment', ${customerInformation})}"></th:block>
     <hr/>
-    <table class="striped" id="show-table">
+    <table class="striped" id="show-table" data-no-export>
         <thead>
         <tr>
-            <th>[[#{label.payment.paymentDate}]]</th>
-            <th>[[#{label.payment.amount}]]</th>
-            <th>[[#{label.payment.method}]]</th>
-            <th>[[#{label.payment.referenceNumber}]]</th>
-            <th>[[#{label.payment.location}]]</th>
-            <th>[[#{label.payment.lasteditedby}]]</th>
+            <th class="asc" th:text="#{label.payment.paymentDate}"></th>
+            <th class="text-align-right" th:text="#{label.payment.amount}"></th>
+            <th th:text="#{label.payment.method}"></th>
+            <th th:text="#{label.payment.referenceNumber}"></th>
+            <th th:text="#{label.payment.visits}"></th>
+            <th class="desktop-only" th:text="#{label.payment.location}"></th>
+            <th class="desktop-only" th:text="#{label.payment.lasteditedby}"></th>
         </tr>
-        <!--        <tr>-->
-        <!--            <th>[[#{label.payment.chipTattooId}]]</th>-->
-        <!--        </tr>-->
         </thead>
         <tbody>
         <th:block th:each="payment : ${payments}">
             <tr>
                 <td th:attr="data-sort-value=${payment.paymentDate}">
-                    <a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a></td>
+                    <a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a>
+                </td>
                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${payment.amount}, false)}"></th:block>
-                <td>[[#{${payment.method.getLabel}}]]</td>
-                <td>[[${payment.referenceNumber}]]</td>
-                <td th:text="${localMembersList.get(payment.localMemberId)}"></td>
+                <td th:text="#{${payment.method.getLabel}}"></td>
+                <td th:text="${payment.referenceNumber}"></td>
+                <td>
+                    <th:block th:each="paymentvisit : ${payment.getPaymentVisits()}">
+                        <a th:if="${paymentvisit.visit.appointment.isOTC}"
+                           th:href="'/sales/otc/customer/'+ ${paymentvisit.payment.customer.id} + '/visit/'+  ${paymentvisit.visit.id}"
+                           th:text="${paymentvisit.visit.id}">
+                        </a>
+                        <a th:unless="${paymentvisit.visit.appointment.isOTC}"
+                           th:href="'/consult/visit/customer/'+ ${paymentvisit.payment.customer.id} + '/visit/'+ ${paymentvisit.visit.id} + '?callFrom=customer'"
+                           th:text="${paymentvisit.visit.id}">
+                        </a>
+                    </th:block>
+                </td>
+                <td class="desktop-only" th:text="${localMembersList.get(payment.localMemberId)}"></td>
                 <th:block
                         th:insert="~{fragments/elements/audit::lastEditedByOn_td(${payment.addedBy},${payment.addedOn},${payment.lastEditedBy},${payment.lastEditedOn})}"></th:block>
             </tr>

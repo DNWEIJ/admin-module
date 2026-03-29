@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKEditor 5 Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .ck-editor__editable {
+            min-height: 400px;
+        }
+
+        #output {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            margin: 20px 5px 0 0;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>CKEditor 5 Superbuild Test</h1>
+
+    <p>This editor should be fully editable with all features available.</p>
+
+    <div id="editor">
+        <h2>Welcome to CKEditor 5!</h2>
+        <p>This is <strong>bold text</strong> and this is <em>italic</em>.</p>
+        <p>Try editing this content - click anywhere and start typing!</p>
+        <ul>
+            <li>Feature 1</li>
+            <li>Feature 2</li>
+            <li>Feature 3</li>
+        </ul>
+    </div>
+
+    <button onclick="getContent()">Get HTML Content</button>
+    <button onclick="setContent()">Set Sample Content</button>
+    <button onclick="checkReadonly()">Check if Readonly</button>
+
+    <div id="output">
+        <strong>HTML Output will appear here...</strong>
+    </div>
+
+    <!-- CKEditor 5 Superbuild CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
+
+    <script>
+        let editorInstance;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing CKEditor...');
+
+            CKEDITOR.ClassicEditor.create(document.querySelector('#editor'), {
+                removePlugins: [
+                    'CKBox', 'CKFinder', 'EasyImage',
+                    'RealTimeCollaborativeComments', 'RealTimeCollaborativeTrackChanges',
+                    'RealTimeCollaborativeRevisionHistory', 'PresenceList',
+                    'Comments', 'TrackChanges', 'TrackChangesData', 'RevisionHistory',
+                    'Pagination', 'WProofreader', 'MathType', 'SlashCommand',
+                    'Template', 'DocumentOutline', 'FormatPainter', 'TableOfContents',
+                    'PasteFromOfficeEnhanced', 'CaseChange'
+                ],
+                toolbar: {
+                    items: [
+                        'heading', '|',
+                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                        'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|',
+                        'alignment', '|',
+                        'numberedList', 'bulletedList', 'todoList', '|',
+                        'outdent', 'indent', '|',
+                        'link', 'uploadImage', 'insertTable', 'blockQuote', 'codeBlock', '|',
+                        'horizontalLine', 'specialCharacters', '|',
+                        'removeFormat', '|',
+                        'undo', 'redo', '|',
+                        'sourceEditing'
+                    ],
+                    shouldNotGroupWhenFull: true
+                }
+            })
+            .then(editor => {
+                editorInstance = editor;
+                window.editor = editor; // Also expose globally
+
+                console.log('✅ Editor initialized successfully!');
+                console.log('Is readonly?', editor.isReadOnly);
+
+                // Try clicking in the editor to make sure it's editable
+                editor.editing.view.focus();
+            })
+            .catch(error => {
+                console.error('❌ CKEditor initialization error:', error);
+            });
+        });
+
+        // Helper functions for testing
+        function getContent() {
+            if (!editorInstance) {
+                alert('Editor not initialized yet!');
+                return;
+            }
+            const html = editorInstance.getData();
+            document.getElementById('output').innerHTML = '<pre>' + escapeHtml(html) + '</pre>';
+            console.log('HTML:', html);
+        }
+
+        function setContent() {
+            if (!editorInstance) {
+                alert('Editor not initialized yet!');
+                return;
+            }
+            editorInstance.setData(`
+                <h2>New Content Set!</h2>
+                <p>This content was set via <code>setData()</code>.</p>
+                <table>
+                    <tr><th>Name</th><th>Email</th></tr>
+                    <tr><td>John Doe</td><td>john@example.com</td></tr>
+                </table>
+            `);
+            alert('Content updated!');
+        }
+
+        function checkReadonly() {
+            if (!editorInstance) {
+                alert('Editor not initialized yet!');
+                return;
+            }
+            alert('Is Readonly: ' + editorInstance.isReadOnly);
+            console.log('Is readonly?', editorInstance.isReadOnly);
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>

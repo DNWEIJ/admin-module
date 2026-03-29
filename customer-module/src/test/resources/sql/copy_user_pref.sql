@@ -29,7 +29,8 @@ SELECT USER_ID,
                'visitProducts', PREF_VISIT_PRODUCTS,
                'visitDiagnoses', PREF_VISIT_DIAGNOSES,
                'visitComments', PREF_VISIT_COMMENTS,
-               'visitImages', PREF_VISIT_IMAGES
+               'visitImages', PREF_VISIT_IMAGES,
+                'color', 'grey'
        ) AS user_preferences_json
 FROM
     vmas.thau_user WHERE MEMBER_ID = 77;

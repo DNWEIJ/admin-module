@@ -1,6 +1,6 @@
 package dwe.holding.supplyinventory.model;
 
-import dwe.holding.admin.model.base.TenantBaseBO;
+import dwe.holding.admin.model.base.LocalAndMemberBaseBO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CostingBatchNumber extends TenantBaseBO {
+public class CostingBatchNumber extends LocalAndMemberBaseBO {
 
     private Long costingId;
 

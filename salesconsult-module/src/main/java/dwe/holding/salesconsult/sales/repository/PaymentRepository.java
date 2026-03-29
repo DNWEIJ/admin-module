@@ -7,10 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByCustomer_IdOrderByPaymentDateDesc(Long customerId);
@@ -20,6 +18,12 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Query("SELECT COALESCE(SUM(p.amount), 0.0) FROM Payment as p WHERE p.customer.id = :customerId and p.memberId = :memberId")
     BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId, @Param("memberId") Long memberId);
+
+
+    @Query("SELECT COALESCE(SUM(p.amount), 0.0) FROM Payment as p WHERE p.customer.id = :customerId")
+    BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId);
+
+
 
     @Query("""
                 SELECT sp
@@ -31,5 +35,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
                       WHERE sp2.customer.id = :customerId AND sp2.memberId = :memberId
                   )
             """)
-    Optional <Payment> findMaxPaymentDate(Long memberId, Long customerId);
+    List <Payment> findMaxPaymentDate(Long memberId, Long customerId);
 }

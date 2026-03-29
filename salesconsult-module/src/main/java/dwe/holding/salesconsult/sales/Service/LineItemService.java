@@ -5,6 +5,7 @@ import dwe.holding.admin.model.type.PersonnelStatusEnum;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.Reminder;
+import dwe.holding.customer.client.service.intrfce.FinancialServiceInterface;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.AnalyseItem;
 import dwe.holding.salesconsult.consult.model.Appointment;
@@ -25,7 +26,10 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -37,7 +41,7 @@ public class LineItemService {
     private final ReminderRepository reminderRepository;
     private final CustomerService customerService;
     private final AnalyseItemRepository analyseItemRepository;
-
+    private final FinancialServiceInterface financialService;
 
     public List<LineItem> createPricing(@NotNull Long costingId, @NotNull BigDecimal quantity) {
         return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, Pet.builder().id(0L).build());
@@ -48,7 +52,6 @@ public class LineItemService {
     }
 
     public List<LineItem> createConsultAnalyseLineItem(@NotNull Long costingId, @NotNull BigDecimal quantity, @NotNull Pet pet, Long analyseId) {
-        System.out.println("createCnsultAnalyseLineItem "+costingId + "|"+quantity+"|"+pet.getId());
         List<LineItem> lineItems = createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
         lineItems.forEach(lineItem -> lineItem.setId(analyseId));
         return lineItems;
@@ -56,31 +59,66 @@ public class LineItemService {
 
 
     @Transactional
-    public void createOtcLineItem(Appointment app, Long petId, Long costingId, BigDecimal quantity, String batchNumber, String spillageName) {
+    public boolean createOtcAndConsultLineItem(Appointment app, Long petId, Long costingId, BigDecimal quantity, String batchNumber, String spillageName) {
 
         // validate if we are allowed to add a line item; Only VET can add after closed or canceled
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
             if (AutorisationUtils.hasStatus(PersonnelStatusEnum.Vet)) {
                 Set<Visit> set = app.getVisits();
                 for (Visit visit : set) {
-                    if (VisitStatusEnum.isClosed(visit.getStatus())) {
-                        throw new SecurityException("Cannot add line items; Appointment or Visit status doesn't allow it");
+                    if (visit.getPet().getId().equals(petId)) {
+                        if (VisitStatusEnum.isClosed(visit.getStatus())) {
+                            throw new SecurityException("Cannot add line items; Appointment or Visit status doesn't allow it");
+                        }
                     }
                 }
             }
         }
 
         Visit foundVisit = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get();
-
         final List<LineItem> toBeSavedLineItems = createLineItemsFromCosting(app, costingId, quantity, batchNumber, spillageName, foundVisit.getPet());
 
         List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
         app.getLineItems().addAll(savedLineItems);
+
+        // for OTC, we changed the status to PAYMENT, after the first lineItem
+        boolean changedStatus = false;
+        if (app.isOTC() && VisitStatusEnum.FINISHED_CONSULT.equals(foundVisit.getStatus())) {
+            foundVisit.setStatus(VisitStatusEnum.PAYMENT);
+            changedStatus = true;
+        }
         appointmentRepository.save(app);
+        financialService.updateCustomerBalanceAndVisitTotal(foundVisit.getPet().getCustomer().getId(), foundVisit.getId());
+        return changedStatus;
     }
 
-    public void delete(@NotNull Long lineItemId) {
-        lineItemRepository.deleteById(lineItemId);
+
+    /** after analyse discussion with customer / vet these are the lineitems we are adding */
+    /**
+     * we update the balance as well
+     */
+    @Transactional
+    public Set<LineItem> saveAnalyseAndLineItem(List<AnalyseItem> analyseItemList, List<LineItem> lineItemsList, Visit visit) {
+        analyseItemRepository.saveAll(analyseItemList);
+        Appointment app = appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow();
+        lineItemsList.forEach(li -> li.setAppointment(app));
+        app.getLineItems().addAll(lineItemsList);
+        lineItemRepository.saveAll(lineItemsList);
+        Appointment savedApp = appointmentRepository.save(app);
+        savedApp.getLineItems().size();
+        financialService.updateCustomerBalanceAndVisitTotal(visit.getPet().getCustomer().getId(), visit.getId());
+        return savedApp.getLineItems();
+    }
+
+
+    @Transactional
+    public Visit deleteLineItemFromVisit(Visit visit, Long lineItemId) {
+        Appointment app = visit.getAppointment();
+        app.getLineItems().removeIf(lItem -> lItem.getId().equals(lineItemId));
+        appointmentRepository.save(app);
+        financialService.updateCustomerBalanceAndVisitTotal(visit.getPet().getCustomer().getId(), visit.getId());
+        return visit;
+
     }
 
     public List<LineItem> getLineItemsForPet(Long petId, Long appointmentId) {
@@ -121,6 +159,7 @@ public class LineItemService {
                 if (cpp.hasBatchNr().equals(YesNoEnum.Yes)) {
                     costingService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
                 }
+                // todo change supply amount
                 // do extra stuff we need to do on costings....
                 doExtraStuff(cpp, pet, appointment);
                 toBeSavedLineItems.add(savedLineItem);
@@ -130,7 +169,7 @@ public class LineItemService {
     }
 
 
-    /**************************************************************************************************************/
+/**************************************************************************************************************/
     /*      THIS IS THE HEART OF ALL LINEITEM CALCULATIONS, FOR ALL TYPES OTC / VISIT / ESTIMATE / ANALYSE        */
     /*                                                                                                            */
     /*                               BE CAREFULLY CHANGING STUFF HERE                                             */
@@ -146,8 +185,8 @@ public class LineItemService {
                 .categoryId(cpp.lookupCostingCategory().getId())
                 .costingId(cpp.id())
                 .nomenclature(cpp.nomenclature())
-                .taxGoodPercentage(taxes.getTaxHigh())
-                .taxServicePercentage(taxes.getTaxLow())
+                .taxGoodPercentage(taxes.getTaxLow())
+                .taxServicePercentage(taxes.getTaxHigh())
                 // calculations
                 .quantity(
                         getQuantity(quantity, costingGroupList.get(costingId))
@@ -169,11 +208,6 @@ public class LineItemService {
     }
 
     private void doExtraStuff(CostingPriceProjection cpp, Pet pet, Appointment appointment) {
-        // TODO update balance
-//        getUserSession().setCustomerBalance(getUserSession().getCustomerBalance() - l.getTotal());
-
-        // update visit total amount
-
         // update reminder status
         if (YesNoEnum.Yes.equals(cpp.autoReminder())) {
             // clean up existing reminders
@@ -191,17 +225,5 @@ public class LineItemService {
         if (YesNoEnum.Yes.equals(cpp.deceasedPetPrompt())) {
             customerService.updatePetDeceased(pet.getId());
         }
-    }
-
-    @Transactional
-    public Set<LineItem> saveAnalyseAndLineItem(List<AnalyseItem> analyseItemList, List<LineItem> lineItemsList, Visit visit) {
-        analyseItemRepository.saveAll(analyseItemList);
-        Appointment app = appointmentRepository.findById(visit.getAppointment().getId()).orElseThrow();
-        lineItemsList.forEach(li -> li.setAppointment(app));
-        app.getLineItems().addAll(lineItemsList);
-        lineItemRepository.saveAll(lineItemsList);
-        Appointment savedApp = appointmentRepository.save(app);
-        savedApp.getLineItems().size();
-        return savedApp.getLineItems();
     }
 }

@@ -1,0 +1,59 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/html" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.refund}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:if="${adminList == null}">
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleListThree(#{label.title.refund},'/sales/price/customer/'+ ${customerId}+'/refund', ${customerInformation})}"></th:block>
+    <hr/>
+    </th:block>
+
+    <th:block th:if="${adminList != null}">
+    <form action="" method="get">
+        <fieldset class="grid">
+            <label th:for="refundDateTimeStart">[[#{visit.headerlist.from}]]
+                <input id="refundDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
+                       th:value="${#temporals.format(form.from, 'yyyy-MM-dd')}">
+            </label>
+            <label th:for="refundDateTimeEnd">[[#{visit.headerlist.untill}]]
+                <input id="refundDateTimeEnd" name="includeTill" required type="date" autocomplete="off" max="9999-01-01"
+                       th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
+            </label>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"
+                    th:with="isSelectAll=true">
+            </th:block>
+        </fieldset>
+        <input type="submit" th:value="#{label.button.search}"/>
+    </form>
+    </th:block>
+
+    <table class="striped" id="show-table" data-no-export>
+        <thead>
+        <tr>
+            <th class="asc" th:text="#{label.refund.refundDate}"></th>
+            <th th:text="#{label.refund.owner}"></th>
+            <th class="text-align-right" th:text="#{label.refund.amount}"></th>
+            <th th:text="#{label.refund.comments}"></th>
+            <th th:text="#{label.refund.location}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="refund : ${refunds}">
+            <tr>
+                <td th:attr="data-sort-value=${refund.refundDate}">
+                    <a th:href="'/sales/price/customer/'+ ${refund.customerId}+ '/refund/'+ ${refund.id}">[[${#temporals.format(refund.refundDate, 'dd-MM-yyyy')}]]</a>
+                </td>
+                <td th:text="${refund.customerName}"></td>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${refund.amount}, false)}"></th:block>
+                <td th:text="${refund.comments}"></td>
+                <td th:text="${localMembersMap.get(refund.localMemberId)}"></td>
+<!--                <th:block-->
+<!--                        th:insert="~{fragments/elements/audit::lastEditedByOn_td(${refund.addedBy},${refund.addedOn},${refund.lastEditedBy},${refund.lastEditedOn})}"></th:block>-->
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</section>

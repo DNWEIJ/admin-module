@@ -1,0 +1,28 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.species}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${breed.id}, #{label.title.breeds},'/customer/lookup/breeds','')}"></th:block>
+
+    <form id="createForm" th:action="@{/customer/lookup/breed}" method="post">
+
+        <input id="id" name="id" th:value="${breed.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${breed.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <div>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesId','', ${breed.species.id}, ${species}, true,'-1')}"></th:block>
+            </div>
+            <div>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('species','label.title.species','breed.breed','1')}"></th:block>
+            </div>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('breed.addedBy','breed.addedOn', 'breed.lastEditedBy', 'breed.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

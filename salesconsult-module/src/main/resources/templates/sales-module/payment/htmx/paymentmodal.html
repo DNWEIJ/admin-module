@@ -2,19 +2,72 @@
     <!-- HX-Trigger-After-Settle::-->
     <article>
         <header>
-            [[#{label.create}]]  [[#{label.title.payment}]]
+            [[#{label.create}]] [[#{label.title.payment}]]
         </header>
         <p id="payment-modal-part">
         <div class="notification-message text-align-center alert "
              th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
 
-        <form th:hx-post="'/sales/customer/' + ${customerId} + '/visit/payment'" th:hx-target="${target}" hx-swap="outerHTML" id="createForm">
-            <th:block th:insert="~{sales-module/payment/paymentform}"></th:block>
+        <form th:hx-post="'/sales/customer/' + ${customerId} + '/appointment/'+ ${appointment.id} + '/payment'" th:hx-target="${target}" hx-swap="outerHTML" id="paymentForm">
+            <fieldset class="grid">
+                <div style="padding-right:4rem;padding-left:1rem">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th th:text="#{label.otc.petName}"></th>
+                            <th class="text-align-right" th:text="#{label.payment.amount}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="visit, iter : ${appointment.visits}">
+                            <td><input role="switch" th:id="${'addToVisit_'+ visit.id}"  th:name="${'addToVisit['+iter.index+']'}" type="checkbox" checked="checked" th:value="${visit.id}">
+                            </td>
+                            <td th:text="${visit.pet.petName}"></td>
+                            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${visit.totalAmountIncTax},false, ${amountClass})}"></th:block>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="padding-left: 4rem; padding-right:1rem;">
+                    <table data-no-export>
+                        <thead>
+                        <tr>
+                            <td colspan="2">Financiele gegevens</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td th:text="#{label.print.invoice.lastpayment.date}"></td>
+                            <td>
+                                <th:block th:with="noDate=#{label.paymentdate},paymentDate=${lastPaymentDate != null ? #temporals.format(lastPaymentDate, 'dd-MM-yyyy') : noDate}">
+                                    <th:block th:text="${paymentDate}"></th:block>
+                                </th:block>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td th:text="#{label.print.invoice.lastpayment.balance}"></td>
+                            <td>
+                                <th:block th:if="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) < 0}">
+                                    <div class="red-text" style="font-size: 1rem" th:text="${#numbers.formatDecimal(balanceInfo, 1, 2)}"></div>
+                                </th:block>
+                                <th:block th:unless="${balanceInfo != null and balanceInfo.compareTo(T(java.math.BigDecimal).ZERO) < 0}">
+                                    <div class="red-text" style="font-size: 1rem" th:text="${#numbers.formatDecimal(balanceInfo, 1, 2)}"></div>
+                                </th:block>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            <th:block th:insert="~{sales-module/payment/paymentform::paymentform}"></th:block>
         </form>
         </p>
         <footer>
             <fieldset class="grid">
-                <input name="_save" type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input name="_save" type="submit" form="paymentForm" th:value="#{label.button.save}"/>
                 <input type="button" data-target="payment-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
             </fieldset>
         </footer>
@@ -42,4 +95,21 @@
     document.addEventListener("DOMContentLoaded", () => {
         messageDisplay();
     });
+
+    document.querySelectorAll('input[id^="addToVisit_"]').forEach(checkbox => {
+        checkbox.addEventListener('change', recalculate);
+    });
+
+    function recalculate() {
+        let total = 0;
+        document.querySelectorAll('input[id^="addToVisit_"]').forEach(checkbox => {
+            if (checkbox.checked) {
+                const row = checkbox.closest('tr');
+                const amountCell = row.querySelector('td:last-child');
+                const value = amountCell.textContent.trim();
+                total += parseFloat(value) || 0;
+            }
+        });
+        document.getElementById('amount').value = total.toFixed(2);
+    }
 </script>

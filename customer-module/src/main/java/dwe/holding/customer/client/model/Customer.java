@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,6 +70,7 @@ public class Customer extends MemberBaseBO {
     private YesNoEnum newsletter;
 
     private String ubn;
+    private BigDecimal balance;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     @Builder.Default
@@ -76,6 +78,11 @@ public class Customer extends MemberBaseBO {
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 //    private Set<Payment> payments = new HashSet<Payment>(0);
+
+    /*********************************************************/
+    public String getAddress2() {
+        return address2 == null ? "" : address2;
+    }
 
     public static String getCustomerName(String lastName, String surName, String firstName, String middleInitial) {
         String CustomerName = lastName;
@@ -90,6 +97,24 @@ public class Customer extends MemberBaseBO {
             CustomerName = CustomerName + " " + middleInitial + (middleInitial.endsWith(".") ? "" : ".");
         }
         return CustomerName;
+    }
+
+    public String getSalutation() {
+        String salutation = new String();
+
+        if((this.getTitle() != null) && (!this.getTitle().isEmpty())) {
+            salutation += this.getTitle();
+        }
+        if((this.getFirstName() != null) && (!this.getFirstName().isEmpty())) {
+            salutation += (salutation.isEmpty() ? "" : " ") + this.getFirstName();
+        }
+        if((this.getMiddleInitial() != null) && (!this.getMiddleInitial().isEmpty())) {
+            salutation += (salutation.isEmpty() ? "" : " ") + this.getMiddleInitial();
+        }
+        if((this.getLastName() != null) && (!this.getLastName().isEmpty())) {
+            salutation += (salutation.isEmpty() ? "" : " ") + this.getLastName();
+        }
+        return salutation;
     }
 
     public String getCustomerName() {
@@ -124,13 +149,48 @@ public class Customer extends MemberBaseBO {
         return phoneList.toString();
     }
 
-    public static String formattedHtmlAddress(String street, String streetNumber, String zipCode, String city) {
-        return street + "&nbsp;" + streetNumber + "<br/>" +
-                zipCode + "&nbsp;&nbsp;" + city + "<br/>";
+    public static String formattedHtmlAddress(String address2, String zipCode, String city) {
+        return address2 + "<br/>" + zipCode + "&nbsp;&nbsp;" + city + "<br/>";
 
     }
 
     public String formattedHtmlAddress() {
-        return formattedHtmlAddress(this.street, this.streetNumber, this.zipCode, this.city);
+        return formattedHtmlAddress(this.address2, this.zipCode, this.city);
+    }
+
+    public Customer(
+            Long id,
+            String firstName,
+            String surName,
+            String lastName,
+            String middleInitial,
+            String email,
+            YesNoEnum newsletter,
+            String homePhone,
+            String workPhone,
+            String mobilePhone,
+            String address2,
+            String city,
+            String zipCode,
+            CustomerStatusEnum status,
+            BigDecimal balance,
+            Set<Pet> pets
+    ) {
+        this.setId(id);
+        this.firstName = firstName;
+        this.surName = surName;
+        this.lastName = lastName;
+        this.middleInitial = middleInitial;
+        this.email = email;
+        this.newsletter = newsletter;
+        this.homePhone = homePhone;
+        this.workPhone = workPhone;
+        this.mobilePhone = mobilePhone;
+        this.address2 = address2;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.status = status;
+        this.balance = balance;
+        this.pets = pets;
     }
 }
