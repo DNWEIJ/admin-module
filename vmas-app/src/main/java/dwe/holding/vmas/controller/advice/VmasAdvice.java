@@ -2,7 +2,6 @@ package dwe.holding.vmas.controller.advice;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.vmas.model.VmasUserPreferences;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;

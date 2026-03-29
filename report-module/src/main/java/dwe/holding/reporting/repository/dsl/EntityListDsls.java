@@ -8,7 +8,6 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLSubQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.QCustomer;
@@ -176,6 +175,7 @@ public class EntityListDsls {
                 .from(payment)
                 .join(customer).on(payment.customer.id.eq(customer.id))
                 .where(
+                        customer.memberId.eq(memberId),
                         payment.paymentDate.between(fromDate, toDate),
                         localMemberId == 0 ? null : payment.localMemberId.eq(localMemberId),
                         payment.paymentVisits.isEmpty()
@@ -285,11 +285,9 @@ public class EntityListDsls {
 
         List<PaymentListProjection> records = paymentsWithBalance(memberId, localMemberId, fromDate, toDate);
 
-        records.stream().forEach(p -> {
-            p.setBalanceFromDate(
-                    customerBalance(p.getCustomerId(), localMemberId, p.getPaymentDate())
-            );
-        });
+        records.stream().forEach(p -> p.setBalanceFromDate(
+                customerBalance(p.getCustomerId(), localMemberId, p.getPaymentDate())
+        ));
         return records;
 
     }
@@ -299,8 +297,6 @@ public class EntityListDsls {
         JPAQuery<Customer> query = new JPAQuery<>(em);
         QPayment payment = QPayment.payment;
         QCustomer customer = QCustomer.customer;
-        QVisit visit = QVisit.visit;
-        QAppointment appointment = QAppointment.appointment;
 
         return query
                 .select(Projections.constructor(

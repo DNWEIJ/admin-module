@@ -27,7 +27,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -99,7 +98,7 @@ public class RefundController {
     }
 
     @PostMapping("/customer/{customerId}/refund")
-    String saveRefund(Model model, Refund refund, @PathVariable Long customerId,
+    String saveRefund(Refund refund, @PathVariable Long customerId,
                       @ProjectedPayload @ModelAttribute("lineItems") List<LineItem> lineItems) {
 
         if (refund.getId() == null) {

@@ -1,8 +1,9 @@
 package dwe.holding.salesconsult.sales.model;
 
-import dwe.holding.customer.client.model.Pet;
-import dwe.holding.salesconsult.consult.model.Estimate;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

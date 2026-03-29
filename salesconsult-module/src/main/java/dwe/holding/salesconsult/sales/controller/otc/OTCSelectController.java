@@ -7,7 +7,6 @@ import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.service.CustomerFinancialInfo;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
-import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
@@ -57,7 +56,7 @@ public class OTCSelectController {
                 .addAttribute("salesType", SalesType.OTC);
         updateReasonsInModel(model, lookupPurposeRepository);
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
-        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.findById(customerId).orElseThrow());
         return "salesconsult-generic-module/petanddateselectpage";
     }
 
@@ -65,7 +64,7 @@ public class OTCSelectController {
     String selectedPets(@PathVariable Long customerId, @ModelAttribute PetsForm petsForm, Model model) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
-        List<AppointmentVisitService.CreatePet> pets = petsForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked().booleanValue() == true).toList();
+        List<AppointmentVisitService.CreatePet> pets = petsForm.formPet().stream().filter(pet -> pet.checked() != null && pet.checked() == true).toList();
         if (customer == null || pets.isEmpty()) {
             model.addAttribute("message", "Something went wrong. Please try again");
             return "sales-module/otc/searchpage";

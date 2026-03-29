@@ -1,10 +1,10 @@
 package dwe.holding.teammover.controller;
 
-import dwe.holding.teammover.model.type.DriveOptionEnum;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.teammover.model.Driver;
 import dwe.holding.teammover.model.Game;
 import dwe.holding.teammover.model.TeamMoverUserPreferences;
+import dwe.holding.teammover.model.type.DriveOptionEnum;
 import dwe.holding.teammover.repository.DriverRepository;
 import dwe.holding.teammover.repository.GameRepository;
 import jakarta.validation.Valid;

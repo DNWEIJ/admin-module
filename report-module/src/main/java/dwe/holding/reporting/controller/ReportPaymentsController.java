@@ -4,7 +4,6 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.reporting.PaymentListTypeEnum;
 import dwe.holding.reporting.repository.dsl.EntityListDsls;
 import dwe.holding.reporting.repository.projection.PaymentListProjection;
-import dwe.holding.salesconsult.sales.model.Payment;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -19,8 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 @Controller
 public class ReportPaymentsController {
-
-    private final MessageSource messageSource;
     private final EntityListDsls entityListDsls;
 
     @GetMapping("/payment")

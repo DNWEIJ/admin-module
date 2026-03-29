@@ -3,9 +3,11 @@ package dwe.holding.salesconsult.sales.repository.dsl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
-import dwe.holding.admin.sessionstorage.AutorisationUtils;import dwe.holding.customer.client.model.QCustomer;
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import dwe.holding.customer.client.model.QCustomer;
 import dwe.holding.salesconsult.sales.model.QRefund;
-import dwe.holding.salesconsult.sales.repository.projection.RefundProjection;import jakarta.persistence.EntityManager;
+import dwe.holding.salesconsult.sales.repository.projection.RefundProjection;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

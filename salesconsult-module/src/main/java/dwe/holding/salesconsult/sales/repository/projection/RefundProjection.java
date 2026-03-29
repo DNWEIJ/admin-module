@@ -1,6 +1,7 @@
 package dwe.holding.salesconsult.sales.repository.projection;
 
-import dwe.holding.customer.client.model.Customer;import lombok.AllArgsConstructor;
+import dwe.holding.customer.client.model.Customer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.math.BigDecimal;

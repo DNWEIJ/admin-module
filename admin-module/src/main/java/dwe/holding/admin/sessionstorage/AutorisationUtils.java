@@ -11,7 +11,6 @@ import dwe.holding.admin.security.AdminUserDetails;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.validation.constraints.NotNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import tools.jackson.databind.JsonNode;

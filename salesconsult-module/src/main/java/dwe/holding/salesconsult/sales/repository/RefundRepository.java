@@ -2,7 +2,6 @@ package dwe.holding.salesconsult.sales.repository;
 
 import dwe.holding.salesconsult.sales.model.Refund;
 import dwe.holding.salesconsult.sales.repository.projection.RefundProjection;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RefundRepository extends JpaRepository<Refund, Long> {
-    public List<Refund> findByRefundDateBetween(LocalDate from, LocalDate includeTill);
+     List<Refund> findByRefundDateBetween(LocalDate from, LocalDate includeTill);
 
     @Query("""
                 SELECT new dwe.holding.salesconsult.sales.repository.projection.RefundProjection(

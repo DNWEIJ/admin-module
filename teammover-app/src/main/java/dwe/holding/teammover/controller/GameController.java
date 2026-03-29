@@ -1,9 +1,9 @@
 package dwe.holding.teammover.controller;
 
-import dwe.holding.teammover.model.type.DriveOptionEnum;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.teammover.model.Driver;
 import dwe.holding.teammover.model.Game;
+import dwe.holding.teammover.model.type.DriveOptionEnum;
 import dwe.holding.teammover.repository.GameRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class GameController {
     }
 
     @PostMapping("/game")
-    String save(@Valid Game game, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid Game game, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "teammover-module/game/action";

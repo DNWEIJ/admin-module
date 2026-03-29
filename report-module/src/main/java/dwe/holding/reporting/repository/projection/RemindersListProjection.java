@@ -1,10 +1,8 @@
 package dwe.holding.reporting.repository.projection;
 
-import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 public class RemindersListProjection {

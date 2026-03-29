@@ -1,7 +1,7 @@
 package dwe.holding.supplyinventory.controller;
 
-import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-
 
 import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
 
