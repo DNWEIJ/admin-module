@@ -78,5 +78,4 @@ public class ModelHelper {
                 .addAttribute("salesType", salesType);
         return model;
     }
-
 }

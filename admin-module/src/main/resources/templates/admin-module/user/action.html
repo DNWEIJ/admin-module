@@ -4,11 +4,11 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/admin/user/list')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/admin/users')}"></th:block>
 
     <form th:action="@{/admin/user}" method="post">
 
-        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+        <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
 
         <fieldset class="grid" role="presentation">
             <input id="id" name="id" th:value="${user.id}" type="hidden">

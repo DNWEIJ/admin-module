@@ -6,10 +6,9 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Category','/product/category')}"></th:block>
 
-    <table class="table-tight striped" id="show-table" data-no-export>
+    <table class="table-tight striped" id="show-table" >
         <thead>
         <tr>
-            <th>[[#{category.memberId}]]</th>
             <th>[[#{category.categoryName}]]</th>
         </tr>
         </thead>
@@ -17,11 +16,9 @@
         <th:block th:each="category : ${categories}">
             <tr>
                 <th:block th:if="${category.memberId == -1}">
-                    <td th:text="${category.memberId}"></td>
                     <td th:text="${category.category}"></td>
                 </th:block>
                 <th:block th:unless="${category.memberId == -1}">
-                    <td th:text="${category.memberId}"></td>
                     <td><a th:href="@{'/product/category/'+ ${category.id}}" th:text="${category.category}"></a></td>
                 </th:block>
             </tr>

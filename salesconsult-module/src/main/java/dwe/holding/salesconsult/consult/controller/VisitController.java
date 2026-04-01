@@ -97,7 +97,7 @@ public class VisitController {
         updateLocationsInModel(model, lookupLocationRepository);
         updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
         updateReasonsInModel(model, lookupPurposeRepository);
-        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.findById(customerId).orElseThrow());
 
         Appointment appointment = Appointment.builder().visitDateTime(
                         (creationDate != null) ? creationDate : LocalDateTime.now()
@@ -152,7 +152,7 @@ public class VisitController {
                 .addAttribute("visits", visitRepository.findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(AutorisationUtils.getCurrentUserMid(), customer.pets().stream().map(CustomerService.Pet::id).toList()))
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
                 .addAttribute("activeMenu", "visits");
-        return "consult-module/visit/list";
+        return "consult-module/visits";
     }
 
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}")

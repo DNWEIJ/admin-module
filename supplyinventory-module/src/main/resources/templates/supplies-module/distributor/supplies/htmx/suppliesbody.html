@@ -1,0 +1,47 @@
+<th:block th:fragment="pricingsbody">
+    <tbody id="lineItemsTable">
+    <th:block th:each="supply : ${supplies}">
+        <th:block th:replace="~{this::readonlyTR(supply=${supply})}"></th:block>
+    </th:block>
+    </tbody>
+</th:block>
+
+
+<th:block th:fragment="readonlyTR(supply)">
+    <th:block th:if="${supply != null}">
+        <tr>
+            <td class="no-sorting">
+                <a th:href="'/supplies/distributor/supply/'+${supply.id}">📝️</a>
+                <a th:hx-get="'/supplies/distributor/supply/'+${supply.id}+'/partialedit'"
+                   hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+            </td>
+            <td th:text="${supply.nomenclature}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.quantityPerPackage}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.minQuantity}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.buyQuantity}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.price}, false)}"></th:block>
+            <td th:text="${supply.itemNumber}"></td>
+            <td th:text="${supply.barcode}"></td>
+        </tr>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="editableTR(supply)">
+    <th:block th:if="${supply != null}">
+        <tr>
+            <td class="no-sorting">
+                <input type="hidden" name="id" th:value="${supply.id}">
+                <input type="hidden" name="version" th:value="${supply.version}">
+                <a href="#" th:hx-post="'/supplies/distributor/supply/' + ${supply.id} + '/partialsave'" hx-target="closest tr"  hx-swap="outerHTML" hx-include="closest tr">💾</a>
+                <a href="#" th:hx-get="'/supplies/distributor/supply/' + ${supply.id} + '/partialcancel'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
+            </td>
+            <td><input type="text" required name="nomenclature" th:value="${supply.nomenclature}"></td>
+            <td><input type="number" step="0.01" required name="quantityPerPackage" th:value="${#numbers.formatDecimal(supply.quantityPerPackage, 1, 2, 'POINT')}"></td>
+            <td><input type="number" step="0.01" required name="minQuantity" th:value="${#numbers.formatDecimal(supply.minQuantity, 1, 2, 'POINT')}"></td>
+            <td><input type="number" step="0.01" required name="buyQuantity" th:value="${#numbers.formatDecimal(supply.buyQuantity, 1, 2, 'POINT')}"></td>
+            <td><input type="number" step="0.01" required name="price" th:value="${#numbers.formatDecimal(supply.price, 1, 2, 'POINT')}"></td>
+            <td><input type="text" name="itemNumber" th:value="${supply.itemNumber}"></td>
+            <td><input type="text" name="barcode" th:value="${supply.barcode}"></td>
+        </tr>
+    </th:block>
+</th:block>

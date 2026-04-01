@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
-
 @Controller
 @Validated
 @RequestMapping("/admin")
@@ -29,14 +27,14 @@ public class LocalMemberController {
     }
 
     @PostMapping("/localmember")
-    String save(@Valid LocalMember localMember, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid LocalMember localMember, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/localmember/action";
         }
-          Long memberLocalId = processMemberLocal(localMember);
-        redirect.addFlashAttribute("message", "Local Member saved successfully!");
-        return getRedirectFor(request, memberLocalId, "redirect:/localmember");
+        processMemberLocal(localMember);
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/localmembers";
     }
 
     @GetMapping("/localmember")
@@ -54,7 +52,7 @@ public class LocalMemberController {
         return "admin-module/localmember/action";
     }
 
-    @GetMapping("/localmember/list")
+    @GetMapping("/localmembers")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("localmembers", AutorisationUtils.getCurrentMember().getLocalMembers());

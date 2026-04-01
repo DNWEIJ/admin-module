@@ -4,21 +4,18 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Products','/product/product')}"></th:block>
+    <fieldset>
     <div class="grid">
         <div>
             <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
         </div>
-        <div>
-            <a href="/costing/product/0">
-                <input type="button" class="outline" value="New Product">
-            </a>
-        </div>
     </div>
-    <hr/>
-    <table class="table table-striped">
+    </fieldset>
+    <table id="productTable" class="table-tight table-striped">
         <thead>
         <tr>
-            <th></th>
+            <th class="no-sorting"></th>
             <th th:text="#{label.costing.product.invoiceInformation}"></th>
             <th th:text="#{label.costing.product.category}"></th>
             <th th:text="#{label.costing.product.code}"></th>
@@ -34,4 +31,10 @@
         <th:block th:insert="~{supplies-module/product/htmx/productsbody}"></th:block>
         <tfoot></tfoot>
     </table>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (event) {
+            window.updateTableFooterCount(document.getElementById("productTable"))
+            highlightRowOnTable()
+        });
+    </script>
 </section>

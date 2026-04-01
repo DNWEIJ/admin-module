@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class ProductCategoryController {
     private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
 
 
-    @GetMapping("/category/list")
+    @GetMapping("/categories")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("categories", lookupCostingCategoryRepository.findAll());
@@ -28,7 +30,22 @@ public class ProductCategoryController {
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         model.addAttribute("category", new LookupCostingCategory());
-        return "supplies-module/product/category/list";
+        return "supplies-module/product/category/action";
+    }
+
+
+    @PostMapping("/category")
+    String saveScreen(LookupCostingCategory category, RedirectAttributes redirect) {
+        if (category.getId() != null) {
+            LookupCostingCategory tobeSavedCategory = lookupCostingCategoryRepository.findById(category.getId()).orElseThrow();
+            tobeSavedCategory.setCategory(category.getCategory());
+            lookupCostingCategoryRepository.save(tobeSavedCategory);
+        } else {
+            LookupCostingCategory lookupCostingCategory = lookupCostingCategoryRepository.save(LookupCostingCategory.builder().category(category.getCategory()).build());
+
+        }
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/product/categories";
     }
 
     @GetMapping("/category/{id}")

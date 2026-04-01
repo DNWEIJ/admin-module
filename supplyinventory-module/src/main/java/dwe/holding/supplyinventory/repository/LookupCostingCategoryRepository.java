@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LookupCostingCategoryRepository extends JpaRepository<LookupCostingCategory, Long> {
+    // TODO Add cache
     Collection<LookupCostingCategory> findByMemberIdInOrderByCategory(List memberIds);
-
+    // TODO Add cache
     Optional<LookupCostingCategory> findByIdAndMemberId(Long id, Long currentUserMid);
 }

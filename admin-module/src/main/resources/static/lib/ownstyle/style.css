@@ -215,7 +215,6 @@ dialog article header {
 }
 
 
-
 a:hover {
     cursor: pointer;
 }
@@ -441,13 +440,14 @@ dialog > article > footer {
 
 /** expor buttons styling **/
 .table-export-btn {
-    border : 1px solid;
+    border: 1px solid;
     padding: 0;
     margin: 0;
     padding-right: .5rem;
     margin-right: .5rem;
     font-size: 1rem;
 }
+
 /* *********************** */
 /* narrow table definition */
 /* *********************** */
@@ -462,7 +462,7 @@ dialog > article > footer {
     max-width: 100%;
 }
 
-.table-tight select, .table-tight  input {
+.table-tight select, .table-tight input {
     padding: 0.1rem;
     margin-right: 0.1rem;
     height: min-content;
@@ -470,7 +470,6 @@ dialog > article > footer {
 
 .table-tight td,
 .table-tight th {
-    text-align: left;
     padding: 0;
     padding-right: .4rem;
     white-space: nowrap;
@@ -737,16 +736,6 @@ label {
     display: none;
 }
 
-/* Show the panel corresponding to the checked tab */
-#tab-reminder:checked ~ .panels .panel:nth-child(1),
-#tab-supply:checked ~ .panels .panel:nth-child(2),
-#tab-certificate:checked ~ .panels .panel:nth-child(3),
-#tab-instructions:checked ~ .panels .panel:nth-child(4),
-#tab-prescription:checked ~ .panels .panel:nth-child(5),
-#tab-actions:checked ~ .panels .panel:nth-child(6) {
-    display: block;
-}
-
 /* Optional: make panels scrollable if content is tall */
 .tabs .panels .panel {
     padding-top: 1.4rem;
@@ -759,6 +748,8 @@ label {
 .tabs .panels .panel .field {
     padding-bottom: 1rem;
 }
+/* Mapping of the panels is in the page as a seperate style element */
+
 
 /****************/
 .svg-header-icon {
@@ -815,10 +806,6 @@ html, body {
     margin: 0;
 }
 
-body {
-    height: 100%;
-}
-
 .wrapper {
     height: 100%;
     display: flex;
@@ -832,6 +819,9 @@ header {
 main {
     flex: 1;
     overflow-y: auto;
+    margin-top: .3rem;
+    padding-top: .3rem;
+    border-top: 1px solid color-mix(in srgb, var(--pico-primary-background) 65%, white);
 }
 
 footer {
@@ -897,20 +887,24 @@ tr.highlighted td {
 }
 
 
- .buttonForLink {
-     font-size: 2rem;
-     background: none;
-     border: none;
-     padding: 0;
-     cursor: pointer;
-     color: inherit;
-     text-decoration: none;
- }
+.buttonForLink {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
 
 
 /****************************************/
 /******* Genric HTML definitions ********/
 /****************************************/
+a {
+    text-decoration: none;
+}
+
 details summary a.emoji-icon {
     position: absolute;
     right: 2.5rem;
@@ -1089,4 +1083,23 @@ tr.highlight td {
     background-color: #fff3cd !important;
 }
 
+.showSplash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
 
+.showSplash div {
+    position: absolute;
+    top: 70%;
+    left: 20%;
+    margin-top: 120px;
+    margin-left: -125px;
+
+    text-align: center;
+    font-size: 40px;
+    z-index: 9999;
+}

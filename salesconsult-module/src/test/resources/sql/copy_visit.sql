@@ -23,7 +23,11 @@ INSERT INTO consult_visit
  last_edited_by,
  last_edited_on,
  added_by,
- added_on)
+ added_on,
+ total_amount_inc_tax,
+ total_product_tax,
+ total_service_tax
+ )
 SELECT VISIT_ID,
        VERSION,
        MID,
@@ -48,6 +52,7 @@ SELECT VISIT_ID,
        LASTEDITEDBY,
        LASTEDITEDON,
        ADDEDBY,
-       ADDEDON
+       ADDEDON,
+       0.0, 0.0, 0.0
 FROM vmas.visit
 WHERE mid = 77;

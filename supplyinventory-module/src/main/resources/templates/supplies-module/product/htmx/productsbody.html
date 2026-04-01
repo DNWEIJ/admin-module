@@ -1,19 +1,63 @@
-<tbody id="lineItemsTable">
-<th:block th:each="product : ${products}">
-    <tr>
-        <td>
-            <a th:href="'/costing/product/'+${product.costing.id}">📝️</a>
-        </td>
-        <td th:text="${product.costing.nomenclature}"></td>
-        <td th:text="${product.costing.lookupCostingCategory.category}"></td>
-        <td th:text="${product.costing.shortCode}"></td>
-        <td th:text="${product.costing.barcode}"></td>
-        <td th:text="${product.costing.itemNumber}"></td>
-        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.quantityPerPackage}, false)}"></th:block>
-        <td th:text="${product.groupedProduct} ? #{label.yesno.yes} : #{label.yesno.no}"></td>
-        <td th:text="#{${product.costing.hasBatchNr.label}}"></td>
-        <td th:text="#{${product.costing.hasSpillage.label}}"></td>
-        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.salesPriceExTax}, false)}"></th:block>
-    </tr>
+<th:block th:fragment="productsbody">
+    <tbody id="lineItemsTable">
+    <th:block th:unless="${#lists.size(products) == 0}">
+        <th:block th:each="product : ${products}">
+            <th:block th:replace="~{this::readonlyTR(product=${product})}"></th:block>
+        </th:block>
+    </th:block>
+    </tbody>
 </th:block>
-</tbody>
+
+<th:block th:fragment="readonlyTR(product)">
+    <th:block th:if="${product != null}">
+        <tr>
+            <td class="no-sorting">
+                <a target="_blank"  th:href="'/product/product/'+${product.costing.id}">📝️</a>
+                <a th:hx-get="'/product/product/'+${product.costing.id} + '/partialedit/product'" hx-target="closest tr"   hx-swap="outerHTML">✏️️</a>
+            </td>
+            <td th:text="${product.costing.nomenclature}"></td>
+            <td th:text="${product.costing.lookupCostingCategory.category}"></td>
+            <td th:text="${product.costing.shortCode}"></td>
+            <td th:text="${product.costing.barcode}"></td>
+            <td th:text="${product.costing.itemNumber}"></td>
+            <td></td>
+            <!-- editable fields -->
+            <td th:text="${product.groupedProduct} ? #{label.yesno.yes} : #{label.yesno.no}"></td>
+            <td th:text="#{${product.costing.hasBatchNr.label}}"></td>
+            <td th:text="#{${product.costing.hasSpillage.label}}"></td>
+            <td th:if="${product.supplyId != null}" th:text="#{label.yesno.yes}"></td>
+            <td th:if="${product.supplyId == null}" th:text="#{label.yesno.no}"></td>
+        </tr>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="editableTR(product)">
+    <th:block th:if="${product != null}">
+        <tr>
+            <td class="no-sorting">
+                <input type="hidden" name="id" th:value="${product.costing.id}">
+                <input type="hidden" name="version" th:value="${product.costing.version}">
+                <!-- Save -->
+                <a href="#" th:hx-post="'/product/product/' + ${product.costing.id} + '/partialsave/product'" hx-target="closest tr" hx-swap="outerHTML" hx-include="closest tr">💾</a>
+                <!-- Cancel -->
+                <a href="#" th:hx-get="'/product/product/' + ${product.costing.id} + '/partialcancel/product'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
+            </td>
+            <td><input type="text" required name="nomenclature" th:value="${product.costing.nomenclature}"></td>
+            <td>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('lookupCostingCategory.id','', ${product.costing.lookupCostingCategory.id}, ${categories}, true,'0')}"></th:block>
+            </td>
+            <td><input type="text" name="shortCode" th:value="${product.costing.shortCode}"></td>
+            <td><input type="text" name="barcode" th:value="${product.costing.barcode}"></td>
+            <td><input type="text" name="itemNumber" th:value="${product.costing.itemNumber}"></td>
+            <td></td>
+            <td></td>
+            <td>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','',${product.costing.hasBatchNr},${yesNoOptions}, true, '0')}"></th:block>
+            </td>
+            <td>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('spillage','',${product.costing.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
+            </td>
+            <td></td>
+        </tr>
+    </th:block>
+</th:block>

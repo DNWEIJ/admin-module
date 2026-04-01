@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
-
 @Controller
 @RequestMapping("/supplies")
 public class DistributorController {
@@ -29,7 +27,7 @@ public class DistributorController {
 
 
     @PostMapping("/distributor")
-    String save(@Valid Distributor distributor, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid Distributor distributor, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         // todo add duplicate check / catch duplicate
         // check on id != null
         if (bindingResult.hasErrors()) {
@@ -41,8 +39,8 @@ public class DistributorController {
         distributor.setMemberId(AutorisationUtils.getCurrentUserMid());
         Distributor savedDistributor = distributorRepository.save(distributor);
 
-        redirect.addFlashAttribute("message", "Function saved successfully!");
-        return getRedirectFor(request, savedDistributor.getId(), "redirect:/supplies/distributor");
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/supplies/distributors";
     }
 
     @GetMapping("/distributor")
@@ -54,13 +52,13 @@ public class DistributorController {
 
 
     @GetMapping("/distributor/{id}")
-    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
         model.addAttribute("action", "Edit");
         setModelData(model, distributorRepository.findById(id).orElseThrow());
         return "supplies-module/distributor/action";
     }
 
-    @GetMapping("/distributor/list")
+    @GetMapping("/distributors")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("distributors", distributorRepository.findAll());

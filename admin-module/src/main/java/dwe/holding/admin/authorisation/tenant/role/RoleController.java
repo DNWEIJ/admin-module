@@ -26,8 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
-
 @Controller
 @Validated
 @PreAuthorize("hasRole('SUPER_ADMIN')")
@@ -41,14 +39,14 @@ public class RoleController {
     private final PermissionMatrixService permissionMatrixService;
 
     @PostMapping("/role")
-    String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/role/action";
         }
-        Long roleId = processRole(form.checkedFunctions, form.role);
-        redirect.addFlashAttribute("message", "Role saved successfully!");
-        return getRedirectFor(request, roleId, "redirect:/role");
+        processRole(form.checkedFunctions, form.role);
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/admin/roles";
     }
 
     @GetMapping("/role")
@@ -67,7 +65,7 @@ public class RoleController {
     }
 
 
-    @GetMapping("/role/list")
+    @GetMapping("/roles")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("roles", roleRepository.findAll());
@@ -105,9 +103,12 @@ public class RoleController {
         List<FunctionRole> functionsForRole = functionRoleRepository.findByRoleId(roleId);
         Map<Long, String> functionIds = functions.stream().collect(Collectors.toMap(Function::getId, Function::getName));
 
-        Map<Long, @NotEmpty String> functionIdsChecked = functionsForRole.stream().collect(
-                Collectors.toMap(s -> s.getFunctionId(), s -> functionIds.get(s.getFunctionId()))
-        );
+        Map<Long, @NotEmpty String> functionIdsChecked = new HashMap<>();
+        for (FunctionRole s : functionsForRole) {
+            if (functionIdsChecked.put(s.getFunctionId(), functionIds.get(s.getFunctionId())) != null) {
+                throw new IllegalStateException("Duplicate key");
+            }
+        }
 
         List<PresentationElement> list = new ArrayList<>(functions.stream()
                 .map(f -> new PresentationElement(f.getId(), f.getName(), functionIdsChecked.containsKey(f.getId())))
@@ -130,8 +131,8 @@ public class RoleController {
         }
         List<FunctionRole> functionsForRole = functionRoleRepository.findByRoleId(role.getId());
 
-        List<Long> currentFunctionIdsDelete = new ArrayList<>(functionsForRole.stream().map(a -> a.getFunctionId()).toList());
-        List<Long> currentFunctionIdsAdd = new ArrayList<>(functionsForRole.stream().map(a -> a.getFunctionId()).toList());
+        List<Long> currentFunctionIdsDelete = new ArrayList<>(functionsForRole.stream().map(FunctionRole::getFunctionId).toList());
+        List<Long> currentFunctionIdsAdd = new ArrayList<>(functionsForRole.stream().map(FunctionRole::getFunctionId).toList());
 
         // initial so no data
         if (functionsForRole.isEmpty()) {
@@ -140,10 +141,9 @@ public class RoleController {
                 FunctionRole functionRole = new FunctionRole(function.getId(), role.getId());
                 functionsForRole.add(functionRole);
             }
-            ;
         } else {
             // find the record to be deleted
-            currentFunctionIdsDelete.removeAll(checked.stream().map(a -> a.getId()).toList());
+            currentFunctionIdsDelete.removeAll(checked.stream().map(PresentationElement::getId).toList());
             if (!currentFunctionIdsDelete.isEmpty()) {
                 // delete records from list
                 Set<FunctionRole> deleteRecord = functionsForRole.stream().filter(a -> currentFunctionIdsDelete.contains(a.getFunctionId())).collect(Collectors.toSet());

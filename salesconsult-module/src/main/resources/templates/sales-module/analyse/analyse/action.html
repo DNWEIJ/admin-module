@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/customer/links}"></div>
     <th:block
-            th:insert="~{fragments/elements/pagetitle::pageTitle(${analyse.id}, #{label.title.analyse},'/admin/analysedescription/list')"></th:block>
+            th:insert="~{fragments/elements/pagetitle::pageTitle(${analyse.id}, #{label.title.analyse},'/admin/analysedescriptions')"></th:block>
     <form id="createForm" th:action="''/admin/analysedescription/'+ ${analyse.id}'" method="post">
         <th:block th:insert="~{sales-module/analyse/analyseform}"></th:block>
     </form>

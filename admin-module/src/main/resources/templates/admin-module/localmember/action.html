@@ -5,11 +5,11 @@
 <body>
 <section layout:fragment="content">
 
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmember/list')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmembers')}"></th:block>
 
     <form th:action="@{/admin/localmember}" method="post">
 
-        <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+        <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
 
         <fieldset class="grid">
             <input id="id" name="id" th:value="${id}" type="hidden">

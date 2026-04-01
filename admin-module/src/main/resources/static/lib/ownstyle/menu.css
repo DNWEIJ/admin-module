@@ -2,7 +2,7 @@
 
 /* ================= THEME VARIABLES ================= */
 :root {
-    --nav-bg: #ffffff;
+    --nav-bg: color-mix(in srgb, var(--pico-primary-background) 15%, white);
     --border-color: #dcdcdc;
     --dropdown-bg: #f9fafb;
     --dropdown-hover: #eef2f6;

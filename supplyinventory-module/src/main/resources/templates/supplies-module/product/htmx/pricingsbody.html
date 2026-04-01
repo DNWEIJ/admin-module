@@ -1,0 +1,77 @@
+<th:block th:fragment="pricingsbody">
+    <tbody id="lineItemsTable">
+    <th:block th:each="product : ${products}">
+        <th:block th:replace="~{this::readonlyTR(product=${product})}"></th:block>
+    </th:block>
+    </tbody>
+</th:block>
+
+<th:block th:fragment="readonlyTR(product)">
+    <th:block th:if="${product != null}">
+        <tr>
+            <td class="no-sorting">
+                <a th:hx-get="'/costing/product/'+${product.costing.id} + '/partialedit/pricing'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+            </td>
+            <td th:text="${product.costing.nomenclature}"></td>
+            <td th:text="${product.costing.lookupCostingCategory.category}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.purchaseDistributorPrice}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.quantityPerPackage}, false)}"></th:block>
+            <th:block th:with="pricePerQuantity=${(product.costing.purchaseDistributorPrice != null
+                                     and product.costing.quantityPerPackage != null
+                                     and product.costing.quantityPerPackage != 0)
+                                     ? (product.costing.purchaseDistributorPrice / product.costing.quantityPerPackage)
+                                     : 0},
+                  safeSalesPrice=${product.costing.salesPriceExTax != null ? product.costing.salesPriceExTax : 0},
+                  marginPercentage=${safeSalesPrice != 0 ? ((safeSalesPrice - pricePerQuantity) / safeSalesPrice * 100) : 0}">
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${pricePerQuantity}, false)}"></th:block>
+
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.uplift}, false)}"></th:block>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.salesPriceExTax}, false)}"></th:block>
+
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${marginPercentage}, false)}"></th:block>
+            </th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.processingFeeExTax}, false)}"></th:block>
+            <td th:text="#{__${product.costing.taxed.label}__}"></td>
+            <th:block
+                    th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.getTotalSalesPriceIncTax(taxGoodPercentage,taxServicePercentage)}, false)}"></th:block>
+        </tr>
+    </th:block>
+</th:block>
+
+
+<th:block th:fragment="editableTR(product)">
+    <th:block th:if="${product != null}">
+        <tr>
+            <td class="no-sorting">
+                <input type="hidden" name="id" th:value="${product.costing.id}">
+                <input type="hidden" name="version" th:value="${product.costing.version}">
+                <!-- Save -->
+                <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.costing.id} + '/partialsave/pricing'" hx-target="closest tr" hx-swap="outerHTML">💾</a>
+                <!-- Cancel -->
+                <a href="#" th:hx-get="'/costing/product/' + ${product.costing.id} + '/partialcancel/pricing'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
+            </td>
+            <td th:text="${product.costing.nomenclature}"></td>
+            <td th:text="${product.costing.lookupCostingCategory.category}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.purchaseDistributorPrice}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.quantityPerPackage}, false)}"></th:block>
+            <th:block th:with="pricePerQuantity=${(product.costing.purchaseDistributorPrice != null and product.costing.quantityPerPackage != null and product.costing.quantityPerPackage != 0)
+                                     ? (product.costing.purchaseDistributorPrice / product.costing.quantityPerPackage) : 0},
+                                      safeSalesPrice=${product.costing.salesPriceExTax != null ? product.costing.salesPriceExTax : 0},
+                                      marginPercentage=${safeSalesPrice != 0 ? ((safeSalesPrice - pricePerQuantity) / safeSalesPrice * 100) : 0}">
+            </th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${pricePerQuantity}, false)}"></th:block>
+
+            <td><input type="number" step="0.01" required name="uplift" th:value="${#numbers.formatDecimal(product.costing.uplift, 1, 2, 'POINT')}"></td>
+            <td><input type="number" step="0.01" required name="salesPriceExTax" th:value="${#numbers.formatDecimal(product.costing.salesPriceExTax, 1, 2, 'POINT')}"></td>
+            <td></td>
+            <td><input type="number" step="0.01" required name="processingFeeExTax" th:value="${#numbers.formatDecimal(product.costing.processingFeeExTax, 1, 2, 'POINT')}">
+            </td>
+            <td>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','',${product.costing.taxed},${taxTypes}, true, '0')}"></th:block>
+            </td>
+        </tr>
+    </th:block>
+    <script>
+        // calculate the totalIncTax
+    </script>
+</th:block>

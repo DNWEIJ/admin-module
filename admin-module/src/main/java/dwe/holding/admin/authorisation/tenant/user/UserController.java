@@ -12,7 +12,6 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.admin.transactional.TransactionalUserService;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Controller;
@@ -27,9 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
-
 
 @Controller
 @Validated
@@ -50,14 +46,14 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid Form form, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/user/action";
         }
-        Long userId = processUser(form.checkedFunctions, form.user);
-        redirect.addFlashAttribute("message", "Role saved successfully!");
-        return getRedirectFor(request, userId, "redirect:/user");
+        processUser(form.checkedFunctions, form.user);
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/user")
@@ -75,7 +71,7 @@ public class UserController {
         return "admin-module/user/action";
     }
 
-    @GetMapping("/user/list")
+    @GetMapping("/users")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("users", transactionalUserService.findAll());
@@ -142,7 +138,7 @@ public class UserController {
             });
         } else {
             // find the record to be deleted
-            currentFunctionIdsDelete.removeAll(checked.stream().map(a -> a.getId()).toList());
+            currentFunctionIdsDelete.removeAll(checked.stream().map(PresentationElement::getId).toList());
             if (!currentFunctionIdsDelete.isEmpty()) {
                 // delete records from list
                 Set<UserRole> deleteRecord = user.getUserRoles().stream().filter(a -> currentFunctionIdsDelete.contains(a.getRole().getId())).collect(Collectors.toSet());
@@ -166,5 +162,6 @@ public class UserController {
         return user.getId();
     }
 
-    record Form(User user, List<PresentationElement> checkedFunctions){}
+    record Form(User user, List<PresentationElement> checkedFunctions) {
+    }
 }

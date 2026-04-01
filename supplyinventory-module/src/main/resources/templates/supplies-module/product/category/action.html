@@ -5,11 +5,11 @@
 <body>
 <section layout:fragment="content">
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Category','/product/category/list')}"></th:block>
+<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Category','/product/categories')}"></th:block>
 
-<form th:action="@{/supplies/distributor}" method="post">
+<form th:action="@{/product/category}" method="post">
 
-    <th:block th:insert="~{fragments/elements/buttons::saveAndNewButtons}"></th:block>
+    <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
 
     <input id="id" name="id" th:value="${category.id}" type="hidden">
     <input id="version" name="version" th:value="${category.version}" type="hidden">

@@ -21,6 +21,7 @@ public record CostingPriceProjection(
         String rRemovePendingRemindersContaining,
         String reminderNomenclature,
         Short intervalInWeeks,
-        YesNoEnum deceasedPetPrompt
+        YesNoEnum deceasedPetPrompt,
+        Long supplyId
 ) {
 }

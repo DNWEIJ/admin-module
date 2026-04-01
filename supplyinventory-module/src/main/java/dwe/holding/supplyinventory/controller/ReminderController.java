@@ -6,7 +6,7 @@ import dwe.holding.customer.client.model.Reminder;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.shared.model.frontend.PresentationElement;
-import dwe.holding.supplyinventory.repository.CostingRepository;
+import dwe.holding.supplyinventory.repository.ProductRepository;
 import dwe.holding.supplyinventory.repository.ReminderRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ import java.time.LocalDate;
 public class ReminderController {
     private final ReminderRepository reminderRepository;
     private final PetRepository petRepository;
-    private final CostingRepository costingRepository;
+    private final ProductRepository productRepository;
     private final CustomerService customerService;
 
     @GetMapping("/customer/{customerId}/reminders")
@@ -93,7 +93,7 @@ public class ReminderController {
                 .addAttribute("activeMenu", "reminders")
                 .addAttribute("customerId", customer.id())
                 .addAttribute("costingReminderList",
-                        costingRepository.findWithNonEmptyReminderNomenclature(AutorisationUtils.getCurrentUserMid())
+                        productRepository.findWithNonEmptyReminderNomenclature(AutorisationUtils.getCurrentUserMid())
                                 .stream().map(reminderNomenclature -> new PresentationElement(reminderNomenclature, reminderNomenclature)).toList()
                 );
     }

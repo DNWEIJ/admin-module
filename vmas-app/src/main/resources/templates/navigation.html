@@ -316,7 +316,7 @@
                 <details name="menu-items">
                     <summary>Task</summary>
                     <ul>
-                        <li><a th:href="@{/report/visit/list}">Consult list</a></li>
+                        <li><a th:href="@{/report/visits}">Consult list</a></li>
                         <li><a th:href="@{/report/reminders}">Report Reminders</a></li>
                         <li><a th:href="@{/admin/user}">Agenda Tasks</a></li>
                         <li><a th:href="@{/report/customerlist}">(E)mail customers</a></li>
@@ -328,11 +328,12 @@
                 <details name="menu-items">
                     <summary>Supplies</summary>
                     <ul>
-                        <li><a th:href="@{/supplies/distributor}">Distributor</a></li>
-                        <li><a th:href="@{/costing/product}">Products</a></li>
-                        <li><a th:href="@{/product/category/list}">Product Categories</a></li>
+                        <li><a th:href="@{/supplies/distributors}">Distributor</a></li>
+                        <li><a th:href="@{/supplies/distributor/supplies}">Distributor supplies</a></li>
+                        <li><a th:href="@{/product/categories}">Product Categories</a></li>
+                        <li><a th:href="@{/product/products}">Products</a></li>
                         <li><a th:href="@{/product/pricing}">Product Pricing</a></li>
-                        <li><a th:href="@{/product/supplies/list}">Product Inventory</a></li>
+                        <li><a th:href="@{/product/supplies}">Product Inventory</a></li>
                     </ul>
                 </details>
             </li>
@@ -346,7 +347,6 @@
                         <li><a th:href="@{/admin/user}">Accounts Receivable</a></li>
                         <li><a th:href="@{/admin/user}">Misc Expenses</a></li>
                         <li><a th:href="@{/sales/price/refund}">Refunds</a></li>
-                        <li><a th:href="@{/admin/user}">Misc Transactions</a></li>
                         <li><a th:href="@{/admin/user}">Reminder Invoice</a></li>
                     </ul>
                 </details>
@@ -355,8 +355,8 @@
                 <details name="menu-items">
                     <summary>Admin</summary>
                     <ul>
-                        <li><a th:href="@{/admin/localmember}">Local Member</a></li>
-                        <li><a th:href="@{/admin/user}">User</a></li>
+                        <li><a th:href="@{/admin/localmembers}">Local Member</a></li>
+                        <li><a th:href="@{/admin/users}">User</a></li>
                         <li>
                             <details>
                                 <summary>Lookup</summary>
@@ -370,7 +370,7 @@
                                 </ul>
                             </details>
                         </li>
-                        <li><a th:href="@{/admin/analyse/description/list}">Analyses</a></li>
+                        <li><a th:href="@{/admin/analyse/descriptions}">Analyses</a></li>
                         <li><a th:href="@{/admin/user}">Indicators</a></li>
                         <li><a th:href="@{/report/templates}">Maintain templates</a></li>
                     </ul>
@@ -380,10 +380,9 @@
                 <details name="menu-items">
                     <summary>SuperAdmin</summary>
                     <ul>
-                        <li><a th:href="@{/admin/member}">Member</a></li>
-                        <li><a th:href="@{/admin/function}">Function</a></li>
-                        <li><a th:href="@{/admin/role}">Role</a></li>
-                        <li><a th:href="@{/admin/role}">Reports</a></li>
+                        <li><a th:href="@{/admin/members}">Member</a></li>
+                        <li><a th:href="@{/admin/functions}">Function</a></li>
+                        <li><a th:href="@{/admin/roles}">Role</a></li>
                     </ul>
                 </details>
             </li>

@@ -6,12 +6,26 @@
         const isVisit = /*[[${salesType.isVisit}]]*/ false;
         const isCostingProduct = /*[[${salesType.isCostingProduct}]]*/ false;
         const isOtc = /*[[${salesType.isOtc}]]*/ false;
+        document.addEventListener("DOMContentLoaded", () => {
+            if ([[${costingSearchForm.useDropDown}]]) {
+                const cb = document.getElementById("useDropDown");
+                cb.checked = true;
+                cb.dispatchEvent(new Event("click", { bubbles: true }));
+            }
+        });
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector("#costingSearchForm");
             form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
             htmx.process(form);
+            // validate checkbox and set it
+            if (costingSearchForm.useDropDown) {
+                const cb = document.getElementById("useDropDown");
+                cb.checked = true;
+                cb.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+
         });
 
         let selectedIndex = -1
@@ -263,6 +277,7 @@
                                hx-trigger="click"
                                hx-target="#categoryList"
                                hx-swap="innerHTML"
+                               hx-indicator="#searching-indicator"
                                hx-on::after-request="setView(this)">
                         <span class="no-break"></span>
                     </label>
@@ -288,18 +303,20 @@
                     <div class="grid">
                         <th:block th:if="${salesType.isCostingProduct}">
                             <div>
-                                <select name="categoryId" id="categoryList"
-                                        hx-post="/costing/product/lineitem"
+                                <select name="categoryId" id="categoryList"  th:value="${costingSearchForm.categoryId}"
+                                        hx-post="/product/product/lineitem"
                                         hx-target="#lineItemsTable"
+                                        hx-indicator="#searching-indicator2"
                                         hx-swap="outerHTML">
                                 </select>
                             </div>
                         </th:block>
                         <th:block th:if="${!salesType.isCostingProduct}">
                             <div>
-                                <select name="categoryId" id="categoryList"
+                                <select name="categoryId" id="categoryList"  th:value="${costingSearchForm.categoryId}"
                                         hx-post="/costing/costing/search/costing/dropdown/found/costing"
                                         hx-target="#productsFromCategory"
+                                        hx-indicator="#searching-indicator2"
                                         hx-swap="innerHTML">
                                 </select>
                             </div>

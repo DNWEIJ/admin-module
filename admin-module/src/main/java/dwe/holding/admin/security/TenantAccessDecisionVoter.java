@@ -110,7 +110,7 @@ public class TenantAccessDecisionVoter {
                     ? getPreviousBeforeLastPart(uri, "/list") + "_" + ATTRIBUTE_READ
                     : last + "_" + ATTRIBUTE_READ;
         } else if (HttpMethod.POST.equals(method)) {
-            if (params.containsKey(ButtonConstants.PARAM_SAVE_NEW) || params.containsKey(ButtonConstants.PARAM_SAVE)) {
+            if (params.containsKey(ButtonConstants.PARAM_SAVE)) {
                 return last + "_" + ATTRIBUTE_CREATE;
             } else if (params.containsKey(ButtonConstants.PARAM_DELETE)) {
                 return last + "_" + ATTRIBUTE_DELETE;

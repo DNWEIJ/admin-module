@@ -1,3 +1,5 @@
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_supplies.sql
+"C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_supplieslocal.sql
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_lookupcosting.sql
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_costing.sql
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_costinggroup.sql

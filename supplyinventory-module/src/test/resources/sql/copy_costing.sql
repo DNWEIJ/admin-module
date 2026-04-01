@@ -1,3 +1,7 @@
+
+UPDATE vmas.costing SET supplies2_id = NULL WHERE supplies2_id = -1;
+UPDATE vmas.costing SET supplies2_id = NULL WHERE deleted ='Y';
+
 INSERT INTO supply_costing
 (id,
  version,
@@ -26,8 +30,8 @@ INSERT INTO supply_costing
  certificate_serial_number,
  certificate_vaccine_expires,
  instructions, prescription_label,
- supplies2_id,
- supplies2_id_indy_qty_deduction,
+ supply_id,
+ supply_indy_qty_deduction,
  added_by,
  added_on,
  last_edited_by,

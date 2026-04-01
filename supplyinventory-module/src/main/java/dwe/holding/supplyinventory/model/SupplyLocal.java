@@ -8,18 +8,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "SUPPLY_SUPPLIESLOCAL", uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLIES_ID", "MLID"}))
+@Table(name = "SUPPLY_SUPPLYLOCAL", uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLY_ID", "MLID"}))
 @Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class SuppliesLocal extends LocalAndMemberBaseBO {
+public class SupplyLocal extends LocalAndMemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
-    private Supplies supplies;
+    private Supply supply;
     private Double quantity;
     private Double individualQuantity;
     private Double minQuantity;

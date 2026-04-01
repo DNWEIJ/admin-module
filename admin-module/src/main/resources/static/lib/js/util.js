@@ -12,6 +12,14 @@ function toggleAllCheckBoxesInSurroundingElement(masterCheckbox, surroundingElem
     });
 }
 
+function highlightRowOnTable() {
+    /** every table has a highlight on it **/
+    document.querySelectorAll('table:not([data-no-highlight]) tbody tr').forEach(row => {
+        row.addEventListener('mouseover', () => row.classList.add('highlight'));
+        row.addEventListener('mouseout', () => row.classList.remove('highlight'));
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     document.body.addEventListener("refreshPage", function (evt) {
@@ -49,12 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    /** every table has a highlight on it **/
-    document.querySelectorAll('table:not([data-no-highlight]) tbody tr').forEach(row => {
-        row.addEventListener('mouseover', () => row.classList.add('highlight'));
-        row.addEventListener('mouseout', () => row.classList.remove('highlight'));
-    });
-
+    highlightRowOnTable();
 
     // todo this makes the tool tip blink but it doesnt go away.
     // document.querySelectorAll('[data-tooltip]').forEach(el => {

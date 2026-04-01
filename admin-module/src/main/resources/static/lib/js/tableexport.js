@@ -222,7 +222,6 @@
         const allRows = table.querySelectorAll('tr');
         const theadRows = table.querySelectorAll('thead tr').length;
         const tfootRows = table.querySelectorAll('tfoot tr').length;
-
         return allRows.length - theadRows - tfootRows;
     }
 
@@ -331,6 +330,18 @@
         document.head.appendChild(style);
     }
 
+    // small updater for after htmx calls
+    function updateTableFooterCount(table) {
+        const rowCount = countTableRows(table);
+        const tfoot = table.querySelector('tfoot');
+        if (!tfoot) return;
+
+        const firstCell = tfoot.querySelector('tr:last-child td:first-child');
+        if (firstCell) {
+            firstCell.querySelector('span').textContent = `Total amount of records: ${rowCount}`;
+        }
+    }
+
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
@@ -345,5 +356,5 @@
     // Expose functions globally for manual use
     window.exportTableToExcel = exportTableToExcel;
     window.exportTableToCSV = exportTableToCSV;
-
+    window.updateTableFooterCount = updateTableFooterCount;
 })();

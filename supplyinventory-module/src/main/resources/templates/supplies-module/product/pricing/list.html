@@ -1,0 +1,61 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>Products</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Pricing','/product/pricing')}"></th:block>
+    <fieldset>
+        <div class="grid">
+            <div>
+                <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
+            </div>
+        </div>
+        <table data-no-highlight data-no-export>
+            <th>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('showCategory',#{label.product.show.category},'true','0')}"></th:block>
+            </td>
+            <td colspan="2">
+                <th:block th:insert="~{fragments/elements/select::selectCheckBox('showDistributorPrice',#{label.product.show.costprice},'true','0')}"></th:block>
+            </td>
+            </th>
+        </table>
+    </fieldset>
+    <script>
+        document.getElementById("showCategory").addEventListener("change", function () {
+            toggleTableColumns("pricingTable", [2], this.checked);
+        });
+        document.getElementById("showDistributorPrice").addEventListener("change", function () {
+            toggleTableColumns("pricingTable", [3, 4, 5], this.checked);
+        });
+    </script>
+    <table id="pricingTable" class="table-tight table-striped">
+        <thead>
+        <tr>
+            <th class="no-sorting"></th>
+            <th data-order="1" th:text="#{label.costing.product.invoiceInformation}"></th>
+            <th data-order="2" th:text="#{label.costing.product.category}"></th>
+            <th data-order="3" th:text="#{label.costing.product.cost}"></th>
+            <th data-order="4" th:text="#{label.costing.product.quantityPerPackage}"></th>
+            <th data-order="5" th:text="#{label.costing.product.costPerQuantity}"></th>
+            <th data-order="6" th:text="#{label.costing.product.uplift}"></th>
+            <th data-order="7" th:text="#{label.costing.product.sell}"></th>
+            <th data-order="8" th:text="#{label.costing.product.margin}"></th>
+            <th data-order="9" th:text="#{label.costing.product.processingFee}"></th>
+            <th data-order="10" th:text="#{label.costing.product.taxedItem}"></th>
+            <th data-order="11" th:text="#{label.costing.product.total}"></th>
+            <th data-order="12" th:text="#{label.costing.product.special}"></th>
+        </tr>
+        </thead>
+        <th:block th:insert="~{supplies-module/product/htmx/pricingsbody}"></th:block>
+    </table>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (event) {
+            window.updateTableFooterCount(document.getElementById("pricingTable"));
+            toggleTableColumns("pricingTable", [2], document.getElementById('showCategory').checked);
+            toggleTableColumns("pricingTable", [3, 4, 5], document.getElementById('showDistributorPrice').checked);
+            highlightRowOnTable()
+        });
+    </script>
+</section>

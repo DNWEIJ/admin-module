@@ -40,7 +40,8 @@ public interface CostingMapper {
                 costing.getRRemovePendingRemindersContaining(),
                 costing.getReminderNomenclature(),
                 costing.getIntervalInWeeks(),
-                costing.getDeceasedPetPrompt()
+                costing.getDeceasedPetPrompt(),
+                costing.getSupply() == null? -1L: costing.getSupply().getId()
         );
     }
 }

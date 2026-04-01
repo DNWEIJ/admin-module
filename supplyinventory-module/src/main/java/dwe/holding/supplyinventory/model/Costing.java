@@ -13,6 +13,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Table(name = "SUPPLY_COSTING")
 @Entity
@@ -27,14 +28,18 @@ public class Costing extends MemberBaseBO {
     @JoinColumn(name = "LOOKUPCOSTINGCATEGORY_ID", nullable = false)
     private LookupCostingCategory lookupCostingCategory;
 
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal purchaseDistributorPrice;
+
     @Column(nullable = false)
     private String nomenclature;
     @Column(nullable = false, precision = 38, scale = 4)
     private BigDecimal salesPriceExTax;
     @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal purchaseDistributorPrice;
-    @Column(nullable = false, precision = 38, scale = 4)
     private BigDecimal processingFeeExTax;
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = TaxedTypeEnumConverter.class)
+    private TaxedTypeEnum taxed;
 
     private String distributor;
     private String distributorDescription;
@@ -54,17 +59,15 @@ public class Costing extends MemberBaseBO {
     private YesNoEnum hasSpillage;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
-    @Convert(converter = TaxedTypeEnumConverter.class)
-    private TaxedTypeEnum taxed;
-
-    @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum autoReminder;
 
     private String reminderNomenclature;
     private Short intervalInWeeks;
     private String rRemovePendingRemindersContaining;
+
     private String shortCode;
+    private Long barcode;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
@@ -76,17 +79,49 @@ public class Costing extends MemberBaseBO {
     private String certificateVaccineExpires;
     @Lob
     private String instructions;
-
     private String prescriptionLabel;
-
-    private Long supplies2Id;
-
-    @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal supplies2IdIndyQtyDeduction;
-
-    private Long barcode;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum deleted;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "SUPPLY_ID", nullable = true)
+    private Supply supply;
+    Long supplyIndyQtyDeduction;
+
+    // Calculating the total amount for a customer, so including tax
+    // This is also called for lineItem; required here so during pricing, we can calculate it as well, no access to Line Item from here
+    public static BigDecimal calculateTotal(
+            BigDecimal salesPriceExTax, BigDecimal processingFeeExTax, BigDecimal quantity, TaxedTypeEnum taxedTypeEnum,
+            BigDecimal taxGoodPercentage, BigDecimal taxServicePercentage, BigDecimal reductionPercentage
+    ) {
+        BigDecimal hundred = new BigDecimal("100.0");
+        // product can be calculated with low or high tax
+        BigDecimal useTaxPercentage = BigDecimal.ZERO;
+
+        if (TaxedTypeEnum.GOOD.equals(taxedTypeEnum)) { // low
+            useTaxPercentage = taxGoodPercentage.divide(hundred, 4, RoundingMode.HALF_UP);
+        }
+        if (TaxedTypeEnum.SERVICE.equals(taxedTypeEnum)) { // high
+            useTaxPercentage = taxServicePercentage.divide(hundred, 4, RoundingMode.HALF_UP);
+        }
+
+        BigDecimal realCost = salesPriceExTax;
+        if (reductionPercentage != null) {
+            realCost = realCost.multiply(
+                    BigDecimal.ONE.subtract(reductionPercentage.divide(hundred, 4, RoundingMode.HALF_UP))
+            );
+        }
+
+        BigDecimal part1 = realCost.multiply(quantity).multiply(useTaxPercentage.add(BigDecimal.ONE));
+        BigDecimal part2 = processingFeeExTax.add(
+                // processingFee is ALWAYS Service taxed (high)
+                processingFeeExTax.multiply(
+                        taxServicePercentage.divide(hundred, 4, RoundingMode.HALF_UP)
+                )
+        );
+
+        return part1.add(part2);
+    }
 }

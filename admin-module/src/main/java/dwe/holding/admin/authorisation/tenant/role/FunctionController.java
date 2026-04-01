@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
-
 @Controller
 @Validated
 @PreAuthorize("hasRole('SUPER_ADMIN')")
@@ -29,17 +27,17 @@ public class FunctionController {
     }
 
     @PostMapping("/function")
-    String save(@Valid Function function, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid Function function, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/function/action";
         }
         function.setId(null);
         function.setVersion(null);
-        Function savedFunction = functionRepository.save(function);
+        functionRepository.save(function);
 
-        redirect.addFlashAttribute("message", "Function saved successfully!");
-        return getRedirectFor(request, savedFunction.getId(), "redirect:/function");
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/admin/functions";
     }
 
     @GetMapping("/function")
@@ -51,13 +49,13 @@ public class FunctionController {
     }
 
     @GetMapping("/function/{id}")
-    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
         model.addAttribute("action", "Edit");
         model.addAttribute("function", functionRepository.findById(id).orElseThrow());
         return "admin-module/function/action";
     }
 
-    @GetMapping("/function/list")
+    @GetMapping("/functions")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("functions", functionRepository.findAll());

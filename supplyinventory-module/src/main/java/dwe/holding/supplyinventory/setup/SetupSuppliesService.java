@@ -12,7 +12,7 @@ import dwe.holding.admin.model.tenant.Role;
 import dwe.holding.admin.model.tenant.User;
 import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.supplyinventory.model.Distributor;
-import dwe.holding.supplyinventory.model.Supplies;
+import dwe.holding.supplyinventory.model.Supply;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
 import dwe.holding.supplyinventory.repository.SuppliesRepository;
 import jakarta.transaction.Transactional;
@@ -98,10 +98,10 @@ public class SetupSuppliesService {
 
             suppliesRepository.saveAllAndFlush(
                     List.of(
-                            Supplies.builder().nomenclature("Supply One").memberId(memberId).distributor(savedDistributors.get(0)).build(),
-                            Supplies.builder().nomenclature("Supply Two").memberId(memberId).build(),
-                            Supplies.builder().nomenclature("Supply Three").memberId(memberId).distributor(savedDistributors.get(2)).build(),
-                            Supplies.builder().nomenclature("Supply Four").memberId(memberId).build()
+                            Supply.builder().nomenclature("Supply One").memberId(memberId).distributor(savedDistributors.get(0)).build(),
+                            Supply.builder().nomenclature("Supply Two").memberId(memberId).build(),
+                            Supply.builder().nomenclature("Supply Three").memberId(memberId).distributor(savedDistributors.get(2)).build(),
+                            Supply.builder().nomenclature("Supply Four").memberId(memberId).build()
                     )
             );
         }

@@ -93,7 +93,7 @@ public class LineItemService {
     }
 
 
-    /** after analyse discussion with customer / vet these are the lineitems we are adding */
+    /** after analyse has been discussed with the customer / vet these are the lineitems we are adding */
     /**
      * we update the balance as well
      */
@@ -225,5 +225,38 @@ public class LineItemService {
         if (YesNoEnum.Yes.equals(cpp.deceasedPetPrompt())) {
             customerService.updatePetDeceased(pet.getId());
         }
+        // update inventory
+
+        if (cpp.supplyId() != -1L) {
+            //       calculateUsage(cpp.supplyId(), AutorisationUtils.getCurrentUserMlid(), costing.getSupplies2Idindyqtydeduction() * lineItem.getQuantity());
+        }
+
+
     }
+//
+//    public void calculateUsage(Long suppliesId, Long mlid, Double usage) throws ApplicationException {
+//        List<Supplies2Local> list = suppliesinventoryDao.getOneSupplies2Local(mlid, suppliesId);
+//        Supplies2Local suppliesLocal = new Supplies2Local();
+//        if(list != null && list.size() > 0) {
+//            suppliesLocal = list.get(0);
+//            Supplies2 supplies = this.getSupplies2ById(suppliesLocal.getSupplies2().getId());
+//            Double qpk = supplies.getQuantityPerPackage();
+//            Double quantity = suppliesLocal.getQuantity();
+//            Double individualQuantity = suppliesLocal.getIndividualQuantity();
+//            Double totalCount = CommonUtils.add(CommonUtils.mul(qpk, quantity), individualQuantity);
+//            if(usage > totalCount) {
+//                usage = totalCount;
+//                //throw new ApplicationException("SYS-00026");
+//            }
+//            Double result = CommonUtils.cut(totalCount, usage);
+//            quantity = CommonUtils.div(result, qpk, 2);
+//            Integer v1 = Integer.valueOf(result.toString().split("\\.")[0]);
+//            Integer v2 = (Integer.valueOf(qpk.toString().split("\\.")[0]));
+//            Integer v3 = v1 % v2;
+//            individualQuantity = Double.valueOf(v3.toString() + ".0");
+//            quantity = Double.valueOf(quantity.toString().split("\\.")[0] + ".0");
+//            suppliesLocal.setQuantity(quantity);
+//            suppliesLocal.setIndividualQuantity(individualQuantity);
+//            suppliesinventoryDao.saveOrUpdate(suppliesLocal);
+//        }
 }

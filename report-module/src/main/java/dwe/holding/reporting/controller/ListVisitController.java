@@ -30,8 +30,8 @@ public class ListVisitController {
 
     private final EntityListDsls entityListDsls;
 
-    @GetMapping("/visit/list")
-    String listAppointments(Model model, AppointmentListForm form, HttpServletRequest request) {
+    @GetMapping("/visits")
+    String listAppointments(Model model, AppointmentListForm form) {
         if (form.getShowInsurance() == null) form.setShowInsurance(false);
         if (form.getShowAmountDiff() == null) form.setShowAmountDiff(false);
         if (form.getShowInvoice() == null) form.setShowInvoice(false);

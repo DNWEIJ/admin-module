@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static dwe.holding.admin.security.ButtonConstants.getRedirectFor;
-
 @Controller
 @Validated
 @RequestMapping("/admin")
@@ -28,14 +26,14 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    String save(@Valid Member member, BindingResult bindingResult, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+    String save(@Valid Member member, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/member/action";
         }
-        Member savedMember = memberRepository.save(member);
-        redirect.addFlashAttribute("message", "Member saved successfully!");
-        return getRedirectFor(request, savedMember.getId(), "redirect:/member");
+        memberRepository.save(member);
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/admin/members";
     }
 
     @GetMapping("/member")
@@ -56,7 +54,7 @@ public class MemberController {
         return "admin-module/member/action";
     }
 
-    @GetMapping("/member/list")
+    @GetMapping("/members")
     String listScreen(Model model) {
         model.addAttribute("action", "List");
         model.addAttribute("members", memberRepository.findAll());

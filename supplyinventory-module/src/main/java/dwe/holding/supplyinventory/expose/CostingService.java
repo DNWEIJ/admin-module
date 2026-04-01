@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CostingService {
     private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
-    private CostingRepository costingRepository;
+    private ProductRepository productRepository;
     private CostingGroupRepository costingGroupRepository;
     private CostingPricePromotionRepository costingPricePromotionRepository;
     private CostingMapper costingMapper;
@@ -31,7 +31,7 @@ public class CostingService {
     public List<CostingPriceProjection> getCorrectedPriceAndGroupingForCostingId(Long costingId) {
 
         List<Costing> listCostingsInGroup = new ArrayList<>(findCostingOnGrouping(costingId));
-        listCostingsInGroup.add(costingRepository.findById(costingId).orElseThrow());
+        listCostingsInGroup.add(productRepository.findById(costingId).orElseThrow());
 
         // validate if there are price promotions
         List<CostingPricePromotion> costingPromotions = costingPricePromotionRepository.findAllById(listCostingsInGroup.stream().map(Costing::getId).toList());
@@ -74,12 +74,11 @@ public class CostingService {
     }
 
     public void createOrUpdateSpillage(Long costingId, String spillageName, Long lineItemId) {
-        Costing costing = costingRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        Costing costing = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         CostingSpillage costingSpillage = costingSpillageRepository.findByNameAndMemberIdAndLocalMemberIdAndEndDateNotNull(spillageName, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid());
         if (costingSpillage == null) {
             costingSpillage = new CostingSpillage();
             costingSpillage.setCostingId(costing.getId());
-            costingSpillage.setPackageQuantity(costing.getQuantityPerPackage());
             costingSpillage.setStartDate(LocalDate.now());
             costingSpillageRepository.save(costingSpillage);
         }
@@ -90,7 +89,7 @@ public class CostingService {
     }
 
     public List<Costing> findCostingOnGrouping(Long costingId) {
-        return costingRepository.findAllById(
+        return productRepository.findAllById(
                 costingGroupRepository.getCostingGroupsByParentCostingId(costingId)
                         .stream().map(CostingGroup::getChildCostingId).collect(Collectors.toList())
         );

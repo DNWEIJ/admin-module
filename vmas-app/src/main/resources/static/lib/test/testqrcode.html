@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ZXing WASM Responsive Scanner</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"> <!-- PicoCSS v2 CDN v2.1.1 :contentReference[oaicite:0]{index=0} -->
+    <style>
+        html { font-size: 16px; }
+        body {
+            padding: 0.625rem;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.625rem;
+        }
+        .wrap {
+            position: relative;
+            width: 90vw;
+            max-width: 30rem;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        video, canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        #header-info, #result, #controls {
+            width: 90vw;
+            max-width: 30rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h3>Barcode / QR Scanner</h3>
+<span id="header-info">Place the code inside the blue square and align it with the guide line</span>
+
+<div class="wrap">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="overlay"></canvas>
+    <canvas id="capture" style="display:none;"></canvas>
+</div>
+
+<div id="controls">
+    <label><input type="checkbox" id="low-power"> Low power mode (slower scanning)</label>
+</div>
+
+<div id="result">No result</div>
+
+<script type="module">
+    import { readBarcodes } from "https://cdn.jsdelivr.net/npm/zxing-wasm@2/+esm";
+
+    const video = document.getElementById("video");
+    const overlay = document.getElementById("overlay");
+    const capture = document.getElementById("capture");
+    const octx = overlay.getContext("2d");
+    const cctx = capture.getContext("2d");
+    const resultDiv = document.getElementById("result");
+    const lowPowerCheckbox = document.getElementById("low-power");
+
+    let lastText = null;
+    let lastTime = 0;
+    const COOLDOWN = 2000;
+    const LOW_POWER_DELAY = 800;
+
+    async function start() {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        video.srcObject = stream;
+        await new Promise(r => video.onloadedmetadata = r);
+        loop();
+    }
+
+    function drawBox(position) {
+        if (!position) return;
+        const pts = [position.topLeft, position.topRight, position.bottomRight, position.bottomLeft];
+        if (pts.some(p => !p || p.x == null || p.y == null)) return;
+        octx.beginPath();
+        octx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 1; i < pts.length; i++) octx.lineTo(pts[i].x, pts[i].y);
+        octx.closePath();
+        octx.lineWidth = 3;
+        octx.strokeStyle = "lime";
+        octx.stroke();
+    }
+
+    function drawScanArea() {
+        const w = overlay.clientWidth;
+        const h = overlay.clientHeight;
+        const size = Math.min(w, h);
+        const x = (w - size) / 2;
+        const y = (h - size) / 2;
+
+        octx.clearRect(0, 0, w, h);
+
+        octx.beginPath();
+        octx.rect(x, y, size, size);
+        octx.lineWidth = 3;
+        octx.strokeStyle = "blue";
+        octx.stroke();
+
+        octx.beginPath();
+        octx.moveTo(x, y + size / 2);
+        octx.lineTo(x + size, y + size / 2);
+        octx.lineWidth = 2;
+        octx.strokeStyle = "rgba(0,0,255,0.5)";
+        octx.stroke();
+
+        return { x, y, size };
+    }
+
+    let lastScanTime = 0;
+
+    async function loop() {
+        const now = Date.now();
+        if (video.readyState !== 4) { requestAnimationFrame(loop); return; }
+
+        const w = overlay.clientWidth;
+        const h = overlay.clientHeight;
+        overlay.width = w;
+        overlay.height = h;
+        capture.width = w;
+        capture.height = h;
+
+        cctx.drawImage(video, 0, 0, w, h);
+
+        const scanArea = drawScanArea();
+        const lowPower = lowPowerCheckbox.checked;
+
+        if (!lowPower || now - lastScanTime > LOW_POWER_DELAY) {
+            try {
+                const imageData = cctx.getImageData(scanArea.x, scanArea.y, scanArea.size, scanArea.size);
+                const results = await readBarcodes(imageData);
+                if (results.length) {
+                    const r = results[0];
+                    drawBox(r.position);
+                    if (r.text && (r.text !== lastText || now - lastTime > COOLDOWN)) {
+                        lastText = r.text;
+                        lastTime = now;
+                        resultDiv.textContent = r.text;
+                    }
+                }
+            } catch(e) {
+                console.error(e);
+            }
+            lastScanTime = now;
+        }
+        requestAnimationFrame(loop);
+    }
+
+    start();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>Functie settings</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Supply','/supplies/distributor/supplies')}"></th:block>
+
+    <form th:action="@{/supplies}" method="post">
+
+        <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
+
+        <!-- hidden identifiers -->
+        <input id="id" name="id" th:value="${supply.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${supply.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.supplies.nomenclature','supply.nomenclature','1')}"></th:block>
+            <th:block th:if="${supply.id != null}">
+                <span style="padding-bottom: .5rem" th:utext="#{label.supplies.distributorexplainname} + '<br/><span id=\'distributorName\'>' + ${supply.distributorName} + '</span>'"></span>
+            </th:block>
+            <th:block
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('distributor','label.supplies.distributor','supply.distributor.id',${distributorList},true,'2')}"></th:block>
+        </fieldset>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('price','label.supplies.price','supply.price','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('quantityPerPackage','label.supplies.quantityPerPackage','supply.quantityPerPackage','4')}"
+                      th:with="type='number'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('minQuantity','label.supplies.minQuantity','supply.minQuantity','5')}"
+                      th:with="type='number'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('buyQuantity','label.supplies.buyQuantity','supply.buyQuantity','6')}"
+                      th:with="type='number'"></th:block>
+        </fieldset>
+        <fieldset>
+            <div class="grid">
+                <div>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('itemNumber','label.supplies.itemNumber','supply.itemNumber','7')}"
+                              th:with="required=false"></th:block>
+                </div>
+                <div>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('barcode','label.supplies.barcode','supply.barcode','8')}" th:with="required=false"></th:block>
+                </div>
+            </div>
+            <label for="distDescription">[[#{label.supplies.distributor.description}]]
+                <textarea cols="60" id="distDescription" name="distDescription" rows="3" tabindex="9" th:value="${supply.descriptionOfDistributor}"></textarea>
+            </label>
+        </fieldset>
+    </form>
+    <script>
+        const distributorText = document
+            .getElementById("distributorName")
+            .textContent
+            .replace(/\s+/g, "")   // remove all spaces
+            .toLowerCase();        // normalize case (optional but safer)
+
+        const select = document.querySelector("select");
+
+        for (let option of select.options) {
+            const optionText = option.text
+                .replace(/\s+/g, "")
+                .toLowerCase();
+
+            if (optionText === distributorText) {
+                option.selected = true;
+                break;
+            }
+        }
+    </script>
+</section>
