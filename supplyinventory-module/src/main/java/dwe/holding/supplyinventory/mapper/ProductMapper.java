@@ -6,11 +6,12 @@ import dwe.holding.supplyinventory.model.CostingPricePromotion;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface CostingMapper {
+public interface ProductMapper {
     @Mapping(target = "reductionPercentage", constant = "0.0")
     CostingPriceProjection toProjection(Costing costing);
 
@@ -44,4 +45,5 @@ public interface CostingMapper {
                 costing.getSupply() == null? -1L: costing.getSupply().getId()
         );
     }
+    Costing fromForm(@MappingTarget Costing entity, Costing form);
 }

@@ -29,7 +29,7 @@ public class ProductAndPricingPartialController {
 
 
     @GetMapping("/product/{productId}/partialedit/{type}")
-    String readCostingLineHtmx(Model model, @PathVariable Long productId, @PathVariable String type, ProductController.ListForm costingSearchForm) {
+    String readProductHtmx(Model model, @PathVariable Long productId, @PathVariable String type, ProductController.ListForm costingSearchForm) {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
@@ -43,7 +43,7 @@ public class ProductAndPricingPartialController {
     }
 
     @GetMapping("/product/{costingId}/partialcancel/{type}")
-    String cancelCostingLineHtmx(Model model, @PathVariable Long costingId, @PathVariable String type) {
+    String cancelProductHtmx(Model model, @PathVariable Long costingId, @PathVariable String type) {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(costingId, AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
@@ -53,29 +53,31 @@ public class ProductAndPricingPartialController {
         model
                 .addAttribute("taxGoodPercentage", taxes.getTaxLow())
                 .addAttribute("taxServicePercentage", taxes.getTaxHigh())
+                .addAttribute("isFormHere", true)
         ;
         return type.equals("pricing") ? "supplies-module/product/htmx/pricingsbody::readonlyTR" : "/supplies-module/product/htmx/productsbody::readonlyTR";
     }
 
     @PostMapping("/product/{costingId}/partialsave/{type}")
-    String updateCostingLineHtmx(Costing costing, Model model, @PathVariable Long costingId, @PathVariable String type) {
-        if (!costingId.equals(costing.getId())) throw new IllegalArgumentException("costingId must be equals to costingId");
+    String updateProductHtmx(Costing productForm, Model model, @PathVariable Long costingId, @PathVariable String type) {
+        if (!costingId.equals(productForm.getId())) throw new IllegalArgumentException("costingId must be equals to costingId");
 
         Costing product = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+
         if (type.equals("pricing")) {
-            product.setUplift(costing.getUplift());
-            product.setSalesPriceExTax(costing.getSalesPriceExTax());
-            product.setProcessingFeeExTax(costing.getProcessingFeeExTax());
-            product.setTaxed(costing.getTaxed());
+            product.setUplift(productForm.getUplift());
+            product.setSalesPriceExTax(productForm.getSalesPriceExTax());
+            product.setProcessingFeeExTax(productForm.getProcessingFeeExTax());
+            product.setTaxed(productForm.getTaxed());
         } else {
-            product.setNomenclature(costing.getNomenclature());
-            product.setLookupCostingCategory(costing.getLookupCostingCategory());
-            product.setShortCode(costing.getShortCode());
-            product.setBarcode(costing.getBarcode());
-            product.setHasBatchNr(costing.getHasBatchNr());
-            product.setHasSpillage(costing.getHasSpillage());
+            product.setNomenclature(productForm.getNomenclature());
+            product.setLookupCostingCategory(lookupCostingCategoryRepository.findById(productForm.getLookupCostingCategory().getId()).orElseThrow());
+            product.setShortCode(productForm.getShortCode());
+            product.setBarcode(productForm.getBarcode());
+            product.setHasBatchNr(productForm.getHasBatchNr());
+            product.setHasSpillage(productForm.getHasSpillage());
         }
         Costing saved = productRepository.save(product);
-        return cancelCostingLineHtmx(model, saved.getId(), type);
+        return cancelProductHtmx(model, saved.getId(), type);
     }
 }

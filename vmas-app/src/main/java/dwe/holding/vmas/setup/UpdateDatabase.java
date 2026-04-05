@@ -38,7 +38,7 @@ public class UpdateDatabase {
     @Transactional
     public void processAllVisitsBalance() {
         log.info("Processing all visits starting at: {}", LocalDateTime.now());
-        long recIds = visitRepository.countByTotalAmountIncTaxIsNull();
+        long recIds = visitRepository.countByTotalAmountIncTaxEquals(BigDecimal.ZERO);
         if (recIds != 0) {
             visitRepository.zeroAmountOnVisit();
             visitRepository.updateAllTotalAmounts();

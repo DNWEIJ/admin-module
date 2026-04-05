@@ -9,8 +9,11 @@
 <th:block th:fragment="readonlyTR(product)">
     <th:block th:if="${product != null}">
         <tr>
-            <td class="no-sorting">
-                <a th:hx-get="'/costing/product/'+${product.costing.id} + '/partialedit/pricing'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+            <td>
+            <a class="no-sorting">
+                <a th:hx-get="'/product/product/'+${product.costing.id} + '/partialedit/pricing'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+                <a th:if="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.costing.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✔️</a>
+                <a th:unless="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.costing.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✖️</a>
             </td>
             <td th:text="${product.costing.nomenclature}"></td>
             <td th:text="${product.costing.lookupCostingCategory.category}"></td>
@@ -48,7 +51,7 @@
                 <!-- Save -->
                 <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.costing.id} + '/partialsave/pricing'" hx-target="closest tr" hx-swap="outerHTML">💾</a>
                 <!-- Cancel -->
-                <a href="#" th:hx-get="'/costing/product/' + ${product.costing.id} + '/partialcancel/pricing'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
+                <a href="#" th:hx-get="'/product/product/' + ${product.costing.id} + '/partialcancel/pricing'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
             </td>
             <td th:text="${product.costing.nomenclature}"></td>
             <td th:text="${product.costing.lookupCostingCategory.category}"></td>
@@ -69,6 +72,7 @@
             <td>
                 <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','',${product.costing.taxed},${taxTypes}, true, '0')}"></th:block>
             </td>
+            <td>TODO calc</td>
         </tr>
     </th:block>
     <script>

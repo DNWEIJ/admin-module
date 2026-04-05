@@ -22,17 +22,35 @@ import java.math.RoundingMode;
 @AllArgsConstructor
 @Getter
 @Setter
+/**
+ * Costing Inventory/Supply
+ * Products can be managed for inventory via two ways:
+ * 1. Connected to a supply
+ * 2. Not being connected to a supply
+ *
+ * - Connected to a supply will make incoming orders from a supplier easier to sort out
+ * - Not being connected is less work and can be done when a different system is used for placing orders at suppliers
+ */
 public class Costing extends MemberBaseBO {
-    // TODO
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LOOKUPCOSTINGCATEGORY_ID", nullable = false)
-    private LookupCostingCategory lookupCostingCategory;
 
-    @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal purchaseDistributorPrice;
-
+    // PRODUCT SPECIFIC
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum hasBatchNr;
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum hasSpillage;
     @Column(nullable = false)
     private String nomenclature;
+    private String shortCode;
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum deleted;
+
+    // PRICING
+    // calculated price for the amount you paid to the supplier; can be a big with x time this product
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal purchaseDistributorPrice;
     @Column(nullable = false, precision = 38, scale = 4)
     private BigDecimal salesPriceExTax;
     @Column(nullable = false, precision = 38, scale = 4)
@@ -40,34 +58,32 @@ public class Costing extends MemberBaseBO {
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = TaxedTypeEnumConverter.class)
     private TaxedTypeEnum taxed;
+    @Column(nullable = false, precision = 38, scale = 4)
+    private BigDecimal uplift;
 
+    // SUPPLY
+    // Option 1 manually maintain the information on the product
     private String distributor;
     private String distributorDescription;
     private String itemNumber;
     @Column(nullable = false, precision = 38, scale = 4)
     private BigDecimal quantityPerPackage;
+    private Long barcode;
 
-    @Column(nullable = false, precision = 38, scale = 4)
-    private BigDecimal uplift;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "SUPPLY_ID", nullable = true)
+    private Supply supply;
+    Long supplyIndyQtyDeduction;
 
-    @Column(columnDefinition = "varchar(1)", nullable = false)
-    @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum hasBatchNr;
 
-    @Column(columnDefinition = "varchar(1)", nullable = false)
-    @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum hasSpillage;
-
+    // REMINDER
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
     private YesNoEnum autoReminder;
-
     private String reminderNomenclature;
     private Short intervalInWeeks;
     private String rRemovePendingRemindersContaining;
 
-    private String shortCode;
-    private Long barcode;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
@@ -81,14 +97,15 @@ public class Costing extends MemberBaseBO {
     private String instructions;
     private String prescriptionLabel;
 
-    @Column(columnDefinition = "varchar(1)", nullable = false)
-    @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum deleted;
+    // TODO
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LOOKUPCOSTINGCATEGORY_ID", nullable = false)
+    private LookupCostingCategory lookupCostingCategory;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "SUPPLY_ID", nullable = true)
-    private Supply supply;
-    Long supplyIndyQtyDeduction;
+    public BigDecimal getTotalSalesPriceIncTax(BigDecimal taxGoodPercentage, BigDecimal taxServicePercentage){
+        return calculateTotal(
+                this.salesPriceExTax, this.processingFeeExTax, BigDecimal.ONE, this.taxed, taxGoodPercentage, taxServicePercentage, null);
+    }
 
     // Calculating the total amount for a customer, so including tax
     // This is also called for lineItem; required here so during pricing, we can calculate it as well, no access to Line Item from here

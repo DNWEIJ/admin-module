@@ -5,7 +5,6 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.reporting.repository.dsl.EntityListDsls;
 import dwe.holding.reporting.repository.projection.VisitListProjection;
 import dwe.holding.shared.model.type.YesNoEnum;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +25,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/report")
 @Slf4j
-public class ListVisitController {
+public class ReportVisitController {
 
     private final EntityListDsls entityListDsls;
 

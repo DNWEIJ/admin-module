@@ -1,4 +1,4 @@
-package dwe.holding.supplyinventory.controller;
+package dwe.holding.supplyinventory.controller.operational;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
@@ -7,12 +7,15 @@ import dwe.holding.supplyinventory.model.projection.CostingProjection;
 import dwe.holding.supplyinventory.repository.ProductRepository;
 import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/costing")
+@Slf4j
 public class CostingSearchController {
 
     private final ProductRepository productRepository;
@@ -28,11 +32,12 @@ public class CostingSearchController {
 
     @GetMapping("/costing/search/category/dropdown")
     public String searchLookupCostingDropdown(Model model) {
+        LocalDateTime now = LocalDateTime.now();
         model.addAttribute("lookupCostings",
                 lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
                         .stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory))
         );
-
+        log.info("searchLookupCostingDropdown::Spending time for lookup: " + Duration.between(now, LocalDateTime.now()));
         return "supplies-module/fragments/costing/selectcosting";
     }
 
@@ -53,6 +58,7 @@ public class CostingSearchController {
 
     @PostMapping("/search/costing")
     public String searchCustomerHtmx(Model model, String searchCriteria) {
+        LocalDateTime now = LocalDateTime.now();
         if (searchCriteria == null || searchCriteria.isEmpty()) {
             model.addAttribute("flatData", "");
             return "fragments/elements/flatData";
@@ -68,6 +74,7 @@ public class CostingSearchController {
             list = productRepository.getCostingOnNomenclature(searchCriteria, AutorisationUtils.getCurrentUserMid());
         }
         model.addAttribute("flatData", wrap(list.stream().map(str -> getOption(str, pattern)).toList()));
+        log.info("searchCustomerHtmx::Spending time for lookup: " + Duration.between(now, LocalDateTime.now()));
         return "fragments/elements/flatData";
     }
 

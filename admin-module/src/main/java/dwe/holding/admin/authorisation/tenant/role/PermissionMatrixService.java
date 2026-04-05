@@ -1,5 +1,6 @@
 package dwe.holding.admin.authorisation.tenant.role;
 
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.model.notenant.Function;
 import dwe.holding.admin.model.notenant.FunctionRole;

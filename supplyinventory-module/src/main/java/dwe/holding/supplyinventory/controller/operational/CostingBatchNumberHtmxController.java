@@ -1,4 +1,4 @@
-package dwe.holding.supplyinventory.controller;
+package dwe.holding.supplyinventory.controller.operational;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.supplyinventory.repository.CostingBatchNumberRepository;

@@ -1,7 +1,7 @@
 package dwe.holding.salesconsult.setup;
 
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
-import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.model.notenant.Function;
 import dwe.holding.admin.model.notenant.FunctionRole;

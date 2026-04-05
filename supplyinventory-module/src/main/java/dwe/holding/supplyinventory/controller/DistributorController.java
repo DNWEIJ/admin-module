@@ -4,7 +4,6 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Controller;

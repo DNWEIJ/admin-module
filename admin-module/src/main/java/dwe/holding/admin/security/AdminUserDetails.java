@@ -1,6 +1,7 @@
 package dwe.holding.admin.security;
 
 import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.model.tenant.UserNoMember;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class AdminUserDetails extends org.springframework.security.core.userdetails.User {
 
     private User user;
+    private UserNoMember userNoMember;
     Map<String, JsonNode> moduleSettings = new HashMap<>();
 
     public AdminUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {

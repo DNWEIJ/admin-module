@@ -1,11 +1,13 @@
 package dwe.holding.admin.security;
 
-import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserNoMemberRepository;
 import dwe.holding.admin.model.notenant.Function;
-import dwe.holding.admin.model.tenant.IPSecurity;
-import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.model.tenant.UserNoMember;
 import dwe.holding.admin.transactional.TransactionalUserService;
 import dwe.holding.shared.model.type.YesNoEnum;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -15,7 +17,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,17 +26,16 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
+@Slf4j
 public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final TransactionalUserService transactionalUserService;
+    private final UserNoMemberRepository UserNoMemberRepository;
     private final FunctionRepository functionRepository;
 
-    public TenantAuthenticationProvider(TransactionalUserService transactionalUserService, FunctionRepository functionRepository) {
-        this.transactionalUserService = transactionalUserService;
-        this.functionRepository = functionRepository;
-    }
 
     enum PasswordState {
         success, succesAndUpdate,
@@ -62,20 +62,31 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+
         // update status
-        AdminUserDetails adminUser  = (AdminUserDetails) userDetails;
-        User user = adminUser.getUser();
+        AdminUserDetails usrDetails = (AdminUserDetails) userDetails;
+        UserNoMember userNoMember = ((AdminUserDetails) userDetails).getUserNoMember();
+
+        //    User user = transactionalUserService.getByIdLazy_LoadingAllData(userNoMember.getId());
+
+        if (userNoMember.isNewEncryptionPassword()) {
+            // change password to the new encryption format
+            userNoMember.setPassword(passwordEncoder.encode(authentication.getCredentials().toString()));
+        }
 
         LocalDate now = LocalDate.now();
-        if (user.getLastVisitDate() == null || !now.equals(user.getLastVisitDate())) {
-            user.setLastVisitDate(now);
-            if (user.getNumberOfVisits() == null) {
-                user.setNumberOfVisits(1L);
+        if (userNoMember.getLastVisitDate() == null || !now.equals(userNoMember.getLastVisitDate())) {
+            userNoMember.setLastVisitDate(now);
+            if (userNoMember.getNumberOfVisits() == null) {
+                userNoMember.setNumberOfVisits(1L);
             } else {
-                user.setNumberOfVisits(user.getNumberOfVisits() + 1);
+                userNoMember.setNumberOfVisits(userNoMember.getNumberOfVisits() + 1);
             }
-            transactionalUserService.save(user);
         }
+        userNoMember = UserNoMemberRepository.save(userNoMember);
+        //usrDetails.setUser(user);
+        usrDetails.setUserNoMember(userNoMember);
+
     }
 
     @Override
@@ -86,73 +97,73 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        List<User> users = transactionalUserService.getByAccount(usernameAndShortCode[0]);
+        List<UserNoMember> users = transactionalUserService.getByAccount(usernameAndShortCode[0]);
 
         if (users.isEmpty()) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
         // reduce the list to matching on member.shortCode
-        List<User> usersList = users.stream().filter(user -> user.getMember().getShortCode().equals(usernameAndShortCode[1])).toList();
+        List<UserNoMember> usersList = users.stream().filter(user -> user.getMember().getShortCode().equals(usernameAndShortCode[1])).toList();
         if (usersList.size() != 1) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
         }
 
-        User user = transactionalUserService.getByIdLazy_LoadingAllData(usersList.getFirst().getId());
-
-        PasswordState state = validatePasswordChecks(authentication.getCredentials().toString(), user.getPassword());
-        if (state.equals(PasswordState.failure)) {
+        UserNoMember userNoMember = usersList.getFirst();
+        PasswordState state = validatePasswordChecks(authentication.getCredentials().toString(), userNoMember.getPassword());
+        if (state.equals(PasswordState.failure))
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.badcodeCredentials", "Bad credentials"));
-        }
+
         if (state.equals(PasswordState.succesAndUpdate)) {
-            user.setPassword(passwordEncoder.encode(authentication.getCredentials().toString()));
-            user = transactionalUserService.save(user);
-        }
-        // todo password on member is empty?
-        if (user.getMember().getPassword().equals(user.getPassword())) {
-            user.setChangePassword(true);
+            log.info("changing the encryptionType for: u:p --" + userNoMember.getAccount() + "|" + userNoMember.getPassword() + "--");
+            userNoMember.setNewEncryptionPassword(true);
         }
 
-        if (YesNoEnum.No.equals(user.getMember().getActive())) {
+        if (userNoMember.getMember().getPassword() != null && !userNoMember.getMember().getPassword().isEmpty()) {
+            if (userNoMember.getMember().getPassword().equals(userNoMember.getPassword())) {
+                userNoMember.setChangePassword(true);
+            }
+        }
+
+        if (YesNoEnum.No.equals(userNoMember.getMember().getActive())) {
             throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.memeberaccount_disconnected",
                     "Unfortunately, this account has been disconnected. Please contact your internal administrator."));
         }
 
         // determine if the user is enabled or not
-        if (YesNoEnum.No.equals(user.getLoginEnabled())) {
+        if (YesNoEnum.No.equals(userNoMember.getLoginEnabled())) {
             throw new BadCredentialsException(
                     messages.getMessage("TenantAuthenticationProvider.login_enabled", "Unfortunately, you have been disabled. Please contact your internal administrator."));
         }
 
-        // TODO rewrite to stream maybe?        //  check the ipnumbers, if they are set.
-        if (!(user.getIpNumbers().isEmpty())) {
-            IPSecurity[] array = user.getIpNumbers().toArray(new IPSecurity[user.getIpNumbers().size()]);
-            WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
-            String ipnumber = details.getRemoteAddress();
-            boolean check_ip = true;
-            for (int i = 0; i < array.length; i++) {
-                if (array[i].getIpnumber().equals(ipnumber)) {
-                    check_ip = false;
-                }
-            }
-            if (check_ip) {
-                throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipNumber",
-                        "You are using the application from an unauthorized IpNumber location. Please contact your internal administrator."));
-            }
-
-        }
+////        //  TODO: check the ipnumbers, if they are set.
+//        if (!(userNoMember.getIpNumbers().isEmpty())) {
+//            IPSecurity[] array = userNoMember.getIpNumbers().toArray(new IPSecurity[userNoMember.getIpNumbers().size()]);
+//            WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
+//            String ipnumber = details.getRemoteAddress();
+//            boolean check_ip = true;
+//            for (int i = 0; i < array.length; i++) {
+//                if (array[i].getIpnumber().equals(ipnumber)) {
+//                    check_ip = false;
+//                }
+//            }
+//            if (check_ip) {
+//                throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipNumber",
+//                        "You are using the application from an unauthorized IpNumber location. Please contact your internal administrator."));
+//            }
+//        }
 
         // create details
-        AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], user.getPassword(),
-                true, true, true, true, getGrantedAuthoritiesFromRolAndFunction(user));
-        adminUserDetails.setUser(user);
+        AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], userNoMember.getPassword(),
+                true, true, true, true, getGrantedAuthoritiesFromRolAndFunction(userNoMember));
+        adminUserDetails.setUserNoMember(userNoMember);
         return adminUserDetails;
     }
 
-    Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromRolAndFunction(User user) {
+    Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromRolAndFunction(UserNoMember user) {
 
         if (user.getUserRoles() != null) {
-            List<Function> functionList =  functionRepository.getAllFunctionsForUser(user.getId());
+            List<Function> functionList = functionRepository.getAllFunctionsForUser(user.getId());
             GrantedAuthority[] grantedAuthorities = new GrantedAuthority[functionList.size()];
 
             int grantedAuthorityIndex = 0;

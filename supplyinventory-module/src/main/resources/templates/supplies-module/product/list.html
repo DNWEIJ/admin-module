@@ -1,6 +1,6 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Products</title>
+    <title th:text="#{label.product}"></title>
 </head>
 <body>
 <section layout:fragment="content">
@@ -8,7 +8,7 @@
     <fieldset>
     <div class="grid">
         <div>
-            <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
+            <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
         </div>
     </div>
     </fieldset>
@@ -29,7 +29,6 @@
         </tr>
         </thead>
         <th:block th:insert="~{supplies-module/product/htmx/productsbody}"></th:block>
-        <tfoot></tfoot>
     </table>
     <script>
         document.body.addEventListener('htmx:afterSwap', function (event) {

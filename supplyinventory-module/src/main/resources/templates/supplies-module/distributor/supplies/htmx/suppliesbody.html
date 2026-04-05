@@ -1,14 +1,13 @@
-<th:block th:fragment="pricingsbody">
-    <tbody id="lineItemsTable">
+<th:block th:fragment="suppliesbody(isFromHere)">
+    <tbody id="supplyItemsTable">
     <th:block th:each="supply : ${supplies}">
-        <th:block th:replace="~{this::readonlyTR(supply=${supply})}"></th:block>
+        <th:block th:replace="~{this::readonlyTR(supply=${supply}, isFromHere=${isFromHere})}"></th:block>
     </th:block>
     </tbody>
 </th:block>
 
-
-<th:block th:fragment="readonlyTR(supply)">
-    <th:block th:if="${supply != null}">
+ <th:block th:fragment="readonlyTR(supply, isFromHere)">
+    <th:block th:if="${supply != null and isFromHere==true}">
         <tr>
             <td class="no-sorting">
                 <a th:href="'/supplies/distributor/supply/'+${supply.id}">📝️</a>
@@ -19,6 +18,18 @@
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.quantityPerPackage}, false)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.minQuantity}, false)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.buyQuantity}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.price}, false)}"></th:block>
+            <td th:text="${supply.itemNumber}"></td>
+            <td th:text="${supply.barcode}"></td>
+        </tr>
+    </th:block>
+    <th:block th:if="${supply != null and isFromHere == false}">
+        <tr>
+            <td class="no-sorting">
+                <a href="#" th:hx-post="'/product/product/'+ ${productId} + '/supply/' + ${supply.id} + '/connect'" hx-confirm="" hx-swap="theSuppliesPart" >🔌</a>
+            </td>
+            <td th:text="${supply.nomenclature}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.quantityPerPackage}, false)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${supply.price}, false)}"></th:block>
             <td th:text="${supply.itemNumber}"></td>
             <td th:text="${supply.barcode}"></td>

@@ -1,0 +1,35 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>Inventory</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Products','/product/inventory')}"></th:block>
+    <fieldset>
+    <div class="grid">
+        <div>
+            <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
+        </div>
+    </div>
+    </fieldset>
+    <table id="productInventoryTable" class="table-tight table-striped">
+        <thead>
+        <tr>
+            <th class="no-sorting"></th>
+            <th th:text="#{label.costing.product.code}"></th>
+            <th th:text="#{label.costing.product.barcode}"></th>
+            <th th:text="#{label.costing.product.article}"></th>
+            <th th:text="#{label.costing.product.inventoryUnit}"></th>
+            <th th:text="#{label.costing.product.localmember}"></th>
+            <th th:text="#{label.costing.product.groupedProduct}"></th>
+        </tr>
+        </thead>
+        <th:block th:insert="~{supplies-module/product/htmx/productsbody}"></th:block>
+    </table>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (event) {
+            window.updateTableFooterCount(document.getElementById("productTable"))
+            highlightRowOnTable()
+        });
+    </script>
+</section>

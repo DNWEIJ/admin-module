@@ -2,7 +2,7 @@ package dwe.holding.customer.setup;
 
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
-import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
@@ -11,6 +11,7 @@ import dwe.holding.admin.model.notenant.FunctionRole;
 import dwe.holding.admin.model.notenant.Member;
 import dwe.holding.admin.model.tenant.Role;
 import dwe.holding.admin.model.tenant.User;
+
 import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.admin.model.type.LanguagePrefEnum;
 import dwe.holding.admin.model.type.PersonnelStatusEnum;

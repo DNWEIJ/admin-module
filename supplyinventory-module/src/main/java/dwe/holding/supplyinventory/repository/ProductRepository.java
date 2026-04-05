@@ -45,6 +45,10 @@ public interface ProductRepository extends JpaRepository<Costing, Long> {
                 case when exists ( select 1 from CostingGroup cg where cg.parentCostingId = c.id )
                     then true
                     else false
+                end,
+                case when exists ( select 1 from CostingPricePromotion cg where cg.costingId = c.id )
+                    then true
+                    else false
                 end
             )
             from Costing c
@@ -58,7 +62,11 @@ public interface ProductRepository extends JpaRepository<Costing, Long> {
                 c.supply.id,
                 case when exists ( select 1 from CostingGroup cg where cg.parentCostingId = c.id )
                     then true
-                    else false 
+                    else false
+                end,
+                case when exists ( select 1 from CostingPricePromotion cg where cg.costingId = c.id )
+                    then true
+                    else false
                 end
             )
             from Costing c

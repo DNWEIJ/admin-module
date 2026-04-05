@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -30,6 +31,8 @@ import java.util.Set;
 @SuperBuilder(toBuilder = true)
 @Getter
 @Setter
+@NoArgsConstructor
+// ALL FIELDS ARE DUPLICATE, MAINTAIN THE USERNOMEMBER AS WELL
 public class User extends LocalAndMemberBaseBO {
     @NotEmpty
     @Column(nullable = false)
@@ -65,7 +68,6 @@ public class User extends LocalAndMemberBaseBO {
     @Transient
     private Member member = new Member();
 
-
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private MetaUserPreferences metaUserPreferences;
 
@@ -78,8 +80,4 @@ public class User extends LocalAndMemberBaseBO {
     @Builder.Default
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "userId")
     private List<IPSecurity> ipNumbers = new ArrayList<>(0);
-
-    public User() {
-        super();
-    }
 }

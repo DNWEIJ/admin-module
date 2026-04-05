@@ -8,7 +8,7 @@
             th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.title.analyse},'/admin/analyse/description')}"></th:block>
     <hr/>
 
-    <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
+    <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
     <hr/>
 
     <form action="/admin/analyse/delete" method="post">

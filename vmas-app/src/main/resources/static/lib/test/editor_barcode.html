@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CKEditor + Barcode SVG</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+</head>
+<body>
+
+<div id="editor"></div>
+<input id="barcodeInput" placeholder="Enter Code39 text">
+<button onclick="insertBarcode()">Insert Barcode</button>
+
+<script>
+    let editor;
+
+    ClassicEditor.create(document.querySelector('#editor')).then(e => editor = e);
+
+    function insertBarcode() {
+        const val = document.getElementById('barcodeInput').value.toUpperCase();
+        if (!/^[0-9A-Z\-.\ $/+%]*$/.test(val)) {
+            alert('Invalid Code39 characters');
+            return;
+        }
+
+        const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+        JsBarcode(svg, val, { format: "CODE39", displayValue: true });
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svg);
+
+        editor.model.change(writer => {
+            const viewFragment = editor.data.processor.toView(svgString);
+            const modelFragment = editor.data.toModel(viewFragment);
+            editor.model.insertContent(modelFragment);
+        });
+    }
+</script>
+
+</body>
+</html>

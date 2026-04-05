@@ -53,4 +53,12 @@ public class CostingPricePromotion extends MemberBaseBO {
     @Column(nullable = false, precision = 38, scale = 4)
     private
     BigDecimal reductionPercentage;
+
+    // format is "5|4" <- buy 5 pay 4
+    // We add the shortCode on the line item: (4/5)
+    // if we find 10 elements,
+    //   we create 1 lineitem: with 8 quantity and the symbol (4/5)
+    //   we create 1 lineitem: witn quantity 2 with the normal price
+    String buyXforY;
+
 }

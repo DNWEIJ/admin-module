@@ -5,8 +5,20 @@
 <body>
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{supplies.supplies},'/supplies/distributor/supply')}"></th:block>
+    <th:block th:insert="~{this::formSelectSuppliesFromDistributorList(isFromHere=true)}"></th:block>
+
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (event) {
+            window.updateTableFooterCount(document.getElementById("suppliesTable"))
+            highlightRowOnTable()
+        });
+    </script>
+</section>
+
+<th:block th:fragment="formSelectSuppliesFromDistributorList(isFromHere)">
     <form name="distributorId" id="distributorId" hx-post="/supplies/distributor/supplies" hx-trigger="change from:#distributorName"
-          hx-target="#lineItemsTable" hx-indicator="#searching-indicator2" hx-swap="outerHTML">
+          hx-target="#supplyItemsTable" hx-indicator="#searching-indicator2" hx-swap="outerHTML">
+        <span>++[[${isFromHere}]]++</span>
         <fieldset class="grid">
             <div>
                 <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('distributorName','','distributorId',${distributorList},true,'0')}"></th:block>
@@ -15,7 +27,8 @@
     </form>
     <table id="suppliesTable" class="table-tight table-striped">
         <thead>
-        <tr>
+
+        <tr th:if="${isFromHere}">
             <th class="no-sorting"></th>
             <th data-order="2" th:text="#{label.supplies.nomenclature}"></th>
             <th data-order="3" th:text="#{label.supplies.quantityPerPackage}"></th>
@@ -24,15 +37,17 @@
             <th data-order="6" th:text="#{label.supplies.price}"></th>
             <th data-order="7" th:text="#{label.supplies.itemNumber}"></th>
             <th data-order="8" th:text="#{label.supplies.barcode}"></th>
-
         </tr>
+        <tr th:unless="${isFromHere}">
+            <th class="no-sorting"></th>
+            <th data-order="2" th:text="#{label.supplies.nomenclature}"></th>
+            <th data-order="3" th:text="#{label.supplies.quantityPerPackage}"></th>
+            <th data-order="6" th:text="#{label.supplies.price}"></th>
+            <th data-order="7" th:text="#{label.supplies.itemNumber}"></th>
+            <th data-order="8" th:text="#{label.supplies.barcode}"></th>
+        </tr>
+
         </thead>
-        <th:block th:insert="~{supplies-module/distributor/supplies/htmx/suppliesbody}"></th:block>
+        <th:block th:insert="~{supplies-module/distributor/supplies/htmx/suppliesbody::suppliesbody(isFromHere=${isFromHere})}"></th:block>
     </table>
-    <script>
-        document.body.addEventListener('htmx:afterSwap', function (event) {
-            window.updateTableFooterCount(document.getElementById("suppliesTable"))
-            highlightRowOnTable()
-        });
-    </script>
-</section>
+</th:block>

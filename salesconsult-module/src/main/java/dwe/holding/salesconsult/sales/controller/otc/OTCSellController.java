@@ -12,6 +12,7 @@ import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.supplyinventory.controller.ProductController;
 import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -64,6 +65,7 @@ public class OTCSellController {
                 .addAttribute("selectedPet", visit.getPet())
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && !pet.deceased()))
                 .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && pet.deceased()))
+                .addAttribute("costingSearchForm", new ProductController.ListForm(null,null, Boolean.FALSE))
         ;
         updateModel(model, visit, customer.id());
         return "salesconsult-generic-module/productpage";

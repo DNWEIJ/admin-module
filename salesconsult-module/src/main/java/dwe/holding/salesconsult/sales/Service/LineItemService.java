@@ -227,7 +227,7 @@ public class LineItemService {
         }
         // update inventory
 
-        if (cpp.supplyId() != -1L) {
+        if (cpp.supplyId() != null) {
             //       calculateUsage(cpp.supplyId(), AutorisationUtils.getCurrentUserMlid(), costing.getSupplies2Idindyqtydeduction() * lineItem.getQuantity());
         }
 

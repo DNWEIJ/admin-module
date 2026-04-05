@@ -19,6 +19,7 @@ import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.controller.ProductController;
 import dwe.holding.supplyinventory.expose.CostingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -152,7 +153,7 @@ public class VisitController {
                 .addAttribute("visits", visitRepository.findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(AutorisationUtils.getCurrentUserMid(), customer.pets().stream().map(CustomerService.Pet::id).toList()))
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
                 .addAttribute("activeMenu", "visits");
-        return "consult-module/visits";
+        return "consult-module/visit/list";
     }
 
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}")
@@ -220,6 +221,7 @@ public class VisitController {
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyseItems", analyseItems)
                 .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())
+                .addAttribute("costingSearchForm", new ProductController.ListForm(null,null, Boolean.FALSE))
         ;
 
 

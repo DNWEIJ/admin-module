@@ -11,10 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -28,7 +26,9 @@ public class DistributorSuppliesController {
     private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
 
     @GetMapping("/supplies")
-    String listScreen(Model model) {
+    String listScreen(Model model, @RequestParam(required = false) Boolean dialog) {
+        dialog = dialog == null ? false : dialog;
+
         setModelData(model);
         model
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
@@ -36,13 +36,15 @@ public class DistributorSuppliesController {
                 .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
                 .addAttribute("supplies", List.of())
         ;
-        return "supplies-module/distributor/supplies/list";
+
+        return dialog ? "supplies-module/distributor/supplies/htmx/supplydialog" : "supplies-module/distributor/supplies/list";
     }
 
     @PostMapping("/supplies")
     String userSelectedGetSuppliesHtmx(Model model, String distributorName) {
         model
                 .addAttribute("supplies", suppliesRepository.findByDistributorNameIgnoreCase(distributorName))
+                .addAttribute("isFromHere", false)
         ;
         return "supplies-module/distributor/supplies/htmx/suppliesbody";
     }
@@ -62,6 +64,7 @@ public class DistributorSuppliesController {
     String cancelSupplyLineHtmx(Model model, @PathVariable Long supplyId) {
         model
                 .addAttribute("supply", suppliesRepository.findById(supplyId).orElseThrow())
+                .addAttribute("isFromHere", true)
         ;
         return "supplies-module/distributor/supplies/htmx/suppliesbody::readonlyTR";
     }
@@ -107,8 +110,11 @@ public class DistributorSuppliesController {
 
 
     @PostMapping("/supply")
-    String SuppliesScreen(Supply supplyForm) {
-        Supply supply = suppliesRepository.findById(supplyForm.getId()).orElseThrow();
+    String SuppliesScreen(Supply supplyForm, RedirectAttributes redirect) {
+        Supply supply = new Supply();
+        if (supplyForm.getId() != null)
+            supply = suppliesRepository.findById(supplyForm.getId()).orElseThrow();
+
         supply.setNomenclature(supplyForm.getNomenclature());
         supply.setQuantityPerPackage(supplyForm.getQuantityPerPackage());
         supply.setMinQuantity(supplyForm.getMinQuantity());
@@ -120,7 +126,7 @@ public class DistributorSuppliesController {
         supply.setDistributor(distributorRepository.getReferenceById(supplyForm.getDistributor().getId()));
         supply.setDistributorName("");
         suppliesRepository.save(supply);
-
+        redirect.addFlashAttribute("message", "label.saved");
         return "redirect:/supplies/distributor/supplies";
     }
 

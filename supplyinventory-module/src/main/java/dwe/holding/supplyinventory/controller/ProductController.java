@@ -5,6 +5,7 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.mapper.ProductMapper;
 import dwe.holding.supplyinventory.model.Costing;
 import dwe.holding.supplyinventory.model.LookupCostingCategory;
 import dwe.holding.supplyinventory.repository.ProductRepository;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,12 +25,13 @@ import java.util.List;
 public class ProductController {
     private final ProductRepository productRepository;
     private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
+    private final ProductMapper productMapper;
 
     /*** LIST ***/
     @GetMapping("/products")
     String showListPage(Model model, ListForm form) {
         if (form.inputCostingId() == null && form.categoryId() == null)
-            form = new ListForm(null, null, Boolean.FALSE);
+            form = new ListForm(null, null, Boolean.TRUE);
         model
                 .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
                         .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
@@ -43,7 +46,7 @@ public class ProductController {
     /*** SINGLE NEW RECORD ***/
     @GetMapping("/product")
     String newProduct(Model model) {
-        Costing product = Costing.builder().lookupCostingCategory(new LookupCostingCategory()).build();
+        Costing product = Costing.builder().lookupCostingCategory(new LookupCostingCategory()).hasBatchNr(YesNoEnum.No).hasSpillage(YesNoEnum.No).taxed(TaxedTypeEnum.SERVICE).build();
         model
                 .addAttribute("product", product)
                 .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
@@ -71,8 +74,21 @@ public class ProductController {
         return "supplies-module/product/action";
     }
 
+    @PostMapping("/product")
+    String saveProduct(Costing productForm, RedirectAttributes redirect) {
+        Costing product = new Costing();
+        if (productForm.getId() != null)
+            product = productRepository.findById(productForm.getId()).orElseThrow();
 
-    /* Is also used in        PricingCostingController     */
+        product = productMapper.fromForm(product, productForm);
+
+        productRepository.save(product);
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:product/products";
+    }
+
+
+    /* Is also used from PricingCostingController     */
     @PostMapping("/product/lineitem")
     String userSelectedGetProductsHtmx(Model model, ListForm form, @RequestHeader(value = "HX-Current-URL", required = false) String currentUrl) {
         if (form.inputCostingId == null && form.categoryId() == null) {
@@ -92,6 +108,21 @@ public class ProductController {
                 .addAttribute("costingSearchForm", getListForm(form))
         ;
         return currentUrl.contains("pricing") ? "supplies-module/product/htmx/pricingsbody" : "supplies-module/product/htmx/productsbody";
+    }
+
+    @DeleteMapping("/product/{productId}/supply/{supplyId}")
+    String deleteSupply(@PathVariable Long productId, @PathVariable Long supplyId) {
+        Costing product =productRepository.findById(productId).orElseThrow();
+        if (product.getSupply().getId().equals(supplyId))
+            product.setSupply(null);
+        productRepository.save(product);
+        return "";
+    }
+
+    @PostMapping("/product/{productId}/supply/{supplyId}/connect")
+    String connectSupply(@PathVariable Long productId, @PathVariable Long supplyId) {
+        // set header to close modal
+        return "";
     }
 
     ListForm getListForm(ListForm form) {

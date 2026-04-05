@@ -1,6 +1,7 @@
 package dwe.holding.admin.security;
 
 
+import dwe.holding.admin.transactional.TransactionalUserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -40,6 +40,9 @@ public class SecurityConfig {
     @Autowired
     private TenantAuthenticationProvider customAuthenticationProvider;
 
+    @Autowired
+    private TransactionalUserService transactionalUserService;
+
     @Value("${server.servlet.context-path:}")
     private String contextPath;
 
@@ -49,8 +52,9 @@ public class SecurityConfig {
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
-        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, contextPath +"/admin/login"));
-        authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(contextPath + "/admin/index"));
+        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, contextPath + "/admin/login"));
+        // authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(contextPath + "/admin/index"));
+        authFilter.setSuccessHandler(new SwapOutNoMemberUserAuthenticationSuccessHandler(contextPath + "/admin/index", transactionalUserService));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler(contextPath + "/admin/login?error=true"));
 
         HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
@@ -81,14 +85,15 @@ public class SecurityConfig {
                         .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
                 )
                 // required to persist the security context between requests
-                .securityContext(securityContext ->securityContext.requireExplicitSave(false)) // ensures context is stored automatically
+                .securityContext(securityContext -> securityContext.requireExplicitSave(false)) // ensures context is stored automatically
 
                 // Session management
-                .sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false) )
+                .sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false))
                 .logout(logout -> logout.invalidateHttpSession(true).addLogoutHandler(clearSiteData))
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
     @Bean
     AccessDeniedHandler accessDeniedHandler() {
         return (request, response, ex) -> {

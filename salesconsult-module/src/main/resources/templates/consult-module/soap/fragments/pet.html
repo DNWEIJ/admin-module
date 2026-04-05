@@ -30,7 +30,7 @@
         <div th:text="#{__${pet.sex.label}__}"></div>
         <div><span th:text="|#{label.soap.Allergies}: #{__${pet.allergies.label}__} ${pet.allergiesDescription != null ? pet.allergiesDescription : ''}|"></span></div>
         <!-- Row 3 -->
-        <div th:text="${(pet.customer.zipcode ?: '') + (pet.customer.city ?: '')}"></div>
+        <div th:text="${(pet.customer.zipCode ?: '') + (pet.customer.city ?: '')}"></div>
         <div>
             <span th:text="${pet.birthday != null ? #temporals.format(pet.birthday,'dd-MM-yyyy') : ''}"></span>
             <span><th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}"  th:text="' ' + ${pet.getAgePresentation(year,month)}"></th:block></span>

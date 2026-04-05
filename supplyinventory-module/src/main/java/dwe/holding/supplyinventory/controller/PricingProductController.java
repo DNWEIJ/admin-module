@@ -18,11 +18,11 @@ public class PricingProductController {
     private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
 
     /**
-     * Via
-     *   CostingController::userSelectedGetProductsHtmx(Model model, ListForm form) {
-     *   The list of products is created
+     * Othere activities are presented via:
+     * Via  {@link dwe.holding.supplyinventory.controller.ProductController#userSelectedGetProductsHtmx)}
+     * Via  {@link dwe.holding.supplyinventory.controller.ProductAndPricingPartialController }
+
      */
-    /*** LIST ***/
     @GetMapping("/pricing")
     String showListPage(Model model) {
         model

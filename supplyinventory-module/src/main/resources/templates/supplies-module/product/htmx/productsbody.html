@@ -52,10 +52,10 @@
             <td></td>
             <td></td>
             <td>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('batch','',${product.costing.hasBatchNr},${yesNoOptions}, true, '0')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('hasBatchNr','',${product.costing.hasBatchNr},${yesNoOptions}, true, '0')}"></th:block>
             </td>
             <td>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('spillage','',${product.costing.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('hasSpillage','',${product.costing.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
             </td>
             <td></td>
         </tr>

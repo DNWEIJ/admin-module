@@ -1,7 +1,6 @@
-package dwe.holding.admin.authorisation.tenant.role;
+package dwe.holding.admin.authorisation.notenant.function;
 
 import dwe.holding.admin.model.notenant.Function;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.access.prepost.PreAuthorize;

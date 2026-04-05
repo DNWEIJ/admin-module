@@ -1,48 +1,34 @@
 package dwe.holding.admin.setup;
 
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
-import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
 import dwe.holding.admin.model.notenant.Function;
 import dwe.holding.admin.model.notenant.FunctionRole;
 import dwe.holding.admin.model.tenant.Role;
-import dwe.holding.admin.model.tenant.User;
-import dwe.holding.admin.model.tenant.UserRole;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
-@Service
+// @Service
 @Slf4j
+@AllArgsConstructor
 public class SetupAdminService {
-
-    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final UserRepository localMemberRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
-    private final UserRoleRepository userRoleRepository;
-
-    public SetupAdminService(MemberRepository memberRepository, UserRepository localMemberRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
-        this.memberRepository = memberRepository;
-        this.localMemberRepository = localMemberRepository;
-        this.functionRepository = functionRepository;
-        this.roleRepository = roleRepository;
-        this.functionRoleRepository = functionRoleRepository;
-        this.userRoleRepository = userRoleRepository;
-    }
 
     @Transactional
-    public   Long init() {
+    public Long init() {
         if (functionRepository.findAll().isEmpty() || memberRepository.findAll().isEmpty()) {
 //            log.info("MigrationAdminService:: member");
 //            String password = passwordEncoder.encode("pas!");
@@ -152,16 +138,17 @@ public class SetupAdminService {
                             .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleDefault.getId()).memberId(77L).build())
                             .toList()
             );
-            User user = localMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().get();
-            log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
-            userRoleRepository.saveAllAndFlush(
-                    List.of(
-                            UserRole.builder().role(roleSuperAdmin).user(user).build(),
-                            UserRole.builder().role(roleAdminCreate).user(user).build(),
-                            UserRole.builder().role(roleAdminRead).user(user).build(),
-                            UserRole.builder().role(roleDefault).user(user).build()
-                    )
-            );
+            // todp fix
+//            User user = localMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().get();
+//            log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
+//            userRoleRepository.saveAllAndFlush(
+//                    List.of(
+//                            UserRole.builder().role(roleSuperAdmin).user(user).build(),
+//                            UserRole.builder().role(roleAdminCreate).user(user).build(),
+//                            UserRole.builder().role(roleAdminRead).user(user).build(),
+//                            UserRole.builder().role(roleDefault).user(user).build()
+//                    )
+//            );
             return 77L;
         }
         return null;

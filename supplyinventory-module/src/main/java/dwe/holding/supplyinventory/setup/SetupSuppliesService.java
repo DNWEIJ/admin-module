@@ -1,27 +1,25 @@
 package dwe.holding.supplyinventory.setup;
 
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
-import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
-import dwe.holding.admin.authorisation.tenant.user.UserRepository;
-import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
 import dwe.holding.admin.model.notenant.Function;
 import dwe.holding.admin.model.notenant.FunctionRole;
 import dwe.holding.admin.model.tenant.Role;
-import dwe.holding.admin.model.tenant.User;
-import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.model.Supply;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
 import dwe.holding.supplyinventory.repository.SuppliesRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
+@AllArgsConstructor
 public class SetupSuppliesService {
 
     private final SuppliesRepository suppliesRepository;
@@ -30,25 +28,12 @@ public class SetupSuppliesService {
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
-    private final UserRoleRepository userRoleRepository;
-    private final UserRepository localMemberRepository;
-
-    public SetupSuppliesService(SuppliesRepository suppliesRepository, MemberRepository memberRepository, DistributorRepository distributorRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, UserRepository localMemberRepository) {
-        this.suppliesRepository = suppliesRepository;
-        this.memberRepository = memberRepository;
-        this.distributorRepository = distributorRepository;
-        this.functionRepository = functionRepository;
-        this.roleRepository = roleRepository;
-        this.functionRoleRepository = functionRoleRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.localMemberRepository = localMemberRepository;
-    }
 
     @Transactional
     public void init() {
         if (suppliesRepository.findAll().isEmpty()) {
 
-              Long memberId = memberRepository.findByShortCode("DWE").getId();
+            Long memberId = memberRepository.findByShortCode("DWE").getId();
 
             List<Function> listFunc = functionRepository.saveAllAndFlush(
                     List.of(
@@ -74,15 +59,15 @@ public class SetupSuppliesService {
                             .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleSupplies.getId()).memberId(77L).build())
                             .toList()
             );
-
-            User user = localMemberRepository.findByAccount("daniel").stream().filter(u -> u.getMember().getId().equals(memberId)).findFirst().orElseThrow();
-            userRoleRepository.saveAllAndFlush(
-                    List.of(
-                            UserRole.builder().role(roleSupplies).user(user).build()
-//                            UserRole.builder().role(roleAdmin).user(user).build(),
-//                            UserRole.builder().role(roleDefault).user(user).build()
-                    )
-            );
+// TODO FIC
+//            User user = localMemberRepository.findByAccount("daniel").stream().filter(u -> u.getMember().getId().equals(memberId)).findFirst().orElseThrow();
+//            userRoleRepository.saveAllAndFlush(
+//                    List.of(
+//                            UserRole.builder().role(roleSupplies).user(user).build()
+////                            UserRole.builder().role(roleAdmin).user(user).build(),
+////                            UserRole.builder().role(roleDefault).user(user).build()
+//                    )
+//            );
 
 
             //***********//

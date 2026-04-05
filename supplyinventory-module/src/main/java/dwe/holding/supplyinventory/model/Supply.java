@@ -36,7 +36,7 @@ public class Supply extends MemberBaseBO {
     @JoinColumn(nullable = true, name = "distributor_id")
     private Distributor distributor;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "supply")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "supply")
     private Set<SupplyLocal> supplyLocals;
 
     //     private Set<Supplies2localsupdated> updateRecords = new HashSet<Supplies2localsupdated>(0);

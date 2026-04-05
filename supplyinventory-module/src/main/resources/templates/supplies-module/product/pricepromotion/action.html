@@ -1,0 +1,88 @@
+<dialog id="customers-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.update} +' '+ #{label.title.customer}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <form th:action="@{/product/promotion}" method="post">
+            <fieldset>
+                <legend th:text="#{label.product.pricepromotion.productInformation}"></legend>
+                <p><strong th:text="#{label.product.pricepromotion.product.nomenclature}"></strong> <span th:text="${product.nomenclature}"></span></p>
+                <p><strong th:text="#{label.product.pricepromotion.product.salesPriceExTax}"></strong> <span th:text="${product.salesPriceExTax}"></span></p>
+                <p><strong th:text="#{label.product.pricepromotion.product.processingFeeExTax}"></strong> <span th:text="${product.processingFeeExTax}"></span></p>
+                <p><strong th:text="#{label.product.pricepromotion.product.taxed}"></strong> <span th:text="${product.taxed}"></span></p>
+                <p><strong th:text="#{label.product.pricepromotion.product.distributor}"></strong> <span th:text="${product.distributor}"></span></p>
+                <p><strong th:text="#{label.product.pricepromotion.product.itemNumber}"></strong> <span th:text="${product.itemNumber}"></span></p>
+                <p><strong th:text="#{label.product.pricepromotion.product.quantityPerPackage}"></strong> <span th:text="${product.quantityPerPackage}"></span></p>
+            </fieldset>
+            <hr/>
+            <fieldset class="grid">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('startDate','label.product.pricepromotion.promo.startDate','promotion.startDate','0')} "
+                          th:with="type='date'"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('endDate','label.product.pricepromotion.promo.endDate','promotion.endDate','0')} "
+                          th:with="type='date'"></th:block>
+            </fieldset>
+            <style>
+                #tab-price:checked ~ .panels .panel:nth-child(1),
+                #tab-reduction:checked ~ .panels .panel:nth-child(2),
+                #tab-buynx:checked ~ .panels .panel:nth-child(3) {
+                    display: block;
+                }
+            </style>
+            <input type="hidden" name="id" th:value="${promotion.id}"/>
+            <input type="hidden" name="version" th:value="${promotion.version}"/>
+            <div class="tabs">
+                <input type="radio" name="promo-tabs" id="tab-price" checked>
+                <label for="tab-price" th:text="#{label.product.pricepromotion.promo.priceAdjustment}"></label>
+                <input type="radio" name="promo-tabs" id="tab-reduction">
+                <label for="tab-reduction" th:text="#{label.product.pricepromotion.promo.percentageReduction}"></label>
+                <input type="radio" name="promo-tabs" id="tab-buynx">
+                <label for="tab-buynx" th:text="#{label.product.pricepromotion.promo.buyXforY}"></label>
+                <div class="panels">
+                    <section class="panel">
+                        <div class="grid">
+                            <th:block
+                                    th:insert="~{fragments/elements/input::inputHtmlLift('salesPriceExTax','label.product.pricepromotion.promo.salesPriceExTax','promotion.salesPriceExTax','0')} "
+                                    th:with="type='number'"></th:block>
+                            <th:block
+                                    th:insert="~{fragments/elements/input::inputHtmlLift('processingFee','label.product.pricepromotion.promo.processingFee','promotion.processingFee','0')} "
+                                    th:with="type='number'"></th:block>
+                        </div>
+                    </section>
+                    <section class="panel">
+                        <div class="grid">
+                            <th:block
+                                    th:insert="~{fragments/elements/input::inputHtmlLift('reductionPercentage','label.product.pricepromotion.promo.reductionPercentage','promotion.reductionPercentage','0')} "
+                                    th:with="type='number'"></th:block>
+                        </div>
+                    </section>
+                    <section class="panel">
+                        <div>
+                            <th:block
+                                    th:insert="~{fragments/elements/input::inputHtmlLift('buyXforY','label.product.pricepromotion.promo.buyXforY','promotion.buyXforY','0')}"></th:block>
+                            <small th:text="#{label.product.pricepromotion.promo.buyXforYFormat}"></small>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
+        </form>
+        <footer>
+            <div class="grid">
+                <input name="_save" type="submit" form="createForm" th:value="#{label.button.save}"/>
+                <input type="button" data-target="customers-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </div>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("customers-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

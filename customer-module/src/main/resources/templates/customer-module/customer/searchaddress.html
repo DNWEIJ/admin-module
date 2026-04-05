@@ -11,7 +11,7 @@
               hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
             <fieldset class="grid">
                 <legend th:text="#{label.search.zip}"></legend>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchZipCode','customer.zipcode','','')}"
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchZipCode','customer.zipCode','','')}"
                           th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
                 </th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber','customer.street.number','','')}"></th:block>

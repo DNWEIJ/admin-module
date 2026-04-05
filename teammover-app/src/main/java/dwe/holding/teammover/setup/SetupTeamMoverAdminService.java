@@ -3,7 +3,7 @@ package dwe.holding.teammover.setup;
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
-import dwe.holding.admin.authorisation.tenant.role.FunctionRepository;
+import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;

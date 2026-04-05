@@ -1,4 +1,4 @@
-<th:block th:fragment="costingSearch(saveButton)">
+<th:block th:fragment="costingSearch">
     <script th:inline="javascript">
         const messageNoCostingSelected = /*[[#{label.costing.search.nocostingselected}]]*/ "";
         const isPriceInfo = /*[[${salesType.isPriceInfo}]]*/ false;
@@ -6,6 +6,7 @@
         const isVisit = /*[[${salesType.isVisit}]]*/ false;
         const isCostingProduct = /*[[${salesType.isCostingProduct}]]*/ false;
         const isOtc = /*[[${salesType.isOtc}]]*/ false;
+        // set the checkbox and load the list
         document.addEventListener("DOMContentLoaded", () => {
             if ([[${costingSearchForm.useDropDown}]]) {
                 const cb = document.getElementById("useDropDown");
@@ -15,18 +16,17 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const form = document.querySelector("#costingSearchForm");
-            form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
-            htmx.process(form);
-            // validate checkbox and set it
-            if (costingSearchForm.useDropDown) {
-                const cb = document.getElementById("useDropDown");
-                cb.checked = true;
-                cb.dispatchEvent(new Event("change", { bubbles: true }));
-            }
-
-        });
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     const form = document.querySelector("#costingSearchForm");
+        //     form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
+        //     htmx.process(form);
+        //     // validate checkbox and set it
+        //     if (costingSearchForm.useDropDown) {
+        //         const cb = document.getElementById("useDropDown");
+        //         cb.checked = true;
+        //         cb.dispatchEvent(new Event("change", { bubbles: true }));
+        //     }
+        // });
 
         let selectedIndex = -1
         let selectedFieldDataSet
@@ -336,7 +336,7 @@
                 </div>
                 <th:block th:if="${salesType.isVisit or salesType.isOtc}">
                     <div id="costingBatchNumberContainer">
-                        <input list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
+                        <input th:placeholder="batchNumber" list="batchNumberForCosting" id="inputBatchNumber" tabindex="3" size="15" name="inputBatchNumber" type="text" disabled="true"/>
                         <datalist id="batchNumberForCosting"
                                   hx-get="writtenByJavascript"
                                   hx-swap="innerHTML"
@@ -346,7 +346,7 @@
                         </datalist>
                     </div>
                     <div id="costingSpillageContainer">
-                        <input list="spillageForCosting" id="inputSpillage" tabindex="4" name="inputSpillage" size="15" type="text" disabled="true"/>
+                        <input placeholder="spillage" list="spillageForCosting" id="inputSpillage" tabindex="4" name="inputSpillage" size="15" type="text" disabled="true"/>
                         <datalist id="spillageForCosting"
                                   hx-get="writtenByJavascript"
                                   hx-swap="innerHTML"

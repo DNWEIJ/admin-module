@@ -1,7 +1,7 @@
 package dwe.holding.supplyinventory.expose;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import dwe.holding.supplyinventory.mapper.CostingMapper;
+import dwe.holding.supplyinventory.mapper.ProductMapper;
 import dwe.holding.supplyinventory.model.*;
 import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
 import dwe.holding.supplyinventory.repository.*;
@@ -23,7 +23,7 @@ public class CostingService {
     private ProductRepository productRepository;
     private CostingGroupRepository costingGroupRepository;
     private CostingPricePromotionRepository costingPricePromotionRepository;
-    private CostingMapper costingMapper;
+    private ProductMapper productMapper;
     private final CostingBatchNumberRepository costingBatchNumberRepository;
     private final CostingSpillageRepository costingSpillageRepository;
     private final CostingSpillageUsageRepository costingSpillageUsageRepository;
@@ -36,7 +36,7 @@ public class CostingService {
         // validate if there are price promotions
         List<CostingPricePromotion> costingPromotions = costingPricePromotionRepository.findAllById(listCostingsInGroup.stream().map(Costing::getId).toList());
         if (costingPromotions.isEmpty()) {
-            return costingMapper.toProjectionList(listCostingsInGroup);
+            return productMapper.toProjectionList(listCostingsInGroup);
         }
 
         LocalDate today = LocalDate.now();
@@ -46,7 +46,7 @@ public class CostingService {
         ).toList();
 
         if (costingPromotions.isEmpty()) {
-            return costingMapper.toProjectionList(listCostingsInGroup);
+            return productMapper.toProjectionList(listCostingsInGroup);
         }
 
         List<CostingPriceProjection> list = new ArrayList<>();
@@ -57,9 +57,9 @@ public class CostingService {
         listCostingsInGroup.forEach(itCosting -> {
             CostingPricePromotion costingPricePromotion = lookupMapOnCostingId.get(itCosting.getId());
             if (costingPricePromotion != null) {
-                list.add(costingMapper.toProjection(itCosting, costingPricePromotion));
+                list.add(productMapper.toProjection(itCosting, costingPricePromotion));
             } else {
-                list.add(costingMapper.toProjection(itCosting));
+                list.add(productMapper.toProjection(itCosting));
             }
 
         });

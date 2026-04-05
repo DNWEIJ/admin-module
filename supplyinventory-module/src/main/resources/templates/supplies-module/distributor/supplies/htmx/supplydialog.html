@@ -1,0 +1,26 @@
+<dialog id="supplies-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{supplies.supplies}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <p id="modalSupplies">
+            <th:block th:insert="~{supplies-module/distributor/supplies/list::formSelectSuppliesFromDistributorList(isFromHere=false)}"></th:block>
+        </p>
+        <footer>
+            <fieldset class="grid">
+                <input type="button" data-target="supplies-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("supplies-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

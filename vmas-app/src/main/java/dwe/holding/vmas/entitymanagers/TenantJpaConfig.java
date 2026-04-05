@@ -58,7 +58,7 @@ public class TenantJpaConfig {
                 .dataSource(dataSource)
                 // the entity packages
                 .packages(
-                        "dwe.holding.admin.model",
+                        "dwe.holding.admin.model.tenant",
                         "dwe.holding.customer.client.model",
                         "dwe.holding.customer.model.lookup",
                         "dwe.holding.shared.model",

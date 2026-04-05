@@ -1,18 +1,21 @@
 package dwe.holding.admin.tenant;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
 
     @Override
-    public String resolveCurrentTenantIdentifier() {
+    public Long resolveCurrentTenantIdentifier() {
         if (AutorisationUtils.isLoggedIn()) {
-            return AutorisationUtils.getCurrentUserMid().toString();
+            return AutorisationUtils.getCurrentUserMid();
         } else {
-            return "77";
+           log.error("No user logged in! THIS SHOULD NOT HAPPEN ON PRODUCTION");
+           return 0L;
         }
     }
 

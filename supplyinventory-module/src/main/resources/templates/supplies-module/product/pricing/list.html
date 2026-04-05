@@ -1,6 +1,6 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Products</title>
+    <title th:text="#{label.product.pricing}"></title>
 </head>
 <body>
 <section layout:fragment="content">
@@ -8,7 +8,7 @@
     <fieldset>
         <div class="grid">
             <div>
-                <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch(true)}"></th:block>
+                <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
             </div>
         </div>
         <table data-no-highlight data-no-export>
@@ -33,7 +33,7 @@
     <table id="pricingTable" class="table-tight table-striped">
         <thead>
         <tr>
-            <th class="no-sorting"></th>
+            <th class="no-sorting" data-placement="right" th:data-tooltip="#{label.costing.product.pencilinfo}">❔</th>
             <th data-order="1" th:text="#{label.costing.product.invoiceInformation}"></th>
             <th data-order="2" th:text="#{label.costing.product.category}"></th>
             <th data-order="3" th:text="#{label.costing.product.cost}"></th>
@@ -41,11 +41,10 @@
             <th data-order="5" th:text="#{label.costing.product.costPerQuantity}"></th>
             <th data-order="6" th:text="#{label.costing.product.uplift}"></th>
             <th data-order="7" th:text="#{label.costing.product.sell}"></th>
-            <th data-order="8" th:text="#{label.costing.product.margin}"></th>
-            <th data-order="9" th:text="#{label.costing.product.processingFee}"></th>
-            <th data-order="10" th:text="#{label.costing.product.taxedItem}"></th>
+            <th data-order="8" th:text="#{label.costing.product.processingFee}"></th>
+            <th data-order="9" th:text="#{label.costing.product.taxedItem}"></th>
+            <th data-order="10" th:text="#{label.costing.product.margin}"></th>
             <th data-order="11" th:text="#{label.costing.product.total}"></th>
-            <th data-order="12" th:text="#{label.costing.product.special}"></th>
         </tr>
         </thead>
         <th:block th:insert="~{supplies-module/product/htmx/pricingsbody}"></th:block>

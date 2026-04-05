@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +19,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
 
     List<Visit> findByMemberIdAndIdIn(Long memberId, List<Long> ids);
 
-    @Query("SELECT v.id FROM Visit v ")
-    List<Long> findAllIds();
-
-    long countByTotalAmountIncTaxIsNull();
+    long countByTotalAmountIncTaxEquals(BigDecimal value);
 
     // this is a native mariaDB query. Since we else have to query three times (JPQL) the lineitems, sum every amount seperatly
     @Modifying

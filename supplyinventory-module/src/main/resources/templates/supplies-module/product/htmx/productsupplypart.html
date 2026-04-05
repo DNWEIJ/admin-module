@@ -1,0 +1,39 @@
+<div>
+    <div th:if="${product.supply == null}">
+        <div th:text="#{label.costing.product.nosupply}"></div>
+
+        <input  type="button" value="Add supply element"
+               hx-get="/supplies/distributor/supplies?dialog=true"
+               hx-target="#modal-container"
+               hx-swap="innerHTML"/>
+    </div>
+    <div th:if="${product.supply != null}">
+        <table data-no-export>
+            <tbody>
+            <tr>
+                <td th:text="#{label.costing.product.distributor}"></td>
+                <td th:text="${product.supply.distributorName}"></td>
+            </tr>
+            <tr>
+                <td><a th:href="'/supplies/distributor/supply/'+ ${product.supply.id}" th:text="#{label.costing.product.productName}"></a></td>
+                <td th:text="${product.supply.descriptionOfDistributor}"></td>
+            </tr>
+            <tr>
+                <td th:text="#{label.costing.product.distributorPrice}"></td>
+                <td th:text="${product.supply.price}"></td>
+            </tr>
+            <tr>
+                <td th:text="#{label.costing.product.quantityPerPackage}"></td>
+                <td th:text="${product.supply.quantityPerPackage}"></td>
+            </tr>
+            <tr>
+                <td th:text="#{label.costing.product.articleNumber}"></td>
+                <td th:text="${product.supply.itemNumber}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" th:value="#{label.button.delete}"
+               th:hx-confirm="#{label.delete.confirm}" th:hx-delete="'/product/product/'+${product.id}+'/supply/'+ ${product.supply.id}"
+               hx-target="#supplyReplaceHtmx"/>
+    </div>
+</div>

@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +51,9 @@ public class AppointmentVisitService {
                                 .status(salesType.isOtc()? VisitStatusEnum.FINISHED_CONSULT : VisitStatusEnum.WAITING)
                                 .sentToInsurance(YesNoEnum.No)
                                 .invoiceStatus(InvoiceStatusEnum.NEW)
+                                .totalAmountIncTax(BigDecimal.ZERO)
+                                .totalServiceTax(BigDecimal.ZERO)
+                                .totalProductTax(BigDecimal.ZERO)
                                 .build()
                 ).collect(Collectors.toSet())
         );

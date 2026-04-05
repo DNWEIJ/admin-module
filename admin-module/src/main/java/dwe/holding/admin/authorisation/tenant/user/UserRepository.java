@@ -10,7 +10,6 @@ import java.util.List;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    List<User> findByAccount(String account);
 
     List<User> findByMemberIdAndLoginEnabledAndPersonnelStatusNotOrderByName(Long memberId, YesNoEnum enabled, PersonnelStatusEnum personnelStatus);
 }
