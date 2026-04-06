@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CostingSpillage extends LocalAndMemberBaseBO {
+public class ProductSpillage extends LocalAndMemberBaseBO {
 
     @Column(nullable = false)
     private Long costingId;

@@ -6,21 +6,20 @@
 <section layout:fragment="content">
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Category','/product/category')}"></th:block>
 
-    <table class="table-tight striped" id="show-table" >
+    <table class="table-tight striped" id="show-table">
         <thead>
         <tr>
             <th>[[#{category.categoryName}]]</th>
+            <th>[[#{category.deleted}]]</th>
+            <th>[[#{category.countRec}]]</th>
         </tr>
         </thead>
         <tbody>
-        <th:block th:each="category : ${categories}">
+        <th:block th:each="categoryDto : ${categories}">
             <tr>
-                <th:block th:if="${category.memberId == -1}">
-                    <td th:text="${category.category}"></td>
-                </th:block>
-                <th:block th:unless="${category.memberId == -1}">
-                    <td><a th:href="@{'/product/category/'+ ${category.id}}" th:text="${category.category}"></a></td>
-                </th:block>
+                <td><a th:href="@{'/product/category/'+ ${categoryDto.LookupProductCategory.id}}" th:text="${categoryDto.LookupProductCategory.categoryName}"></a></td>
+                <td th:text="${categoryDto.LookupProductCategory.deleted}"></td>
+                <td th:text="${categoryDto.countRec}"></td>
             </tr>
         </th:block>
         </tbody>

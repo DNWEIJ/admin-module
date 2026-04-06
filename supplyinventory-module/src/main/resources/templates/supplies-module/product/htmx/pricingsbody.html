@@ -11,32 +11,32 @@
         <tr>
             <td>
             <a class="no-sorting">
-                <a th:hx-get="'/product/product/'+${product.costing.id} + '/partialedit/pricing'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
-                <a th:if="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.costing.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✔️</a>
-                <a th:unless="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.costing.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✖️</a>
+                <a th:hx-get="'/product/product/'+${product.product.id} + '/partialedit/pricing'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+                <a th:if="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.product.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✔️</a>
+                <a th:unless="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.product.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✖️</a>
             </td>
-            <td th:text="${product.costing.nomenclature}"></td>
-            <td th:text="${product.costing.lookupCostingCategory.category}"></td>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.purchaseDistributorPrice}, false)}"></th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.quantityPerPackage}, false)}"></th:block>
-            <th:block th:with="pricePerQuantity=${(product.costing.purchaseDistributorPrice != null
-                                     and product.costing.quantityPerPackage != null
-                                     and product.costing.quantityPerPackage != 0)
-                                     ? (product.costing.purchaseDistributorPrice / product.costing.quantityPerPackage)
+            <td th:text="${product.product.nomenclature}"></td>
+            <td th:text="${product.product.lookupProductCategory.categoryName}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.purchaseDistributorPrice}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.quantityPerPackage}, false)}"></th:block>
+            <th:block th:with="pricePerQuantity=${(product.product.purchaseDistributorPrice != null
+                                     and product.product.quantityPerPackage != null
+                                     and product.product.quantityPerPackage != 0)
+                                     ? (product.product.purchaseDistributorPrice / product.product.quantityPerPackage)
                                      : 0},
-                  safeSalesPrice=${product.costing.salesPriceExTax != null ? product.costing.salesPriceExTax : 0},
+                  safeSalesPrice=${product.product.salesPriceExTax != null ? product.product.salesPriceExTax : 0},
                   marginPercentage=${safeSalesPrice != 0 ? ((safeSalesPrice - pricePerQuantity) / safeSalesPrice * 100) : 0}">
                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${pricePerQuantity}, false)}"></th:block>
 
-                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.uplift}, false)}"></th:block>
-                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.salesPriceExTax}, false)}"></th:block>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.uplift}, false)}"></th:block>
+                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.salesPriceExTax}, false)}"></th:block>
 
                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${marginPercentage}, false)}"></th:block>
             </th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.processingFeeExTax}, false)}"></th:block>
-            <td th:text="#{__${product.costing.taxed.label}__}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.processingFeeExTax}, false)}"></th:block>
+            <td th:text="#{__${product.product.taxed.label}__}"></td>
             <th:block
-                    th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.getTotalSalesPriceIncTax(taxGoodPercentage,taxServicePercentage)}, false)}"></th:block>
+                    th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.getTotalSalesPriceIncTax(taxGoodPercentage,taxServicePercentage)}, false)}"></th:block>
         </tr>
     </th:block>
 </th:block>
@@ -46,31 +46,31 @@
     <th:block th:if="${product != null}">
         <tr>
             <td class="no-sorting">
-                <input type="hidden" name="id" th:value="${product.costing.id}">
-                <input type="hidden" name="version" th:value="${product.costing.version}">
+                <input type="hidden" name="id" th:value="${product.product.id}">
+                <input type="hidden" name="version" th:value="${product.product.version}">
                 <!-- Save -->
-                <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.costing.id} + '/partialsave/pricing'" hx-target="closest tr" hx-swap="outerHTML">💾</a>
+                <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.product.id} + '/partialsave/pricing'" hx-target="closest tr" hx-swap="outerHTML">💾</a>
                 <!-- Cancel -->
-                <a href="#" th:hx-get="'/product/product/' + ${product.costing.id} + '/partialcancel/pricing'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
+                <a href="#" th:hx-get="'/product/product/' + ${product.product.id} + '/partialcancel/pricing'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
             </td>
-            <td th:text="${product.costing.nomenclature}"></td>
-            <td th:text="${product.costing.lookupCostingCategory.category}"></td>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.purchaseDistributorPrice}, false)}"></th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.costing.quantityPerPackage}, false)}"></th:block>
-            <th:block th:with="pricePerQuantity=${(product.costing.purchaseDistributorPrice != null and product.costing.quantityPerPackage != null and product.costing.quantityPerPackage != 0)
-                                     ? (product.costing.purchaseDistributorPrice / product.costing.quantityPerPackage) : 0},
-                                      safeSalesPrice=${product.costing.salesPriceExTax != null ? product.costing.salesPriceExTax : 0},
+            <td th:text="${product.product.nomenclature}"></td>
+            <td th:text="${product.product.lookupProductCategory.categoryName}"></td>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.purchaseDistributorPrice}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.quantityPerPackage}, false)}"></th:block>
+            <th:block th:with="pricePerQuantity=${(product.product.purchaseDistributorPrice != null and product.product.quantityPerPackage != null and product.product.quantityPerPackage != 0)
+                                     ? (product.product.purchaseDistributorPrice / product.product.quantityPerPackage) : 0},
+                                      safeSalesPrice=${product.product.salesPriceExTax != null ? product.product.salesPriceExTax : 0},
                                       marginPercentage=${safeSalesPrice != 0 ? ((safeSalesPrice - pricePerQuantity) / safeSalesPrice * 100) : 0}">
             </th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${pricePerQuantity}, false)}"></th:block>
 
-            <td><input type="number" step="0.01" required name="uplift" th:value="${#numbers.formatDecimal(product.costing.uplift, 1, 2, 'POINT')}"></td>
-            <td><input type="number" step="0.01" required name="salesPriceExTax" th:value="${#numbers.formatDecimal(product.costing.salesPriceExTax, 1, 2, 'POINT')}"></td>
+            <td><input type="number" step="0.01" required name="uplift" th:value="${#numbers.formatDecimal(product.product.uplift, 1, 2, 'POINT')}"></td>
+            <td><input type="number" step="0.01" required name="salesPriceExTax" th:value="${#numbers.formatDecimal(product.product.salesPriceExTax, 1, 2, 'POINT')}"></td>
             <td></td>
-            <td><input type="number" step="0.01" required name="processingFeeExTax" th:value="${#numbers.formatDecimal(product.costing.processingFeeExTax, 1, 2, 'POINT')}">
+            <td><input type="number" step="0.01" required name="processingFeeExTax" th:value="${#numbers.formatDecimal(product.product.processingFeeExTax, 1, 2, 'POINT')}">
             </td>
             <td>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','',${product.costing.taxed},${taxTypes}, true, '0')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','',${product.product.taxed},${taxTypes}, true, '0')}"></th:block>
             </td>
             <td>TODO calc</td>
         </tr>

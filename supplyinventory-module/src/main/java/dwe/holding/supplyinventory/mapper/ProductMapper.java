@@ -1,9 +1,9 @@
 package dwe.holding.supplyinventory.mapper;
 
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.model.Costing;
-import dwe.holding.supplyinventory.model.CostingPricePromotion;
-import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
+import dwe.holding.supplyinventory.model.Product;
+import dwe.holding.supplyinventory.model.ProductPricePromotion;
+import dwe.holding.supplyinventory.model.projection.ProductPriceProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
     @Mapping(target = "reductionPercentage", constant = "0.0")
-    CostingPriceProjection toProjection(Costing costing);
+    ProductPriceProjection toProjection(Product product);
 
-    List<CostingPriceProjection> toProjectionList(List<Costing> costings);
+    List<ProductPriceProjection> toProjectionList(List<Product> products);
 
     default boolean map(YesNoEnum value) {
         return value == YesNoEnum.Yes;
@@ -25,25 +25,25 @@ public interface ProductMapper {
         return value ? YesNoEnum.Yes : YesNoEnum.No;
     }
 
-    default CostingPriceProjection toProjection(Costing costing, CostingPricePromotion costingPricePromotion) {
-        return new CostingPriceProjection(
-                costing.getId(),
-                costing.getNomenclature(),
-                costing.getHasBatchNr(),
-                costing.getHasSpillage(),
-                costing.getProcessingFeeExTax(),
-                costingPricePromotion.getSalesPriceExTax(),
-                costing.getTaxed(),
-                costingPricePromotion.getReductionPercentage(),
-                costing.getLookupCostingCategory(),
-                costing.getPrescriptionLabel(),
-                costing.getAutoReminder(),
-                costing.getRRemovePendingRemindersContaining(),
-                costing.getReminderNomenclature(),
-                costing.getIntervalInWeeks(),
-                costing.getDeceasedPetPrompt(),
-                costing.getSupply() == null? -1L: costing.getSupply().getId()
+    default ProductPriceProjection toProjection(Product product, ProductPricePromotion productPricePromotion) {
+        return new ProductPriceProjection(
+                product.getId(),
+                product.getNomenclature(),
+                product.getHasBatchNr(),
+                product.getHasSpillage(),
+                product.getProcessingFeeExTax(),
+                productPricePromotion.getSalesPriceExTax(),
+                product.getTaxed(),
+                productPricePromotion.getReductionPercentage(),
+                product.getLookupProductCategory(),
+                product.getPrescriptionLabel(),
+                product.getAutoReminder(),
+                product.getRRemovePendingRemindersContaining(),
+                product.getReminderNomenclature(),
+                product.getIntervalInWeeks(),
+                product.getDeceasedPetPrompt(),
+                product.getSupply() == null? -1L: product.getSupply().getId()
         );
     }
-    Costing fromForm(@MappingTarget Costing entity, Costing form);
+    Product fromForm(@MappingTarget Product entity, Product form);
 }

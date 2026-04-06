@@ -14,7 +14,6 @@ public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
         if (AutorisationUtils.isLoggedIn()) {
             return AutorisationUtils.getCurrentUserMid();
         } else {
-           log.error("No user logged in! THIS SHOULD NOT HAPPEN ON PRODUCTION");
            return 0L;
         }
     }

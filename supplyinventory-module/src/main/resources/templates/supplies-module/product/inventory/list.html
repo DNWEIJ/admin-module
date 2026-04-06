@@ -4,7 +4,7 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Products','/product/inventory')}"></th:block>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Inventory','')}"></th:block>
     <fieldset>
     <div class="grid">
         <div>
@@ -16,15 +16,14 @@
         <thead>
         <tr>
             <th class="no-sorting"></th>
-            <th th:text="#{label.costing.product.code}"></th>
+            <th th:text="#{label.costing.product.localmember}"></th>
             <th th:text="#{label.costing.product.barcode}"></th>
             <th th:text="#{label.costing.product.article}"></th>
             <th th:text="#{label.costing.product.inventoryUnit}"></th>
-            <th th:text="#{label.costing.product.localmember}"></th>
-            <th th:text="#{label.costing.product.groupedProduct}"></th>
+
         </tr>
         </thead>
-        <th:block th:insert="~{supplies-module/product/htmx/productsbody}"></th:block>
+        <th:block th:insert="~{supplies-module/product/inventory/inventorybody}"></th:block>
     </table>
     <script>
         document.body.addEventListener('htmx:afterSwap', function (event) {

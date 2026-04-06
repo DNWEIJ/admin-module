@@ -1,9 +1,9 @@
 package dwe.holding.supplyinventory.model;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import dwe.holding.shared.model.converter.YesNoEnumConverter;
+import dwe.holding.shared.model.type.YesNoEnum;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +19,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LookupCostingCategory extends MemberBaseBO {
+public class LookupProductCategory extends MemberBaseBO {
     @Column(nullable = false)
     @NotEmpty
-    private String category;
+    private String categoryName;
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = YesNoEnumConverter.class)
+    private YesNoEnum deleted;
+
 }

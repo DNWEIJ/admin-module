@@ -16,8 +16,8 @@ import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.salesconsult.sales.repository.LineItemRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.expose.CostingService;
-import dwe.holding.supplyinventory.model.projection.CostingPriceProjection;
+import dwe.holding.supplyinventory.expose.ProductService;
+import dwe.holding.supplyinventory.model.projection.ProductPriceProjection;
 import dwe.holding.supplyinventory.repository.ReminderRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +36,7 @@ import java.util.Set;
 public class LineItemService {
 
     private final LineItemRepository lineItemRepository;
-    private final CostingService costingService;
+    private final ProductService productService;
     private final AppointmentRepository appointmentRepository;
     private final ReminderRepository reminderRepository;
     private final CustomerService customerService;
@@ -131,12 +131,12 @@ public class LineItemService {
 
     private List<LineItem> createLineItemsFromCosting(Appointment appointment, Long costingId, BigDecimal quantity, String batchNumber, String spillageName, Pet pet) {
         // do we need to add all grouping products?
-        List<CostingPriceProjection> priceIncludingPromotions = costingService.getCorrectedPriceAndGroupingForCostingId(costingId);
+        List<ProductPriceProjection> priceIncludingPromotions = productService.getCorrectedPriceAndGroupingForCostingId(costingId);
 
         // we need the quantity of the grouping to be calculated
         Map<Long, BigDecimal> costingGroupList;
         if (priceIncludingPromotions.size() > 1) {
-            costingGroupList = costingService.getGroupingsQuantity(costingId);
+            costingGroupList = productService.getGroupingsQuantity(costingId);
         } else {
             costingGroupList = Map.of();
         }
@@ -154,10 +154,10 @@ public class LineItemService {
                 LineItem savedLineItem = lineItemRepository.save(newLineItem);
 
                 if (cpp.hasSpillage().equals(YesNoEnum.Yes)) {
-                    costingService.createOrUpdateSpillage(cpp.id(), spillageName, savedLineItem.getId());
+                    productService.createOrUpdateSpillage(cpp.id(), spillageName, savedLineItem.getId());
                 }
                 if (cpp.hasBatchNr().equals(YesNoEnum.Yes)) {
-                    costingService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
+                    productService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
                 }
                 // todo change supply amount
                 // do extra stuff we need to do on costings....
@@ -175,14 +175,14 @@ public class LineItemService {
     /*                               BE CAREFULLY CHANGING STUFF HERE                                             */
 
     /**************************************************************************************************************/
-    private LineItem createLineItem(Appointment appointment, CostingPriceProjection cpp, BigDecimal quantity, Pet pet,
+    private LineItem createLineItem(Appointment appointment, ProductPriceProjection cpp, BigDecimal quantity, Pet pet,
                                     LocalMemberTax taxes, Map<Long, BigDecimal> costingGroupList, Long costingId) {
         LineItem newLineItem = LineItem.builder().appointment(appointment)
                 .pet(pet)
                 .processingFeeExTax(cpp.processingFeeExTax())
                 .taxedTypeEnum(cpp.taxed())
                 .salesPriceExTax(cpp.salesPriceExTax())
-                .categoryId(cpp.lookupCostingCategory().getId())
+                .categoryId(cpp.lookupProductCategory().getId())
                 .costingId(cpp.id())
                 .nomenclature(cpp.nomenclature())
                 .taxGoodPercentage(taxes.getTaxLow())
@@ -207,7 +207,7 @@ public class LineItemService {
         return quantity.multiply(groupQuantity);
     }
 
-    private void doExtraStuff(CostingPriceProjection cpp, Pet pet, Appointment appointment) {
+    private void doExtraStuff(ProductPriceProjection cpp, Pet pet, Appointment appointment) {
         // update reminder status
         if (YesNoEnum.Yes.equals(cpp.autoReminder())) {
             // clean up existing reminders
@@ -225,9 +225,10 @@ public class LineItemService {
         if (YesNoEnum.Yes.equals(cpp.deceasedPetPrompt())) {
             customerService.updatePetDeceased(pet.getId());
         }
-        // update inventory
+        // TODO update inventory
 
         if (cpp.supplyId() != null) {
+            // TODO
             //       calculateUsage(cpp.supplyId(), AutorisationUtils.getCurrentUserMlid(), costing.getSupplies2Idindyqtydeduction() * lineItem.getQuantity());
         }
 

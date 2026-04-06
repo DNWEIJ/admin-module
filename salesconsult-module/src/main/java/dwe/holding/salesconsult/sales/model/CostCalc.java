@@ -2,7 +2,7 @@ package dwe.holding.salesconsult.sales.model;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
-import dwe.holding.supplyinventory.model.Costing;
+import dwe.holding.supplyinventory.model.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotEmpty;
@@ -79,7 +79,7 @@ public abstract class CostCalc extends MemberBaseBO {
     }
 
     public BigDecimal calculateTotal(BigDecimal reductionPercentage) {
-        return Costing.calculateTotal(salesPriceExTax, processingFeeExTax, quantity, taxedTypeEnum, taxGoodPercentage, taxServicePercentage,
+        return Product.calculateTotal(salesPriceExTax, processingFeeExTax, quantity, taxedTypeEnum, taxGoodPercentage, taxServicePercentage,
                 reductionPercentage);
     }
 

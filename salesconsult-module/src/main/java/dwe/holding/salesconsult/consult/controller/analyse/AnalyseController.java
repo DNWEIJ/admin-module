@@ -7,7 +7,7 @@ import dwe.holding.salesconsult.consult.repository.AnalyseDescriptionRepository;
 import dwe.holding.salesconsult.consult.repository.AnalyseRepository;
 import dwe.holding.salesconsult.consult.service.AnalyseService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
-import dwe.holding.supplyinventory.model.Costing;
+import dwe.holding.supplyinventory.model.Product;
 import dwe.holding.supplyinventory.repository.ProductRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,8 @@ public class AnalyseController {
     private final AnalyseRepository analyseRepository;
     private final AnalyseDescriptionRepository analyseDescriptionRepository;
     private final ProductRepository productRepository;
-private final AnalyseService analyseService;
+    private final AnalyseService analyseService;
+
     @GetMapping("analyse/description/{id}")
     String getList(@PathVariable Long id, Model model) {
         updateModel(model, id);
@@ -36,14 +37,14 @@ private final AnalyseService analyseService;
 
     @PostMapping("analysedescription/{analyseDescriptionId}/analyse/lineitem")
     String saveHtmxAnalyseItem(@PathVariable Long analyseDescriptionId, @NotNull Long inputCostingId, @NotNull BigDecimal inputCostingQuantity, Model model) {
-        Costing costing = productRepository.findByIdAndMemberId(inputCostingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        Product product = productRepository.findByIdAndMemberId(inputCostingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         AnalyseDescription desc = analyseDescriptionRepository.findByIdAndMemberId(analyseDescriptionId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         analyseRepository.save(
                 Analyse.builder()
                         .analyseDescription(desc)
-                        .costing(costing)
+                        .product(product)
                         .quantity(inputCostingQuantity)
-                        .lookupCostingCategoryId(costing.getLookupCostingCategory().getId())
+                        .lookupCostingCategoryId(product.getLookupProductCategory().getId())
                         .build()
         );
         updateModel(model, desc.getId());
@@ -51,7 +52,7 @@ private final AnalyseService analyseService;
     }
 
     @PostMapping("/analyse/delete")
-    String deleteRecords(@RequestParam(required = false)  ArrayList<Long> analyseSelected, @NotNull Long analyseDescriptionId) {
+    String deleteRecords(@RequestParam(required = false) ArrayList<Long> analyseSelected, @NotNull Long analyseDescriptionId) {
         analyseService.delete(analyseSelected);
         return "redirect:/admin/analyse/description/" + analyseDescriptionId;
     }

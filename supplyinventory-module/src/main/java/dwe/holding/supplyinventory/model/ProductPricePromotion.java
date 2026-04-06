@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CostingPricePromotion extends MemberBaseBO {
+public class ProductPricePromotion extends MemberBaseBO {
 
     @NotNull
     @Column(nullable = false)

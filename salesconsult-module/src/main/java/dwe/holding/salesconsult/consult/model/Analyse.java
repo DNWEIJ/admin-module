@@ -1,7 +1,7 @@
 package dwe.holding.salesconsult.consult.model;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
-import dwe.holding.supplyinventory.model.Costing;
+import dwe.holding.supplyinventory.model.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class Analyse extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "costing_id")
-    private Costing costing;
+    private Product product;
 
     @Column(nullable = false)
     private Long lookupCostingCategoryId;

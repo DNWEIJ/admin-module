@@ -4,6 +4,7 @@ INSERT INTO supply_lookup_costing_category
  version,
  member_id,
  category,
+ deleted,
  added_by,
  added_on,
  last_edited_by,
@@ -12,6 +13,7 @@ SELECT LOOKUPCOSTINGCATEGORY_ID,
        VERSION,
        MID,
        CATEGORY,
+       'N'
        'migration',
        now(),
        'migration',
@@ -19,6 +21,8 @@ SELECT LOOKUPCOSTINGCATEGORY_ID,
 FROM vmas.lookupcostingcategory
 WHERE MID = 77
    or mid = -1;
+
+update supply_lookup_costing_category set member_id = 77;
 #
 # INSERT INTO supplyinventory_lookup_costing_category
 # (id,

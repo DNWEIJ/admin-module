@@ -1,8 +1,35 @@
 <div>
+    Zonder gekoppelde leveranciersproduct is er geen automatische voorraadtracking.<br/>
+    Zodra een leveranciersproduct wordt gekoppeld, >kan voorraad worden gevolgd.<br/>
+    Nu kunnen er ook meldingen bij lage voorraad worden ingesteld op basis van productverkoop.<br/>
+<br/>
+    <h4>Scenario’s:</h4>
+    <dl>
+        <dt><b>Geen tracking</b></dt>
+        <dd>
+            Geen leverancier gekoppeld
+            Geen velden ingevuld
+            Geen automatische voorraadregistratie
+        </dd>
+        <dt><b>Eenvoudige tracking (productniveau)</b>
+        </dt>
+        <dd>
+            Verplichte veld: Hoeveelheid (aantal verkoopbare items op voorraad; wordt automatisch verlaagd bij verkoop en gebruikt voor herbevoorrading)
+            Optioneel: distributeur, distributeurBeschrijving, artikelnummer, barcode
+        </dd>
+        <dt><b>Geavanceerde tracking</dt>
+        <dd>
+            Distributeur koppelen via een distributeurs produkt
+            Meer geautomatiseerde en nauwkeurige voorraadcontrole
+            Status: er is nog geen voorraadrecord gekoppeld.
+        </dd>
+    </dl>
+
+
     <div th:if="${product.supply == null}">
         <div th:text="#{label.costing.product.nosupply}"></div>
 
-        <input  type="button" value="Add supply element"
+        <input type="button" value="Add supply element"
                hx-get="/supplies/distributor/supplies?dialog=true"
                hx-target="#modal-container"
                hx-swap="innerHTML"/>

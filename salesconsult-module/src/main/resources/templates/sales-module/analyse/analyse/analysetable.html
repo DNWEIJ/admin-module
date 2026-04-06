@@ -11,7 +11,7 @@
     <tbody>
     <tr th:each="analyse : ${analyses}">
         <td><input role="switch" type="checkbox" name="analyseSelected" th:value="${analyse.id}"/></td>
-        <td th:text="${analyse.lookupCostingCategoryId}">
+        <td th:text="${analyse.lookupProductCategoryId}">
         <td th:text="${analyse.costing.nomenclature}">
         <td th:text="${analyse.costing.salesPriceExTax}">
         <td th:text="${analyse.quantity}">

@@ -12,7 +12,7 @@ import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.salesconsult.sales.model.CostCalc;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -39,7 +39,7 @@ public class HtmxVisitAnalyseController {
     private final AnalyseItemRepository analyseItemRepository;
     private final AnalyseRepository analyseRepository;
     private final LineItemService lineItemService;
-    private final CostingService costingService;
+    private final ProductService productService;
 
     // Changed dropdown -> produce list of analyses
     @GetMapping("/visit/{visitId}/analyse/{analyseDescriptionId}")
@@ -48,7 +48,7 @@ public class HtmxVisitAnalyseController {
         List<Analyse> definedAnalyseList = analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), analyseDescriptionId);
 
         List<LineItem> result = definedAnalyseList.stream().flatMap(a ->
-                lineItemService.createConsultAnalyseLineItem(a.getCosting().getId(), a.getQuantity(), visit.getPet(), a.getId()).stream()).toList();
+                lineItemService.createConsultAnalyseLineItem(a.getProduct().getId(), a.getQuantity(), visit.getPet(), a.getId()).stream()).toList();
         model
                 .addAttribute("visit", visit)
                 .addAttribute("analyseItems", result)
@@ -75,8 +75,8 @@ public class HtmxVisitAnalyseController {
         List<AnalyseItem> analyseItemToBeSaved = new ArrayList<>();
 
         List<LineItem> lineItemsToBeSaved = definedAnalyseList.stream().flatMap(formAnalyse ->
-                    lineItemService.createConsultAnalyseLineItem(formAnalyse.getCosting().getId(),
-                                    userMap.get(formAnalyse.getCosting().getId()).quantity(), // get Form quantity
+                    lineItemService.createConsultAnalyseLineItem(formAnalyse.getProduct().getId(),
+                                    userMap.get(formAnalyse.getProduct().getId()).quantity(), // get Form quantity
                                     visit.getPet(), null).stream()
                             // find records that do not have a vet or owner NO (being the true on the checkbox)
                             .filter(lineItem -> {
@@ -86,7 +86,7 @@ public class HtmxVisitAnalyseController {
                                         }
 
                                         mapFormToAnalyseItem(analyseItemToBeSaved, lineItem, rec, visit);
-                                        return (rec.ownerIndicator == null || rec.ownerIndicator == false) && (rec.vetIndicator == null || rec.vetIndicator == false);
+                                        return (rec.ownerIndicator == null || !rec.ownerIndicator) && (rec.vetIndicator == null || !rec.vetIndicator);
                                     }
                             )
         ).toList();
@@ -100,13 +100,14 @@ public class HtmxVisitAnalyseController {
                 .addAttribute("customerId", visit.getPet().getCustomer().getId())
                 .addAttribute("petId", visit.getPet().getId())
                 .addAttribute("costingSearchUrl", VisitController.VISIT_URL.replace("{customerId}", visit.getPet().getCustomer().getId().toString()).replace("{visitId}", visit.getId().toString()))
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("salesType", SalesType.VISIT);
         return "/consult-module/fragments/htmx/replaceanalyseandlineitems";
     }
 
     @PostMapping("/visit/{visitId}/analyse/update")
     String saveAnalyseCommentsHtmx(@PathVariable Long visitId, AnalyseForm analyseForm, Model model) {
+        // TODO finish
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         List<Analyse> definedAnalyseList = analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), analyseForm.analyseDropDown());
         return "";
@@ -115,8 +116,8 @@ public class HtmxVisitAnalyseController {
 
         private void mapFormToAnalyseItem(List<AnalyseItem> list, LineItem lineItem, AnalyseItemForm form, Visit visit) {
         AnalyseItem item = new AnalyseItem();
-        item.setVetIndicator(form.vetIndicator() == null || form.vetIndicator().booleanValue() == false ? YesNoEnum.No : YesNoEnum.Yes);
-        item.setOwnerIndicator(form.ownerIndicator() == null || form.ownerIndicator().booleanValue() == false ? YesNoEnum.No : YesNoEnum.Yes);
+        item.setVetIndicator(form.vetIndicator() == null || !form.vetIndicator() ? YesNoEnum.No : YesNoEnum.Yes);
+        item.setOwnerIndicator(form.ownerIndicator() == null || !form.ownerIndicator() ? YesNoEnum.No : YesNoEnum.Yes);
         item.setQuantity(form.quantity() == null ? BigDecimal.ZERO : form.quantity());
         item.setAppointmentId(visit.getAppointment().getId());
         item.setPetId(visit.getPet().getId());

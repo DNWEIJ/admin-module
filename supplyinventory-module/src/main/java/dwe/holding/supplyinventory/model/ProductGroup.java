@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CostingGroup extends MemberBaseBO {
+public class ProductGroup extends MemberBaseBO {
     @NotNull
     @Column(nullable = false)
     private Long parentCostingId;

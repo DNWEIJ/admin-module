@@ -13,7 +13,7 @@ import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.supplyinventory.controller.ProductController;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -39,14 +39,14 @@ import static dwe.holding.salesconsult.sales.controller.ValidationHelper.validat
 public class OTCSellController {
     private final CustomerService customerService;
     private final LineItemService lineItemService;
-    private final CostingService costingService;
+    private final ProductService productService;
     private final AppointmentVisitService appointmentVisitService;
     private final VisitRepository visitRepository;
     private final CustomerFinancialInfo customerFinancialInfo;
     private final CustomerRepository customerRepository;
 
     @GetMapping("/otc/customer/{customerId}/visit/{visitId}")
-    String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Model model, RedirectAttributes redirect) {
+    String setupProductSell_InitialCall(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Model model) {
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
 
@@ -54,7 +54,7 @@ public class OTCSellController {
         Appointment app = visit.getAppointment();
         HashSet<Long> listPetsOnAppointment = app.getVisits().stream().map(Visit::getPet).map(Pet::getId).collect(Collectors.toCollection(HashSet::new));
 
-        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.findById(customerId).orElseThrow());
 
         updateVisitStatusInModel(model, visit.getStatus(), SalesType.OTC);
         model
@@ -137,7 +137,7 @@ public class OTCSellController {
                 .addAttribute("costingSearchUrl", "/sales/otc/customer/" + customerId + "/visit/" + visit.getId())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("salesType", SalesType.OTC);
     }
 }

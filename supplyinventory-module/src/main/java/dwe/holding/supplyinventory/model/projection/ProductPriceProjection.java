@@ -2,11 +2,11 @@ package dwe.holding.supplyinventory.model.projection;
 
 import dwe.holding.shared.model.type.TaxedTypeEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.model.LookupCostingCategory;
+import dwe.holding.supplyinventory.model.LookupProductCategory;
 
 import java.math.BigDecimal;
 
-public record CostingPriceProjection(
+public record ProductPriceProjection(
         Long id,
         String nomenclature,
         YesNoEnum hasBatchNr,
@@ -15,7 +15,7 @@ public record CostingPriceProjection(
         BigDecimal salesPriceExTax,
         TaxedTypeEnum taxed,
         BigDecimal reductionPercentage,
-        LookupCostingCategory lookupCostingCategory,
+        LookupProductCategory lookupProductCategory,
         String prescriptionLabel,
         YesNoEnum autoReminder,
         String rRemovePendingRemindersContaining,

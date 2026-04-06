@@ -275,7 +275,7 @@
                     <th:block th:each="lineItem : ${appointment.lineItems}">
                         <th:block th:if="${lineItem.pet.id == visitFromList.pet.id}">
                             <tr>
-                                <td th:text="${lineItem.nomenclature}"></td>
+                                <td th:tuext="${lineItem.nomenclature}"></td>
                                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineItem.quantity},false)}"></th:block>
                                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${lineItem.totalIncTax},false,'')}"></th:block>
                             </tr>

@@ -2,10 +2,9 @@ package dwe.holding.supplyinventory.controller.operational;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.model.LookupCostingCategory;
 import dwe.holding.supplyinventory.model.projection.CostingProjection;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import dwe.holding.supplyinventory.repository.ProductRepository;
-import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,38 +18,33 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/costing")
 @Slf4j
-public class CostingSearchController {
+public class ProductSearchController {
 
     private final ProductRepository productRepository;
-    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
+    private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
     @GetMapping("/costing/search/category/dropdown")
     public String searchLookupCostingDropdown(Model model) {
         LocalDateTime now = LocalDateTime.now();
-        model.addAttribute("lookupCostings",
-                lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().collect(Collectors.toMap(LookupCostingCategory::getId, LookupCostingCategory::getCategory))
-        );
-        log.info("searchLookupCostingDropdown::Spending time for lookup: " + Duration.between(now, LocalDateTime.now()));
+        model.addAttribute("lookupCostings", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No));
         return "supplies-module/fragments/costing/selectcosting";
     }
 
     @PostMapping("/costing/search/costing/dropdown/found/costing")
     public String searchCostingForDropDown(Long categoryId, Model model) {
         StringBuilder sb = new StringBuilder();
-        productRepository.findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclature(categoryId, AutorisationUtils.getCurrentUserMid()).forEach(costingProj ->
+        productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclature(categoryId, AutorisationUtils.getCurrentUserMid()).forEach(costingProj ->
                 sb.append("<option data-has-batch=\"").append(costingProj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
-                .append("\" data-id=\"").append(costingProj.id())
-                .append("\" data-nomenclature=\"").append(costingProj.nomenclature())
-                .append("\">")
-                .append(costingProj.nomenclature())
-                .append("</option>"));
+                        .append("\" data-id=\"").append(costingProj.id())
+                        .append("\" data-nomenclature=\"").append(costingProj.nomenclature())
+                        .append("\">")
+                        .append(costingProj.nomenclature())
+                        .append("</option>"));
         model.addAttribute("flatData", sb.toString());
         return "fragments/elements/flatData";
     }
@@ -69,9 +63,9 @@ public class CostingSearchController {
         List<CostingProjection> list;
         try {
             Long.parseLong(searchCriteria);
-            list = productRepository.getCostingProjectionsWhenSearchCriteriaIsNumeric(searchCriteria, AutorisationUtils.getCurrentUserMid());
+            list = productRepository.getProductProjectionsWhenSearchCriteriaIsNumeric(searchCriteria, AutorisationUtils.getCurrentUserMid());
         } catch (NumberFormatException e) {
-            list = productRepository.getCostingOnNomenclature(searchCriteria, AutorisationUtils.getCurrentUserMid());
+            list = productRepository.getProductOnNomenclature(searchCriteria, AutorisationUtils.getCurrentUserMid());
         }
         model.addAttribute("flatData", wrap(list.stream().map(str -> getOption(str, pattern)).toList()));
         log.info("searchCustomerHtmx::Spending time for lookup: " + Duration.between(now, LocalDateTime.now()));

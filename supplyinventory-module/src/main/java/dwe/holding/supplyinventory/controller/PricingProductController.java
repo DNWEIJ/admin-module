@@ -2,7 +2,8 @@ package dwe.holding.supplyinventory.controller;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.frontend.PresentationElement;
-import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
+import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,22 +15,18 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/product")
+/**
+ * This controller uses shared costingSearch via ProdctAndPricingPartialController with ProductController
+ */
 public class PricingProductController {
-    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
+    private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
-    /**
-     * Othere activities are presented via:
-     * Via  {@link dwe.holding.supplyinventory.controller.ProductController#userSelectedGetProductsHtmx)}
-     * Via  {@link dwe.holding.supplyinventory.controller.ProductAndPricingPartialController }
-
-     */
     @GetMapping("/pricing")
     String showListPage(Model model) {
         model
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
-                .addAttribute("costingSearchUrl", "/product/product")
+                .addAttribute("costingSearchUrl", "/product/search/product")
                 .addAttribute("costingSearchForm",  new ProductController.ListForm(null,null, Boolean.TRUE))
                 .addAttribute("products", List.of())
         ;

@@ -31,7 +31,7 @@ import java.math.RoundingMode;
  * - Connected to a supply will make incoming orders from a supplier easier to sort out
  * - Not being connected is less work and can be done when a different system is used for placing orders at suppliers
  */
-public class Costing extends MemberBaseBO {
+public class Product extends MemberBaseBO {
 
     // PRODUCT SPECIFIC
     @Column(columnDefinition = "varchar(1)", nullable = false)
@@ -100,7 +100,7 @@ public class Costing extends MemberBaseBO {
     // TODO
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOOKUPCOSTINGCATEGORY_ID", nullable = false)
-    private LookupCostingCategory lookupCostingCategory;
+    private LookupProductCategory lookupProductCategory;
 
     public BigDecimal getTotalSalesPriceIncTax(BigDecimal taxGoodPercentage, BigDecimal taxServicePercentage){
         return calculateTotal(

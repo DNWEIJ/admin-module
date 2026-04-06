@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Improved Mobile OCR</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/opencv.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .video-wrapper {
+            position: relative;
+        }
+        video {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .overlay {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 80%;
+            height: 60%;
+            border: 2px dashed #00ffcc;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        #output {
+            margin-top: 12px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            min-height: 120px;
+            white-space: pre-wrap;
+        }
+        textarea {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            height: 80px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="video-wrapper">
+        <video id="video" autoplay playsinline></video>
+        <div class="overlay"></div>
+    </div>
+
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <button id="capture">Capture & Scan</button>
+    <button id="copy">Copy Text</button>
+
+    <div id="output">Scan result will appear here...</div>
+
+    <textarea placeholder="Paste or edit text here"></textarea>
+    <textarea placeholder="Another field"></textarea>
+
+</div>
+
+<script>
+
+    async function preprocessCanvasForOCR(canvas) {
+        const src = cv.imread(canvas);        // Read into OpenCV matrix
+        let gray = new cv.Mat();
+        let blurred = new cv.Mat();
+        let thresh = new cv.Mat();
+        let edges = new cv.Mat();
+
+        // 1) Grayscale conversion
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+        // 2) Reduce noise with a small blur (improves threshold)
+        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+
+        // 3) Adaptive thresholding for uneven lighting
+        // ADAPTIVE_THRESH_GAUSSIAN_C is usually best for scanned documents
+        cv.adaptiveThreshold(
+            blurred, thresh, 255,
+            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv.THRESH_BINARY, 15, 10
+        ); // blockSize=15, C=10 can be tuned for your images :contentReference[oaicite:1]{index=1}
+
+        // 4) Optional morphological closing to fill gaps in text
+        // (uncomment if needed)
+        // let kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
+        // cv.morphologyEx(thresh, thresh, cv.MORPH_CLOSE, kernel);
+
+        // 5) Edge detection for skew estimation
+        cv.Canny(thresh, edges, 50, 150);
+
+        // 6) Hough line transform to detect lines
+        let lines = new cv.Mat();
+        cv.HoughLines(edges, lines, 1, Math.PI / 180, 200); // tune threshold if needed :contentReference[oaicite:2]{index=2}
+
+        // compute average angle of detected lines
+        let angleSum = 0;
+        let count = 0;
+        for (let i = 0; i < lines.rows; i++) {
+            let rho = lines.data32F[i * 2];
+            let theta = lines.data32F[i * 2 + 1];
+            // convert theta to degrees relative to horizontal
+            let deg = (theta * 180 / Math.PI) - 90;
+            if (deg > -45 && deg < 45) {
+                angleSum += deg;
+                count++;
+            }
+        }
+        let skewAngle = count > 0 ? angleSum / count : 0;
+
+        // 7) Deskew the image if skewAngle is significant
+        if (Math.abs(skewAngle) > 0.1) {
+            let center = new cv.Point(src.cols / 2, src.rows / 2);
+            let M = cv.getRotationMatrix2D(center, skewAngle, 1);
+            let deskewed = new cv.Mat();
+            cv.warpAffine(thresh, deskewed, M, new cv.Size(src.cols, src.rows), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar(255, 255, 255));
+            thresh.delete();
+            thresh = deskewed;
+            M.delete();
+        }
+
+        // 8) Output back to canvas
+        cv.imshow(canvas, thresh);
+
+        // clean up mats
+        src.delete();
+        gray.delete();
+        blurred.delete();
+        edges.delete();
+        lines.delete();
+        // thresh remains to allow OCR after canvas update
+
+        return canvas;
+    }
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const output = document.getElementById('output');
+
+    // Start camera
+    navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }
+    })
+        .then(stream => video.srcObject = stream)
+        .catch(err => alert("Camera error: " + err));
+
+    // Capture + preprocess + OCR
+    document.getElementById('capture').onclick = async () => {
+        const ctx = canvas.getContext('2d');
+
+        // scale up for better OCR
+        const scale = 2;
+        canvas.width = video.videoWidth * scale;
+        canvas.height = video.videoHeight * scale;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        preprocessCanvasForOCR(canvas)
+
+        // crop to center (overlay area)
+        const cropX = canvas.width * 0.1;
+        const cropY = canvas.height * 0.2;
+        const cropW = canvas.width * 0.8;
+        const cropH = canvas.height * 0.6;
+
+
+        const imageData = ctx.getImageData(cropX, cropY, cropW, cropH);
+        const data = imageData.data;
+
+        const step = 256 / 8; // size of each gray level
+
+        for (let i = 0; i < data.length; i += 4) {
+            // Convert to grayscale
+            const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+
+            // Quantize to nearest level
+            const quantized = Math.floor(gray / step) * step + step / 2;
+
+            data[i] = data[i + 1] = data[i + 2] = quantized;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+
+        output.innerText = "Processing...";
+
+        const { data: { text } } = await Tesseract.recognize(canvas, 'eng', {
+            tessedit_pageseg_mode: 6,
+            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        });
+
+        output.innerText = text.trim();
+    };
+
+    // Copy text
+    document.getElementById('copy').onclick = () => {
+        navigator.clipboard.writeText(output.innerText);
+    };
+
+</script>
+
+</body>
+</html>

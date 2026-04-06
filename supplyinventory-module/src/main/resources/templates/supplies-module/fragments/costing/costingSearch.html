@@ -16,17 +16,17 @@
         });
     </script>
     <script>
-        // document.addEventListener("DOMContentLoaded", () => {
-        //     const form = document.querySelector("#costingSearchForm");
-        //     form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
-        //     htmx.process(form);
-        //     // validate checkbox and set it
-        //     if (costingSearchForm.useDropDown) {
-        //         const cb = document.getElementById("useDropDown");
-        //         cb.checked = true;
-        //         cb.dispatchEvent(new Event("change", { bubbles: true }));
-        //     }
-        // });
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("#costingSearchForm");
+            form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
+            htmx.process(form);
+            // // validate checkbox and set it
+            // if (costingSearchForm.useDropDown) {
+            //     const cb = document.getElementById("useDropDown");
+            //     cb.checked = true;
+            //     cb.dispatchEvent(new Event("change", { bubbles: true }));
+            // }
+        });
 
         let selectedIndex = -1
         let selectedFieldDataSet

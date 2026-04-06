@@ -21,8 +21,8 @@
             <td class="center">
                 <a href="" class="emoji-icon"  title="delete" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${costingSearchUrl + '/lineitem/' + lineitem.id}" hx-target="#lineItemsTable">🗑️</a>
             </td>
-            <td th:text="${lineitem.nomenclature}"></td>
-            <td th:text="${categoryNames.get(lineitem.categoryId)}" class="desktop-only"></td>
+            <td th:utext="${lineitem.nomenclature}"></td>
+            <td th:text="${categoryNames.get(lineitem.categoryId).name}" class="desktop-only"></td>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.salesPriceExTax},true)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.processingFeeExTax},true)}"></th:block>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineitem.quantity},false)}"></th:block>

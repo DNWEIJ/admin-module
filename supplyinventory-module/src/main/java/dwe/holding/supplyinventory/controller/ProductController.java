@@ -1,30 +1,29 @@
 package dwe.holding.supplyinventory.controller;
 
-import dwe.holding.admin.model.tenant.LocalMemberTax;
-import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.mapper.ProductMapper;
-import dwe.holding.supplyinventory.model.Costing;
-import dwe.holding.supplyinventory.model.LookupCostingCategory;
+import dwe.holding.supplyinventory.model.LookupProductCategory;
+import dwe.holding.supplyinventory.model.Product;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import dwe.holding.supplyinventory.repository.ProductRepository;
-import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/product")
+/**
+ * This controller uses shared costingSearch via ProdctAndPricingPartialController with PricingController
+ */
 public class ProductController {
     private final ProductRepository productRepository;
-    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
+    private final LookupProductCategoryRepository lookupProductCategoryRepository;
     private final ProductMapper productMapper;
 
     /*** LIST ***/
@@ -33,10 +32,9 @@ public class ProductController {
         if (form.inputCostingId() == null && form.categoryId() == null)
             form = new ListForm(null, null, Boolean.TRUE);
         model
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new SalesTypeDummy())
-                .addAttribute("costingSearchUrl", "/product/product")
+                .addAttribute("costingSearchUrl", "/product/search/product")
                 .addAttribute("costingSearchForm", form)
                 .addAttribute("products", List.of())
         ;
@@ -46,11 +44,10 @@ public class ProductController {
     /*** SINGLE NEW RECORD ***/
     @GetMapping("/product")
     String newProduct(Model model) {
-        Costing product = Costing.builder().lookupCostingCategory(new LookupCostingCategory()).hasBatchNr(YesNoEnum.No).hasSpillage(YesNoEnum.No).taxed(TaxedTypeEnum.SERVICE).build();
+        Product product = Product.builder().lookupProductCategory(new LookupProductCategory()).hasBatchNr(YesNoEnum.No).hasSpillage(YesNoEnum.No).taxed(TaxedTypeEnum.SERVICE).build();
         model
                 .addAttribute("product", product)
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
                 .addAttribute("salesType", new SalesTypeDummy())
@@ -61,11 +58,10 @@ public class ProductController {
     /*** SINGLE UPDATE RECORD ***/
     @GetMapping("/product/{costingId}")
     String initialPag(Model model, @PathVariable Long costingId, ListForm costingSearchForm) {
-        Costing product = costingId == 0 ? new Costing() : productRepository.findById(costingId).get();
+        Product product = costingId == 0 ? new Product() : productRepository.findById(costingId).get();
         model
                 .addAttribute("product", product)
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
                 .addAttribute("salesType", new SalesTypeDummy())
@@ -75,8 +71,8 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    String saveProduct(Costing productForm, RedirectAttributes redirect) {
-        Costing product = new Costing();
+    String saveProduct(Product productForm, RedirectAttributes redirect) {
+        Product product = new Product();
         if (productForm.getId() != null)
             product = productRepository.findById(productForm.getId()).orElseThrow();
 
@@ -88,44 +84,23 @@ public class ProductController {
     }
 
 
-    /* Is also used from PricingCostingController     */
-    @PostMapping("/product/lineitem")
-    String userSelectedGetProductsHtmx(Model model, ListForm form, @RequestHeader(value = "HX-Current-URL", required = false) String currentUrl) {
-        if (form.inputCostingId == null && form.categoryId() == null) {
-            model.addAttribute("products", List.of());
-        } else {
-            if (form.inputCostingId != null) {
-                model.addAttribute("products", productRepository.findByIdAndMemberIdToDto(form.inputCostingId, AutorisationUtils.getCurrentUserMid()));
-            }
-            if (form.categoryId != null) {
-                model.addAttribute("products", productRepository.findAllByLookupCostingCategory_IdAndMemberIdOrderByNomenclatureToDto(form.categoryId, AutorisationUtils.getCurrentUserMid()));
-            }
-        }
-        LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
-        model
-                .addAttribute("taxGoodPercentage", taxes.getTaxLow())
-                .addAttribute("taxServicePercentage", taxes.getTaxHigh())
-                .addAttribute("costingSearchForm", getListForm(form))
-        ;
-        return currentUrl.contains("pricing") ? "supplies-module/product/htmx/pricingsbody" : "supplies-module/product/htmx/productsbody";
-    }
-
     @DeleteMapping("/product/{productId}/supply/{supplyId}")
     String deleteSupply(@PathVariable Long productId, @PathVariable Long supplyId) {
-        Costing product =productRepository.findById(productId).orElseThrow();
+        Product product = productRepository.findById(productId).orElseThrow();
         if (product.getSupply().getId().equals(supplyId))
             product.setSupply(null);
         productRepository.save(product);
         return "";
     }
 
+    // TODO
     @PostMapping("/product/{productId}/supply/{supplyId}/connect")
     String connectSupply(@PathVariable Long productId, @PathVariable Long supplyId) {
         // set header to close modal
         return "";
     }
 
-    ListForm getListForm(ListForm form) {
+    static ListForm getListForm(ListForm form) {
         return form.categoryId() != null ? new ListForm(null, form.categoryId, Boolean.TRUE) : new ListForm(form.inputCostingId, null, Boolean.FALSE);
     }
 

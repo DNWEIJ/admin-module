@@ -18,14 +18,16 @@ public class PresentationElement {
         this.name = name;
     }
 
+
+    public PresentationElement(Long id, String name) {
+        this.id = id.toString();
+        this.name = name;
+    }
+
     public PresentationElement(String id, String name, String label) {
         this.id = id;
         this.name = name;
         this.label = label;
-    }
-    public PresentationElement(Long id, String name) {
-        this.id = id.toString();
-        this.name = name;
     }
 
     public PresentationElement(Long id, String name, String dataField) {

@@ -8,7 +8,8 @@ import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.controller.ProductController;
+import dwe.holding.supplyinventory.expose.ProductService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.data.web.ProjectedPayload;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 public class PriceSellController {
     public static final String SALES_PRICE_SELL = "/sales/price/sell";
     private final LineItemService lineItemService;
-    private final CostingService costingService;
+    private final ProductService productService;
     private final Appointment appointment = Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build();
     private final Visit visit = Visit.builder().status(VisitStatusEnum.CONSULT).appointment(appointment).build();
 
@@ -68,8 +69,9 @@ public class PriceSellController {
     private Model updateModel(Model model, List<LineItem> lineItems) {
         ModelHelper.updateLineItemsInModel(model, lineItems);
         model
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("costingSearchUrl", SALES_PRICE_SELL)
+                .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)
                 .addAttribute("salesType", SalesType.PRICE_INFO);

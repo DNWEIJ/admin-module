@@ -1,3 +1,91 @@
+(function () {
+    'use strict'
+
+    function enableTableMultiSelect(tableElement) {
+        const rows = Array.from(tableElement.querySelectorAll("tbody tr"));
+        let isMouseDown = false;
+        let anchorIndex = null;
+        let lastHoveredIndex = null;
+        let currentHighlight = [];
+
+        function highlightRange(start, end) {
+            const [min, max] = [start, end].sort((a, b) => a - b);
+            currentHighlight.forEach(row => row.classList.remove('multiSelected'));
+            currentHighlight = [];
+
+            for (let i = min; i <= max; i++) {
+                const row = rows[i];
+                row.classList.add('multiSelected');
+                currentHighlight.push(row);
+            }
+        }
+
+        function commitSelection() {
+            currentHighlight.forEach(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                checkbox.checked = true;
+                row.classList.remove('multiSelected');
+            });
+            currentHighlight = [];
+        }
+
+        rows.forEach((row, index) => {
+            row.addEventListener('mousedown', (e) => {
+                // ignore clicks on links or buttons inside the row
+                if (e.target.closest('a, button')) return;
+
+                isMouseDown = true;
+                anchorIndex = index;
+                highlightRange(index, index);
+                e.preventDefault(); // prevent text selection
+            });
+
+            row.addEventListener('mouseenter', () => {
+                if (!isMouseDown) return;
+                lastHoveredIndex = rows.indexOf(row);
+                highlightRange(anchorIndex, lastHoveredIndex);
+            });
+
+            row.addEventListener('click', (e) => {
+                if (e.target.closest('a, button')) return;
+
+                // If not dragging, treat click as single row selection
+                if (!isMouseDown) {
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    checkbox.checked = true;
+                }
+            });
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isMouseDown) {
+                commitSelection();
+                isMouseDown = false;
+                anchorIndex = null;
+                lastHoveredIndex = null;
+            }
+        });
+    }
+
+    function initEnableTableMultiSelect(){
+        // Find all tables
+        const tables = document.querySelectorAll('table[data-multi-select]')
+
+        tables.forEach(table => {
+            enableTableMultiSelect(table)
+        })
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            initEnableTableMultiSelect()
+        })
+    } else {
+        initEnableTableMultiSelect()
+    }
+})()
+
 function toggleTableColumns(tableId, columns, visible) {
     const table = document.getElementById(tableId);
     if (!table) return;

@@ -48,7 +48,7 @@
                 <input type="hidden" th:value="${analyseItem.id}" th:name="${idName}">
                 <th:block th:insert="~{fragments/elements/select::selectCheckBox(${vetName},'','','')}"></th:block>
             </td>
-            <td th:text="${analyseItem.nomenclature}"></td>
+            <td th:utext="${analyseItem.nomenclature}"></td>
             <td>
                 <th:block th:insert="~{fragments/elements/select::selectCheckBox(${ownerName},'','','')}"></th:block>
             </td>
@@ -75,7 +75,7 @@
                         <th:block th:insert="~{fragments/elements/select::selectCheckBoxDisabled('', '', ${isChecked}, '')}"></th:block>
                     </th:block>
                 </td>
-                <td th:text="${analyseItem.nomenclature}"></td>
+                <td th:utext="${analyseItem.nomenclature}"></td>
                 <td>
                     <th:block th:with="isChecked=${T(dwe.holding.shared.model.type.YesNoEnum).Yes.equals(analyseItem.ownerIndicator)}">
                         <th:block th:insert="~{fragments/elements/select::selectCheckBoxDisabled('', '', ${isChecked}, '')}"></th:block>

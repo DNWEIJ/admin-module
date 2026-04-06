@@ -11,7 +11,7 @@ import dwe.holding.salesconsult.consult.service.EstimateService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +33,7 @@ public class EstimateController {
     private final CustomerService customerService;
     private final LookupPurposeRepository lookupPurposeRepository;
     private final EstimateService estimateService;
-    private final CostingService costingService;
+    private final ProductService productService;
 
     @GetMapping("/customer/{customerId}/estimates")
     String showEstimateListForCustomer(@PathVariable Long customerId, Model model) {
@@ -86,7 +86,7 @@ public class EstimateController {
                 .addAttribute("selectedPet", estimateForPet.getPet())
                 .addAttribute("petList", estimate.getEstimateForPets().stream().collect(Collectors.toMap(a -> a.getPet().getId(), a -> a.getPet().getNameWithDeceased()))
                 )
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
                 .addAttribute("costingSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
                 .addAttribute("salesType", SalesType.ESTIMATE);

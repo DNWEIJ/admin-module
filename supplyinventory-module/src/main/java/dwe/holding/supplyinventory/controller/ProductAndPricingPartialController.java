@@ -2,19 +2,15 @@ package dwe.holding.supplyinventory.controller;
 
 import dwe.holding.admin.model.tenant.LocalMemberTax;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.TaxedTypeEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.model.Costing;
+import dwe.holding.supplyinventory.model.Product;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import dwe.holding.supplyinventory.repository.ProductRepository;
-import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,15 +21,14 @@ import java.util.List;
 public class ProductAndPricingPartialController {
 
     private final ProductRepository productRepository;
-    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
+    private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
 
     @GetMapping("/product/{productId}/partialedit/{type}")
     String readProductHtmx(Model model, @PathVariable Long productId, @PathVariable String type, ProductController.ListForm costingSearchForm) {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
@@ -46,8 +41,7 @@ public class ProductAndPricingPartialController {
     String cancelProductHtmx(Model model, @PathVariable Long costingId, @PathVariable String type) {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(costingId, AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
         ;
         LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
         model
@@ -59,10 +53,10 @@ public class ProductAndPricingPartialController {
     }
 
     @PostMapping("/product/{costingId}/partialsave/{type}")
-    String updateProductHtmx(Costing productForm, Model model, @PathVariable Long costingId, @PathVariable String type) {
+    String updateProductHtmx(Product productForm, Model model, @PathVariable Long costingId, @PathVariable String type) {
         if (!costingId.equals(productForm.getId())) throw new IllegalArgumentException("costingId must be equals to costingId");
 
-        Costing product = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        Product product = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         if (type.equals("pricing")) {
             product.setUplift(productForm.getUplift());
@@ -71,13 +65,44 @@ public class ProductAndPricingPartialController {
             product.setTaxed(productForm.getTaxed());
         } else {
             product.setNomenclature(productForm.getNomenclature());
-            product.setLookupCostingCategory(lookupCostingCategoryRepository.findById(productForm.getLookupCostingCategory().getId()).orElseThrow());
+            product.setLookupProductCategory(lookupProductCategoryRepository.findById(productForm.getLookupProductCategory().getId()).orElseThrow());
             product.setShortCode(productForm.getShortCode());
             product.setBarcode(productForm.getBarcode());
             product.setHasBatchNr(productForm.getHasBatchNr());
             product.setHasSpillage(productForm.getHasSpillage());
         }
-        Costing saved = productRepository.save(product);
+        Product saved = productRepository.save(product);
         return cancelProductHtmx(model, saved.getId(), type);
+    }
+
+
+    /*
+            searchCosting search via Dropdown, showing all belonging products -> url defined in ProductController   .addAttribute("costingSearchUrl", "/product/search/product")
+            searchCosting search via typing, showing the selected product in edit mode
+     */
+    @PostMapping(value = {"/product/lineitem", "/search/product"})
+    String userSelectedGetProductsHtmx(Model model, ProductController.ListForm form, @RequestHeader(value = "HX-Current-URL", required = false) String parentCallingUrl) {
+        if (form.inputCostingId() == null && form.categoryId() == null) {
+            model.addAttribute("products", List.of());
+        } else {
+            if (form.inputCostingId() != null) {
+                model.addAttribute("products", productRepository.findByIdAndMemberIdToDto(form.inputCostingId(), AutorisationUtils.getCurrentUserMid()));
+            }
+            if (form.categoryId() != null) {
+                model.addAttribute("products", productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclatureToDto(form.categoryId(), AutorisationUtils.getCurrentUserMid()));
+            }
+        }
+        LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
+        model
+                .addAttribute("taxGoodPercentage", taxes.getTaxLow())
+                .addAttribute("taxServicePercentage", taxes.getTaxHigh())
+                .addAttribute("costingSearchForm", ProductController.getListForm(form))
+        ;
+        return
+                parentCallingUrl.contains("pricing") ?
+                        "supplies-module/product/htmx/pricingsbody" :
+                        parentCallingUrl.contains("inventory") ?
+                                "supplies-module/product/inventory/inventorybody" : "supplies-module/product/htmx/productsbody";
+
     }
 }

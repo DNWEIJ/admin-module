@@ -1,4 +1,4 @@
-<th:block th:fragment="productsbody">
+<th:block th:fragment="inventorybody">
     <tbody id="lineItemsTable">
     <th:block th:unless="${#lists.size(products) == 0}">
         <th:block th:each="product : ${products}">
@@ -15,18 +15,12 @@
                 <a target="_blank"  th:href="'/product/product/'+${product.product.id}">📝️</a>
                 <a th:hx-get="'/product/product/'+${product.product.id} + '/partialedit/product'" hx-target="closest tr"   hx-swap="outerHTML">✏️️</a>
             </td>
-            <td th:text="${product.product.nomenclature}"></td>
-            <td th:text="${product.product.lookupProductCategory.categoryName}"></td>
             <td th:text="${product.product.shortCode}"></td>
             <td th:text="${product.product.barcode}"></td>
             <td th:text="${product.product.itemNumber}"></td>
+            <td th:text="${product.product.itemNumber}"></td>
             <td></td>
             <!-- editable fields -->
-            <td th:text="${product.groupedProduct} ? #{label.yesno.yes} : #{label.yesno.no}"></td>
-            <td th:text="#{${product.product.hasBatchNr.label}}"></td>
-            <td th:text="#{${product.product.hasSpillage.label}}"></td>
-            <td th:if="${product.supplyId != null}" th:text="#{label.yesno.yes}"></td>
-            <td th:if="${product.supplyId == null}" th:text="#{label.yesno.no}"></td>
         </tr>
     </th:block>
 </th:block>
@@ -35,6 +29,7 @@
     <th:block th:if="${product != null}">
         <tr>
             <td class="no-sorting">
+                adaasdasdad
                 <input type="hidden" name="id" th:value="${product.product.id}">
                 <input type="hidden" name="version" th:value="${product.product.version}">
                 <!-- Save -->

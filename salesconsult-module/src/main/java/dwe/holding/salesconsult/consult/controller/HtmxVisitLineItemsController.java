@@ -7,7 +7,7 @@ import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class HtmxVisitLineItemsController {
     private final VisitRepository visitRepository;
     private final CustomerService customerService;
     private final LineItemService lineItemService;
-    private final CostingService costingService;
+    private final ProductService productService;
     private final AppointmentVisitService appointmentVisitService;
 
     @DeleteMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
@@ -79,7 +79,7 @@ public class HtmxVisitLineItemsController {
     private void updateModel(Model model, Visit visit, Long customerId) {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("visit", visit)
                 .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("costingSearchUrl", "/consult/visit/customer/" + customerId + "/visit/" + visit.getId());

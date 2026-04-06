@@ -875,12 +875,6 @@ footer p {
     font-weight: bold;
 }
 
-tr.highlighted td {
-    color: var(--pico-color);
-    font-style: italic;
-    font-weight: bold;
-}
-
 
 .lower {
     padding-top: 1.4rem;
@@ -1082,6 +1076,11 @@ details summary a.emoji-icon {
 tr.highlight td {
     background-color: #fff3cd !important;
 }
+tr.multiSelected td {
+    background-color: #fff3cd !important;
+}
+
+
 
 .showSplash {
     position: fixed;

@@ -6,7 +6,7 @@ import dwe.holding.admin.util.ControllerHelper;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.SoapAndHistoryService;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class HtmxSoapAndHistoryController {
     private final SoapAndHistoryService soapAndHistoryService;
     private final PetRepository petRepository;
     private final CustomerService customerService;
-    private final CostingService costingService;
+    private final ProductService productService;
     private final MessageSource messageSource;
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/history/{action}")
@@ -48,7 +48,7 @@ public class HtmxSoapAndHistoryController {
                 model
                         .addAttribute("headertitle", messageSource.getMessage("label.history.product", null, local))
                         .addAttribute("historyItems", soapAndHistoryService.getHistoryForProducts(petId))
-                        .addAttribute("categoryNames", costingService.getCategories())
+                        .addAttribute("categoryNames", productService.getCategories())
                         .addAttribute("fragment", "consult-module/visit/dialog/history/productshistory");
                 break;
             }

@@ -28,7 +28,7 @@
             <!-- General Information -->
             <legend>General Information</legend>
             <th:block
-                    th:insert="~{fragments/elements/dropdown::dbDropdown('lookupCostingCategory.id','label.costing.product.category', ${product.lookupCostingCategory.id}, ${categories}, true,'0')}"></th:block>
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('lookupProductCategory.id','label.costing.product.category', ${product.lookupProductCategory.id}, ${categories}, true,'0')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.costing.product.invoiceInformation','product.nomenclature','0')}"></th:block>
             <div class="grid">
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('salesPriceExTax','label.costing.product.cost',

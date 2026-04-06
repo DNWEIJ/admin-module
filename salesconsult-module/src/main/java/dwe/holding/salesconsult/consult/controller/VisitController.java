@@ -20,7 +20,7 @@ import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.controller.ProductController;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -63,7 +63,7 @@ public class VisitController {
     private final CustomerService customerService;
     private final LineItemService lineItemService;
     private final AppointmentVisitService appointmentVisitService;
-    private final CostingService costingService;
+    private final ProductService productService;
     private final ObjectMapper objectMapper;
     private final CustomerForm customerForm;
     private final AppointmentRepository appointmentRepository;
@@ -212,7 +212,7 @@ public class VisitController {
                         .sorted(Comparator.comparing(v -> v.getPet().getNameWithDeceased()))
                         .map(vist -> new PresentationElement(vist.getId(), vist.getPet().getNameWithDeceased())).toList())
                 // the analyse descriptions will be available when there is a description selected on the visit screen.
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("analyseDescription", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("templates", pref.getConsultTextRecords(objectMapper))
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())

@@ -1,9 +1,9 @@
 package dwe.holding.supplyinventory.repository;
 
-import dwe.holding.supplyinventory.model.Costing;
+import dwe.holding.supplyinventory.model.Product;
 
-public record CostingProjection(
-        Costing costing,
+public record ProductProjection(
+        Product product,
         Long supplyId,
         boolean groupedProduct,
         boolean pricingProduct

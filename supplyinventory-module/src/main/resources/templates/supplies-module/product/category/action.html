@@ -15,7 +15,8 @@
     <input id="version" name="version" th:value="${category.version}" type="hidden">
 
     <fieldset class="grid">
-        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('categoryName', 'category.category', 'category.category','0')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('categoryName', 'category.category', 'category.categoryName','0')}"></th:block>
+        <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','',${category.deleted},${yesNoOptions}, true, '0')}"></th:block>
     </fieldset>
 </form>
 </section>

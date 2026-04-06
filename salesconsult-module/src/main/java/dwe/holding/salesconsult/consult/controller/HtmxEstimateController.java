@@ -9,7 +9,7 @@ import dwe.holding.salesconsult.consult.service.EstimateService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class HtmxEstimateController {
     private final LineItemMapper lineItemMapper;
     private final CustomerService customerService;
     private final EstimateService estimateService;
-    private final CostingService costingService;
+    private final ProductService productService;
 
     @PostMapping("/customer/{customerId}/estimate/{estimateId}/{petId}")
     String saveHtmxEstimateLineItem(@PathVariable Long customerId, @PathVariable Long estimateId, @PathVariable Long petId,
@@ -52,13 +52,13 @@ public class HtmxEstimateController {
         model
                 .addAttribute("costingSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
                 .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
-                .addAttribute("categoryNames", costingService.getCategories());
+                .addAttribute("categoryNames", productService.getCategories());
         ModelHelper.updateLineItemsInModel(model, estimateService.getAllLineItems(estimateId, petId));
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
     @PostMapping("/customer/{customerId}/estimateforpet")
-    String saveHtmxEstimateForPet(@PathVariable Long customerId, EstimateForPet estimateForPetForm, Model model, RedirectAttributes redirect) {
+    String saveHtmxEstimateForPet(@PathVariable Long customerId, EstimateForPet estimateForPetForm, Model model) {
         // validate the customer exists
         customerService.searchCustomer(customerId);
         model.addAttribute("estimateForPet",

@@ -2,10 +2,11 @@ package dwe.holding.supplyinventory.controller;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.frontend.PresentationElement;
+import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.model.Supply;
 import dwe.holding.supplyinventory.repository.DistributorRepository;
-import dwe.holding.supplyinventory.repository.LookupCostingCategoryRepository;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import dwe.holding.supplyinventory.repository.SuppliesRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,11 +24,11 @@ import java.util.List;
 public class DistributorSuppliesController {
     private final SuppliesRepository suppliesRepository;
     private final DistributorRepository distributorRepository;
-    private final LookupCostingCategoryRepository lookupCostingCategoryRepository;
+    private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
     @GetMapping("/supplies")
     String listScreen(Model model, @RequestParam(required = false) Boolean dialog) {
-        dialog = dialog == null ? false : dialog;
+        dialog = dialog != null && dialog;
 
         setModelData(model);
         model
@@ -54,8 +55,7 @@ public class DistributorSuppliesController {
     String readCostingLineHtmx(Model model, @PathVariable Long supplyId) {
         model
                 .addAttribute("supply", suppliesRepository.findById(supplyId).orElseThrow())
-                .addAttribute("categories", lookupCostingCategoryRepository.findByMemberIdInOrderByCategory(List.of(AutorisationUtils.getCurrentUserMid(), -1))
-                        .stream().map(loocategory -> new PresentationElement(loocategory.getId(), loocategory.getCategory())).toList())
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
         ;
         return "supplies-module/distributor/supplies/htmx/suppliesbody::editableTR";
     }

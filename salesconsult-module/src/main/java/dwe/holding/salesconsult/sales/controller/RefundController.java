@@ -12,7 +12,8 @@ import dwe.holding.salesconsult.sales.model.Refund;
 import dwe.holding.salesconsult.sales.repository.RefundRepository;
 import dwe.holding.salesconsult.sales.repository.dsl.RefundListDsl;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.expose.CostingService;
+import dwe.holding.supplyinventory.expose.ProductService;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class RefundController {
     private final RefundListDsl refundListDsl;
     private final RefundRepository refundRepository;
     private final LineItemService lineItemService;
-    private final CostingService costingService;
+    LookupProductCategoryRepository lookupProductCategoryRepository;
     private final CustomerService customerService;
     private final LineItemMapper lineItemMapper;
 
@@ -129,9 +130,9 @@ public class RefundController {
 
 
     @GetMapping("/customer/{customerId}/refund/{refundId}")
-    // Since for new we need to use a sessionStorage, to ensure we add the refund direclty with all info,
-    // we will move the lines to the session lineitem and on save we will remove all lineitems and add them again.
-    // Since refunds are not happing that much, the easiest solution instead of finding out changed/new etc.
+        // Since for new we need to use a sessionStorage, to ensure we add the refund direclty with all info,
+        // we will move the lines to the session lineitem and on save we will remove all lineitems and add them again.
+        // Since refunds are not happing that much, the easiest solution instead of finding out changed/new etc.
     String getRefund(Model model, @NotNull @PathVariable Long customerId, @NotNull @PathVariable Long refundId) {
         customerService.searchCustomer(customerId);
         Refund refund = refundRepository.findByIdAndCustomerId(refundId, customerId).orElseThrow();
@@ -174,7 +175,7 @@ public class RefundController {
     private void updateModel(Long customerId, Model model) {
         model
                 .addAttribute("costingSearchUrl", SALES_PRICE_SELL.formatted(customerId))
-                .addAttribute("categoryNames", costingService.getCategories())
+                .addAttribute("categoryNames", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)
                 .addAttribute("salesType", SalesType.PRICE_INFO);

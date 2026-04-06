@@ -15,25 +15,26 @@
         <input id="version" name="version" th:value="${distributor.version}" type="hidden">
 
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('distributorName', #{label.distributor.distributorName}, 'distributor.distributorName','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('distributorName', 'label.distributor.distributorName', 'distributor.distributorName','1')}"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1', #{label.distributor.address1}, 'distributor.address1','2')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2', #{label.distributor.address2}, 'distributor.address2','3')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3', #{label.distributor.address3}, 'distributor.address3','4')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1', 'label.distributor.address1', 'distributor.address1','2')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2', 'label.distributor.address2', 'distributor.address2','3')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3', 'label.distributor.address3', 'distributor.address3','4')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode', #{label.distributor.zipCode}, 'distributor.zipCode','5')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city', #{label.distributor.city}, 'distributor.city','6')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('state', #{label.distributor.state}, 'distributor.state','7')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode', 'label.distributor.zipCode', 'distributor.zipCode','5')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city', 'label.distributor.city', 'distributor.city','6')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('state', 'label.distributor.state', 'distributor.state','7')}" th:with="required=false"></th:block>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1', #{label.distributor.phone1}, 'distributor.phone1','8')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2', #{label.distributor.phone2}, 'distributor.phone2','9')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('fax', #{label.distributor.fax}, 'distributor.fax','10')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', #{label.distributor.email}, 'distributor.email','11')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('url', #{label.distributor.url}, 'distributor.url','12')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1', 'label.distributor.phone1', 'distributor.phone1','8')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2', 'label.distributor.phone2', 'distributor.phone2','9')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('fax', 'label.distributor.fax', 'distributor.fax','10')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', 'label.distributor.email', 'distributor.email','11')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('url', 'label.distributor.url', 'distributor.url','12')}" th:with="required=false"></th:block>
         </fieldset>
+
         <fieldset class="grid" >
             <label for="comments">General Comments:
                 <textarea cols="60" id="comments" name="comments" rows="6" tabindex="13" th:text="${comments}"></textarea>

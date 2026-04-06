@@ -21,11 +21,11 @@
         <th:block th:each="distributor : ${distributors}">
             <tr>
                 <td><a th:href="@{'/supplies/distributor/'+ ${distributor.id}}">[[${distributor.distributorName}]]</a></td>
-                <th>[[${distributor.email}]]</th>
-                <th>[[${distributor.phone}]]</th>
-                <th>[[${distributor.address}]]</th>
-                <th>[[${distributor.city}]]</th>
-                <th>[[${distributor.zipCode}]]</th>
+                <td th:text="${distributor.email}"></td>
+                <td th:text="${distributor.phone}"></td>
+                <td th:text="${distributor.address}"></td>
+                <td th:text="${distributor.city}"></td>
+                <td th:text="${distributor.zipCode}"></td>
             </tr>
         </th:block>
         </tbody>

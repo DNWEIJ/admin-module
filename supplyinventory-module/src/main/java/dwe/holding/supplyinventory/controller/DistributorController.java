@@ -24,6 +24,26 @@ public class DistributorController {
         this.distributorRepository = distributorRepository;
     }
 
+    @GetMapping("/distributors")
+    String listScreen(Model model) {
+        model.addAttribute("action", "List");
+        model.addAttribute("distributors", distributorRepository.findAll());
+        return "supplies-module/distributor/list";
+    }
+
+    @GetMapping("/distributor")
+    String DistributorScreen(Model model) {
+        model.addAttribute("action", "Create");
+        setModelData(model, new Distributor());
+        return "supplies-module/distributor/action";
+    }
+
+    @GetMapping("/distributor/{id}")
+    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
+        model.addAttribute("action", "Edit");
+        setModelData(model, distributorRepository.findById(id).orElseThrow());
+        return "supplies-module/distributor/action";
+    }
 
     @PostMapping("/distributor")
     String save(@Valid Distributor distributor, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
@@ -36,32 +56,10 @@ public class DistributorController {
         distributor.setId(null);
         distributor.setVersion(null);
         distributor.setMemberId(AutorisationUtils.getCurrentUserMid());
-        Distributor savedDistributor = distributorRepository.save(distributor);
+        distributorRepository.save(distributor);
 
         redirect.addFlashAttribute("message", "label.saved");
         return "redirect:/supplies/distributors";
-    }
-
-    @GetMapping("/distributor")
-    String DistributorScreen(Model model) {
-        model.addAttribute("action", "Create");
-        setModelData(model, new Distributor());
-        return "supplies-module/distributor/action";
-    }
-
-
-    @GetMapping("/distributor/{id}")
-    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
-        model.addAttribute("action", "Edit");
-        setModelData(model, distributorRepository.findById(id).orElseThrow());
-        return "supplies-module/distributor/action";
-    }
-
-    @GetMapping("/distributors")
-    String listScreen(Model model) {
-        model.addAttribute("action", "List");
-        model.addAttribute("distributors", distributorRepository.findAll());
-        return "supplies-module/distributor/list";
     }
 
     private void setModelData(Model model, Distributor distributor) {

@@ -41,6 +41,7 @@ public class TenantEntityListener {
                         if (AutorisationUtils.isLoggedIn()) {
                             ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
                         } else {
+                            log.error("Current user is not logged in. This should never happen");
                             ReflectionUtils.setField(field, entity, 77L);
                         }
                     }
