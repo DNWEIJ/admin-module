@@ -18,6 +18,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector("#costingSearchForm");
+            if (form == null) return
             form.setAttribute("hx-post", form.getAttribute("hx-post") + "/lineitem");
             htmx.process(form);
             // // validate checkbox and set it

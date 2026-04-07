@@ -39,12 +39,15 @@
             </div>
         </fieldset>
         <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','label.costing.product.quickReferenceCode','product.shortCode','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','label.costing.product.quickReferenceCode','product.shortCode','0')}"
+                      th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('barcode','label.costing.product.barcode','product.barcode','0')}" th:with="required=false"></th:block>
             <th:block
-                    th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.batchRegistered',${product.hasBatchNr},${yesNoOptions}, true, '0')}" th:with="required=false"></th:block>
+                    th:insert="~{fragments/elements/dropdown::propDropdown('batch','label.costing.product.batchRegistered',${product.hasBatchNr},${yesNoOptions}, true, '0')}"
+                    th:with="required=false"></th:block>
             <th:block
-                    th:insert="~{fragments/elements/dropdown::propDropdown('spillage','label.costing.product.spillageAccounted',${product.hasSpillage},${yesNoOptions}, true, '0')}" th:with="required=false"></th:block>
+                    th:insert="~{fragments/elements/dropdown::propDropdown('spillage','label.costing.product.spillageAccounted',${product.hasSpillage},${yesNoOptions}, true, '0')}"
+                    th:with="required=false"></th:block>
         </fieldset>
         <!-- Tabs Sections -->
         <hr/>
@@ -63,45 +66,56 @@
             <input type="radio" name="product-tabs" id="tab-prescription">
             <label for="tab-prescription" th:text="#{label.costing.product.prescriptionLabel}"></label>
             <input type="radio" name="product-tabs" id="tab-actions">
+            <label for="tab-actions" th:text="#{label.costing.product.additionalActions}"></label>
 
             <div class="panels">
-                <section class="panel">
+                <section class="panel" id="panel-reminder">
                     <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('reminderNomenclature','label.costing.product.reminderDescription','product.reminderNomenclature','0')}" th:with="required=false"></th:block>
+                            th:insert="~{fragments/elements/input::inputHtmlLift('reminderNomenclature','label.costing.product.reminderDescription','product.reminderNomenclature','0')}"
+                            th:with="required=false"></th:block>
                     <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('intervalInWeeks','label.costing.product.intervalInWeeks','product.intervalInWeeks','0')}" th:with="type='number'"></th:block>
+                            th:insert="~{fragments/elements/input::inputHtmlLift('intervalInWeeks','label.costing.product.intervalInWeeks','product.intervalInWeeks','0')}"
+                            th:with="type='number'"></th:block>
                     <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('rRemovePendingRemindersContaining','label.costing.product.removePendingReminders','product.rRemovePendingRemindersContaining','8')}" th:with="required=false"></th:block>
+                            th:insert="~{fragments/elements/input::inputHtmlLift('rRemovePendingRemindersContaining','label.costing.product.removePendingReminders','product.rRemovePendingRemindersContaining','8')}"
+                            th:with="required=false"></th:block>
                 </section>
-                <section class="panel">
-                    <th:block th:insert="~{supplies-module/product/htmx/productsupplypart}"></th:block>
+                <section class="panel" id="panel-supply">
+                    <th:block th:replace="~{supplies-module/product/htmx/productsupplypart}"></th:block>
                 </section>
-                <section class="panel" th:if="${product.id == null}">
-                    <div style="font-style: italic"><b>[[#{label.costing.product.groupingExplenation}]]</b></div>
+                <section class="panel" id="panel-groups">
+                    <div th:if="${product.id == null}">
+                        <div style="font-style: italic"><b>[[#{label.costing.product.groupingExplenation}]]</b></div>
+                    </div>
+                    <div th:if="${product.id != null}">
+                        <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
+                    </div>
                 </section>
-                <section class="panel" th:if="${product.id != null}">
-                    <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
+                <section class="panel" id="panel-certificate">
+                    <div>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','0')}"
+                            th:with="required=false"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','0')}"
+                            th:with="required=false"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','0')}"
+                            th:with="required=false"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','0')}"
+                            th:with="type='date',required=false"></th:block>
+                    </div>
                 </section>
-
-                <section class="panel">
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','0')}" th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','0')}" th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','0')}" th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','0')}" th:with="type='date',required=false"></th:block>
-                </section>
-                <section class="panel">
+                <section class="panel" id="panel-instructions">
                     <label for="instructions" th:text="#{label.costing.product.instructions}"></label>
                     <textarea cols="80" id="instructions" name="instructions" rows="8" th:text="${product.instructions}"></textarea>
                 </section>
-                <section class="panel">
+                <section class="panel" id="panel-prescription">
                     <label for="prescriptionLabel" th:text="#{label.costing.product.prescriptionLabel}"></label>
                     <textarea cols="80" id="prescriptionLabel" name="prescriptionLabel" rows="8" th:text="${product.prescriptionLabel}"></textarea>
                 </section>
-                <section class="panel">
+                <section class="panel"  id="panel-actions">
                     <label for="deceasedPetPrompt" th:text="#{label.costing.product.deceasedPetPrompt}"></label>
                     <label><input id="deceasedPetPrompt" name="deceasedPetPrompt" type="checkbox" th:checked="${product.deceasedPetPrompt}"></label>
                 </section>

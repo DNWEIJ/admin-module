@@ -1,8 +1,8 @@
-package dwe.holding.supplyinventory.controller;
+package dwe.holding.supplyinventory.controller.distributor;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.controller.ProductController;
 import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import dwe.holding.supplyinventory.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -21,6 +21,12 @@ public class ProductInventoryController {
     private final LookupProductCategoryRepository lookupProductCategoryRepository;
     private final ProductRepository productRepository;
 
+
+//    SELECT * FROM new_vmas.supply_costing where supply_id =3240;
+//    SELECT * FROM new_vmas.supply_supply where id = 3240;
+//    SELECT * FROM new_vmas.supply_supplylocal where supply_id = 3240;
+//
+//
     @GetMapping("/inventory")
     String showListPage(Model model, ProductController.ListForm form) {
         if (form.inputCostingId() == null && form.categoryId() == null)

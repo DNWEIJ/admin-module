@@ -1,8 +1,9 @@
-package dwe.holding.supplyinventory.controller;
+package dwe.holding.supplyinventory.controller.distributor;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.controller.ProductController;
 import dwe.holding.supplyinventory.model.Distributor;
 import dwe.holding.supplyinventory.model.Supply;
 import dwe.holding.supplyinventory.repository.DistributorRepository;

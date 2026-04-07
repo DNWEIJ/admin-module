@@ -22,7 +22,7 @@
 
         <details id="visitInfo" open>
             <summary>
-                <span th:text="#{visit.info.title}"></span><a href="/info/visitinfo" title="More info" class="emoji-icon">ℹ️</a>
+                <span th:text="#{visit.info.title}"></span><a href="/info/visit" title="More info" class="emoji-icon">ℹ️</a>
             </summary>
             <div class="grid">
                 <!-- define extra buttons to add behind -->
@@ -75,7 +75,7 @@
         </details>
         <details id="analyses" open>
             <summary>
-                <span th:text="#{visit.analyse.title}"></span><a href="/info/customerpetinfo" title="More info" class="emoji-icon">ℹ️</a>
+                <span th:text="#{visit.analyse.title}"></span><a href="/info/customerpet" title="More info" class="emoji-icon">ℹ️</a>
             </summary>
             <div id="analyseReplaceHtmx">
                 <th:include th:replace="~{consult-module/visit/analyse}"></th:include>
@@ -89,7 +89,7 @@
                    hx-target="#modal-container"
                    hx-swap="innerHTML">️🛒</a>
                 <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
-                <a href="/info/lineiteminfo" title="More info" class="emoji-icon">ℹ️</a>
+                <a href="/info/lineitem" title="More info" class="emoji-icon">ℹ️</a>
             </summary>
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
             <!-- TODO: Check on visit isOpen -->
@@ -103,7 +103,7 @@
                    th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/diagnose'}"
                    hx-target="#modal-container" hx-swap="innerHTML">🏷️</a>
                 <span class="center-text" th:text="#{label.diagnose}"></span>
-                <a href="/info/visitinfo" title="More info" class="emoji-icon">ℹ️</a>
+                <a href="/info/diagnose" title="More info" class="emoji-icon">ℹ️</a>
             </summary>
             <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>
         </details>

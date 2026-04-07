@@ -38,7 +38,7 @@ spring:
 #      use_sql_comments: true
 
 #        format_sql: true
-    show_sql: true
+#    show_sql: true
   ssl:
     bundle:
       jks:
@@ -80,9 +80,9 @@ logging:
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.hibernate.tool.schema: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.type.descriptor.sql: TRACE
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.orm.jdbc.bind: TRACE
+#    org.hibernate.type.descriptor.sql: TRACE
 
 
 server:

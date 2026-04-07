@@ -18,7 +18,7 @@
         <th:block th:each="categoryDto : ${categories}">
             <tr>
                 <td><a th:href="@{'/product/category/'+ ${categoryDto.LookupProductCategory.id}}" th:text="${categoryDto.LookupProductCategory.categoryName}"></a></td>
-                <td th:text="${categoryDto.LookupProductCategory.deleted}"></td>
+                <td th:text="#{__${categoryDto.LookupProductCategory.deleted.label}__}"></td>
                 <td th:text="${categoryDto.countRec}"></td>
             </tr>
         </th:block>

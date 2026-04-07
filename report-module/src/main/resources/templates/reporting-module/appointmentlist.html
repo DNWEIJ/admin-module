@@ -3,56 +3,64 @@
     <title th:text="#{label.title.appoinmentlist}"></title>
 </head>
 <body>
-<section layout:fragment="content">
-    <form action="" method="get">
-        <fieldset>
-            <div class="grid">
-                <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
-                    <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
-                           th:value="${#temporals.format(form.from, 'yyyy-MM-dd')}">
-                </label>
-                <label th:for="visitDateTimeEnd">[[#{visit.headerlist.untill}]]
-                    <input id="visitDateTimeEnd" name="includeTill" required type="date" autocomplete="off"
-                           max="9999-01-01"
-                           th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
-                </label>
-                <th:block
-                        th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"
-                        th:with="isSelectAll=true"></th:block>
-                <th:block
-                        th:insert="~{fragments/elements/dropdown::propDropdown('invoiceSend','visit.headerlist.send', ${form.invoiceSend}, ${ynvaluesList}, true,'0')}"
-                        th:with="required=false">
-                </th:block>
 
-                <div style="display: flex; align-self: stretch;">
-                    <div style="display: flex; align-items: center;">
-                        <th:block
-                                th:insert="~{fragments/elements/select::selectCheckBox('showAmountDiff',#{label.visit.checkbox.amountdiff},${form.showAmountDiff},'0')}"></th:block>
+<section layout:fragment="content">
+    <details id="reportRemindersInfo" open>
+        <summary>
+            <span th:text="#{label.report.consult.input.title}"></span><a href="/info/report/visit" title="More info" class="emoji-icon">ℹ️</a>
+        </summary>
+
+        <form action="" method="get">
+            <fieldset>
+                <div class="grid">
+                    <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
+                        <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
+                               th:value="${#temporals.format(form.from, 'yyyy-MM-dd')}">
+                    </label>
+                    <label th:for="visitDateTimeEnd">[[#{visit.headerlist.untill}]]
+                        <input id="visitDateTimeEnd" name="includeTill" required type="date" autocomplete="off"
+                               max="9999-01-01"
+                               th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
+                    </label>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"
+                            th:with="isSelectAll=true"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::propDropdown('invoiceSend','visit.headerlist.send', ${form.invoiceSend}, ${ynvaluesList}, true,'0')}"
+                            th:with="required=false">
+                    </th:block>
+
+                    <div style="display: flex; align-self: stretch;">
+                        <div style="display: flex; align-items: center;">
+                            <th:block
+                                    th:insert="~{fragments/elements/select::selectCheckBox('showAmountDiff',#{label.visit.checkbox.amountdiff},${form.showAmountDiff},'0')}"></th:block>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <input type="submit" th:value="#{label.button.search}"/>
+                <input type="submit" th:value="#{label.button.search}"/>
 
-            <table data-no-highlight data-no-export>
-                <tr>
-                    <td colspan="2">
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('showPetname',#{label.visit.checkbox.petname},${form.showPetname},'0')}"></th:block>
-                    </td>
-                    <td colspan="2">
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('showVetroom',#{label.visit.checkbox.vetroom},${form.showVetroom},'0')}"></th:block>
-                    </td>
-                    <td colspan="2">
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('showInsurance',#{label.visit.checkbox.insurance},${form.showInsurance},'0')}"></th:block>
-                    </td>
-                    <td colspan="2">
-                        <th:block th:insert="~{fragments/elements/select::selectCheckBox('showInvoice',#{label.visit.checkbox.amount},${form.showInvoice},'0')}"></th:block>
-                    </td>
-                    <td colspan="2">
-                    </td>
-                </tr>
-            </table>
-        </fieldset>
-    </form>
+                <table data-no-highlight data-no-export>
+                    <tr>
+                        <td colspan="2">
+                            <th:block th:insert="~{fragments/elements/select::selectCheckBox('showPetname',#{label.visit.checkbox.petname},${form.showPetname},'0')}"></th:block>
+                        </td>
+                        <td colspan="2">
+                            <th:block th:insert="~{fragments/elements/select::selectCheckBox('showVetroom',#{label.visit.checkbox.vetroom},${form.showVetroom},'0')}"></th:block>
+                        </td>
+                        <td colspan="2">
+                            <th:block
+                                    th:insert="~{fragments/elements/select::selectCheckBox('showInsurance',#{label.visit.checkbox.insurance},${form.showInsurance},'0')}"></th:block>
+                        </td>
+                        <td colspan="2">
+                            <th:block th:insert="~{fragments/elements/select::selectCheckBox('showInvoice',#{label.visit.checkbox.amount},${form.showInvoice},'0')}"></th:block>
+                        </td>
+                        <td colspan="2">
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+    </details>
     <div class="table-wrapper">
         <table id="appointmentList" data-multi-select class="table-tight">
             <thead>

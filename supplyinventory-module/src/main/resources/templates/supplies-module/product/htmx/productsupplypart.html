@@ -1,30 +1,29 @@
-<div>
-    Zonder gekoppelde leveranciersproduct is er geen automatische voorraadtracking.<br/>
-    Zodra een leveranciersproduct wordt gekoppeld, >kan voorraad worden gevolgd.<br/>
-    Nu kunnen er ook meldingen bij lage voorraad worden ingesteld op basis van productverkoop.<br/>
-<br/>
-    <h4>Scenario’s:</h4>
-    <dl>
-        <dt><b>Geen tracking</b></dt>
-        <dd>
-            Geen leverancier gekoppeld
-            Geen velden ingevuld
-            Geen automatische voorraadregistratie
-        </dd>
-        <dt><b>Eenvoudige tracking (productniveau)</b>
-        </dt>
-        <dd>
-            Verplichte veld: Hoeveelheid (aantal verkoopbare items op voorraad; wordt automatisch verlaagd bij verkoop en gebruikt voor herbevoorrading)
-            Optioneel: distributeur, distributeurBeschrijving, artikelnummer, barcode
-        </dd>
-        <dt><b>Geavanceerde tracking</dt>
-        <dd>
-            Distributeur koppelen via een distributeurs produkt
-            Meer geautomatiseerde en nauwkeurige voorraadcontrole
-            Status: er is nog geen voorraadrecord gekoppeld.
-        </dd>
-    </dl>
+<div id="supplyPartForTab">
+    <fieldset>
+        Zonder gekoppelde leveranciersproduct is er geen automatische voorraadtracking.<br/>
+        Zodra een leveranciersproduct wordt gekoppeld, >kan voorraad worden gevolgd.<br/>
+        Nu kunnen er ook meldingen bij lage voorraad worden ingesteld op basis van productverkoop.<br/>
+        <br/>
 
+        <dl>
+            <h4>Scenario’s:</h4>
+            <dt><b>Geen tracking</b></dt>
+            <dd>
+                Geen leverancier gekoppeld<br/>
+                Geen velden ingevuld<br/>
+            </dd>
+            <dt><b>Eenvoudige tracking (productniveau niet per locatie)</b></dt>
+            <dd>
+                Verplichte veld: Hoeveelheid (aantal verkoopbare items op voorraad; wordt automatisch verlaagd bij verkoop en gebruikt voor herbevoorrading)
+                Optioneel: distributeur, distributeurBeschrijving, artikelnummer, barcode
+            </dd>
+            <dt><b>Geavanceerde tracking</b></dt>
+            <dd>
+                Distributeur koppelen via een distributeurs produkt
+                Geautomatiseerde en nauwkeurige voorraadcontrole per locatie
+            </dd>
+        </dl>
+    </fieldset>
 
     <div th:if="${product.supply == null}">
         <div th:text="#{label.costing.product.nosupply}"></div>
@@ -59,6 +58,7 @@
             </tr>
             </tbody>
         </table>
+
         <input type="submit" th:value="#{label.button.delete}"
                th:hx-confirm="#{label.delete.confirm}" th:hx-delete="'/product/product/'+${product.id}+'/supply/'+ ${product.supply.id}"
                hx-target="#supplyReplaceHtmx"/>

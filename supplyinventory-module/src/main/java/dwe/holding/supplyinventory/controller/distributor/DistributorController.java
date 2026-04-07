@@ -1,4 +1,4 @@
-package dwe.holding.supplyinventory.controller;
+package dwe.holding.supplyinventory.controller.distributor;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
