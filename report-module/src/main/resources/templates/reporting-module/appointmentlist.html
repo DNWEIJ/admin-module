@@ -7,11 +7,11 @@
 <section layout:fragment="content">
     <details id="reportRemindersInfo" open>
         <summary>
-            <span th:text="#{label.report.consult.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit" title="More info" class="emoji-icon">ℹ️</a>
+            <span th:text="#{label.report.consult.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit" title="More information" class="emoji-icon">ℹ️</a>
         </summary>
 
         <form action="" method="get">
-            <fieldset>
+
                 <div class="grid">
                     <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
                         <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
@@ -58,7 +58,6 @@
                         </td>
                     </tr>
                 </table>
-            </fieldset>
         </form>
     </details>
     <div class="table-wrapper">

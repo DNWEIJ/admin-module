@@ -16,8 +16,14 @@
             display: block;
         }
     </style>
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${product.id}, 'Product','/product/products')}"></th:block>
+    <details open>
+        <summary>
+            <span th:text="#{label.report.category.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/categories/edit" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
 
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${product.id}, 'Product','/product/products')}"></th:block>
+    </details>
     <form th:action="@{/product}" method="post">
         <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
         <fieldset class="grid">

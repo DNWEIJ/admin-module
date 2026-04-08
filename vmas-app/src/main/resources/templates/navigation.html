@@ -181,7 +181,7 @@
                                 fill: var(--pico-card-background-color, #ffffff);
                             }
 
-                            .muted {
+                            .muted
                                 fill: var(--pico-muted-border-color, #ccd6e0);
                             }
 
@@ -318,9 +318,8 @@
                     <ul>
                         <li><a th:href="@{/report/visits}">Consult list</a></li>
                         <li><a th:href="@{/report/reminders}">Report Reminders</a></li>
-                        <li><a th:href="@{/admin/user}">Agenda Tasks</a></li>
+                        <li><a href="">TODO Agenda Tasks</a></li>
                         <li><a th:href="@{/report/customerlist}">(E)mail customers</a></li>
-                        <li><a th:href="@{/admin/user}">Reports</a></li>
                     </ul>
                 </details>
             </li>
@@ -330,8 +329,8 @@
                     <ul>
                         <li><a th:href="@{/supplies/distributors}">Distributor</a></li>
                         <li><a th:href="@{/supplies/distributor/supplies}">Distributor supplies</a></li>
-                        <li><a th:href="@{/supplies/distributor/supplies}">TODO Create purchase list</a></li>
-                        <li><a th:href="@{/supplies/distributor/supplies}">TOD Process inventory</a></li>
+                        <li><a th:href="@{/supplies/distributor/supplies}">TODO NEW: Create purchase list</a></li>
+                        <li><a th:href="@{/supplies/distributor/supplies}">TOD NEW: Process inventory</a></li>
                     </ul>
                 </details>
             </li>
@@ -351,12 +350,14 @@
                     <summary>Financials</summary>
                     <ul>
                         <li><a th:href="@{/report/payment}">Payments</a></li>
-                        <li><a th:href="@{/admin/user}">Cash Flow</a></li>
-                        <li><a th:href="@{/admin/user}">Cash Basis</a></li>
-                        <li><a th:href="@{/admin/user}">Accounts Receivable</a></li>
-                        <li><a th:href="@{/admin/user}">Misc Expenses</a></li>
                         <li><a th:href="@{/sales/price/refund}">Refunds</a></li>
-                        <li><a th:href="@{/admin/user}">Reminder Invoice</a></li>
+                        <li><a href="">TODO: Misc Expenses</a></li>
+                        <li style="text-align: center">---   ---   ---  ---</li>
+                        <li><a href="">TODO: Cash Flow</a></li>
+                        <li><a href="">TODO: Cash Basis</a></li>
+                        <li><a href="">TOD: Accounts Receivable</a></li>
+
+                        <li><a href="">TODO: Email Reminder Invoice</a></li>
                     </ul>
                 </details>
             </li>
@@ -380,7 +381,7 @@
                             </details>
                         </li>
                         <li><a th:href="@{/admin/analyse/descriptions}">Analyses</a></li>
-                        <li><a th:href="@{/admin/user}">Indicators</a></li>
+                        <li><a href="">TODO Indicators</a></li>
                         <li><a th:href="@{/report/templates}">Maintain templates</a></li>
                     </ul>
                 </details>
@@ -392,7 +393,7 @@
                         <li><a th:href="@{/admin/members}">Member</a></li>
                         <li><a th:href="@{/admin/functions}">Function</a></li>
                         <li><a th:href="@{/admin/roles}">Role</a></li>
-                        <li><a th:href="@{/admin/manuals}">Manuals</a></li>
+                        <li><a th:href="@{/admin/manuals}">NEW Manuals</a></li>
                     </ul>
                 </details>
             </li>

@@ -4,6 +4,11 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <details open>
+        <summary>
+            <span th:text="#{label.report.product.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/products" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Products','/product/product')}"></th:block>
     <fieldset>
     <div class="grid">
@@ -12,6 +17,7 @@
         </div>
     </div>
     </fieldset>
+    </details>
     <table id="productTable" class="table-tight table-striped">
         <thead>
         <tr>

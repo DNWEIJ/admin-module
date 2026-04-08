@@ -4,7 +4,13 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Pricing','/product/pricing')}"></th:block>
+    <details open>
+        <summary>
+            <span th:text="#{label.report.pricing.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/pricing" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Pricing','')}"></th:block>
+    </details>
     <fieldset>
         <div class="grid">
             <div>

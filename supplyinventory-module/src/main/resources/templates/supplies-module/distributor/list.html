@@ -4,8 +4,13 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Distributor','/supplies/distributor')}"></th:block>
-
+    <details open>
+        <summary>
+            <span th:text="#{label.report.distributor.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/distributor" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Distributor','/supplies/distributor')}"></th:block>
+    </details>
     <table class="table-tight striped" id="show-table">
         <thead>
         <tr>

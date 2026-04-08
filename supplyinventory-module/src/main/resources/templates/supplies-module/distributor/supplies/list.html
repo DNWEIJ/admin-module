@@ -4,30 +4,31 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{supplies.supplies},'/supplies/distributor/supply')}"></th:block>
-    <th:block th:insert="~{this::formSelectSuppliesFromDistributorList(isFromHere=true)}"></th:block>
+    <details open>
+        <summary>
+            <span th:text="#{label.report.supplies.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/supplies" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{supplies.supplies},'/supplies/distributor/supply')}"></th:block>
 
-    <script>
-        document.body.addEventListener('htmx:afterSwap', function (event) {
-            window.updateTableFooterCount(document.getElementById("suppliesTable"))
-            highlightRowOnTable()
-        });
-    </script>
+        <script>
+            document.body.addEventListener('htmx:afterSwap', function (event) {
+                window.updateTableFooterCount(document.getElementById("suppliesTable"))
+                highlightRowOnTable()
+            });
+        </script>
+        <form name="distributorId" id="distributorId" hx-post="/supplies/distributor/supplies" hx-trigger="change from:#distributorName"
+              hx-target="#supplyItemsTable" hx-indicator="#searching-indicator2" hx-swap="outerHTML">
+
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('distributorName','','distributorId',${distributorList},true,'0')}"></th:block>
+        </form>
+    </details>
+    <th:block th:insert="~{this::formSelectSuppliesFromDistributorList(isFromHere=true)}"></th:block>
 </section>
 
 <th:block th:fragment="formSelectSuppliesFromDistributorList(isFromHere)">
-    <form name="distributorId" id="distributorId" hx-post="/supplies/distributor/supplies" hx-trigger="change from:#distributorName"
-          hx-target="#supplyItemsTable" hx-indicator="#searching-indicator2" hx-swap="outerHTML">
-        <span>++[[${isFromHere}]]++</span>
-        <fieldset class="grid">
-            <div>
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('distributorName','','distributorId',${distributorList},true,'0')}"></th:block>
-            </div>
-        </fieldset>
-    </form>
     <table id="suppliesTable" class="table-tight table-striped">
         <thead>
-
         <tr th:if="${isFromHere}">
             <th class="no-sorting"></th>
             <th data-order="2" th:text="#{label.supplies.nomenclature}"></th>

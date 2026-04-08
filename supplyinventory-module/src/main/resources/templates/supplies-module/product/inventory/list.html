@@ -4,10 +4,10 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <details id="reportRemindersInfo" open>
+    <details open>
         <summary>
-            <span th:text="#{label.inventory.title.selection}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/inventory"
-                                                                         title="More info" class="emoji-icon">ℹ️</a>
+            <span th:text="#{label.inventory.title.selection}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/inventory" title="More information" class="emoji-icon">ℹ️</a>
         </summary>
         <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.inventory.title},'')}"></th:block>
         <div class="grid">
@@ -18,10 +18,10 @@
         <table data-no-highlight data-no-export>
             <tr>
                 <td>
-                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('showProduct',#{label.visit.checkbox.vetroom},true,'0')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('showProduct',#{label.inventory.checkbox.product},true,'0')}"></th:block>
                 </td>
                 <td>
-                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('showSupplyItem',#{label.visit.checkbox.petname},true,'0')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('showSupplyItem',#{label.inventory.checkbox.supply},true,'0')}"></th:block>
                 </td>
             </tr>
         </table>

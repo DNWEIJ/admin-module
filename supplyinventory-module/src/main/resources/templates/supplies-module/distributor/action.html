@@ -4,9 +4,14 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <details open>
+        <summary>
+            <span th:text="#{label.report.distributor.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/distributor/edit" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Distributor','/supplies/distributors')}"></th:block>
-
+    </details>
     <form th:action="@{/supplies/distributor}" method="post">
 
         <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>

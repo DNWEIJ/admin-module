@@ -4,19 +4,24 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <details open>
+        <summary>
+            <span th:text="#{label.report.category.input.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/categories/edit" title="More information" class="emoji-icon">ℹ️</a>
+        </summary>
 
-<th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Category','/product/categories')}"></th:block>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Category','/product/categories')}"></th:block>
+    </details>
+    <form th:action="@{/product/category}" method="post">
 
-<form th:action="@{/product/category}" method="post">
+        <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
 
-    <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
+        <input id="id" name="id" th:value="${category.id}" type="hidden">
+        <input id="version" name="version" th:value="${category.version}" type="hidden">
 
-    <input id="id" name="id" th:value="${category.id}" type="hidden">
-    <input id="version" name="version" th:value="${category.version}" type="hidden">
-
-    <fieldset class="grid">
-        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('categoryName', 'category.category', 'category.categoryName','0')}"></th:block>
-        <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','',${category.deleted},${yesNoOptions}, true, '0')}"></th:block>
-    </fieldset>
-</form>
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('categoryName', 'category.category', 'category.categoryName','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','',${category.deleted},${yesNoOptions}, true, '0')}"></th:block>
+        </fieldset>
+    </form>
 </section>
