@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "SUPPLY_COSTING_SPILLAGE_USAGE")
+@Table(name = "SUPPLY_PRODUCT_SPILLAGE_USAGE")
 @Entity
 @Getter
 @Setter
@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class ProductSpillageUsage extends MemberBaseBO {
 
     @Column(nullable = false)
-    private Long costingSpillageId;
+    private Long productSpillageId;
 
     @Column(nullable = false)
     private Long lineItemId;

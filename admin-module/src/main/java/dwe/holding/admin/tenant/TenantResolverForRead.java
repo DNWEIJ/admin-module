@@ -14,7 +14,8 @@ public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
         if (AutorisationUtils.isLoggedIn()) {
             return AutorisationUtils.getCurrentUserMid();
         } else {
-           return 0L;
+            // TODO put to zeor, for now we only have GWZ and we need it for the migration of balance
+           return 77L;
         }
     }
 

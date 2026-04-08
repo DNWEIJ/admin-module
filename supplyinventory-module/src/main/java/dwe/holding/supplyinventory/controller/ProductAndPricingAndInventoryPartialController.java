@@ -18,8 +18,11 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/product")
-public class ProductAndPricingPartialController {
+public class ProductAndPricingAndInventoryPartialController {
 
+    public static final String PRICING = "pricing";
+    public static final String INVENTORY = "inventory";
+    public static final String PRODUCT = "product";
     private final ProductRepository productRepository;
     private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
@@ -29,12 +32,14 @@ public class ProductAndPricingPartialController {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
-                .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
+                .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
+                .addAttribute("locals", AutorisationUtils.getLocalMemberMapShort())
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
                 .addAttribute("costingSearchForm", costingSearchForm)
         ;
-        return type.equals("pricing") ? "supplies-module/product/htmx/pricingsbody::editableTR" : "/supplies-module/product/htmx/productsbody::editableTR";
+        return type.equals(PRICING) ? "supplies-module/product/htmx/pricingsbody::editableTR" :
+                type.equals(INVENTORY) ? "supplies-module/product/inventory/inventorybody::editableTR" : "/supplies-module/product/htmx/productsbody::editableTR";
     }
 
     @GetMapping("/product/{costingId}/partialcancel/{type}")
@@ -42,6 +47,8 @@ public class ProductAndPricingPartialController {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(costingId, AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
+                .addAttribute("yesNoOptions", YesNoEnum.getWebList())
+                .addAttribute("locals", AutorisationUtils.getLocalMemberMapShort())
         ;
         LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
         model
@@ -49,7 +56,8 @@ public class ProductAndPricingPartialController {
                 .addAttribute("taxServicePercentage", taxes.getTaxHigh())
                 .addAttribute("isFormHere", true)
         ;
-        return type.equals("pricing") ? "supplies-module/product/htmx/pricingsbody::readonlyTR" : "/supplies-module/product/htmx/productsbody::readonlyTR";
+        return type.equals(PRICING) ? "supplies-module/product/htmx/pricingsbody::readonlyTR" :
+                type.equals(INVENTORY) ? "supplies-module/product/inventory/inventorybody::readonlyTR" : "/supplies-module/product/htmx/productsbody::readonlyTR";
     }
 
     @PostMapping("/product/{costingId}/partialsave/{type}")
@@ -58,12 +66,13 @@ public class ProductAndPricingPartialController {
 
         Product product = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
-        if (type.equals("pricing")) {
+        if (type.equals(PRICING)) {
             product.setUplift(productForm.getUplift());
             product.setSalesPriceExTax(productForm.getSalesPriceExTax());
             product.setProcessingFeeExTax(productForm.getProcessingFeeExTax());
             product.setTaxed(productForm.getTaxed());
-        } else {
+        }
+        if (type.equals(PRODUCT)) {
             product.setNomenclature(productForm.getNomenclature());
             product.setLookupProductCategory(lookupProductCategoryRepository.findById(productForm.getLookupProductCategory().getId()).orElseThrow());
             product.setShortCode(productForm.getShortCode());
@@ -71,17 +80,21 @@ public class ProductAndPricingPartialController {
             product.setHasBatchNr(productForm.getHasBatchNr());
             product.setHasSpillage(productForm.getHasSpillage());
         }
+        if (type.equals(INVENTORY)) {
+            // TODO:what to do?
+        }
         Product saved = productRepository.save(product);
         return cancelProductHtmx(model, saved.getId(), type);
     }
 
 
     /*
-            searchCosting search via Dropdown, showing all belonging products -> url defined in ProductController   .addAttribute("costingSearchUrl", "/product/search/product")
+            searchCosting search via Dropdown, showing all belonging products -> url defined in ProductController   .addAttribute("productSearchUrl", "/product/search/product")
             searchCosting search via typing, showing the selected product in edit mode
      */
-    @PostMapping(value = {"/product/lineitem", "/search/product"})
+    @PostMapping(value = {"/search/product/lineitem", "/search/product"})
     String userSelectedGetProductsHtmx(Model model, ProductController.ListForm form, @RequestHeader(value = "HX-Current-URL", required = false) String parentCallingUrl) {
+
         if (form.inputCostingId() == null && form.categoryId() == null) {
             model.addAttribute("products", List.of());
         } else {
@@ -97,11 +110,12 @@ public class ProductAndPricingPartialController {
                 .addAttribute("taxGoodPercentage", taxes.getTaxLow())
                 .addAttribute("taxServicePercentage", taxes.getTaxHigh())
                 .addAttribute("costingSearchForm", ProductController.getListForm(form))
+                .addAttribute("locals", AutorisationUtils.getLocalMemberMapShort())
         ;
         return
-                parentCallingUrl.contains("pricing") ?
+                parentCallingUrl.contains(PRICING) ?
                         "supplies-module/product/htmx/pricingsbody" :
-                        parentCallingUrl.contains("inventory") ?
+                        parentCallingUrl.contains(INVENTORY) ?
                                 "supplies-module/product/inventory/inventorybody" : "supplies-module/product/htmx/productsbody";
 
     }

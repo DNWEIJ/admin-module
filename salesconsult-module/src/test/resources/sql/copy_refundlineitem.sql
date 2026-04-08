@@ -14,7 +14,7 @@ INSERT INTO sales_refund_lineitem
  tax_portion_of_product,
  tax_portion_of_processing_fee_service,
  category_id,
- costing_id,
+ product_id,
  added_by,
  added_on,
  last_edited_by,

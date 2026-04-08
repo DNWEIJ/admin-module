@@ -1,9 +1,9 @@
-INSERT INTO supply_costing_group
+INSERT INTO supply_product_group
 (id,
  version,
  member_id,
- parent_costing_id,
- child_costing_id,
+ parent_product_id,
+ child_product_id,
  quantity,
  added_by,
  added_on,

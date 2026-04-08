@@ -13,19 +13,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByIdAndMemberId(Long id, Long MemberId);
 
     // numeric value
-    default List<dwe.holding.supplyinventory.model.projection.CostingProjection> getProductProjectionsWhenSearchCriteriaIsNumeric(String searchString, Long memberId) {
+    default List<dwe.holding.supplyinventory.model.projection.ProductProjection> getProductProjectionsWhenSearchCriteriaIsNumeric(String searchString, Long memberId) {
         return findByBarcodeOrShortCodeStartsWithOrNomenclatureContainsAndMemberId(Long.valueOf(searchString), searchString, searchString, memberId);
     }
 
-    List<dwe.holding.supplyinventory.model.projection.CostingProjection> findByBarcodeOrShortCodeStartsWithOrNomenclatureContainsAndMemberId(Long searchStringOne, String searchStringTwo, String searchStringThee, Long memberId);
+    List<dwe.holding.supplyinventory.model.projection.ProductProjection> findByBarcodeOrShortCodeStartsWithOrNomenclatureContainsAndMemberId(Long searchStringOne, String searchStringTwo, String searchStringThee, Long memberId);
 
-    default List<dwe.holding.supplyinventory.model.projection.CostingProjection> getProductOnNomenclature(String searchString, Long memberId) {
+    default List<dwe.holding.supplyinventory.model.projection.ProductProjection> getProductOnNomenclature(String searchString, Long memberId) {
         return findByNomenclatureContainsAndMemberIdAndDeletedOrShortCodeAndMemberIdAndDeleted(searchString, memberId, YesNoEnum.No, searchString, memberId, YesNoEnum.No);
     }
 
-    List<dwe.holding.supplyinventory.model.projection.CostingProjection> findByNomenclatureContainsAndMemberIdAndDeletedOrShortCodeAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no, String searchString1, Long memberId1, YesNoEnum no1);
+    List<dwe.holding.supplyinventory.model.projection.ProductProjection> findByNomenclatureContainsAndMemberIdAndDeletedOrShortCodeAndMemberIdAndDeleted(String searchString, Long memberId, YesNoEnum no, String searchString1, Long memberId1, YesNoEnum no1);
 
-    List<dwe.holding.supplyinventory.model.projection.CostingProjection> findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long memberId);
+    List<dwe.holding.supplyinventory.model.projection.ProductProjection> findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclature(Long lookupId, Long memberId);
 
     @Query("""
                 select DISTINCT c.reminderNomenclature as reminderText
@@ -42,11 +42,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             select new dwe.holding.supplyinventory.repository.ProductProjection(
                 c,
                 c.supply.id,
-                case when exists ( select 1 from ProductGroup cg where cg.parentCostingId = c.id )
+                case when exists ( select 1 from ProductGroup cg where cg.parentProductId = c.id )
                     then true
                     else false
                 end,
-                case when exists ( select 1 from ProductPricePromotion cg where cg.costingId = c.id )
+                case when exists ( select 1 from ProductPricePromotion cg where cg.productId = c.id )
                     then true
                     else false
                 end
@@ -60,11 +60,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             select new dwe.holding.supplyinventory.repository.ProductProjection(
                 c,
                 c.supply.id,
-                case when exists ( select 1 from ProductGroup cg where cg.parentCostingId = c.id )
+                case when exists ( select 1 from ProductGroup cg where cg.parentProductId = c.id )
                     then true
                     else false
                 end,
-                case when exists ( select 1 from ProductPricePromotion cg where cg.costingId = c.id )
+                case when exists ( select 1 from ProductPricePromotion cg where cg.productId = c.id )
                     then true
                     else false
                 end

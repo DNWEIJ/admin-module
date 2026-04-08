@@ -1,0 +1,21 @@
+<dialog id="information-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.manual.title}"></span>
+            </div>
+        </header>
+        <div th:if="${manual.name == null}">
+            <span th:utext="#{label.manual.notext}"></span>
+        </div>
+        <div th:unless="manual.name == null">
+            <span th:utext="${manual.htmlDescription}"></span>
+        </div>
+
+        <footer>
+            <div class="grid">
+                <input type="button" data-target="information-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </div>
+        </footer>
+    </article>
+</dialog>

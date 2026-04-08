@@ -19,7 +19,7 @@
     <th:block th:each="lineitem : ${lineItems}">
         <tr>
             <td class="center">
-                <a href="" class="emoji-icon"  title="delete" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${costingSearchUrl + '/lineitem/' + lineitem.id}" hx-target="#lineItemsTable">🗑️</a>
+                <a href="" class="emoji-icon"  title="delete" th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}" th:hx-delete="${productSearchUrl + '/lineitem/' + lineitem.id}" hx-target="#lineItemsTable">🗑️</a>
             </td>
             <td th:utext="${lineitem.nomenclature}"></td>
             <td th:text="${categoryNames.get(lineitem.categoryId).name}" class="desktop-only"></td>

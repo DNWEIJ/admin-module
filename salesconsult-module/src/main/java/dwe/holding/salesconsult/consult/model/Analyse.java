@@ -26,11 +26,11 @@ public class Analyse extends MemberBaseBO {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "costing_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(nullable = false)
-    private Long lookupCostingCategoryId;
+    private Long lookupProductCategoryId;
     @NotNull
     @Column(nullable = false)
     private BigDecimal quantity;

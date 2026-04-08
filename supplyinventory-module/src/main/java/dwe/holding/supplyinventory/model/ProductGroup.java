@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
-@Table(name = "SUPPLY_COSTING_GROUP")
+@Table(name = "SUPPLY_PRODUCT_GROUP")
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -23,11 +23,11 @@ import java.math.BigDecimal;
 public class ProductGroup extends MemberBaseBO {
     @NotNull
     @Column(nullable = false)
-    private Long parentCostingId;
+    private Long parentProductId;
 
     @NotNull
     @Column(nullable = false)
-    private Long childCostingId;
+    private Long childProductId;
 
     @NotNull
     @Column(nullable = false,precision = 38, scale = 4)

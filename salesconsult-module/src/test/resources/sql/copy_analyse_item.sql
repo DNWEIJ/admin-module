@@ -5,7 +5,7 @@ INSERT INTO consult_analyse_item
  appointment_id,
  pet_id,
  analyse_id,
- costing_id,
+ product_id,
  vet_indicator,
  owner_indicator,
  comment,

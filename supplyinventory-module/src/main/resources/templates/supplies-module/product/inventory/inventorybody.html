@@ -9,19 +9,75 @@
 </th:block>
 
 <th:block th:fragment="readonlyTR(product)">
+    <!-- deliver back either:
+      1. no tracking: empty fields;
+      2. tracking on product;
+      3. tracking on supply -->
+
     <th:block th:if="${product != null}">
-        <tr>
-            <td class="no-sorting">
-                <a target="_blank"  th:href="'/product/product/'+${product.product.id}">📝️</a>
-                <a th:hx-get="'/product/product/'+${product.product.id} + '/partialedit/product'" hx-target="closest tr"   hx-swap="outerHTML">✏️️</a>
-            </td>
-            <td th:text="${product.product.shortCode}"></td>
-            <td th:text="${product.product.barcode}"></td>
-            <td th:text="${product.product.itemNumber}"></td>
-            <td th:text="${product.product.itemNumber}"></td>
-            <td></td>
-            <!-- editable fields -->
-        </tr>
+        <th:block th:if="${product.product.supply == null}">
+            <tr>
+                <td class="no-sorting">
+                </td>
+                <td th:text="${product.product.nomenclature}"></td>
+                <td th:text="${product.product.barcode}"></td>
+                <td th:text="${product.product.itemNumber}"></td>
+                <td th:text="${#numbers.formatDecimal(product.product.quantityPerPackage, 1, 0, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(product.product.supplyIndyQtyDeduction, 1, 0, 'POINT')}"></td>
+                <td colspan="5">no supply record todo link to connect</td>
+            </tr>
+        </th:block>
+        <th:block th:if="${product.product.supply != null}">
+            <tr>
+                <td class="no-sorting">
+                    <!--                <a target="_blank"  th:href="'/product/product/'+${product.product.id}">📝️</a>-->
+                    <a th:hx-get="'/product/product/'+${product.product.id} + '/partialedit/inventory'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+                </td>
+                <td th:utext="${product.product.nomenclature}"></td>
+                <td th:text="${product.product.barcode}"></td>
+                <td th:text="${product.product.itemNumber}"></td>
+                <td th:text="${#numbers.formatDecimal(product.product.quantityPerPackage, 1, 0, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(product.product.supplyIndyQtyDeduction, 1, 0, 'POINT')}"></td>
+                <!-- supply -->
+                <td th:utext="${product.product.supply.nomenclature}"></td>
+                <td th:text="${product.product.supply.barcode}"></td>
+                <td th:text="${product.product.supply.itemNumber}"></td>
+                <td th:text="${#numbers.formatDecimal(product.product.supply.quantityPerPackage, 1, 0, 'POINT')}"></td>
+                <!-- sypply local -->
+                <td>
+                    <th:block th:unless="${product.product.supply.supplyLocals.size != 0}">
+                        [[#{label.inventory.nolocal}]]
+                        <a href="#" th:hx-get="'/product/product/' + ${product.product.id} + '/inventory/local'" hx-target="modal">🆕️</a>
+                    </th:block>
+                    <th:block th:if="${product.product.supply.supplyLocals.size != 0}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th th:text="#{label.inventory.location}"></th>
+                                <th th:text="#{label.inventory.quantityOfPackages}"></th>
+                                <th th:text="#{label.inventory.individualLeftInOpenPackage}"></th>
+                                <th th:text="#{label.inventory.minQuantityForAlert}"></th>
+                                <th th:text="#{label.inventory.buyQuantityPerOrder}"></th>
+                            </tr>
+                            </thead>
+
+                            <th:block th:each="local : ${product.product.supply.supplyLocals}">
+                                <tr>
+                                    <input type="hidden" name="id" th:value="${local.id}">
+                                    <input type="hidden" name="version" th:value="${local.version}">
+                                    <td th:text="${locals.get(local.localMemberId)}"></td>
+                                    <td th:text="${#numbers.formatDecimal(local.quantityOfPackages, 1, 0, 'POINT')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(local.individualLeftInOpenPackage, 1, 0, 'POINT')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(local.minQuantityForAlert, 1, 0, 'POINT')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(local.buyQuantityPerOrder, 1, 0, 'POINT')}"></td>
+                                </tr>
+                            </th:block>
+
+                        </table>
+                    </th:block>
+                </td>
+            </tr>
+        </th:block>
     </th:block>
 </th:block>
 
@@ -29,30 +85,62 @@
     <th:block th:if="${product != null}">
         <tr>
             <td class="no-sorting">
-                adaasdasdad
                 <input type="hidden" name="id" th:value="${product.product.id}">
                 <input type="hidden" name="version" th:value="${product.product.version}">
                 <!-- Save -->
-                <a href="#" th:hx-post="'/product/product/' + ${product.product.id} + '/partialsave/product'" hx-target="closest tr" hx-swap="outerHTML" hx-include="closest tr">💾</a>
+                <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.product.id} + '/partialsave/inventory'" hx-target="closest tr" hx-swap="outerHTML">💾</a>
                 <!-- Cancel -->
-                <a href="#" th:hx-get="'/product/product/' + ${product.product.id} + '/partialcancel/product'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
+                <a href="#" th:hx-get="'/product/product/' + ${product.product.id} + '/partialcancel/inventory'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
             </td>
-            <td><input type="text" required name="nomenclature" th:value="${product.product.nomenclature}"></td>
+            <td th:utext="${product.product.nomenclature}"></td>
+            <td th:text="${product.product.barcode}"></td>
+            <td th:text="${product.product.itemNumber}"></td>
+            <td th:text="${#numbers.formatDecimal(product.product.quantityPerPackage, 1, 0, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(product.product.supplyIndyQtyDeduction, 1, 0, 'POINT')}"></td>
+            <!-- supply -->
+            <td th:utext="${product.product.supply.nomenclature}"></td>
+            <td th:text="${product.product.supply.barcode}"></td>
+            <td th:text="${product.product.supply.itemNumber}"></td>
+            <td th:text="${#numbers.formatDecimal(product.product.supply.quantityPerPackage, 1, 0, 'POINT')}"></td>
+            <!-- sypply local -->
             <td>
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('lookupProductCategory.id','', ${product.product.lookupProductCategory.id}, ${categories}, true,'0')}"></th:block>
+                <table>
+                    <thead>
+                    <tr>
+                        <th><a href="#" th:hx-get="'/product/product/' + ${product.product.id} + '/inventory/local'" hx-target="modal"
+                               th:text="#{label.inventory.location} +'🆕️'"></a></th>
+                        <th th:text="#{label.inventory.quantityOfPackages}"></th>
+                        <th th:text="#{label.inventory.individualLeftInOpenPackage}"></th>
+                        <th th:text="#{label.inventory.minQuantityForAlert}"></th>
+                        <th th:text="#{label.inventory.buyQuantityPerOrder}"></th>
+                    </tr>
+                    </thead>
+                    <th:block th:if="${product.product.supply.supplyLocals.size == 0}">
+                        <tr><td>[[#{label.inventory.nolocal}]]</td></tr>
+                    </th:block>
+                    <th:block th:unless="${product.product.supply.supplyLocals.size == 0}">
+                        <th:block th:each="local, iterStat : ${product.product.supply.supplyLocals}">
+                            <tr>
+                                <input type="hidden" th:name="|localsupply[${iterStat.index}].id|" th:value="${local.id}">
+                                <input type="hidden" th:name="|localsupply[${iterStat.index}].version|" th:value="${local.version}">
+
+                                <td><a href="#" th:hx-delete="'/product/product/' + ${product.product.id} + '/inventory/local/' + ${local.id}"
+                                       th:hx-confirm="#{label.delete.confirm}" hx-swap="outerHTML"
+                                       th:text="'🗑️'+${locals.get(local.localMemberId)}"></a></td>
+
+                                <td><input type="number" step="0.01" required th:name="|localsupply[${iterStat.index}].quantityOfPackages|"
+                                           th:value="${#numbers.formatDecimal(local.quantityOfPackages, 1, 0, 'POINT')}"></td>
+                                <td><input type="number" step="0.01" required th:name="|localsupply[${iterStat.index}].individualLeftInOpenPackage|"
+                                           th:value="${#numbers.formatDecimal(local.individualLeftInOpenPackage, 1, 0, 'POINT')}"></td>
+                                <td><input type="number" step="0.01" required th:name="|localsupply[${iterStat.index}].minQuantityForAlert|"
+                                           th:value="${#numbers.formatDecimal(local.minQuantityForAlert, 1, 0, 'POINT')}"></td>
+                                <td><input type="number" step="0.01" required th:name="|localsupply[${iterStat.index}].buyQuantityPerOrder|"
+                                           th:value="${#numbers.formatDecimal(local.buyQuantityPerOrder, 1, 0, 'POINT')}"></td>
+                            </tr>
+                        </th:block>
+                    </th:block>
+                </table>
             </td>
-            <td><input type="text" name="shortCode" th:value="${product.product.shortCode}"></td>
-            <td><input type="text" name="barcode" th:value="${product.product.barcode}"></td>
-            <td><input type="text" name="itemNumber" th:value="${product.product.itemNumber}"></td>
-            <td></td>
-            <td></td>
-            <td>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('hasBatchNr','',${product.product.hasBatchNr},${yesNoOptions}, true, '0')}"></th:block>
-            </td>
-            <td>
-                <th:block th:insert="~{fragments/elements/dropdown::propDropdown('hasSpillage','',${product.product.hasSpillage},${yesNoOptions}, true, '0')}"></th:block>
-            </td>
-            <td></td>
         </tr>
     </th:block>
 </th:block>

@@ -34,7 +34,7 @@ public class ProductController {
         model
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new SalesTypeDummy())
-                .addAttribute("costingSearchUrl", "/product/search/product")
+                .addAttribute("productSearchUrl", "/product/search/product")
                 .addAttribute("costingSearchForm", form)
                 .addAttribute("products", List.of())
         ;

@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Table(name = "SUPPLY_COSTING_PRICE_PROMOTION")
+@Table(name = "SUPPLY_PRODUCT_PRICE_PROMOTION")
 @Entity
 @Getter
 @Setter
@@ -25,7 +25,7 @@ public class ProductPricePromotion extends MemberBaseBO {
 
     @NotNull
     @Column(nullable = false)
-    private Long costingId;
+    private Long productId;
 
     @NotNull
     @Column(nullable = false)

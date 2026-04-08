@@ -1,0 +1,24 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>Manual</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Manual','/admin/manual')}"></th:block>
+
+    <table id="manual-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="page : ${manuals}">
+            <tr>
+                <td><a th:href="@{'/admin/manual/'+ ${page.id}}" th:text="${page.name}"></a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</section>

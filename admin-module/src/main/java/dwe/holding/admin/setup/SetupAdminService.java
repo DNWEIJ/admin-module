@@ -4,21 +4,24 @@ import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
+import dwe.holding.admin.authorisation.tenant.user.UserNoMemberRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
 import dwe.holding.admin.model.notenant.Function;
 import dwe.holding.admin.model.notenant.FunctionRole;
 import dwe.holding.admin.model.tenant.Role;
+import dwe.holding.admin.model.tenant.User;
+import dwe.holding.admin.model.tenant.UserNoMember;
+import dwe.holding.admin.model.tenant.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
-// @Service
+@Service
 @Slf4j
 @AllArgsConstructor
 public class SetupAdminService {
@@ -26,6 +29,28 @@ public class SetupAdminService {
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
     private final FunctionRoleRepository functionRoleRepository;
+    private final UserNoMemberRepository userNoMemberRepository;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+
+    @Transactional
+    public void updateDaniel() {
+
+        UserNoMember userNoMember = userNoMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().orElseThrow();
+        log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
+        User user = userRepository.findById(userNoMember.getId()).orElseThrow();
+        roleRepository.getRoleByName("SUPER_ADMIN");
+
+        userRoleRepository.saveAllAndFlush(
+                List.of(
+                        UserRole.builder().role(roleRepository.getRoleByName("SUPER_ADMIN")).user(user).build(),
+                        UserRole.builder().role(roleRepository.getRoleByName("ADMIN_READ")).user(user).build(),
+                        UserRole.builder().role(roleRepository.getRoleByName("ADMIN_CREATE")).user(user).build(),
+                        UserRole.builder().role(roleRepository.getRoleByName("DEFAULT")).user(user).build()
+                )
+        );
+
+    }
 
     @Transactional
     public Long init() {
@@ -138,17 +163,19 @@ public class SetupAdminService {
                             .map(func -> (FunctionRole) FunctionRole.builder().functionId(func.getId()).roleId(roleDefault.getId()).memberId(77L).build())
                             .toList()
             );
-            // todp fix
-//            User user = localMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().get();
-//            log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
-//            userRoleRepository.saveAllAndFlush(
-//                    List.of(
-//                            UserRole.builder().role(roleSuperAdmin).user(user).build(),
-//                            UserRole.builder().role(roleAdminCreate).user(user).build(),
-//                            UserRole.builder().role(roleAdminRead).user(user).build(),
-//                            UserRole.builder().role(roleDefault).user(user).build()
-//                    )
-//            );
+
+            UserNoMember userNoMember = userNoMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().orElseThrow();
+            log.info("MigrationAdminService:: CONNECT USER TO THE ROLE");
+            User user = userRepository.findById(userNoMember.getId()).orElseThrow();
+
+            userRoleRepository.saveAllAndFlush(
+                    List.of(
+                            UserRole.builder().role(roleSuperAdmin).user(user).build(),
+                            UserRole.builder().role(roleAdminCreate).user(user).build(),
+                            UserRole.builder().role(roleAdminRead).user(user).build(),
+                            UserRole.builder().role(roleDefault).user(user).build()
+                    )
+            );
             return 77L;
         }
         return null;

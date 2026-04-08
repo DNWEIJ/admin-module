@@ -33,7 +33,6 @@ public class HtmxVisitLineItemsController {
     private final CustomerService customerService;
     private final LineItemService lineItemService;
     private final ProductService productService;
-    private final AppointmentVisitService appointmentVisitService;
 
     @DeleteMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem/{lineItemId}")
     public String deleteLineItemViaHTmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, @PathVariable Long lineItemId, Model model, RedirectAttributes redirect) {
@@ -82,6 +81,6 @@ public class HtmxVisitLineItemsController {
                 .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("visit", visit)
                 .addAttribute("salesType", SalesType.VISIT)
-                .addAttribute("costingSearchUrl", "/consult/visit/customer/" + customerId + "/visit/" + visit.getId());
+                .addAttribute("productSearchUrl", "/consult/visit/customer/" + customerId + "/visit/" + visit.getId());
     }
 }

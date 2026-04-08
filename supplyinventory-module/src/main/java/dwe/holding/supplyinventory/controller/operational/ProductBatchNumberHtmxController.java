@@ -18,7 +18,7 @@ public class ProductBatchNumberHtmxController {
 
     @GetMapping("/costing/{costingId}/batchnumbers")
     String getBatchListHtmx(@PathVariable Long costingId, Model model) {
-        model.addAttribute("batchList", productBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(costingId, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid()));
+        model.addAttribute("batchList", productBatchNumberRepository.findByProductIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(costingId, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid()));
         return "supplies-module/fragments/costing/batchlist";
     }
 }

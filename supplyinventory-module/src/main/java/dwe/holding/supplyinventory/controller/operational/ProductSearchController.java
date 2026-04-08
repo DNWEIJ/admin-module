@@ -2,7 +2,7 @@ package dwe.holding.supplyinventory.controller.operational;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.shared.model.type.YesNoEnum;
-import dwe.holding.supplyinventory.model.projection.CostingProjection;
+import dwe.holding.supplyinventory.model.projection.ProductProjection;
 import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import dwe.holding.supplyinventory.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class ProductSearchController {
     }
 
     @PostMapping("/costing/search/costing/dropdown/found/costing")
-    public String searchCostingForDropDown(Long categoryId, Model model) {
+    public String searchProductForDropDown(Long categoryId, Model model) {
         StringBuilder sb = new StringBuilder();
         productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclature(categoryId, AutorisationUtils.getCurrentUserMid()).forEach(costingProj ->
                 sb.append("<option data-has-batch=\"").append(costingProj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
@@ -60,7 +60,7 @@ public class ProductSearchController {
         String escapedSearch = Pattern.quote(searchCriteria);
         Pattern pattern = Pattern.compile(escapedSearch, Pattern.CASE_INSENSITIVE);
 
-        List<CostingProjection> list;
+        List<ProductProjection> list;
         try {
             Long.parseLong(searchCriteria);
             list = productRepository.getProductProjectionsWhenSearchCriteriaIsNumeric(searchCriteria, AutorisationUtils.getCurrentUserMid());
@@ -78,7 +78,7 @@ public class ProductSearchController {
                 : "<ul style=\"max-height: 180px; overflow: auto;\">No record found</ul>";
     }
 
-    private String getOption(CostingProjection proj, Pattern pattern) {
+    private String getOption(ProductProjection proj, Pattern pattern) {
         StringBuilder result = new StringBuilder();
         Matcher matcher = pattern.matcher(proj.nomenclature());
         while (matcher.find()) {

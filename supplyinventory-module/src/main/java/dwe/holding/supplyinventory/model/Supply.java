@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 @Table(name = "SUPPLY_SUPPLY",
         indexes = @Index(name = "idx_supply_distributor_name", columnList = "member_id, distributorName")
@@ -24,8 +24,8 @@ public class Supply extends MemberBaseBO {
     @Column(nullable = false, length = 40)
     private String nomenclature;
     private BigDecimal quantityPerPackage;
-    private BigDecimal minQuantity;
-    private BigDecimal buyQuantity;
+    private BigDecimal minQuantityForAlert;
+    private BigDecimal buyQuantityPerOrder;
     private BigDecimal price;
     private String itemNumber;
     private String descriptionOfDistributor;
@@ -37,7 +37,7 @@ public class Supply extends MemberBaseBO {
     private Distributor distributor;
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "supply")
-    private Set<SupplyLocal> supplyLocals;
+    private List<SupplyLocal> supplyLocals;
 
     //     private Set<Supplies2localsupdated> updateRecords = new HashSet<Supplies2localsupdated>(0);
 }

@@ -33,7 +33,7 @@ public class AnalyseItem extends MemberBaseBO {
     private Long analyseId;
     @NotNull
     @Column(nullable = false)
-    private long costingId;
+    private long productId;
     @NotNull
     @Column(nullable = false)
     private String nomenclature;

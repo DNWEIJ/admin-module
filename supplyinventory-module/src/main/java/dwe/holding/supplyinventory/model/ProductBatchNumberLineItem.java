@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "SUPPLY_COSTING_BATCH_NUMBER_LINEITEM")
+@Table(name = "SUPPLY_PRODUCT_BATCH_NUMBER_LINEITEM")
 @Entity
 @Getter
 @Setter
@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class ProductBatchNumberLineItem extends MemberBaseBO  {
 
     @Column(nullable = false)
-    private Long costingBatchNrId;
+    private Long productBatchNrId;
     @Column(nullable = false)
     private Long lineItemId;
 }

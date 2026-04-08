@@ -88,7 +88,7 @@ public class EstimateController {
                 )
                 .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
-                .addAttribute("costingSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
+                .addAttribute("productSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
                 .addAttribute("salesType", SalesType.ESTIMATE);
         ModelHelper.updateLineItemsInModel(model, estimateService.saveEstimateLineItems(estimate.getEstimatelineitems()));
         return "consult-module/estimate/estimateforpet";

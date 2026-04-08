@@ -80,7 +80,7 @@ public class HtmxVisitAnalyseController {
                                     visit.getPet(), null).stream()
                             // find records that do not have a vet or owner NO (being the true on the checkbox)
                             .filter(lineItem -> {
-                                        AnalyseItemForm rec = userMap.get(lineItem.getCostingId());
+                                        AnalyseItemForm rec = userMap.get(lineItem.getProductId());
                                         if (rec == null) {
                                             throw new RuntimeException("AnalyseForm doesn't contain costingId");
                                         }
@@ -99,14 +99,14 @@ public class HtmxVisitAnalyseController {
                 .addAttribute("isAnalyseItemsFromDb", true)
                 .addAttribute("customerId", visit.getPet().getCustomer().getId())
                 .addAttribute("petId", visit.getPet().getId())
-                .addAttribute("costingSearchUrl", VisitController.VISIT_URL.replace("{customerId}", visit.getPet().getCustomer().getId().toString()).replace("{visitId}", visit.getId().toString()))
+                .addAttribute("productSearchUrl", VisitController.VISIT_URL.replace("{customerId}", visit.getPet().getCustomer().getId().toString()).replace("{visitId}", visit.getId().toString()))
                 .addAttribute("categoryNames", productService.getCategories())
                 .addAttribute("salesType", SalesType.VISIT);
         return "/consult-module/fragments/htmx/replaceanalyseandlineitems";
     }
 
     @PostMapping("/visit/{visitId}/analyse/update")
-    String saveAnalyseCommentsHtmx(@PathVariable Long visitId, AnalyseForm analyseForm, Model model) {
+    String saveAnalyseCommentsHtmx(@PathVariable Long visitId, AnalyseForm analyseForm) {
         // TODO finish
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         List<Analyse> definedAnalyseList = analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), analyseForm.analyseDropDown());
@@ -122,7 +122,7 @@ public class HtmxVisitAnalyseController {
         item.setAppointmentId(visit.getAppointment().getId());
         item.setPetId(visit.getPet().getId());
         item.setNomenclature(lineItem.getNomenclature());
-        item.setCostingId(lineItem.getCostingId());
+        item.setProductId(lineItem.getProductId());
         item.setAnalyseId(form.id());
         item.setId(null);
         list.add(item);

@@ -49,9 +49,9 @@ public class PriceSellController {
     }
 
     @PostMapping("/price/sell/lineitem")
-    String foundProductAddLineItemViaHtmx(@NotNull Long inputCostingId, @NotNull BigDecimal inputCostingQuantity,
+    String foundProductAddLineItemViaHtmx(@NotNull Long inputProductId, @NotNull BigDecimal inputProductQuantity,
                                           @ProjectedPayload @ModelAttribute(value = "lineItems") List<LineItem> lineItems, Model model) {
-        List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingQuantity);
+        List<LineItem> list = lineItemService.createPricing(inputProductId, inputProductQuantity);
         AtomicLong counter = new AtomicLong(lineItems.size() + 1);
         list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
         lineItems.addAll(list);
@@ -70,7 +70,7 @@ public class PriceSellController {
         ModelHelper.updateLineItemsInModel(model, lineItems);
         model
                 .addAttribute("categoryNames", productService.getCategories())
-                .addAttribute("costingSearchUrl", SALES_PRICE_SELL)
+                .addAttribute("productSearchUrl", SALES_PRICE_SELL)
                 .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)

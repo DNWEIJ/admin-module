@@ -1,7 +1,5 @@
 package dwe.holding.supplyinventory.controller;
 
-import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import lombok.AllArgsConstructor;
@@ -26,8 +24,8 @@ public class PricingProductController {
         model
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
-                .addAttribute("costingSearchUrl", "/product/search/product")
-                .addAttribute("costingSearchForm",  new ProductController.ListForm(null,null, Boolean.TRUE))
+                .addAttribute("productSearchUrl", "/product/search/product")
+                .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
                 .addAttribute("products", List.of())
         ;
         return "supplies-module/product/pricing/list";

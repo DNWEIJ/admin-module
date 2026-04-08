@@ -174,7 +174,7 @@ public class RefundController {
 
     private void updateModel(Long customerId, Model model) {
         model
-                .addAttribute("costingSearchUrl", SALES_PRICE_SELL.formatted(customerId))
+                .addAttribute("productSearchUrl", SALES_PRICE_SELL.formatted(customerId))
                 .addAttribute("categoryNames", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)

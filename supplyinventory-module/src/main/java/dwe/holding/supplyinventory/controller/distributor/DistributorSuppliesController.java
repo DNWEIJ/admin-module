@@ -34,7 +34,7 @@ public class DistributorSuppliesController {
         setModelData(model);
         model
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
-                .addAttribute("costingSearchUrl", "/supplies/distributor/")
+                .addAttribute("productSearchUrl", "/supplies/distributor/")
                 .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
                 .addAttribute("supplies", List.of())
         ;
@@ -75,8 +75,8 @@ public class DistributorSuppliesController {
         Supply supply = suppliesRepository.findById(supplyId).orElseThrow();
         supply.setNomenclature(supplyForm.getNomenclature());
         supply.setQuantityPerPackage(supplyForm.getQuantityPerPackage());
-        supply.setMinQuantity(supplyForm.getMinQuantity());
-        supply.setBuyQuantity(supplyForm.getBuyQuantity());
+        supply.setMinQuantityForAlert(supplyForm.getMinQuantityForAlert());
+        supply.setBuyQuantityPerOrder(supplyForm.getBuyQuantityPerOrder());
         supply.setPrice(supplyForm.getPrice());
         supply.setItemNumber((supplyForm.getItemNumber()));
         supply.setBarcode(supplyForm.getBarcode());
@@ -118,8 +118,8 @@ public class DistributorSuppliesController {
 
         supply.setNomenclature(supplyForm.getNomenclature());
         supply.setQuantityPerPackage(supplyForm.getQuantityPerPackage());
-        supply.setMinQuantity(supplyForm.getMinQuantity());
-        supply.setBuyQuantity(supplyForm.getBuyQuantity());
+        supply.setMinQuantityForAlert(supplyForm.getMinQuantityForAlert());
+        supply.setBuyQuantityPerOrder(supplyForm.getBuyQuantityPerOrder());
         supply.setPrice(supplyForm.getPrice());
         supply.setItemNumber((supplyForm.getItemNumber()));
         supply.setBarcode(supplyForm.getBarcode());

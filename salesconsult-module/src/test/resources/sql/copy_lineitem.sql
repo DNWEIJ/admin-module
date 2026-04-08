@@ -3,7 +3,7 @@ INSERT INTO new_vmas.sales_line_item
  version,
  member_id,
  category_id,
- costing_id,
+ product_id,
  nomenclature,
  quantity,
  tax_good_percentage,

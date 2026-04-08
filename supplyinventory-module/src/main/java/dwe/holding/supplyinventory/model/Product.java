@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Table(name = "SUPPLY_COSTING")
+@Table(name = "SUPPLY_PRODUCT")
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -60,30 +60,28 @@ public class Product extends MemberBaseBO {
     private TaxedTypeEnum taxed;
     @Column(nullable = false, precision = 38, scale = 4)
     private BigDecimal uplift;
+    private Long barcode;
 
     // SUPPLY
-    // Option 1 manually maintain the information on the product
+    // option 1: do not fill in anything - no inventory tracking
+    // Option 2:  manually maintain the information on the product order reference, no tracking of inventory
     private String distributor;
     private String distributorDescription;
     private String itemNumber;
     @Column(nullable = false, precision = 38, scale = 4)
     private BigDecimal quantityPerPackage;
-    private Long barcode;
-
+    // Option 3:  product order reference and inventory management
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUPPLY_ID", nullable = true)
     private Supply supply;
-    Long supplyIndyQtyDeduction;
+    Long supplyIndyQtyDeduction; // pending on this we deduct x times: product can be '5bags' so we need to have 5 here
 
-
-    // REMINDER
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum autoReminder;
+    private YesNoEnum autoReminder; // for eg repeat vaccination
     private String reminderNomenclature;
     private Short intervalInWeeks;
     private String rRemovePendingRemindersContaining;
-
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
@@ -93,13 +91,14 @@ public class Product extends MemberBaseBO {
     private String certificateType;
     private String certificateSerialNumber;
     private String certificateVaccineExpires;
+
     @Lob
     private String instructions;
     private String prescriptionLabel;
 
     // TODO
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LOOKUPCOSTINGCATEGORY_ID", nullable = false)
+    @JoinColumn(name = "LOOKUP_PRODUCT_CATEGORY_ID", nullable = false)
     private LookupProductCategory lookupProductCategory;
 
     public BigDecimal getTotalSalesPriceIncTax(BigDecimal taxGoodPercentage, BigDecimal taxServicePercentage){

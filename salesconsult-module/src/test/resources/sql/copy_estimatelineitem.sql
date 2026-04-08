@@ -5,7 +5,7 @@
      estimate_id,
      pet_id,
      category_id,
-     costing_id,
+     product_id,
      nomenclature,
      quantity,
      taxed_type_enum,

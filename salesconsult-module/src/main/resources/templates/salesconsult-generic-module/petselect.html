@@ -1,7 +1,7 @@
 <th:block th:fragment="petSelect(customer, pets, deceasedPets, salesType, showPetLink)">
     <details id="selectpets" open>
         <summary>
-            <span th:text="#{label.otc.petList}"></span><a href="/info/selectpets" title="More info" class="emoji-icon">ℹ️</a>
+            <span th:text="#{label.otc.petList}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/selectpets" title="More info" class="emoji-icon">ℹ️</a>
         </summary>
 <!--        <div class="desktop-tablet-only">-->
             <table id="show-alive-table" class="table-tight striped">

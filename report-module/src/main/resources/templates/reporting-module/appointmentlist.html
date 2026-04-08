@@ -7,7 +7,7 @@
 <section layout:fragment="content">
     <details id="reportRemindersInfo" open>
         <summary>
-            <span th:text="#{label.report.consult.input.title}"></span><a href="/info/report/visit" title="More info" class="emoji-icon">ℹ️</a>
+            <span th:text="#{label.report.consult.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit" title="More info" class="emoji-icon">ℹ️</a>
         </summary>
 
         <form action="" method="get">
@@ -102,8 +102,8 @@
                     th:text="${T(dwe.holding.customer.client.model.Customer).getCustomerName(visit.lastName, visit.surName, visit.firstName, visit.middleInitial)}"></td>
                 <td th:utext="${visit.petName + '(' + (visit.species ==null?'':visit.species) + '/' +(visit.breed==null?'':visit.breed) +')'}"></td>
                 <td th:utext="${visit.veterinarian + '/'+visit.room}"></td>
-                <td th:text="${visit.insured +'-'+ visit.insuredBy ?:''}"></td>
-                <td th:text="${visit.sentToInsurance}"></td>
+                <td th:text="#{__${visit.insured.label}__} +'-'+ ${visit.insuredBy ?:''}"></td>
+                <td th:text="#{__${visit.sentToInsurance.label}__}"></td>
                 <th:block
                         th:with="amountClass=${visit.totalAmountIncTax - visit.paidAmount > 0.01 ? 'red-background': (visit.paidAmount - visit.totalAmountIncTax > 0.01 ? 'green-background':'')}">
                     <th:block

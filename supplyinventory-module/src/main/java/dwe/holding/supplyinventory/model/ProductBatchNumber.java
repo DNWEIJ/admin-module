@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@Table(name = "SUPPLY_COSTING_BATCH_NUMBER")
+@Table(name = "SUPPLY_PRODUCT_BATCH_NUMBER")
 @Entity
 @Getter
 @Setter
@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @SuperBuilder
 public class ProductBatchNumber extends LocalAndMemberBaseBO {
 
-    private Long costingId;
+    private Long productId;
 
     @NotEmpty
     @Column(nullable = false)

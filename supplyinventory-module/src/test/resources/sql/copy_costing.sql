@@ -2,11 +2,11 @@
 UPDATE vmas.costing SET supplies2_id = NULL WHERE supplies2_id = -1;
 UPDATE vmas.costing SET supplies2_id = NULL WHERE deleted ='Y';
 
-INSERT INTO supply_costing
+INSERT INTO supply_product
 (id,
  version,
  member_id,
- lookupcostingcategory_id,
+ lookup_product_category_id,
  nomenclature,
  sales_price_ex_tax,
  purchase_distributor_price,

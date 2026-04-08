@@ -4,31 +4,67 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Inventory','')}"></th:block>
-    <fieldset>
-    <div class="grid">
-        <div>
-            <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
+    <details id="reportRemindersInfo" open>
+        <summary>
+            <span th:text="#{label.inventory.title.selection}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/inventory"
+                                                                         title="More info" class="emoji-icon">ℹ️</a>
+        </summary>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.inventory.title},'')}"></th:block>
+        <div class="grid">
+            <div>
+                <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
+            </div>
         </div>
-    </div>
-    </fieldset>
+        <table data-no-highlight data-no-export>
+            <tr>
+                <td>
+                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('showProduct',#{label.visit.checkbox.vetroom},true,'0')}"></th:block>
+                </td>
+                <td>
+                    <th:block th:insert="~{fragments/elements/select::selectCheckBox('showSupplyItem',#{label.visit.checkbox.petname},true,'0')}"></th:block>
+                </td>
+            </tr>
+        </table>
+    </details>
     <table id="productInventoryTable" class="table-tight table-striped">
         <thead>
         <tr>
             <th class="no-sorting"></th>
-            <th th:text="#{label.costing.product.localmember}"></th>
-            <th th:text="#{label.costing.product.barcode}"></th>
-            <th th:text="#{label.costing.product.article}"></th>
-            <th th:text="#{label.costing.product.inventoryUnit}"></th>
-
+            <th data-order="1" colspan="5" style="text-align:center; background-color: #95a49d5e" th:text="#{label.product}"></th>
+            <th data-order="5" colspan="4" style="text-align:center; background-color: var(--pico-background-color)" th:text="#{label.costing.product.supplyItems}"></th>
+            <th colspan="1" style="text-align:center; background-color: #95a49d5e" th:text="#{label.costing.product.localmember}"></th>
+        </tr>
+        <tr>
+            <th class="no-sorting"></th>
+            <th data-order="1" th:text="#{label.product.nomenclature}"></th>
+            <th data-order="2" th:text="#{label.costing.product.barcode}"></th>
+            <th data-order="3" th:text="#{label.costing.product.article}"></th>
+            <th data-order="4" th:text="#{label.costing.product.inventoryUnit}"></th>
+            <th data-order="5" th:text="#{label.costing.product.deduction}"></th>
+            <th data-order="6" th:text="#{label.product.nomenclature}"></th>
+            <th data-order="7" th:text="#{label.costing.product.barcode}"></th>
+            <th data-order="8" th:text="#{label.costing.product.article}"></th>
+            <th data-order="9" th:text="#{label.costing.product.inventoryUnit}"></th>
+            <th data-order="10">&nbsp;</th>
         </tr>
         </thead>
         <th:block th:insert="~{supplies-module/product/inventory/inventorybody}"></th:block>
     </table>
     <script>
         document.body.addEventListener('htmx:afterSwap', function (event) {
-            window.updateTableFooterCount(document.getElementById("productTable"))
+            window.updateTableFooterCount(document.getElementById("productInventoryTable"))
             highlightRowOnTable()
         });
+    </script>
+    <script>
+        document.getElementById("showProduct").addEventListener("change", function () {
+            toggleTableColumns("productInventoryTable", [1,2,3,4,5], this.checked);
+        });
+        document.getElementById("showSupplyItem").addEventListener("change", function () {
+            toggleTableColumns("productInventoryTable", [6,7,8,9], this.checked);
+        });
+        // trigger initially
+        document.getElementById("showProduct").dispatchEvent(new Event("change"));
+        document.getElementById("showSupplyItem").dispatchEvent(new Event("change"));
     </script>
 </section>

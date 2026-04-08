@@ -217,7 +217,7 @@ public class VisitController {
                 .addAttribute("templates", pref.getConsultTextRecords(objectMapper))
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("costingSearchUrl", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
+                .addAttribute("productSearchUrl", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyseItems", analyseItems)
                 .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())

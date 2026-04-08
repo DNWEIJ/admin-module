@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Table(name = "SUPPLY_COSTING_SPILLAGE")
+@Table(name = "SUPPLY_PRODUCT_SPILLAGE")
 @Entity
 @Getter
 @Setter
@@ -23,7 +23,7 @@ import java.time.LocalDate;
 public class ProductSpillage extends LocalAndMemberBaseBO {
 
     @Column(nullable = false)
-    private Long costingId;
+    private Long productId;
 
     @Column(nullable = false)
     private String name;

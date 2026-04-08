@@ -11,7 +11,7 @@
     <title>Template title</title>
     <link th:href="@{/images/favicon.svg}" rel="icon" type="image/x-icon"/>
 
-    <link th:href="@{'/lib/pico/pico.' + ${color==null?'grey':color} + '.min.css'}" rel="stylesheet"/>
+    <link th:href="@{'/lib/pico/pico.' + ${color==null or color.isEmpty?'grey':color} + '.min.css'}" rel="stylesheet"/>
     <link th:href="@{/lib/pico/pico.colors.min.css}" rel="stylesheet"/>
 
     <!-- javascript -->
@@ -59,8 +59,8 @@
             </th:block>
             <span>DWE Holding &copy;</span>
             <th:block th:if="${T(dwe.holding.admin.sessionstorage.AutorisationUtils).isLoggedIn()}">
-                <a th:href="'/customer/preferences/user'"
-                   th:text="'loggedin User:' + ${T(dwe.holding.admin.sessionstorage.AutorisationUtils).getCurrentUserAccount()}"></a>
+                <span
+                   th:text="'loggedin User: ' + ${T(dwe.holding.admin.sessionstorage.AutorisationUtils).getCurrentUserAccount()}"></span>
             </th:block>
 
         </p>

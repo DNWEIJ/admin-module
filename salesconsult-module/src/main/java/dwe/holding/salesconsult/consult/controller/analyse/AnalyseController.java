@@ -44,7 +44,7 @@ public class AnalyseController {
                         .analyseDescription(desc)
                         .product(product)
                         .quantity(inputCostingQuantity)
-                        .lookupCostingCategoryId(product.getLookupProductCategory().getId())
+                        .lookupProductCategoryId(product.getLookupProductCategory().getId())
                         .build()
         );
         updateModel(model, desc.getId());
@@ -62,6 +62,6 @@ public class AnalyseController {
                 .addAttribute("analyses", analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), id))
                 .addAttribute("salesType", SalesType.PRICE_INFO)
                 .addAttribute("analyseDescriptionId", id)
-                .addAttribute("costingSearchUrl", "/admin/analysedescription/" + id + "/analyse");
+                .addAttribute("productSearchUrl", "/admin/analysedescription/" + id + "/analyse");
     }
 }

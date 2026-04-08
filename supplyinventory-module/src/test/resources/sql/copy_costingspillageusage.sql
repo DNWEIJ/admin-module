@@ -1,7 +1,7 @@
-INSERT INTO supply_costing_spillage_usage
+INSERT INTO supply_product_spillage_usage
 (id,
  version,
-  costing_spillage_id,
+ product_spillage_id,
  line_item_id,
  member_id,
  added_by,

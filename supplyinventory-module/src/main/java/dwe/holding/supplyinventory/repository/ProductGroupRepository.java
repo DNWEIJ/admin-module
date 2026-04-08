@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ProductGroupRepository extends JpaRepository<ProductGroup, Long> {
 
-    List<ProductGroup> getCostingGroupsByParentCostingId(Long costingParentId);
+    List<ProductGroup> getCostingGroupsByParentProductId(Long productParentId);
 }

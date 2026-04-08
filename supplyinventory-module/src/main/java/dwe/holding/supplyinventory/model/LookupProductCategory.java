@@ -12,7 +12,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 
-@Table(name = "SUPPLY_LOOKUP_COSTING_CATEGORY")
+@Table(name = "SUPPLY_LOOKUP_PRODUCT_CATEGORY")
 @Entity
 @SuperBuilder
 @NoArgsConstructor

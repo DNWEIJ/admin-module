@@ -28,6 +28,8 @@
             <!-- General Information -->
             <legend>General Information</legend>
             <th:block
+                    th:insert="~{fragments/elements/dropdown::propDropdown('deleted','label.costing.product.deleted',${product.deleted},${yesNoOptions}, true, '0')}" th:with="required=false"></th:block>
+            <th:block
                     th:insert="~{fragments/elements/dropdown::dbDropdown('lookupProductCategory.id','label.costing.product.category', ${product.lookupProductCategory.id}, ${categories}, true,'0')}"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.costing.product.invoiceInformation','product.nomenclature','0')}"></th:block>
             <div class="grid">

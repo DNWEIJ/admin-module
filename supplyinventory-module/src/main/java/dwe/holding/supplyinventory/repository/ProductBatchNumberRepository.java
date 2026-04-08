@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface ProductBatchNumberRepository extends JpaRepository<ProductBatchNumber, Long> {
 
-    List<ProductBatchNumber> findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(Long costingId, Long memberId, Long localMemberId);
-
-    Optional<ProductBatchNumber> findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(Long costingId, Long memberId, Long localMemberId, String batchNumber);
+    List<ProductBatchNumber> findByProductIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(Long productId, Long memberId, Long localMemberId);
+    Optional<ProductBatchNumber> findByProductIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(Long productId, Long memberId, Long localMemberId, String batchNumber);
 }

@@ -27,7 +27,7 @@ public abstract class CostCalc extends MemberBaseBO {
     @NotNull
     private Long categoryId;
     @NotNull
-    private Long costingId;
+    private Long productId;
 
     @NotEmpty
     @Column(nullable = false)

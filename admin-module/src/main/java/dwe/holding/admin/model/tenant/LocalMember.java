@@ -37,4 +37,8 @@ public class LocalMember extends MemberBaseBO {
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private MetaLocalMemberPreferences metaLocalMemberPreferences;
+
+    public String getShortMemberName() {
+        return localMemberName.split(" ")[1];
+    }
 }

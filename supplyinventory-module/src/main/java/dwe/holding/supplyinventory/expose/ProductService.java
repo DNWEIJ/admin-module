@@ -30,33 +30,33 @@ public class ProductService {
     private final ProductSpillageRepository productSpillageRepository;
     private final ProductSpillageUsageRepository productSpillageUsageRepository;
 
-    public List<ProductPriceProjection> getCorrectedPriceAndGroupingForCostingId(Long costingId) {
+    public List<ProductPriceProjection> getCorrectedPriceAndGroupingForProductId(Long costingId) {
 
-        List<Product> listCostingsInGroup = new ArrayList<>(findCostingOnGrouping(costingId));
-        listCostingsInGroup.add(productRepository.findById(costingId).orElseThrow());
+        List<Product> listProductsInGroup = new ArrayList<>(findProductInGrouping(costingId));
+        listProductsInGroup.add(productRepository.findById(costingId).orElseThrow());
 
         // validate if there are price promotions
-        List<ProductPricePromotion> costingPromotions = productPricePromotionRepository.findAllById(listCostingsInGroup.stream().map(Product::getId).toList());
-        if (costingPromotions.isEmpty()) {
-            return productMapper.toProjectionList(listCostingsInGroup);
+        List<ProductPricePromotion> productPromotions = productPricePromotionRepository.findAllById(listProductsInGroup.stream().map(Product::getId).toList());
+        if (productPromotions.isEmpty()) {
+            return productMapper.toProjectionList(listProductsInGroup);
         }
 
         LocalDate today = LocalDate.now();
         // find active once's
-        costingPromotions = costingPromotions.stream().filter(pricePromo ->
+        productPromotions = productPromotions.stream().filter(pricePromo ->
                 (pricePromo.getStartDate().isBefore(today) && pricePromo.getEndDate() != null && pricePromo.getEndDate().isAfter(today))
         ).toList();
 
-        if (costingPromotions.isEmpty()) {
-            return productMapper.toProjectionList(listCostingsInGroup);
+        if (productPromotions.isEmpty()) {
+            return productMapper.toProjectionList(listProductsInGroup);
         }
 
         List<ProductPriceProjection> list = new ArrayList<>();
         // there acre active price promotions
         Map<Long, ProductPricePromotion> lookupMapOnCostingId =
-                costingPromotions.stream().collect(Collectors.toMap(ProductPricePromotion::getCostingId, pricePromo -> pricePromo));
+                productPromotions.stream().collect(Collectors.toMap(ProductPricePromotion::getProductId, pricePromo -> pricePromo));
 
-        listCostingsInGroup.forEach(itCosting -> {
+        listProductsInGroup.forEach(itCosting -> {
             ProductPricePromotion productPricePromotion = lookupMapOnCostingId.get(itCosting.getId());
             if (productPricePromotion != null) {
                 list.add(productMapper.toProjection(itCosting, productPricePromotion));
@@ -69,37 +69,37 @@ public class ProductService {
     }
 
     public void createBatchNumberIfNotExisting(Long id, String batchNumber) {
-        Optional<ProductBatchNumber> cbnOptional = productBatchNumberRepository.findByCostingIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(id, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid(), batchNumber);
+        Optional<ProductBatchNumber> cbnOptional = productBatchNumberRepository.findByProductIdAndMemberIdAndLocalMemberIdAndEndDateIsNullAndBatchNumber(id, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid(), batchNumber);
         if (cbnOptional.isEmpty()) {
-            productBatchNumberRepository.save(ProductBatchNumber.builder().costingId(id).localMemberId(AutorisationUtils.getCurrentUserMlid()).batchNumber(batchNumber).build());
+            productBatchNumberRepository.save(ProductBatchNumber.builder().productId(id).localMemberId(AutorisationUtils.getCurrentUserMlid()).batchNumber(batchNumber).build());
         }
     }
 
-    public void createOrUpdateSpillage(Long costingId, String spillageName, Long lineItemId) {
-        Product product = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+    public void createOrUpdateSpillage(Long productId, String spillageName, Long lineItemId) {
+        Product product = productRepository.findByIdAndMemberId(productId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         ProductSpillage productSpillage = productSpillageRepository.findByNameAndMemberIdAndLocalMemberIdAndEndDateNotNull(spillageName, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid());
         if (productSpillage == null) {
             productSpillage = new ProductSpillage();
-            productSpillage.setCostingId(product.getId());
+            productSpillage.setProductId(product.getId());
             productSpillage.setStartDate(LocalDate.now());
             productSpillageRepository.save(productSpillage);
         }
         ProductSpillageUsage productSpillageUsage = new ProductSpillageUsage();
         productSpillageUsage.setLineItemId(lineItemId);
-        productSpillageUsage.setCostingSpillageId(productSpillage.getId());
+        productSpillageUsage.setProductSpillageId(productSpillage.getId());
         productSpillageUsageRepository.save(productSpillageUsage);
     }
 
-    public List<Product> findCostingOnGrouping(Long costingId) {
+    public List<Product> findProductInGrouping(Long productId) {
         return productRepository.findAllById(
-                productGroupRepository.getCostingGroupsByParentCostingId(costingId)
-                        .stream().map(ProductGroup::getChildCostingId).collect(Collectors.toList())
+                productGroupRepository.getCostingGroupsByParentProductId(productId)
+                        .stream().map(ProductGroup::getChildProductId).collect(Collectors.toList())
         );
     }
 
-    public Map<Long, BigDecimal> getGroupingsQuantity(Long costingId) {
-        return productGroupRepository.getCostingGroupsByParentCostingId(costingId).stream()
-                .collect(Collectors.toMap(ProductGroup::getChildCostingId, ProductGroup::getQuantity)
+    public Map<Long, BigDecimal> getGroupingsQuantity(Long productId) {
+        return productGroupRepository.getCostingGroupsByParentProductId(productId).stream()
+                .collect(Collectors.toMap(ProductGroup::getChildProductId, ProductGroup::getQuantity)
                 );
     }
 

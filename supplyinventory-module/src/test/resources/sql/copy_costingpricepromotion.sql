@@ -1,7 +1,7 @@
-INSERT INTO supply_costing_price_promotion
+INSERT INTO supply_product_price_promotion
 (id,
  version,
- costing_id,
+ product_id,
  start_date, end_date,
  sales_price_ex_tax,
  processing_fee,

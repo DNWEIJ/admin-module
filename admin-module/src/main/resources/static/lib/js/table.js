@@ -21,11 +21,21 @@
         }
 
         function commitSelection() {
+            if (currentHighlight.length === 0) return;
+
+            // Check if all checkboxes are already checked
+            const allChecked = currentHighlight.every(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                return checkbox.checked;
+            });
+
+            // Toggle based on current state
             currentHighlight.forEach(row => {
                 const checkbox = row.querySelector('input[type="checkbox"]');
-                checkbox.checked = true;
+                checkbox.checked = !allChecked; // if all were checked, uncheck; else check
                 row.classList.remove('multiSelected');
             });
+
             currentHighlight = [];
         }
 

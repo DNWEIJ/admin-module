@@ -102,6 +102,12 @@ public class AutorisationUtils {
                 .stream().collect(Collectors.toMap(LocalMember::getId, LocalMember::getLocalMemberName));
     }
 
+
+    public static Map<Long, String> getLocalMemberMapShort() {
+        return AutorisationUtils.getCurrentMember().getLocalMembers()
+                .stream().collect(Collectors.toMap(LocalMember::getId, LocalMember::getShortMemberName));
+    }
+
     public static Map<Long, LocalMember> getFullLocalMemberMap() {
         return AutorisationUtils.getCurrentMember().getLocalMembers()
                 .stream().collect(Collectors.toMap(LocalMember::getId, Function.identity()));

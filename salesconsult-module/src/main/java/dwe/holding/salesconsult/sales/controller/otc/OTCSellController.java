@@ -110,7 +110,7 @@ public class OTCSellController {
 
     @PostMapping("/otc/customer/{customerId}/visit/{visitId}/lineitem")
     String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @PathVariable Long visitId,
-                                          @NotNull BigDecimal inputCostingQuantity, @NotNull Long inputCostingId,
+                                          @NotNull BigDecimal inputProductQuantity, @NotNull Long inputProductId,
                                           String inputBatchNumber, String spillageName, Model model, RedirectAttributes redirect) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
@@ -121,7 +121,7 @@ public class OTCSellController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/otc/search/";
         }
-        boolean visitChanged = lineItemService.createOtcAndConsultLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
+        boolean visitChanged = lineItemService.createOtcAndConsultLineItem(visit.getAppointment(), visit.getPet().getId(), inputProductId, inputProductQuantity, inputBatchNumber, spillageName);
         updateModel(model, visit, customerId);
         if (visitChanged) {
             updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
@@ -134,7 +134,7 @@ public class OTCSellController {
     private void updateModel(Model model, Visit visit, Long customerId) {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
-                .addAttribute("costingSearchUrl", "/sales/otc/customer/" + customerId + "/visit/" + visit.getId())
+                .addAttribute("productSearchUrl", "/sales/otc/customer/" + customerId + "/visit/" + visit.getId())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
                 .addAttribute("categoryNames", productService.getCategories())

@@ -7,6 +7,7 @@ import dwe.holding.supplyinventory.model.projection.ProductPriceProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Mappings;
 
 import java.util.List;
 
@@ -45,5 +46,11 @@ public interface ProductMapper {
                 product.getSupply() == null? -1L: product.getSupply().getId()
         );
     }
+
+    @Mappings({
+            @Mapping(target = "memberId", ignore = true),
+            @Mapping(target = "version", ignore = true),
+            @Mapping(target = "id", ignore = true)
+    })
     Product fromForm(@MappingTarget Product entity, Product form);
 }

@@ -43,23 +43,23 @@ public class LineItemService {
     private final AnalyseItemRepository analyseItemRepository;
     private final FinancialServiceInterface financialService;
 
-    public List<LineItem> createPricing(@NotNull Long costingId, @NotNull BigDecimal quantity) {
-        return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, Pet.builder().id(0L).build());
+    public List<LineItem> createPricing(@NotNull Long productId, @NotNull BigDecimal quantity) {
+        return createLineItemsFromProduct(Appointment.builder().id(0L).build(), productId, quantity, Pet.builder().id(0L).build());
     }
 
-    public List<LineItem> createEstimateLineItem(@NotNull Long costingId, @NotNull BigDecimal quantity, @NotNull Pet pet) {
-        return createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
+    public List<LineItem> createEstimateLineItem(@NotNull Long productId, @NotNull BigDecimal quantity, @NotNull Pet pet) {
+        return createLineItemsFromProduct(Appointment.builder().id(0L).build(), productId, quantity, pet);
     }
 
-    public List<LineItem> createConsultAnalyseLineItem(@NotNull Long costingId, @NotNull BigDecimal quantity, @NotNull Pet pet, Long analyseId) {
-        List<LineItem> lineItems = createLineItemsFromCosting(Appointment.builder().id(0L).build(), costingId, quantity, pet);
+    public List<LineItem> createConsultAnalyseLineItem(@NotNull Long productId, @NotNull BigDecimal quantity, @NotNull Pet pet, Long analyseId) {
+        List<LineItem> lineItems = createLineItemsFromProduct(Appointment.builder().id(0L).build(), productId, quantity, pet);
         lineItems.forEach(lineItem -> lineItem.setId(analyseId));
         return lineItems;
     }
 
 
     @Transactional
-    public boolean createOtcAndConsultLineItem(Appointment app, Long petId, Long costingId, BigDecimal quantity, String batchNumber, String spillageName) {
+    public boolean createOtcAndConsultLineItem(Appointment app, Long petId, Long productId, BigDecimal quantity, String batchNumber, String spillageName) {
 
         // validate if we are allowed to add a line item; Only VET can add after closed or canceled
         if (app.getCancelled().equals(YesNoEnum.Yes) || app.getCompleted().equals(YesNoEnum.Yes)) {
@@ -76,7 +76,7 @@ public class LineItemService {
         }
 
         Visit foundVisit = app.getVisits().stream().filter(visit -> visit.getPet().getId().equals(petId)).findFirst().get();
-        final List<LineItem> toBeSavedLineItems = createLineItemsFromCosting(app, costingId, quantity, batchNumber, spillageName, foundVisit.getPet());
+        final List<LineItem> toBeSavedLineItems = createLineItemsFromProduct(app, productId, quantity, batchNumber, spillageName, foundVisit.getPet());
 
         List<LineItem> savedLineItems = lineItemRepository.saveAll(toBeSavedLineItems);
         app.getLineItems().addAll(savedLineItems);
@@ -125,28 +125,28 @@ public class LineItemService {
         return lineItemRepository.findByPet_IdAndAppointment_IdAndMemberId(petId, appointmentId, AutorisationUtils.getCurrentUserMid());
     }
 
-    private List<LineItem> createLineItemsFromCosting(Appointment appointment, Long costingId, BigDecimal quantity, Pet pet) {
-        return createLineItemsFromCosting(appointment, costingId, quantity, null, null, pet);
+    private List<LineItem> createLineItemsFromProduct(Appointment appointment, Long productId, BigDecimal quantity, Pet pet) {
+        return createLineItemsFromProduct(appointment, productId, quantity, null, null, pet);
     }
 
-    private List<LineItem> createLineItemsFromCosting(Appointment appointment, Long costingId, BigDecimal quantity, String batchNumber, String spillageName, Pet pet) {
+    private List<LineItem> createLineItemsFromProduct(Appointment appointment, Long productId, BigDecimal quantity, String batchNumber, String spillageName, Pet pet) {
         // do we need to add all grouping products?
-        List<ProductPriceProjection> priceIncludingPromotions = productService.getCorrectedPriceAndGroupingForCostingId(costingId);
+        List<ProductPriceProjection> priceIncludingPromotions = productService.getCorrectedPriceAndGroupingForProductId(productId);
 
         // we need the quantity of the grouping to be calculated
-        Map<Long, BigDecimal> costingGroupList;
+        Map<Long, BigDecimal> productGroupList;
         if (priceIncludingPromotions.size() > 1) {
-            costingGroupList = productService.getGroupingsQuantity(costingId);
+            productGroupList = productService.getGroupingsQuantity(productId);
         } else {
-            costingGroupList = Map.of();
+            productGroupList = Map.of();
         }
 
-        // create the lineItems on the invoice per costing
+        // create the lineItems on the invoice per product
         List<LineItem> toBeSavedLineItems = new ArrayList<>();
         priceIncludingPromotions.forEach(cpp -> {
             // create the lineItem to save; fill it with the generic and reference stuff
             LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
-            LineItem newLineItem = createLineItem(appointment, cpp, quantity, pet, taxes, costingGroupList, costingId);
+            LineItem newLineItem = createLineItem(appointment, cpp, quantity, pet, taxes, productGroupList, productId);
 
             if (appointment.getId() == 0L) { // we are in pricing or estimate or analyse
                 toBeSavedLineItems.add(newLineItem);
@@ -160,7 +160,7 @@ public class LineItemService {
                     productService.createBatchNumberIfNotExisting(cpp.id(), batchNumber);
                 }
                 // todo change supply amount
-                // do extra stuff we need to do on costings....
+                // do extra stuff we need to do on products....
                 doExtraStuff(cpp, pet, appointment);
                 toBeSavedLineItems.add(savedLineItem);
             }
@@ -176,20 +176,20 @@ public class LineItemService {
 
     /**************************************************************************************************************/
     private LineItem createLineItem(Appointment appointment, ProductPriceProjection cpp, BigDecimal quantity, Pet pet,
-                                    LocalMemberTax taxes, Map<Long, BigDecimal> costingGroupList, Long costingId) {
+                                    LocalMemberTax taxes, Map<Long, BigDecimal> productGroupList, Long productId) {
         LineItem newLineItem = LineItem.builder().appointment(appointment)
                 .pet(pet)
                 .processingFeeExTax(cpp.processingFeeExTax())
                 .taxedTypeEnum(cpp.taxed())
                 .salesPriceExTax(cpp.salesPriceExTax())
                 .categoryId(cpp.lookupProductCategory().getId())
-                .costingId(cpp.id())
+                .productId(cpp.id())
                 .nomenclature(cpp.nomenclature())
                 .taxGoodPercentage(taxes.getTaxLow())
                 .taxServicePercentage(taxes.getTaxHigh())
                 // calculations
                 .quantity(
-                        getQuantity(quantity, costingGroupList.get(costingId))
+                        getQuantity(quantity, productGroupList.get(productId))
                 )
                 .hasPrintLabel(cpp.prescriptionLabel() != null && !cpp.prescriptionLabel().isEmpty())
                 .build();
@@ -229,7 +229,7 @@ public class LineItemService {
 
         if (cpp.supplyId() != null) {
             // TODO
-            //       calculateUsage(cpp.supplyId(), AutorisationUtils.getCurrentUserMlid(), costing.getSupplies2Idindyqtydeduction() * lineItem.getQuantity());
+            //       calculateUsage(cpp.supplyId(), AutorisationUtils.getCurrentUserMlid(), Product.getSupplies2Idindyqtydeduction() * lineItem.getQuantity());
         }
 
 

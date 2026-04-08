@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @Table(name = "SUPPLY_SUPPLYLOCAL", uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLY_ID", "MLID"}))
 @Entity
 @SuperBuilder
@@ -16,12 +18,11 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class SupplyLocal extends LocalAndMemberBaseBO {
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    private BigDecimal quantityOfPackages;
+    private BigDecimal individualLeftInOpenPackage;
+    private BigDecimal minQuantityForAlert;
+    private BigDecimal buyQuantityPerOrder;
+    @ManyToOne
+    @JoinColumn(name = "supply_id")
     private Supply supply;
-    private Double quantity;
-    private Double individualQuantity;
-    private Double minQuantity;
-    private Double buyQuantity;
 }

@@ -45,6 +45,10 @@ public class VmasUserPreferencesController {
 
     @PostMapping("/userpreferences")
     String localMember(@Valid SettingsForm form) {
+        // color is set via a separate POST, so we need to add that color, not from the form
+        VmasUserPreferences prefData = objectMapper.readValue(AutorisationUtils.getCurrentUserJsonPref(), VmasUserPreferences.class).valid();
+        form.userPreferences.setColor(prefData.getColor());
+
         userService.saveUserSettings(objectMapper.writeValueAsString(form.userPreferences), form.localMemberId(), form.language(), form.username(), form.email());
         customerForm.updateForm(
                 form.userPreferences.getSearchCustStart().booleanValue(),

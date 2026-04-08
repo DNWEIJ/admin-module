@@ -1,7 +1,7 @@
-INSERT INTO supply_costing_batch_number
+INSERT INTO supply_product_batch_number
 (id,
  version,
- costing_id,
+ product_id,
  batch_number,
  member_id,
  local_member_id,
