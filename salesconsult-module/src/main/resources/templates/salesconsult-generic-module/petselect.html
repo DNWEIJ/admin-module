@@ -4,7 +4,7 @@
             <span th:text="#{label.otc.petList}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/selectpets" title="More information" class="emoji-icon">ℹ️</a>
         </summary>
 <!--        <div class="desktop-tablet-only">-->
-            <table id="show-alive-table" class="table-tight striped">
+            <table data-no-export  id="show-alive-table" class="table-tight striped no-sorting">
                 <thead>
                 <tr>
                     <th>[[#{label.otc.add}]]</th>

@@ -1,7 +1,10 @@
 package dwe.holding.supplyinventory.model;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
+import dwe.holding.supplyinventory.model.converter.PricingTypeEnumConverter;
+import dwe.holding.supplyinventory.model.type.PricingTypeEnum;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -38,27 +41,28 @@ public class ProductPricePromotion extends MemberBaseBO {
     // either you give a change in price/processing fee
     // OR
     // you give a reduction percentage
-    // NOT BOTH!!!
-    @NotNull
+    // OR
+    // you give x for y
+    // NOT at the same time!!!
+    // we wills store zeros insteand of nulls, to have more clearity
     @Column(nullable = false, precision = 38, scale = 4)
-    private
-    BigDecimal salesPriceExTax;
+    private BigDecimal salesPriceExTax;
 
-    @NotNull
     @Column(nullable = false, precision = 38, scale = 4)
-    private
-    BigDecimal processingFee;
+    private BigDecimal processingFee;
 
-    @NotNull
     @Column(nullable = false, precision = 38, scale = 4)
-    private
-    BigDecimal reductionPercentage;
+    private BigDecimal reductionPercentage;
 
     // format is "5|4" <- buy 5 pay 4
     // We add the shortCode on the line item: (4/5)
     // if we find 10 elements,
     //   we create 1 lineitem: with 8 quantity and the symbol (4/5)
     //   we create 1 lineitem: witn quantity 2 with the normal price
-    String buyXforY;
+    int buyXforY_X;
+    int buyXforY_Y;
 
+    @Column(columnDefinition = "varchar(1)", nullable = false)
+    @Convert(converter = PricingTypeEnumConverter.class)
+    PricingTypeEnum pricingType;
 }

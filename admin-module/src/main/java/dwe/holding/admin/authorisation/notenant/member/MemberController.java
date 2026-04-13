@@ -2,9 +2,10 @@ package dwe.holding.admin.authorisation.notenant.member;
 
 import dwe.holding.admin.model.notenant.Member;
 import dwe.holding.shared.model.type.YesNoEnum;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,16 +22,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MemberController {
     private final MemberRepository memberRepository;
 
+    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public MemberController(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
     @PostMapping("/member")
-    String save(@Valid Member member, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
+    String save(@Valid Member formMember, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/member/action";
         }
+        Member member = memberRepository.findById(formMember.getId()).orElseThrow();
+        member.setName(formMember.getName());
+        member.setStartDate(formMember.getStartDate());
+        if (!formMember.getPassword().equals(member.getPassword())) {
+            member.setPassword(passwordEncoder.encode(formMember.getPassword()));
+        }
+        member.setSimultaneousUsers(formMember.getSimultaneousUsers());
+        member.setStopDate(formMember.getStopDate());
+
         memberRepository.save(member);
         redirect.addFlashAttribute("message", "label.saved");
         return "redirect:/admin/members";
@@ -47,7 +59,7 @@ public class MemberController {
 
 
     @GetMapping("/member/{id}")
-    String showEditScreen(@PathVariable @NotNull   Long id, Model model) {
+    String showEditScreen(@PathVariable @NotNull Long id, Model model) {
         model.addAttribute("action", "Edit");
         model.addAttribute("member", memberRepository.findById(id).orElseThrow());
         setModelData(model);

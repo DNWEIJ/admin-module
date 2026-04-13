@@ -64,6 +64,7 @@ public class VmasApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         setupAdminService.init();
+    //    setupAdminService.importRolesAndConenctToDaniel();
         //setupAdminService.updateDaniel();
         updateDatabase.processAllCustomerBalance();
         updateDatabase.processAllVisitsBalance();

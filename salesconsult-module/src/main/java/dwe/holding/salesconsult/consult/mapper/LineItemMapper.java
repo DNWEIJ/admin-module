@@ -13,31 +13,20 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface LineItemMapper {
 
-    Estimatelineitem toEstimateLineItem(
-            LineItem lineItem,
-            @Context Estimate estimate
-    );
+    @Mapping(target = "memberId", ignore = true)
+    Estimatelineitem toEstimateLineItem(LineItem lineItem, @Context Estimate estimate);
 
     List<Estimatelineitem> toEstimateLineItemList(
-            List<LineItem> lineItems,
-            @Context Estimate estimate
-    );
-
+            List<LineItem> lineItems, @Context Estimate estimate);
     @AfterMapping
     default void setEstimate(
-            @MappingTarget Estimatelineitem target,
-            @Context Estimate estimate
-    ) {
+            @MappingTarget Estimatelineitem target, @Context Estimate estimate) {
         target.setEstimate(estimate);
     }
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "version", ignore = true)
     @Mapping(target = "memberId", ignore = true)
-    RefundLineItem toRefundLineItem(
-            LineItem lineItem,
-            @Context Refund refund
-    );
+    RefundLineItem toRefundLineItem(LineItem lineItem, @Context Refund refund);
 
     List<RefundLineItem> toRefundLineItemList(
             List<LineItem> lineItem,
@@ -46,18 +35,9 @@ public interface LineItemMapper {
 
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "version", ignore = true)
     @Mapping(target = "memberId", ignore = true)
-    LineItem fromRefundLineItem(
-            RefundLineItem refundLineItem,
-            @Context Appointment app
-    );
+    LineItem fromRefundLineItem(RefundLineItem refundLineItem, @Context Appointment app);
 
     List<LineItem> fromRefundLineItemList(
-            List<RefundLineItem> refundLineItem,
-            @Context Appointment app
-    );
-
-
-
+            List<RefundLineItem> refundLineItem, @Context Appointment app);
 }

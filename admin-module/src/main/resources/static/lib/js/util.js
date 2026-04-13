@@ -39,21 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("refreshPage", function (evt) {
         const detail = evt.detail || ''
         const url = detail.url
-
         if (url) {
-            console.log("refresh with url")
             window.location.href = url
         } else {
-            console.log("refresh without url")
             window.location.reload()
 
         }
-    })
-
-    document.body.addEventListener("closeModal", () => {
-        const modal = document.getElementById("datetime-modal")
-        closeModal(modal)
-        location.reload()
     })
 
     document.body.addEventListener('htmx:configRequest', e => {
@@ -72,6 +63,18 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     highlightRowOnTable()
+
+    document.body.addEventListener("htmx:afterSwap", function (event) {
+        if (event.target.id === "notification-message-modal") {
+            setTimeout(() => {
+                const el = document.getElementById("notification-message-modal");
+                if (el) {
+                    el.classList.remove("show");
+                }
+            }, 4000);
+        }
+    });
+
 
     // todo this makes the tool tip blink but it doesnt go away.
     // document.querySelectorAll('[data-tooltip]').forEach(el => {

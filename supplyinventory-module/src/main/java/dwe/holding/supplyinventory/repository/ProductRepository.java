@@ -5,6 +5,7 @@ import dwe.holding.supplyinventory.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,11 +43,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             select new dwe.holding.supplyinventory.repository.ProductProjection(
                 c,
                 c.supply.id,
-                case when exists ( select 1 from ProductGroup cg where cg.parentProductId = c.id )
+                (select pp.id from ProductPricePromotion pp
+                 where pp.productId = c.id
+                 and :currentDate between pp.startDate and pp.endDate),
+                case when exists (select 1 from ProductGroup cg where cg.parentProductId = c.id)
                     then true
                     else false
                 end,
-                case when exists ( select 1 from ProductPricePromotion cg where cg.productId = c.id )
+                 case when exists (select 1 from ProductPricePromotion cg where cg.productId = c.id and :currentDate between cg.startDate and cg.endDate)
                     then true
                     else false
                 end
@@ -54,17 +58,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             from Product c
             where c.id = :id and c.memberId = :memberId
             """)
-    ProductProjection findByIdAndMemberIdToDto(Long id, Long memberId);
+    ProductProjection findByIdAndMemberIdToDto(Long id, Long memberId, LocalDate currentDate);
 
     @Query("""
             select new dwe.holding.supplyinventory.repository.ProductProjection(
                 c,
                 c.supply.id,
-                case when exists ( select 1 from ProductGroup cg where cg.parentProductId = c.id )
+                (select pp.id from ProductPricePromotion pp
+                 where pp.productId = c.id
+                 and :currentDate between pp.startDate and pp.endDate),
+                case when exists (select 1 from ProductGroup cg where cg.parentProductId = c.id)
                     then true
                     else false
                 end,
-                case when exists ( select 1 from ProductPricePromotion cg where cg.productId = c.id )
+                 case when exists (select 1 from ProductPricePromotion cg where cg.productId = c.id and :currentDate between cg.startDate and cg.endDate)
                     then true
                     else false
                 end
@@ -73,6 +80,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             where c.lookupProductCategory.id = :lookupId and c.memberId = :memberId
             order by c.nomenclature
             """)
-    List<ProductProjection> findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclatureToDto(Long lookupId, Long memberId);
-
+    List<ProductProjection> findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclatureToDto(Long lookupId, Long memberId, LocalDate currentDate);
 }

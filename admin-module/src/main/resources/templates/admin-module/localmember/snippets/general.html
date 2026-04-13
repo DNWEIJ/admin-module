@@ -1,0 +1,28 @@
+﻿<fieldset>
+    <div class="grid">
+        <input id="id" name="id" th:value="${id}" type="hidden">
+        <input id="version" name="version" th:value="${version}" type="hidden">
+
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','localmember.name','localmember.localMemberName','0')}"></th:block>
+    </div>
+    <div class="grid">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','localmember.email','localmember.email','0')}" th:with="type='email'"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1','localmember.phone1','localmember.phone1','0')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2','localmember.phone2','localmember.phone2','0')}"></th:block>
+    </div>
+</fieldset>
+<fieldset>
+    <div class="grid">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','localmember.address1','localmember.address1','0')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','localmember.address2','localmember.address2','0')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3','localmember.address3','localmember.address3','0')}"></th:block>
+    </div>
+    <div class="grid">
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','localmember.city','localmember.city','0')}"></th:block>
+        <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','localmember.zipCode','localmember.zipCode','0')}"></th:block>
+    </div>
+    <fieldset>
+        <div th:text="#{localmember.pref.template.openingshours}"></div>
+        <textarea style="width:100%; height:12rem;" id="opening" name="pref.firstPageMsssage" th:utext="${pref.firstPageMessage}"></textarea>
+    </fieldset>
+</fieldset>

@@ -1,11 +1,17 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Gebruiker bewerken/toevoegen</title>
+    <title th:test="#{user.title}"></title>
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/admin/users')}"></th:block>
 
+        <details id="reportRemindersInfo" open>
+            <summary>
+                <span th:text="#{label.user.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/admin/user" title="More information" class="emoji-icon">ℹ️</a>
+            </summary>
+
+            <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${user.id}, 'User','/admin/users')}"></th:block>
+        </details>
     <form th:action="@{/admin/user}" method="post">
 
         <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
@@ -14,27 +20,31 @@
             <input id="id" name="id" th:value="${user.id}" type="hidden">
             <input id="version" name="version" th:value="${user.version}" type="hidden">
             <legend th:utext="#{user.details}"></legend>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('account','user.account', 'user.account','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','user.name', 'user.name','3')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('Email','user.email', 'user.email','4')}" th:with="type='email'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('account','user.account', 'user.account','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','user.name', 'user.name','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','user.email', 'user.email','0')}" th:with="type='email'"></th:block>
         </fieldset>
 
         <fieldset class="grid" role="presentation">
             <legend th:utext="#{user.settings}"></legend>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','user.loginEnabled', ${user.loginEnabled}, ${ynvaluesList}, true,'5')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','user.language', ${user.language}, ${languagePrefList}, true,'6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('loginEnabled','user.loginEnabled', ${user.loginEnabled}, ${ynvaluesList}, true,'0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('language','user.language', ${user.language}, ${languagePrefList}, true,'0')}"></th:block>
             <th:block
                     th:if="${applicationName != null and applicationName != 'teammover'}"
-                    th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','user.personnelStatus', ${user.personnelStatus}, ${personnelStatusList}, true,'7')}">
+                    th:insert="~{fragments/elements/dropdown::propDropdown('personnelStatus','user.personnelStatus', ${user.personnelStatus}, ${personnelStatusList}, true,'0')}">
             </th:block>
             <th:block
                     th:if="${isSuperAdmin}"
-                    th:insert="~{fragments/elements/dropdown::dbDropdown('member','user.member', ${user.member.id}, ${membersList}, true,'8')}">
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('member','user.member', ${user.member.id}, ${membersList}, true,'0')}">
             </th:block>
         </fieldset>
         <hr/>
         <fieldset class="grid" role="presentation">
-            <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${roles}, 'checkedRoles', '2', 'Roles')}"></th:block>
+            <th:block th:insert="~{fragments/elements/select::selectCheckBoxList(${roles}, 'checkedRoles', 'Roles')}"></th:block>
         </fieldset>
     </form>
+
+    <table>
+        <tr><td>ips</td></tr>
+    </table>
 </section>

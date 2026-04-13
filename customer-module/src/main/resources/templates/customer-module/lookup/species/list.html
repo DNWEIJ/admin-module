@@ -13,6 +13,7 @@
             <thead>
             <tr>
                 <th>[[#{label.species.species}]]</th>
+                <th>[[#{label.species.breeds}]]</th>
                 <th>[[#{label.list.auditinfo}]]</th>
             </tr>
             </thead>
@@ -22,9 +23,8 @@
                     <th:block th:if="${specy.memberId == -1}">
                         <td th:text="${specy.species}"></td>
                     </th:block>
-                    <th:block th:unless="${specy.memberId == -1}">
-                        <td><a th:href="'/customer/lookup/specy/'+ ${specy.id}">[[${specy.species}]]</a></td>
-                    </th:block>
+                        <td><a th:href="'/customer/lookup/specy/'+ ${specy.id}" th:text="${specy.species}"></a></td>
+                    <td><a th:href="'/customer/lookup/specy/'+ ${specy.id}+ '/breeds'" th:text="#{label.title.breeds}"></a></td>
                     <td>
                         <small th:data-tooltip="'Created by  '+${specy.addedBy}+' on ' +${#temporals.format(specy.addedOn, 'dd-MM-yy')}">
                             [[${specy.lastEditedBy}]] • [[${#temporals.format(specy.lastEditedOn, 'dd-MM-yy')}]]

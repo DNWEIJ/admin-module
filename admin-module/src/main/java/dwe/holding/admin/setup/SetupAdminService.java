@@ -52,6 +52,35 @@ public class SetupAdminService {
 
     }
 
+    @Transactional()
+    public void importRolesAndConenctToDaniel() {
+        log.info("importRolesAndConenctToDaniel:: role");
+        List<Role> listRole = roleRepository.saveAllAndFlush(
+                List.of(
+                        Role.builder().name("SUPER_ADMIN").memberId(77L).build(),
+                        Role.builder().name("ADMIN_READ").memberId(77L).build(),
+                        Role.builder().name("ADMIN_CREATE").memberId(77L).build(),
+                        Role.builder().name("DEFAULT").memberId(77L).build()
+                )
+        );
+        Role roleSuperAdmin = listRole.stream().filter(r -> r.getName().equals("SUPER_ADMIN")).findFirst().get();
+        Role roleAdminCreate = listRole.stream().filter(r -> r.getName().equals("ADMIN_CREATE")).findFirst().get();
+        Role roleAdminRead = listRole.stream().filter(r -> r.getName().equals("ADMIN_READ")).findFirst().get();
+        Role roleDefault = listRole.stream().filter(r -> r.getName().equals("DEFAULT")).findFirst().get();
+
+        UserNoMember userNoMember = userNoMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().orElseThrow();
+        User user = userRepository.findById(userNoMember.getId()).orElseThrow();
+
+        userRoleRepository.saveAllAndFlush(
+                List.of(
+                        UserRole.builder().role(roleSuperAdmin).user(user).build(),
+                        UserRole.builder().role(roleAdminCreate).user(user).build(),
+                        UserRole.builder().role(roleAdminRead).user(user).build(),
+                        UserRole.builder().role(roleDefault).user(user).build()
+                )
+        );
+    }
+
     @Transactional
     public Long init() {
         if (functionRepository.findAll().isEmpty() || memberRepository.findAll().isEmpty()) {

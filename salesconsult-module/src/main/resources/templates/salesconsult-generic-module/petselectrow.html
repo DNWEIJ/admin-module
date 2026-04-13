@@ -7,8 +7,9 @@
         <th:block th:replace="~{this::petName}"></th:block>
 
         <td th:if="${salesType.isVisit}">
+            <!-- TODO add default from localMemer -->
             <th:block
-                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${offset + iStat.index}+'].timeNeeded', '', '', ${timeList},  false,'-1')}"
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('formPet['+${offset + iStat.index}+'].timeNeeded', '', ${localMemberDefaultTimeNeeded}, ${timeList},  false,'-1')}"
                     th:with="required=false"></th:block>
         </td>
         <td th:if="${salesType.isVisit}">

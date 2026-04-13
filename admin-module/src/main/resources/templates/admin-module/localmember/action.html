@@ -1,35 +1,76 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
+    <script type="module" th:src="@{/lib/js/standard_ckeditor.js}"></script>
+    <style>
+        .ck-editor__editable {
+            height: calc(100vh - 40rem); /*  200px header + 60px footer */
+
+        }
+    </style>
     <title>Sub Member Settings</title>
 </head>
 <body>
+
 <section layout:fragment="content">
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmembers')}"></th:block>
 
-    <form th:action="@{/admin/localmember}" method="post">
+    <style>
+        #tab-general:checked ~ .panels .panel:nth-child(1),
+        #tab-pref:checked ~ .panels .panel:nth-child(2),
+        #tab-infotext:checked ~ .panels .panel:nth-child(3) {
+            display: block;
+        }
+
+        .tabs .panels .panel {
+            max-height: 100%
+        }
+    </style>
+
+    <form th:action="@{/admin/localmember}" method="post" onsubmit="document.getElementById('contentToSave').value = window.editor.getData();">
 
         <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
+        <hr/>
+        <div class="tabs">
+            <input type="radio" name="localmember-tabs" id="tab-general" checked>
+            <label for="tab-general" th:text="#{label.memberlocal.general}"></label>
+            <input type="radio" name="localmember-tabs" id="tab-pref">
+            <label for="tab-pref" th:text="#{label.memberlocal.pref}"></label>
+            <input type="radio" name="localmember-tabs" id="tab-infotext">
+            <label for="tab-infotext" th:text="#{label.memberlocal.infotext}"></label>
 
-        <fieldset class="grid">
-            <input id="id" name="id" th:value="${id}" type="hidden">
-            <input id="version" name="version" th:value="${version}" type="hidden">
+            <div class="panels">
+                <section class="panel" id="">
+                    <div>
+                        <th:block th:insert="~{admin-module/localmember/snippets/general}"></th:block>
+                    </div>
+                </section>
+                <section class="panel">
+                    <div>
+                        <th:block th:insert="~{admin-module/localmember/snippets/preferences}"></th:block>
+                    </div>
+                </section>
+                <section class="panel">
 
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','localmember.name','localmember.localMemberName','1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email','localmember.email','localmember.email','2')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone1','localmember.phone1','localmember.phone1','3')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('phone2','localmember.phone2','localmember.phone2','4')}"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address1','localmember.address1','localmember.address1','5')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address2','localmember.address2','localmember.address2','6')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('address3','localmember.address3','localmember.address3','7')}"></th:block>
-        </fieldset>
-        <fieldset class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('city','localmember.city','localmember.city','8')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('state','localmember.state','localmember.state','8')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','localmember.zipCode','localmember.zipCode','10')}"></th:block>
-        </fieldset>
+                    <script>
+                        let editor;
+                        ClassicEditor.create(document.querySelector('#editor')).then(e => editor = e);
+                    </script>
+                    <div th:text="#{localmember.pref.firstPageMsssage}"></div>
+
+                    <div id="editor" th:utext="${pref.firstPageMessage}"></div>
+                </section>
+            </div>
+        </div>
     </form>
 </section>
 </body>

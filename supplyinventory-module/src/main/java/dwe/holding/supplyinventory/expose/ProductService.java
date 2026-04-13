@@ -36,6 +36,7 @@ public class ProductService {
         listProductsInGroup.add(productRepository.findById(costingId).orElseThrow());
 
         // validate if there are price promotions
+        // TODO add the date to the query
         List<ProductPricePromotion> productPromotions = productPricePromotionRepository.findAllById(listProductsInGroup.stream().map(Product::getId).toList());
         if (productPromotions.isEmpty()) {
             return productMapper.toProjectionList(listProductsInGroup);

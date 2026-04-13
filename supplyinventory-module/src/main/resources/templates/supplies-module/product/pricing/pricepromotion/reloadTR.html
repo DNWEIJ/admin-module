@@ -1,0 +1,3 @@
+<div hx-swap-oob="true" th:id="'pricing-tr-productid_' + ${product.product.id}" hx-swap="outerHTML">
+    <th:block th:replace="~{supplies-module/product/htmx/pricingsbody::readonlyTR(product=${product})}"></th:block>
+</div>

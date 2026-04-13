@@ -23,7 +23,7 @@
                         <tr th:each="visit, iter : ${appointment.visits}">
                             <td><input role="switch" th:id="${'addToVisit_'+ visit.id}"  th:name="${'addToVisit['+iter.index+']'}" type="checkbox" checked="checked" th:value="${visit.id}">
                             </td>
-                            <td th:text="${visit.pet.petName}"></td>
+                            <td th:text="${visit.pet.name}"></td>
                             <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${visit.totalAmountIncTax},false, ${amountClass})}"></th:block>
                         </tr>
                         </tbody>

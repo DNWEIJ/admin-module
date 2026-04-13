@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @Table(name = "SUPPLY_PRODUCT")
 @Entity
@@ -74,6 +75,10 @@ public class Product extends MemberBaseBO {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUPPLY_ID", nullable = true)
     private Supply supply;
+
+    @OneToMany(mappedBy = "productId", fetch = FetchType.LAZY)
+    private List<ProductPricePromotion> pricePromotions;
+
     Long supplyIndyQtyDeduction; // pending on this we deduct x times: product can be '5bags' so we need to have 5 here
 
     @Column(columnDefinition = "varchar(1)", nullable = false)

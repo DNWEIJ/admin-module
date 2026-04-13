@@ -52,8 +52,7 @@ public class SecurityConfig {
         AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
-        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, contextPath + "/admin/login"));
-        // authFilter.setSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(contextPath + "/admin/index"));
+        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.GET, contextPath + "/admin/login"));
         authFilter.setSuccessHandler(new SwapOutNoMemberUserAuthenticationSuccessHandler(contextPath + "/admin/index", transactionalUserService));
         authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler(contextPath + "/admin/login?error=true"));
 
@@ -89,7 +88,7 @@ public class SecurityConfig {
 
                 // Session management
                 .sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false))
-                .logout(logout -> logout.invalidateHttpSession(true).addLogoutHandler(clearSiteData))
+                .logout(logout -> logout.logoutUrl("/admin/logout").invalidateHttpSession(true).addLogoutHandler(clearSiteData))
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

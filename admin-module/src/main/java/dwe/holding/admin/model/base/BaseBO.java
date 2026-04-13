@@ -40,7 +40,6 @@ public abstract class BaseBO {
     public BaseBO() {
     }
 
-    @Transient
     public boolean isNew() {
         return id == null;
     }

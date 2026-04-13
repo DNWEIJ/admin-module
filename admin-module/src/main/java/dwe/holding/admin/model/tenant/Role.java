@@ -27,7 +27,7 @@ public class Role extends MemberBaseBO {
 //    @Column(nullable = false)
 //    private String appName;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "role")
-    @Builder.Default
-    private Set<UserRole> userRoles = new HashSet<UserRole>(1);
+//    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "role")
+//    @Builder.Default
+//    private Set<UserRole> userRoles = new HashSet<UserRole>(1);
 }

@@ -81,8 +81,8 @@
         <th:block th:if="${label != ''}">
             <label th:for="${name}" th:value="${label}">[[#{${label}}]]
         </th:block>
-        <div hx-ext="path-params">
-            <select th:hx-get="${hxget}" th:hx-target="${hxtarget}"
+        <div>
+            <select th:hx-get="${hxget}" th:hx-target="${hxtarget}"  hx-ext="path-params"
                     th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}"
                     th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
                 <th:block th:unless="${list.size() == 1}">

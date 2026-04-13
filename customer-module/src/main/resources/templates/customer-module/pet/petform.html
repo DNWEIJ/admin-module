@@ -17,8 +17,9 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('idealWeight','pet.idealWeight','pet.idealWeight','3')}" th:with="required=false"></th:block>
         </div>
         <div class="grid">
+            <!-- species in url is a placeholder for param htmx exntension -->
             <th:block
-                    th:insert="~{fragments/elements/dropdown::dbDropdownWithHtmx('species', 'pet.species', ${pet.species}, ${speciesList}, true, '/customer/customer/pet/{species}', '#breed')}"
+                    th:insert="~{fragments/elements/dropdown::dbDropdownWithHtmx('species', 'pet.species', ${pet.species}, ${speciesList}, true, '/customer/customer/pet/species/{species}', '#breed')}"
                     th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('breed', 'pet.breed', ${pet.breed}, ${speciesList}, true,'5')}" th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sex','pet.sex', ${pet.sex}, ${sexTypeList}, true,'6')}"></th:block>

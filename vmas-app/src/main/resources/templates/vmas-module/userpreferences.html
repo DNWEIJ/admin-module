@@ -22,7 +22,7 @@
                     <th:block th:insert="~{fragments/elements/input::inputHtmlLift('username', 'userpreferences.username', 'user.username', '1')}"></th:block>
                 </div>
                 <div>
-                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', 'userpreferences.email', 'user.email', '2')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('email', 'userpreferences.email', 'user.email', '2')}" th:with="type='email'"></th:block>
                 </div>
             </div>
             <div class="grid">

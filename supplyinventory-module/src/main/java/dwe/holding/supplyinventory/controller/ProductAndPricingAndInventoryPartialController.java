@@ -6,8 +6,10 @@ import dwe.holding.shared.model.type.TaxedTypeEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.model.Product;
 import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
+import dwe.holding.supplyinventory.repository.ProductProjection;
 import dwe.holding.supplyinventory.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/product")
+@Slf4j
 public class ProductAndPricingAndInventoryPartialController {
 
     public static final String PRICING = "pricing";
@@ -30,7 +33,7 @@ public class ProductAndPricingAndInventoryPartialController {
     @GetMapping("/product/{productId}/partialedit/{type}")
     String readProductHtmx(Model model, @PathVariable Long productId, @PathVariable String type, ProductController.ListForm costingSearchForm) {
         model
-                .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid()))
+                .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid(), LocalDate.now()))
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
                 .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
@@ -42,10 +45,11 @@ public class ProductAndPricingAndInventoryPartialController {
                 type.equals(INVENTORY) ? "supplies-module/product/inventory/inventorybody::editableTR" : "/supplies-module/product/htmx/productsbody::editableTR";
     }
 
-    @GetMapping("/product/{costingId}/partialcancel/{type}")
-    String cancelProductHtmx(Model model, @PathVariable Long costingId, @PathVariable String type) {
+    @GetMapping("/product/{productId}/partialcancel/{type}")
+    String cancelProductHtmx(Model model, @PathVariable Long productId, @PathVariable String type) {
         model
-                .addAttribute("product", productRepository.findByIdAndMemberIdToDto(costingId, AutorisationUtils.getCurrentUserMid()))
+                .addAttribute("isOOB", false)
+                .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid(), LocalDate.now()))
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
                 .addAttribute("locals", AutorisationUtils.getLocalMemberMapShort())
@@ -99,12 +103,14 @@ public class ProductAndPricingAndInventoryPartialController {
             model.addAttribute("products", List.of());
         } else {
             if (form.inputCostingId() != null) {
-                model.addAttribute("products", productRepository.findByIdAndMemberIdToDto(form.inputCostingId(), AutorisationUtils.getCurrentUserMid()));
+                model.addAttribute("products", productRepository.findByIdAndMemberIdToDto(form.inputCostingId(), AutorisationUtils.getCurrentUserMid(), LocalDate.now()));
             }
             if (form.categoryId() != null) {
-                model.addAttribute("products", productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclatureToDto(form.categoryId(), AutorisationUtils.getCurrentUserMid()));
+                model.addAttribute("products", productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclatureToDto(form.categoryId(), AutorisationUtils.getCurrentUserMid(), LocalDate.now()));
             }
         }
+        List<ProductProjection> list = (List<ProductProjection>) model.getAttribute("products");
+
         LocalMemberTax taxes = AutorisationUtils.getVatPercentages(LocalDate.now());
         model
                 .addAttribute("taxGoodPercentage", taxes.getTaxLow())

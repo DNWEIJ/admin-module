@@ -1,8 +1,8 @@
 <span th:fragment="notification"
-     id="notification-message-modal"
-     role="alert"
-     class="notification-message text-align-center alert"
+     id="notification-message-modal" role="alert" class="notification-message text-align-center alert"
      hx-swap-oob="true" hx-swap="outerHTML"
-     th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'"
-     th:text="${message != null} ? #{${message}} : ''">
+     th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'">
+    <span th:if="${message != null}" th:text="#{__${message}__}"></span>
+    <span th:if="${message == null and messageTxt != null}" th:text="${messageTxt}"></span>
+    <span th:if="${message == null and messageTxt == null}">Unknown Error</span>
 </span>

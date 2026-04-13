@@ -1,5 +1,6 @@
 package dwe.holding.salesconsult.sales.controller.otc;
 
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.form.CustomerForm;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
@@ -69,8 +70,11 @@ public class OTCSelectController {
             model.addAttribute("message", "Something went wrong. Please try again");
             return "sales-module/otc/searchpage";
         }
-        Appointment app = appointmentVisitService.createAppointmentVisit(pets, customerId, SalesType.OTC);
-        // start selling for the first pet in the list...
+
+        Appointment app = appointmentVisitService.createAppointmentVisit(
+                // OTC: Set user accordingly
+                petsForm.formPet().stream().map(p -> p.withVet(AutorisationUtils.getCurrentUserAccount())).toList()
+                , customerId, SalesType.OTC);
         return "redirect:/sales/otc/customer/" + customerId + "/visit/" + app.getVisits().iterator().next().getId();
     }
 

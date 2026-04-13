@@ -13,7 +13,7 @@
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','paymentAmount','2')}"
                           th:with="shouldFocus=true,pattern='^(?!0+(?:\.0+)?$)\d+(?:\.\d{1,2})?$'"></th:block>
             </th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('paymentDate','label.payment.paymentDa','payment.paymentDate','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('paymentDate','label.payment.paymentDate','payment.paymentDate','3')}"></th:block>
         </div>
         <div class="grid">
             <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method',${payment.method}, ${payMethodsList}, true,'1')}"></th:block>

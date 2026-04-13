@@ -11,7 +11,6 @@ import tools.jackson.databind.ObjectMapper;
 
 @ControllerAdvice
 @Slf4j
-
 public class VmasAdvice {
     private final ObjectMapper objectMapper;
 

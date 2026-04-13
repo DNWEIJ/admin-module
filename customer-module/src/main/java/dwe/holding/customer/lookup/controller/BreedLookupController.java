@@ -28,9 +28,9 @@ public class BreedLookupController {
     private final SpeciesLookupRepository speciesLookupRepository;
 
 
-    @GetMapping("lookup/breeds")
-    String list(Model model) {
-        model.addAttribute("breeds", breedLookupRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L)));
+    @GetMapping("lookup/specy/{specyId}/breeds")
+    String list(Model model, @PathVariable Long specyId) {
+        model.addAttribute("breeds", breedLookupRepository.findBySpecies_Id(specyId));
         model.addAttribute("activeMenu", "breeds");
         return "customer-module/lookup/breeds/list";
     }

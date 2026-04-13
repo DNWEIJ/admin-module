@@ -15,23 +15,24 @@ import java.util.List;
 @Setter
 @Getter
 public class LocalMemberPreferences {
-    private String firstPageMessage;
-    private String consultTextTemplate;
     private Integer estimatedTime;
-    private String openingsTimes;
     private String insuranceCompany;
     private PaymentMethodEnum paymentMethod;
+    private AgendaTypeEnum agendaType;
+
+    private YesNoEnum mandatoryConsultReason;
+    private YesNoEnum mandatoryExpireDate;
+    private YesNoEnum sendOutAppointmentReminderMail;
+
+    private String consultTextTemplate;
 
     private String room1;
     private String room2;
     private String room3;
     private String room4;
-    // todo rename and renaming at the copy file roomAgenda -> agendaType
-    private AgendaTypeEnum roomAgenda;
-    private YesNoEnum active;
-    private YesNoEnum rxLabel;
-    private YesNoEnum mandatoryReason;
-    private YesNoEnum sendOutAppointmentReminderMail;
+
+    private String openingsTimes;
+    private String firstPageMessage;
 
     public List<Template> getConsultTextRecords(ObjectMapper objectMapper) {
         return objectMapper.readValue(getConsultTextTemplate(), TemplatesResponse.class).templates();

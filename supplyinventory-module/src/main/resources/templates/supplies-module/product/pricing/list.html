@@ -10,8 +10,6 @@
             <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/pricing" title="More information" class="emoji-icon">ℹ️</a>
         </summary>
         <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Pricing','')}"></th:block>
-    </details>
-    <fieldset>
         <div class="grid">
             <div>
                 <th:block th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></th:block>
@@ -25,9 +23,8 @@
             <td colspan="2">
                 <th:block th:insert="~{fragments/elements/select::selectCheckBox('showDistributorPrice',#{label.product.show.costprice},'true','0')}"></th:block>
             </td>
-            </th>
         </table>
-    </fieldset>
+    </details>
     <script>
         document.getElementById("showCategory").addEventListener("change", function () {
             toggleTableColumns("pricingTable", [2], this.checked);

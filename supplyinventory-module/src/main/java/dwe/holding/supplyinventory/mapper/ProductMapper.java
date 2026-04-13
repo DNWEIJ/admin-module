@@ -48,9 +48,8 @@ public interface ProductMapper {
     }
 
     @Mappings({
-            @Mapping(target = "memberId", ignore = true),
-            @Mapping(target = "version", ignore = true),
-            @Mapping(target = "id", ignore = true)
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "memberId", ignore = true)
     })
     Product fromForm(@MappingTarget Product entity, Product form);
 }

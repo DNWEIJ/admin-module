@@ -107,6 +107,7 @@ public class VisitController {
                         (localMemberId != null) ? localMemberId : AutorisationUtils.getCurrentUserMlid()
                 )
                 .build();
+        LocalMemberPreferences prefMemberData = objectMapper.readValue(AutorisationUtils.getCurrentLocalMember().getMetaLocalMemberPreferences().getPreferencesJson(), LocalMemberPreferences.class);
         model
                 .addAttribute("selectedRoom", AgendaTypeEnum.Room.equals(agendaType) ? resource : "")
                 .addAttribute("selectedVet", AgendaTypeEnum.Vet.equals(agendaType) ? resource : "")
@@ -114,6 +115,7 @@ public class VisitController {
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("timeList", IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList())
+                .addAttribute("localMemberDefaultTimeNeeded", prefMemberData.getEstimatedTime())
                 .addAttribute("salesType", SalesType.VISIT)
         ;
         if (getHtmxAndAddToModel(request, model)) {

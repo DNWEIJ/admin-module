@@ -4,9 +4,9 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.admin.util.ControllerHelper;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
-import dwe.holding.customer.client.model.lookup.LookupBreeds;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.repository.LookupBreedsRepository;
 import dwe.holding.customer.client.repository.LookupSpeciesRepository;
 import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
@@ -37,6 +37,7 @@ public class PetController {
     private final PetRepository petRepository;
     private final CustomerRepository customerRepository;
     private final LookupSpeciesRepository lookupSpeciesRepository;
+    private final LookupBreedsRepository lookupBreedsRepository;
 
     @GetMapping("/customer/{customerId}/pets")
     String list(@PathVariable Long customerId, Model model) {
@@ -55,7 +56,7 @@ public class PetController {
         // on error, we have a form
         if (model.containsAttribute("petForm")) {
             setModel(model, customer.getId(), (Pet) model.getAttribute("petForm"));
-            return  isHtmx ? "admin-module/modal/error" : "customer-module/pet/action";
+            return isHtmx ? "admin-module/modal/error" : "customer-module/pet/action";
         } else {
             setModel(model, customer.getId(), Pet.builder()
                     .allergies(YesNoEnum.No).deceased(YesNoEnum.No).gpwarning(YesNoEnum.No).insured(YesNoEnum.No)
@@ -102,14 +103,16 @@ public class PetController {
         return isHtmx ? "fragments/elements/empty" : "redirect:/customer/customer/" + customerId + "/pets";
     }
 
-    @PostMapping("/customer/pet/breed/{id}")
-    String getBreed(@PathVariable Long id, Model model){
-        model.addAttribute("flatData",
-                model.addAttribute("speciesList", lookupSpeciesRepository.findById(id).orElseThrow().getBreeds()
-                        .stream().sorted(comparing(LookupBreeds::getBreed)).map(
-                                f -> "<option='" + f.getId() + "'>" + f.getBreed() + "</option>"
-                        ).collect(Collectors.joining()))
-                );
+    @GetMapping("/customer/pet/species/{id}")
+    String getBreed(@PathVariable Long id, Model model) {
+//        model.addAttribute("flatData", lookupSpeciesRepository.findById(id).orElseThrow().getBreeds()
+//                        .stream().sorted(comparing(LookupBreeds::getBreed))
+//                        .map(f -> "<option='" + f.getId() + "'>" + f.getBreed() + "</option>")
+//                        .collect(Collectors.joining())
+//                );
+        model.addAttribute("flatData", lookupBreedsRepository.findBySpecies_Id(id).stream()
+                .map(f -> "<option value='" + f.getId() + "'>" + f.getBreed() + "</option>")
+                .collect(Collectors.joining()));
         return "fragments/elements/flatData";
     }
 
@@ -174,7 +177,9 @@ public class PetController {
     }
 
     void setModel(Model model, Long customerId, Pet pet) {
+        // TODO remove all, no -1 anymore
         List<Long> listIds = List.of(AutorisationUtils.getCurrentUserMid(), -1L);
+
         model.addAttribute("activeMenu", "pets");
         model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
         model.addAttribute("sexTypeList", SexTypeEnum.getWebList());

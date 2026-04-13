@@ -10,4 +10,5 @@ public interface LookupBreedsRepository extends JpaRepository<LookupBreeds, Long
     List<LookupBreeds> findByMemberIdIn(List<Long> memberIds);
 
 
+    List<LookupBreeds> findBySpecies_Id(Long id);
 }

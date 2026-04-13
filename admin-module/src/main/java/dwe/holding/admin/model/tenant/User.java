@@ -68,15 +68,17 @@ public class User extends LocalAndMemberBaseBO {
     @Transient
     private Member member = new Member();
 
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private MetaUserPreferences metaUserPreferences;
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<>(0);
+
     @Builder.Default
     @Transient
     private List<String> roles = new ArrayList<>(0);
+
     @Builder.Default
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "userId")
     private List<IPSecurity> ipNumbers = new ArrayList<>(0);

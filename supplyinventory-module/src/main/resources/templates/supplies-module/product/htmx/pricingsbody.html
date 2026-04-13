@@ -1,6 +1,6 @@
 <th:block th:fragment="pricingsbody">
     <tbody id="lineItemsTable">
-    <th:block th:each="product : ${products}">
+    <th:block th:each="product : ${products}" th:with="isOOB=false">
         <th:block th:replace="~{this::readonlyTR(product=${product})}"></th:block>
     </th:block>
     </tbody>
@@ -8,35 +8,45 @@
 
 <th:block th:fragment="readonlyTR(product)">
     <th:block th:if="${product != null}">
-        <tr>
-            <td>
+        <th:block th:if="${isOOB == true}">
+            <tr th:id="'pricing-tr-productid_' + ${product.product.id}" hx-swap-oob="true" hx-swap="outerHTML">
+        </th:block>
+        <th:block th:if="${isOOB == false}">
+            <tr th:id="'pricing-tr-productid_' + ${product.product.id}">
+        </th:block>
+        <td>
             <a class="no-sorting">
                 <a th:hx-get="'/product/product/'+${product.product.id} + '/partialedit/pricing'" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
-                <a th:if="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.product.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✔️</a>
-                <a th:unless="${product.pricingProduct}" th:hx-get="'/product/product/'+${product.product.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="outerHTML">✖️</a>
-            </td>
-            <td th:text="${product.product.nomenclature}"></td>
-            <td th:text="${product.product.lookupProductCategory.categoryName}"></td>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.purchaseDistributorPrice}, false)}"></th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.quantityPerPackage}, false)}"></th:block>
-            <th:block th:with="pricePerQuantity=${(product.product.purchaseDistributorPrice != null
+                <th:block th:if="${product.pricePromotionId != null}">
+                    <a th:hx-get="'/product/product/'+${product.product.id} + '/pricing/promotion/'+${product.pricePromotionId}" hx-target="#modal-container"
+                       hx-swap="innerHtml">✔️</a>
+                </th:block>
+                <th:block th:if="${product.pricePromotionId == null}">
+                    <a th:hx-get="'/product/product/'+${product.product.id} + '/pricing/promotion'" hx-target="#modal-container" hx-swap="innerHTML">✖️</a>
+                </th:block>
+        </td>
+        <td th:text="${product.product.nomenclature}"></td>
+        <td th:text="${product.product.lookupProductCategory.categoryName}"></td>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.purchaseDistributorPrice}, false)}"></th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.quantityPerPackage}, false)}"></th:block>
+        <th:block th:with="pricePerQuantity=${(product.product.purchaseDistributorPrice != null
                                      and product.product.quantityPerPackage != null
                                      and product.product.quantityPerPackage != 0)
                                      ? (product.product.purchaseDistributorPrice / product.product.quantityPerPackage)
                                      : 0},
                   safeSalesPrice=${product.product.salesPriceExTax != null ? product.product.salesPriceExTax : 0},
                   marginPercentage=${safeSalesPrice != 0 ? ((safeSalesPrice - pricePerQuantity) / safeSalesPrice * 100) : 0}">
-                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${pricePerQuantity}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${pricePerQuantity}, false)}"></th:block>
 
-                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.uplift}, false)}"></th:block>
-                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.salesPriceExTax}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.uplift}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.salesPriceExTax}, false)}"></th:block>
 
-                <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${marginPercentage}, false)}"></th:block>
-            </th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.processingFeeExTax}, false)}"></th:block>
-            <td th:text="#{__${product.product.taxed.label}__}"></td>
-            <th:block
-                    th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.getTotalSalesPriceIncTax(taxGoodPercentage,taxServicePercentage)}, false)}"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${marginPercentage}, false)}"></th:block>
+        </th:block>
+        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.processingFeeExTax}, false)}"></th:block>
+        <td th:text="#{__${product.product.taxed.label}__}"></td>
+        <th:block
+                th:insert="~{fragments/elements/numberdisplay::showNumber_td(${product.product.getTotalSalesPriceIncTax(taxGoodPercentage,taxServicePercentage)}, false)}"></th:block>
         </tr>
     </th:block>
 </th:block>
@@ -49,7 +59,8 @@
                 <input type="hidden" name="id" th:value="${product.product.id}">
                 <input type="hidden" name="version" th:value="${product.product.version}">
                 <!-- Save -->
-                <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.product.id} + '/partialsave/pricing'" hx-target="closest tr" hx-swap="outerHTML">💾</a>
+                <a href="#" hx-include="closest tr" th:hx-post="'/product/product/' + ${product.product.id} + '/partialsave/pricing'" hx-target="closest tr"
+                   hx-swap="outerHTML">💾</a>
                 <!-- Cancel -->
                 <a href="#" th:hx-get="'/product/product/' + ${product.product.id} + '/partialcancel/pricing'" hx-target="closest tr" hx-swap="outerHTML">❌</a>
             </td>

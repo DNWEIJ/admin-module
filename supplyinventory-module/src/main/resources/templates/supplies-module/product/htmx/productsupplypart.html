@@ -27,11 +27,7 @@
 
     <div th:if="${product.supply == null}">
         <div th:text="#{label.costing.product.nosupply}"></div>
-
-        <input type="button" value="Add supply element"
-               hx-get="/supplies/distributor/supplies?dialog=true"
-               hx-target="#modal-container"
-               hx-swap="innerHTML"/>
+        <input type="button" value="Add supply element" hx-get="/supplies/distributor/supplies?dialog=true" hx-target="#modal-container" hx-swap="innerHTML"/>
     </div>
     <div th:if="${product.supply != null}">
         <table data-no-export>

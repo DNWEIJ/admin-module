@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Services per Month</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        canvas { max-width: 1200px; }
+    </style>
+</head>
+<body>
+
+<h2>Services Usage per Month</h2>
+<canvas id="chart"></canvas>
+
+<script>
+    // Months
+    const months = [
+        "Jan","Feb","Mar","Apr","May","Jun",
+        "Jul","Aug","Sep","Oct","Nov","Dec"
+    ];
+
+    // January data (your dataset)
+    const services = {
+        "Bloedafname": 12,
+        "Skyla Diagnosis PLUS Panel (G)": 10,
+        "urine strip": 9,
+        "urine sediment": 8,
+        "verzenden naar lab. + interpr.": 8,
+        "Hematologie Bepaling": 8,
+        "urine soortelijkgewicht": 7,
+        "Urineonderzoek volledig (G)": 7,
+        "Vet Med Labor bepaling per euro (G)": 7,
+        "Solution Total T4": 5,
+        "Skyla pLipase+Amylase": 3,
+        "Solution cCRP": 2,
+        "Skyla Diabetes Panel (c)": 1,
+        "Skyla UPC KIT": 1,
+        "Glucose controle \"strip\"": 1,
+        "Sotution Serum Amyloid A (SAA)": 1,
+        "Vet Med Labor Bloedafname per ? (G)": 1
+    };
+
+    // Generate random variation for other months
+    function generateYearData(baseValue) {
+        const data = [baseValue]; // January fixed
+        for (let i = 1; i < 12; i++) {
+            const variation = Math.round(baseValue * (0.5 + Math.random())); // 50%–150%
+            data.push(variation);
+        }
+        return data;
+    }
+
+    // Build datasets
+    const datasets = Object.keys(services).map(service => ({
+        label: service,
+        data: generateYearData(services[service]),
+        tension: 0.3
+    }));
+
+    // Create chart
+    new Chart(document.getElementById("chart"), {
+        type: "line",
+        data: {
+            labels: months,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "right"
+                }
+            },
+            interaction: {
+                mode: "nearest",
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

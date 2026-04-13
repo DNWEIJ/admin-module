@@ -15,7 +15,7 @@
                   th:with="required=true,extraClass='small'"></th:block>
         </th:block>
         <th:block th:insert="~{fragments/elements/input::inputHtmlLift('middleInitial','customer.middleInitial','customer.middleInitial','0')}"
-                  th:with="required=false,extraClass='small'"></th:block>
+                  th:with="required=false,extraClass='verysmall'"></th:block>
         <th:block th:insert="~{fragments/elements/input::inputHtmlLift('title','customer.title','customer.title','0')}"
                   th:with="required=false, extraClass='small'"></th:block>
     </fieldset>
@@ -36,7 +36,7 @@
         <th:block
                 th:insert="~{fragments/elements/input::inputHtmlLift('city','customer.city','customer.city','0')}"></th:block>
         <th:block
-                th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipCode','customer.zipCode','12')}"
+                th:insert="~{fragments/elements/input::inputHtmlLift('zipCode','customer.zipcode','customer.zipCode','12')}"
                 th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')',
                      pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$', extraClass='small'">
         </th:block>
@@ -49,8 +49,8 @@
         <div class="grid four-cols">
             <div>
                 <th:block
-                        th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','0')}"
-                        th:with="required=false"></th:block>
+                        th:insert="~{fragments/elements/input::inputHtmlLift('email','customer.email','customer.email','0')}
+                        th:with="required=false,type='email'"></th:block>
             </div>
             <div>
                 <th:block

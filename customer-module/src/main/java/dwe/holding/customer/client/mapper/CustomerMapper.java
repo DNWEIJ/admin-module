@@ -12,6 +12,8 @@ import org.mapstruct.MappingTarget;
 public interface CustomerMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "balance", ignore = true)
+    @Mapping(target = "memberId", ignore = true)
     void updateCustomerFromForm(Customer form, @MappingTarget Customer customer);
 
     CustomerService.Customer toCustomer(Customer customer);

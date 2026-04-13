@@ -108,5 +108,8 @@ public class AppointmentVisitService {
             vet = vet == null ? "" : vet;
             room = room == null ? "" : room;
         }
+        public CreatePet withVet(String newVet) {
+            return new CreatePet(id, checked, purpose, timeNeeded, newVet, room);
+        }
     }
 }

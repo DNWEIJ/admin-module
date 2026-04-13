@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Member Distribution</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        canvas { max-width: 800px; margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+
+<h2>Staff Member Counts (Bar Chart)</h2>
+<canvas id="barChart"></canvas>
+
+<h2>Staff Member Distribution (Pie Chart)</h2>
+<canvas id="pieChart"></canvas>
+
+<script>
+    const labels = [
+        "--- No Staff Member Assigned ---",
+        "Drs. A. de Bruin",
+        "Drs. A. Lafuente Ramos",
+        "Drs. E.E.D. Winius",
+        "Drs. J. Hoekstra",
+        "Eva de Boer",
+        "Jane Doe",
+        "Kim Broertjes",
+        "Rosanne Meijer"
+    ];
+
+    const dataValues = [72,18,60,70,20,83,2,12,8];
+
+    // Bar chart
+    new Chart(document.getElementById("barChart"), {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Count",
+                data: dataValues
+            }]
+        },
+        options: {
+            indexAxis: 'x', // horizontal bar (better for long names)
+            scales: {
+                x: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Pie chart
+    new Chart(document.getElementById("pieChart"), {
+        type: "pie",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataValues
+            }]
+        }
+    });
+</script>
+</body>
+</html>

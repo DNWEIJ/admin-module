@@ -9,6 +9,7 @@
         <input th:name="'formPet[' + ${offset + iStat.index} + '].id'" th:value="${pet.id}" type="hidden"/>
         <div th:if="${salesType.isVisit}" class="mobile-field">
             <label>[[#{label.visit.timeNeeded}]]</label>
+            <!-- TODO add default from localMemer -->
             <th:block th:insert="~{fragments/elements/dropdown::dbDropdown( 'formPet['+${offset + iStat.index}+'].timeNeeded', '', '', ${timeList}, false, '-1')}"></th:block>
         </div>
         <div th:if="${salesType.isVisit}" class="mobile-field">

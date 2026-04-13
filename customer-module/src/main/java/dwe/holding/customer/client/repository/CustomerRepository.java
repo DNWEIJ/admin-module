@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findByPets_IdAndMemberId(Long petId, Long memberId);
 
     List<Customer> findByZipCodeAndMemberId(String zipCode, Long MemberId);
+
     List<Customer> findByZipCodeAndStreetNumberStartingWithAndMemberId(String zipCode, String streetNumber, Long MemberId);
 
     default List<Customer> findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(String searchCriteria, long memberId) {
@@ -69,6 +71,44 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Modifying
     @Query("UPDATE Customer c SET c.balance = :balance WHERE c.id = :id")
     void updateBalance(@Param("id") Long id, @Param("balance") BigDecimal balance);
+
+
+    @Query(value = """
+            SELECT YEAR(c.addedOn) as year, COUNT(DISTINCT c.id) as customers
+            FROM Customer c 
+            JOIN c.pets p
+            WHERE c.memberId = :memberId
+            GROUP BY YEAR(c.addedOn)
+            ORDER BY YEAR(c.addedOn) ASC
+            """)
+    List<Object[]> countCustomersPerYear(@Param("memberId") Long memberId);
+
+    @Query(value = """
+            SELECT COUNT(DISTINCT p.customer.id) 
+            FROM Appointment a
+            JOIN a.visits v 
+            JOIN v.pet p
+            JOIN p.customer c 
+            WHERE a.memberId = :memberId 
+            AND c.addedOn > :customerFrom 
+            AND c.addedOn < :customerTill
+            AND a.visitDateTime > :appointmentFrom
+            AND a.visitDateTime <= :appointmentTill
+            """)
+    Long countNewCustomers(LocalDateTime customerFrom, LocalDateTime customerTill,LocalDateTime appointmentFrom,  LocalDateTime appointmentTill, Long memberId);
+
+    @Query(value = """
+            SELECT COUNT(DISTINCT p.customer.id) 
+                    FROM Appointment a
+            JOIN a.visits v 
+            JOIN v.pet p
+            JOIN p.customer c 
+            JOIN a.lineItems l
+            WHERE a.visitDateTime > :from 
+            AND a.visitDateTime <= :till 
+            AND p.memberId = :memberId
+            """)
+    Long countActiveCustomers(LocalDateTime from,LocalDateTime till,  Long memberId);
 
     long countByBalanceIsNull();
 

@@ -30,7 +30,7 @@ public class AgendaTaskController {
                 .addAttribute("initialDate", date.toLocalDate().toString())
                 .addAttribute("selectDate", selectDate(date.toLocalDate().toString()))
                 .addAttribute("scrollToTime", date.minusHours(1).format(DateTimeFormatter.ofPattern("HH:mm:ss")))
-                .addAttribute("agendaType", prefMemberData.getRoomAgenda().toString())
+                .addAttribute("agendaType", prefMemberData.getAgendaType().toString())
                 .addAttribute("locationDropdown", locationDropDown())
                 .addAttribute("colorModal", colorModalButton())
                  .addAttribute("localMemberId", AutorisationUtils.getCurrentUserMlid())

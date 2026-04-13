@@ -814,13 +814,13 @@ html, body {
     flex-direction: column;
 }
 
-header {
+body > div > header {
     position: relative;
     z-index:1000;
     flex-shrink: 0;
 }
 
-main {
+body > div > main {
     flex: 1;
     overflow-y: auto;
     margin-top: .3rem;
@@ -828,13 +828,13 @@ main {
     border-top: 1px solid color-mix(in srgb, var(--pico-primary-background) 65%, white);
 }
 
-footer {
+body > div > footer {
     flex-shrink: 0;
     background-color: var(--pico-primary-background);
     color: var(--pico-contrast);
 }
 
-footer p {
+body > div > footer p {
     margin: 0;
     padding: 0.5rem;
 }
@@ -979,6 +979,7 @@ details summary a.emoji-icon {
     border-radius: 0.25rem;
     padding-left: 5rem;
     margin-left: 5rem;
+    z-index: 1000;
 }
 
 .notification-message.show {

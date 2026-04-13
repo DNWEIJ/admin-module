@@ -33,6 +33,7 @@ public class LoginController {
     }
 
     @GetMapping("/login")
+    @PostMapping("/login")
     String newScreen() {
         return "admin-module/login";
     }
