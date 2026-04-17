@@ -32,5 +32,4 @@ public class Diagnose extends MemberBaseBO {
     @ManyToOne(optional = false)
     @JoinColumn(name = "lookup_location_id")
     private LookupLocation lookupLocation;
-
 }

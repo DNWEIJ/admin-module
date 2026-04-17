@@ -4,14 +4,14 @@ package dwe.holding.admin.authorisation;
 import dwe.holding.admin.exception.SystemException;
 
 public class IPNumber {
-    private Integer number1;
-    private Integer number2;
-    private Integer number3;
-    private Integer number4;
+    private Integer numberOne;
+    private Integer numberTwo;
+    private Integer numberThree;
+    private Integer numberFour;
 
     public final String toString() {
         if (validate()) {
-            return number1 + "." + number2 + "." + number3 + "." + number4;
+            return numberOne + "." + numberTwo + "." + numberThree + "." + numberFour;
         } else return null;
     }
 
@@ -20,16 +20,16 @@ public class IPNumber {
         if (splitted.length != 4) {
             throw new SystemException(this.getClass().getName() + ": Not a correct IPNumber!!");
         }
-        number1 = Integer.valueOf(splitted[0]);
-        number2 = Integer.valueOf(splitted[1]);
-        number3 = Integer.valueOf(splitted[2]);
-        number4 = Integer.valueOf(splitted[3]);
+        numberOne = Integer.valueOf(splitted[0]);
+        numberTwo = Integer.valueOf(splitted[1]);
+        numberThree = Integer.valueOf(splitted[2]);
+        numberFour = Integer.valueOf(splitted[3]);
     }
 
     public boolean validate() {
-        return (number1 != null) && (number1 <= 255) &&
-                (number2 != null) && (number2 <= 255) &&
-                (number3 != null) && (number3 <= 255) &&
-                (number4 != null) && (number4 <= 255);
+        return (numberOne != null) && (numberOne <= 255) &&
+                (numberTwo != null) && (numberTwo <= 255) &&
+                (numberThree != null) && (numberThree <= 255) &&
+                (numberFour != null) && (numberFour <= 255);
     }
 }

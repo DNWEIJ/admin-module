@@ -1,5 +1,6 @@
 package dwe.holding.salesconsult.sales.controller;
 
+import dwe.holding.admin.preferences.LocalMemberPreferences;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.repository.CustomerRepository;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,18 +40,19 @@ public class HtmxAddPaymentController {
     private final CustomerFinancialInfo customerFinancialInfo;
     private final FinancialServiceInterface financialService;
     private final PaymentService paymentService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/visit/{visitId}/payment")
     String getPaymentForModal(@PathVariable Long visitId, Model model) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         Appointment app = visit.getAppointment();
-
+        LocalMemberPreferences localMemberPref = objectMapper.readValue(AutorisationUtils.getCurrentLocalMemberJsonPreferences(), LocalMemberPreferences.class);
         model.addAttribute("appointment", app);
         model.addAttribute("payMethodsList", PaymentMethodEnum.getWebList());
         model.addAttribute("customerId", visit.getPet().getCustomer().getId());
         model.addAttribute("payment",
                 Payment.builder()
-                        .method(PaymentMethodEnum.PIN) // TODO from setting payment method (local)member
+                        .method(localMemberPref.getPaymentMethod())
                         .paymentDate(LocalDate.now())
                         .amount(
                                 app.getVisits().stream().map(Visit::getTotalAmountIncTax).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)
@@ -64,7 +67,7 @@ public class HtmxAddPaymentController {
     String savePayment(@PathVariable Long customerId, @PathVariable Long appointmentId, PaymentForm paymentForm, HttpServletResponse response, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
-         // TODO validate if state is ok to add payment
+        // TODO validate if state is ok to add payment
         paymentService.addPayment(
                 Payment.builder()
                         .paymentDate(paymentForm.getPaymentDate())

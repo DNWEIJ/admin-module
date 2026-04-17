@@ -8,6 +8,7 @@ import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
@@ -17,14 +18,16 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Controller
+@Slf4j
 public class UserRoleService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
+
     @Transactional
-    public void processUser(List<Long> checked, User formUser) {
+    public void processUserAdd(List<Long> checked, User formUser) {
         User user = new User();
         if (formUser.isNew()) {
             userMapper.updateUserFromForm(formUser, user);
@@ -41,13 +44,12 @@ public class UserRoleService {
             user.setLanguage(formUser.getLanguage());
             user.setPersonnelStatus(formUser.getPersonnelStatus());
             user.setLoginEnabled(formUser.getLoginEnabled());
-                // TODO set member for superAdmin
+            // TODO set member for superAdmin
 
             user = userRepository.save(user);
         }
 
         // user is finished, now do the roles
-        List<Long> currentUserRoleIdsDelete = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
         List<Long> currentUserRoleIdsAdd = new ArrayList<>(user.getUserRoles().stream().map(a -> a.getRole().getId()).toList());
 
         final User processUser = user;
@@ -58,11 +60,22 @@ public class UserRoleService {
                     userRoleRepository.save(new UserRole(processUser, role));
                 }
         );
+        userRepository.flush();
+    }
 
-        currentUserRoleIdsDelete.removeAll(checked);
-        if (!currentUserRoleIdsDelete.isEmpty()) {
-            Set<UserRole> deleteRecords = processUser.getUserRoles().stream().filter(userRole -> currentUserRoleIdsDelete.contains(userRole.getRole().getId())).collect(Collectors.toSet());
-            userRoleRepository.deleteAll(deleteRecords);
-        }
+    @Transactional
+    public void processUserDelete(List<Long> checked, User formUser) {
+        User userDelete = userRepository.findById(formUser.getId()).orElseThrow();
+
+        userDelete.getUserRoles().removeIf(userRole -> {
+            if (!checked.contains(userRole.getRole().getId())) {
+                log.info("delete");
+                return true;
+            }
+            return false;
+        });
+
+        userRepository.save(userDelete);
+        userRepository.flush();
     }
 }

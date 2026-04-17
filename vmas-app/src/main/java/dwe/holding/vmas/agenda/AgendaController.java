@@ -32,7 +32,7 @@ public class AgendaController {
                 .addAttribute("initialDate", date.toLocalDate().toString())
                 .addAttribute("selectDate", selectDate(date.toLocalDate().toString()))
                 //       .addAttribute("scrollToTime", date.minusHours(1).format(DateTimeFormatter.ofPattern("HH:mm:ss")))
-                .addAttribute("agendaType", prefMemberData.getAgendaType().toString())
+                .addAttribute("agendaType", prefMemberData.getRoomAgenda().toString())
                 .addAttribute("locationDropdown", locationDropDown())
                 .addAttribute("colorModal", colorModalButton())
                 .addAttribute("changeRoomVet", roomVetDropDown())

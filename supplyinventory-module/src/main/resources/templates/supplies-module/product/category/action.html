@@ -21,7 +21,7 @@
 
         <fieldset class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('categoryName', 'category.category', 'category.categoryName','0')}"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','',${category.deleted},${yesNoOptions}, true, '0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','category.deleted',${category.deleted},${yesNoOptions}, true, '0')}"></th:block>
         </fieldset>
     </form>
 </section>

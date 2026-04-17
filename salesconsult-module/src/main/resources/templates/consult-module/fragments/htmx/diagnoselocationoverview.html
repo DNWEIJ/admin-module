@@ -1,18 +1,15 @@
-<tbody>
-<th:block th:each="diagnose : ${allDiagnoses}">
+<tbody id="diagnoseTableReplaceHtmx">
+<th:block th:each="diagnose : ${petDiagnoses}">
     <tr>
         <td class="center">
-            <a href="" th:if="${(visit.isOpen)}" th:hx-delete="${url+diagnose.id}" th:hx-confirm="#{label.otc.sell.delete.confirm}"  hx-include="#csrfParameterName">
-                <svg class="svg-icon">
-                    <use href="/lib/tabler-icons-3_35_0/icons/outline/trash.svg"></use>
-                </svg>
-            </a>
+            <a href="" class="emoji-icon" title="delete"  th:if="${visit.isOpen}" th:hx-confirm="#{label.otc.sell.delete.confirm}"
+               th:hx-delete="'/consult/visit/'+ ${visit.id} + '/diagnose/'+${diagnose.id}" hx-swap="outerHTML" hx-target="#diagnoseTableReplaceHtmx">🗑️</a>
         </td>
-        <td th:text="${diagnose.diagnose}"></td>
-        <td th:text="${diagnose.location}"></td>
+        <td th:text="${diagnose.lookupDiagnose.nomenclature}"></td>
+        <td th:text="${diagnose.lookupLocation.nomenclature}"></td>
     </tr>
 </th:block>
-<th:block th:if="${allDiagnoses == null or allDiagnoses.isEmpty()}">
+<th:block th:if="${petDiagnoses == null or petDiagnoses.isEmpty()}">
     <tr>
         <td colspan="3" class="center">
             <th:block th:text="#{label.not-found}"></th:block>

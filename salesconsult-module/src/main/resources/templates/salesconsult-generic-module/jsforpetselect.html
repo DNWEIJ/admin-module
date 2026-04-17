@@ -31,14 +31,26 @@
         })
 
         // prevent submitting the form if no checkbox is checked
-        document.getElementById('createForm').addEventListener("submit", function (e) {
-            if (!this.querySelectorAll('input[type=checkbox]:checked').length) {
-                // @formatter:off
+        if (document.getElementById('createForm')) {
+            document.getElementById('createForm').addEventListener("submit", function (e) {
+                if (!this.querySelectorAll('input[type=checkbox]:checked').length) {
+                    // @formatter:off
                 alert([[#{label.otc.pet.checkbox.error}]])
                 // @formatter:on
-                e.preventDefault();
-            }
-        });
+                    e.preventDefault();
+                }
+            });
+        }
+        if (document.getElementById('addPetForm')) {
+            document.getElementById('addPetForm').addEventListener("submit", function (e) {
+                if (!this.querySelectorAll('input[type=checkbox]:checked').length) {
+                    // @formatter:off
+                    alert([[#{label.otc.pet.checkbox.error}]])
+                    // @formatter:on
+                    e.preventDefault();
+                }
+            });
+        }
     }
     document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
 </script>

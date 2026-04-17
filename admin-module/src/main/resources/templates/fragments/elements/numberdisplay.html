@@ -6,10 +6,10 @@
 
 
 <th:block th:fragment="showNumberWithEuro_td(money, deskTopOnly,class)">
-    <td th:class="${class} + ' number-font text-align-right'">
+    <td th:class="${class} + ' number-font text-align-right'" th:classappend="${deskTopOnly} ? 'desktop-only' : null">
         <span>€</span>
         <span th:class="${class} + ' number-font text-align-right'" th:text="${#numbers.formatDecimal(money, 1, 2, 'POINT')}"
-              th:style="${increaseFont != null ? 'font-size:' + increaseFont + '%' : null}" th:classappend="${deskTopOnly} ? 'desktop-only' : null"
+              th:style="${increaseFont != null ? 'font-size:' + increaseFont + '%' : null}"
               th:attr="data-field-money-total=${dataFieldMoneyTotal != null ? dataFieldMoneyTotal : null}"></span>
     </td>
 </th:block>

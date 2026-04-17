@@ -29,13 +29,13 @@ public class ProductController {
     /*** LIST ***/
     @GetMapping("/products")
     String showListPage(Model model, ListForm form) {
-        if (form.inputCostingId() == null && form.categoryId() == null)
+        if (form.inputProductId() == null && form.categoryId() == null)
             form = new ListForm(null, null, Boolean.TRUE);
         model
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new SalesTypeDummy())
                 .addAttribute("productSearchUrl", "/product/search/product")
-                .addAttribute("costingSearchForm", form)
+                .addAttribute("productSearchForm", form)
                 .addAttribute("products", List.of())
         ;
         return "supplies-module/product/list";
@@ -56,16 +56,16 @@ public class ProductController {
     }
 
     /*** SINGLE UPDATE RECORD ***/
-    @GetMapping("/product/{costingId}")
-    String initialPag(Model model, @PathVariable Long costingId, ListForm costingSearchForm) {
-        Product product = costingId == 0 ? new Product() : productRepository.findById(costingId).get();
+    @GetMapping("/product/{productId}")
+    String initialPag(Model model, @PathVariable Long productId, ListForm productSearchForm) {
+        Product product = productId == 0 ? new Product() : productRepository.findById(productId).orElseThrow();
         model
                 .addAttribute("product", product)
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
                 .addAttribute("yesNoOptions", YesNoEnum.getWebList())
                 .addAttribute("salesType", new SalesTypeDummy())
-                .addAttribute("costingSearchForm", costingSearchForm)
+                .addAttribute("productSearchForm", productSearchForm)
         ;
         return "supplies-module/product/action";
     }
@@ -101,10 +101,10 @@ public class ProductController {
     }
 
     static ListForm getListForm(ListForm form) {
-        return form.categoryId() != null ? new ListForm(null, form.categoryId, Boolean.TRUE) : new ListForm(form.inputCostingId, null, Boolean.FALSE);
+        return form.categoryId() != null ? new ListForm(null, form.categoryId, Boolean.TRUE) : new ListForm(form.inputProductId, null, Boolean.FALSE);
     }
 
-    public record ListForm(Long inputCostingId, Long categoryId, Boolean useDropDown) {
+    public record ListForm(Long inputProductId, Long categoryId, Boolean useDropDown) {
     }
 
     public record SalesTypeDummy() {

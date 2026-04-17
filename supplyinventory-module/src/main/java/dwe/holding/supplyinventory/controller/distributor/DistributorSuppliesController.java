@@ -35,7 +35,7 @@ public class DistributorSuppliesController {
         model
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
                 .addAttribute("productSearchUrl", "/supplies/distributor/")
-                .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
                 .addAttribute("supplies", List.of())
         ;
 

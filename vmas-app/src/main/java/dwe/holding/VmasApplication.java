@@ -66,6 +66,7 @@ public class VmasApplication implements CommandLineRunner {
         setupAdminService.init();
     //    setupAdminService.importRolesAndConenctToDaniel();
         //setupAdminService.updateDaniel();
+
         updateDatabase.processAllCustomerBalance();
         updateDatabase.processAllVisitsBalance();
     }

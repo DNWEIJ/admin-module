@@ -30,10 +30,10 @@ public class ProductService {
     private final ProductSpillageRepository productSpillageRepository;
     private final ProductSpillageUsageRepository productSpillageUsageRepository;
 
-    public List<ProductPriceProjection> getCorrectedPriceAndGroupingForProductId(Long costingId) {
+    public List<ProductPriceProjection> getCorrectedPriceAndGroupingForProductId(Long productId) {
 
-        List<Product> listProductsInGroup = new ArrayList<>(findProductInGrouping(costingId));
-        listProductsInGroup.add(productRepository.findById(costingId).orElseThrow());
+        List<Product> listProductsInGroup = new ArrayList<>(findProductInGrouping(productId));
+        listProductsInGroup.add(productRepository.findById(productId).orElseThrow());
 
         // validate if there are price promotions
         // TODO add the date to the query
@@ -54,11 +54,11 @@ public class ProductService {
 
         List<ProductPriceProjection> list = new ArrayList<>();
         // there acre active price promotions
-        Map<Long, ProductPricePromotion> lookupMapOnCostingId =
+        Map<Long, ProductPricePromotion> lookupMapOnPorductId =
                 productPromotions.stream().collect(Collectors.toMap(ProductPricePromotion::getProductId, pricePromo -> pricePromo));
 
         listProductsInGroup.forEach(itCosting -> {
-            ProductPricePromotion productPricePromotion = lookupMapOnCostingId.get(itCosting.getId());
+            ProductPricePromotion productPricePromotion = lookupMapOnPorductId.get(itCosting.getId());
             if (productPricePromotion != null) {
                 list.add(productMapper.toProjection(itCosting, productPricePromotion));
             } else {
@@ -104,7 +104,16 @@ public class ProductService {
                 );
     }
 
-    public  List<PresentationElement>  getCategories() {
-        return lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No);
+    public Map<Long, String> getCategoriesWithoutDeletedRecs() {
+        return lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No)
+                .stream().collect(Collectors.toMap(PresentationElement::getLongId, PresentationElement::getName)
+                );
+    }
+
+    public Map<Long, String> getAllCategoriesInclDeleted() {
+        return lookupProductCategoryRepository.findByOrderByCategoryName()
+                .stream().collect(Collectors.toMap(PresentationElement::getLongId, PresentationElement::getName)
+                );
+
     }
 }

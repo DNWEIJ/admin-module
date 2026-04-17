@@ -58,7 +58,9 @@ public class UserController {
     @PostMapping("/user")
     String save(User user, @RequestParam(required = false) List<Long> checkedRoles, RedirectAttributes redirect) {
         if (checkedRoles == null) checkedRoles = new ArrayList<>();
-        userRoleService.processUser(checkedRoles, user);
+
+        userRoleService.processUserAdd(checkedRoles, user);
+        userRoleService.processUserDelete(checkedRoles, user);
         redirect.addFlashAttribute("message", "label.saved");
         return "redirect:/admin/users";
     }

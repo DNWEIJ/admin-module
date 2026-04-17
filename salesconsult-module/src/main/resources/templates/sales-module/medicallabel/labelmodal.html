@@ -1,0 +1,51 @@
+<dialog id="label-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.create} +' '+ #{label.title.label}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+
+        <form id="labelForm" method="post" th:action="'/sales/customer/'+${visit.pet.customer.id}+'/visit/'+${visit.id}+ '/lineitem/'+${lineItem.id}+'/label'">
+            <div>
+                <input type="hidden" name="id" th:value="${rxlabel.id}">
+                <input type="hidden" name="version" th:value="${rxlabel.version}">
+                <div class="grid">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('ownerName','customer.emergencyContact','rxlabel.ownerName','0')}" th:with="required=true"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('petName','pet.name','rxlabel.petName','0')}" th:with="required=true"></th:block>
+                </div>
+                <div class="grid">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('expirationDate','label.exipredate','rxlabel.expirationDate','0')}"
+                              th:with="required=true,type='date'"></th:block>
+                    <th:block
+                            th:insert="~{fragments/elements/dropdown::dbDropdown('staffMember','label.notes.personnel', ${rxlabel.staffMember}, ${staffList}, true,'1')}"></th:block>
+                </div>
+                <div class="grid">
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('drugDosage','label.drugdosage','rxlabel.drugDosage','0')}" th:with="required=true"></th:block>
+                </div>
+                <div class="grid">
+                    <textarea class="field" cols="110" id="prescription" name="usageDescription" rows="8" required="true" th:utext="${rxlabel.usageDescription}"></textarea>
+                </div>
+            </div>
+            <br/>
+            <footer>
+                <div class="grid">
+                    <!-- button save goes to ajax, print to normal -->
+                    <button name="submitButton" value="_save" th:text="#{label.button.save}"
+                            th:hx-post="'/sales/customer/'+${visit.pet.customer.id}+'/visit/'+${visit.id}+ '/lineitem/'+${lineItem.id}+'/label'"></button>
+                    <button name="submitButton" value="_print" th:text="#{label.button.print}" formtarget="_blank"></button>
+                    <button name="closeModal" data-target="label-modal" onclick="toggleModal(event)" th:text="#{label.button.close}"></button>
+                </div>
+            </footer>
+        </form>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("label-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

@@ -25,7 +25,7 @@ public class ReminderGenerateEmailAndSendOrCreateReport {
     @Async
     public void createHtmlAndSendAsync(ReportTemplate mainTemplate, List<Long> reminders, ReportTemplate template, boolean preview, Counter counter, SessionStorageReporting.ActionType actionType) {
         ResultAndError result = createHtmlAndSend(mainTemplate, reminders, template, preview, counter, actionType);
-        // todo push errors to session
+        // todo push errors to session , use SSE channel to push to the frontend
     }
 
     public ResultAndError createHtmlAndSend(ReportTemplate mainTemplate, List<Long> reminders, ReportTemplate template, boolean preview, Counter counter, SessionStorageReporting.ActionType actionType) {
@@ -36,8 +36,9 @@ public class ReminderGenerateEmailAndSendOrCreateReport {
         reminderRepository.findAllById(reminders).forEach(reminder -> {
             String emailText = generateService.generateFromTemplate(template.getContent(), new DataWrapper(reminder, reminder.getPet(), reminder.getPet().getCustomer()));
 
-
-            if (!preview) {
+            if (preview) {
+                reports.add(emailText);
+            } else {
                 if (SessionStorageReporting.ActionType.REPORT.equals(actionType)) {
                     reports.add(emailText);
                 }
@@ -45,7 +46,8 @@ public class ReminderGenerateEmailAndSendOrCreateReport {
                     if (reminder.getPet().getCustomer().getEmail() != null && !reminder.getPet().getCustomer().getEmail().isEmpty()) {
                         if (sendEmail.sendHtmlEmail(reminder.getPet().getCustomer().getEmail(), template.getSubject(),
                                 mainTemplate.getContent().replace("{{emailContentPlaceholder}}", emailText),
-                                "noreply@dweholding.nl")) {
+                                "noreply@dweholding.nl")
+                        ) {
                             // todo add reference to email that didn't send
                             errorLines.add("Cannot send email due to error. For " + reminder.getPet().getCustomer().getCustomerNameWithId());
                         }
@@ -63,8 +65,9 @@ public class ReminderGenerateEmailAndSendOrCreateReport {
         return new ResultAndError(reports, errorLines);
     }
 
-    record DataWrapper(Reminder reminder, Pet pet, Customer customer) {
+    public record DataWrapper(Reminder reminder, Pet pet, Customer customer) {
     }
 
-    public record ResultAndError(List<String> reports, List<String> errors) {}
+    public record ResultAndError(List<String> reports, List<String> errors) {
+    }
 }

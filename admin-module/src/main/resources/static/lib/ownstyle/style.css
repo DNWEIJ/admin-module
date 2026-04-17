@@ -228,12 +228,36 @@ a:hover {
     display: none;
 }
 
+.grid-grid-row {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    column-gap: .1rem;
+    row-gap: .5rem;
+    align-items: end;
+    margin-left: var(--pico-grid-column-gap);
+    margin-right: var(--pico-grid-column-gap);
+}
+/* Smaller columns */
+.grid-grid-row > *.small {
+    flex: 0.5 1 0; /* roughly half width relative to normal items */
+}
+
+.right-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 12px;
+    row-gap: 12px;
+}
+.left-center {
+    align-self: center;
+}
+
+
 .grid {
     padding-left: var(--pico-grid-column-gap);
     padding-right: var(--pico-grid-column-gap);
     align-items: end; /* due to htmllift, we want to align at the bottom, not in the center */
 }
-
 
 /* Flexible row using Flexbox for dynamic columns */
 /* Container for a flexible row */
@@ -363,7 +387,7 @@ dialog > article > footer {
     grid-column-gap: .5rem;
 }
 
-.gridSearchCostingWithCheck {
+.gridSearchProductWithCheck {
     display: grid;
     grid-template-columns: .1fr 2fr repeat(3, 1fr);
     grid-column-gap: .5rem;
@@ -376,7 +400,7 @@ dialog > article > footer {
         grid-row-gap: .5rem;
     }
 
-    .gridSearchCostingWithCheck {
+    .gridSearchProductWithCheck {
         grid-template-columns: 1fr;
         grid-row-gap: .5rem;
     }
@@ -639,7 +663,7 @@ tbody tr.red-text td {
 .field {
     position: relative;
     margin-bottom: calc(var(--pico-spacing) * .375); /* from pico */
-    margin-top: .5rem;
+    margin-top: 1.2rem;
 }
 
 /* Input */

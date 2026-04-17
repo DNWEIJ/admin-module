@@ -70,7 +70,7 @@ public class ReportVisitController {
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
                 .addAttribute("ynvaluesList", YesNoEnum.getWebListDoNotCare())
                 .addAttribute("form", form);
-        return "reporting-module/appointmentlist";
+        return "reporting-module/reporting/appointmentlist";
     }
 
 

@@ -5,12 +5,14 @@ import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Estimate;
 import dwe.holding.salesconsult.consult.model.EstimateForPet;
+import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.consult.service.EstimateService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.controller.ProductController;
 import dwe.holding.supplyinventory.expose.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -78,6 +80,8 @@ public class EstimateController {
                 customer.pets().stream().filter(p -> p.id().equals(petId)).findFirst().orElseThrow().id()
         )).findFirst().orElseThrow();
 
+        Appointment app = Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build();
+        Visit visit = Visit.builder().appointment(app).build();
         model
                 .addAttribute("activeMenu", "estimates")
                 .addAttribute("estimate", estimate)
@@ -86,12 +90,18 @@ public class EstimateController {
                 .addAttribute("selectedPet", estimateForPet.getPet())
                 .addAttribute("petList", estimate.getEstimateForPets().stream().collect(Collectors.toMap(a -> a.getPet().getId(), a -> a.getPet().getNameWithDeceased()))
                 )
-                .addAttribute("categoryNames", productService.getCategories())
-                .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
-                .addAttribute("productSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
+                .addAttribute("categoryNames", productService.getCategoriesWithoutDeletedRecs())
+                .addAttribute("appointment", app)
+                .addAttribute("visit", visit)
+                .addAttribute("productSearchUrl", getUrl(customerId, petId, estimate.getId()))
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
                 .addAttribute("salesType", SalesType.ESTIMATE);
         ModelHelper.updateLineItemsInModel(model, estimateService.saveEstimateLineItems(estimate.getEstimatelineitems()));
         return "consult-module/estimate/estimateforpet";
+    }
+
+    public static  String getUrl(Long customerId, Long petId, Long estimateId) {
+        return "/consult/customer/" + customerId + "/estimate/" + estimateId + "/pet/" + petId;
     }
 
     public record PetsForm(List<AppointmentVisitService.CreatePet> formPet) {

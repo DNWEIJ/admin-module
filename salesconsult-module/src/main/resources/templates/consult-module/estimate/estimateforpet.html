@@ -7,27 +7,27 @@
     <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
 
     <fieldset class="no-background">
-    <div th:text="${#temporals.format(estimateForPet.estimate.estimateDate, 'dd-MM-yyyy')}"></div>
+        <div th:text="${#temporals.format(estimateForPet.estimate.estimateDate, 'dd-MM-yyyy')}"></div>
     </fieldset>
-<fieldset >
-    <form id="estimateForm"
-          th:hx-post="'/consult/customer/'+${customerId}+ '/estimateforpet'"
-          hx-target="#estimateFormFields"
-          hx-swap="innerHTML"
-          th:data-saved-msg="#{label.saved}"
-          hx-on:htmx:before-request="messageDisplay(this.dataset.savedMsg)">
+    <fieldset>
+        <form id="estimateForm"
+              th:hx-post="'/consult/customer/'+${customerId}+ '/estimateforpet'"
+              hx-target="#estimateFormFields"
+              hx-swap="innerHTML"
+              th:data-saved-msg="#{label.saved}"
+              hx-on:htmx:before-request="messageDisplay(this.dataset.savedMsg)">
 
-    <span id="estimateFormFields">
+        <span id="estimateFormFields">
             <th:include th:replace="~{consult-module/estimate/estimateforpetform}"></th:include>
         </span>
-    </form>
-</fieldset>
+        </form>
+    </fieldset>
 
-    <table class="no-sorting table-tight striped">
-        <!-- head -->
-        <th:include th:replace="~{sales-module/fragments/htmx/lineitemsoverviewhead}"></th:include>
+    <table class="no-sorting table-tight striped" data-no-export>
         <!-- body and footer -->
         <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
     </table>
-    <div id="replacePartForCostingSearch" th:include="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></div>
+    <div id="replacePartForProductSearch" th:include="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></div>
+    <br/>
+    <button name="submitButton" value="_done" type="submit" form="estimateForm" th:text="#{label.button.finished}"></button>
 </section>

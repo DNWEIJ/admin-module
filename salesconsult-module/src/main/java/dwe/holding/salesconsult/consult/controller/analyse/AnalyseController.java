@@ -36,14 +36,14 @@ public class AnalyseController {
     }
 
     @PostMapping("analysedescription/{analyseDescriptionId}/analyse/lineitem")
-    String saveHtmxAnalyseItem(@PathVariable Long analyseDescriptionId, @NotNull Long inputCostingId, @NotNull BigDecimal inputCostingQuantity, Model model) {
-        Product product = productRepository.findByIdAndMemberId(inputCostingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+    String saveHtmxAnalyseItem(@PathVariable Long analyseDescriptionId, @NotNull Long inputProductId, @NotNull BigDecimal inputProductQuantity, Model model) {
+        Product product = productRepository.findByIdAndMemberId(inputProductId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         AnalyseDescription desc = analyseDescriptionRepository.findByIdAndMemberId(analyseDescriptionId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         analyseRepository.save(
                 Analyse.builder()
                         .analyseDescription(desc)
                         .product(product)
-                        .quantity(inputCostingQuantity)
+                        .quantity(inputProductQuantity)
                         .lookupProductCategoryId(product.getLookupProductCategory().getId())
                         .build()
         );

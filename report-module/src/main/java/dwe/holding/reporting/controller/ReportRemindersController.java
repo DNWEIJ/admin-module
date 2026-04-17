@@ -64,13 +64,13 @@ public class ReportRemindersController {
                 .addAttribute("reminderTypes", reminderRepository.findDistinctReminderTextByMemberIdOrderByReminderText(AutorisationUtils.getCurrentUserMid())
                         .stream().map(reminder -> new PresentationElement(reminder, reminder, true)).toList()
                 )
-                .addAttribute("species", lookupSpeciesRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L))
+                .addAttribute("species", lookupSpeciesRepository.findByMemberId(AutorisationUtils.getCurrentUserMid())
                         .stream().map(f -> new PresentationElement(f.getId(), f.getSpecies()))
                         .sorted(comparing(PresentationElement::getName)).toList()
                 )
                 .addAttribute("reminders", getReminders(reminderForm))
         ;
-        return "reporting-module/reminders";
+        return "reporting-module/reporting/reminders";
     }
 
     @PostMapping("reminders")
@@ -114,20 +114,17 @@ public class ReportRemindersController {
         // preview will open in a different TAB (frontend driven)
         if (submitButton.equals("_preview")) {
             reminders = List.of(reminders.get(0));
-            model.addAttribute("flatData", reminderGenerateEmailAndSendOrCreateReport.createHtmlAndSend(mainTemplate, reminders, template, true, (Counter) session.getAttribute(Counter.name), reportSettings.getActionType()));
-            return "fragments/elements/flatData";
         }
-        if (submitButton.equals("_save")) {
-            session.setAttribute(Counter.name, new Counter(reminders.size()));
-            if (SessionStorageReporting.ActionType.REPORT.equals(reportSettings.getActionType())) {
-                // report will open in a different TAB (frontend driven)
-                ReminderGenerateEmailAndSendOrCreateReport.ResultAndError result = reminderGenerateEmailAndSendOrCreateReport.createHtmlAndSend(mainTemplate, reminders, template, false, (Counter) session.getAttribute(Counter.name), reportSettings.getActionType());
-                model.addAttribute("elementList", result.reports());
-                return "reporting-module/print/elementlist";
-            } else {
-                model.addAttribute("processingEmails", true);
-                reminderGenerateEmailAndSendOrCreateReport.createHtmlAndSendAsync(mainTemplate, reminders, template, false, (Counter) session.getAttribute(Counter.name), reportSettings.getActionType());
-            }
+        session.setAttribute(Counter.name, new Counter(reminders.size()));
+
+        if (SessionStorageReporting.ActionType.REPORT.equals(reportSettings.getActionType()) || submitButton.equals("_preview")) {
+            // report will open in a different TAB (frontend driven)
+            ReminderGenerateEmailAndSendOrCreateReport.ResultAndError result = reminderGenerateEmailAndSendOrCreateReport.createHtmlAndSend(mainTemplate, reminders, template,  submitButton.equals("_preview"), (Counter) session.getAttribute(Counter.name), reportSettings.getActionType());
+            model.addAttribute("elementList", result.reports());
+            return "reporting-module/print/elementlist";
+        } else {
+            model.addAttribute("processingEmails", true);
+            reminderGenerateEmailAndSendOrCreateReport.createHtmlAndSendAsync(mainTemplate, reminders, template, false, (Counter) session.getAttribute(Counter.name), reportSettings.getActionType());
         }
         return reportReminders(model, getForm());
     }

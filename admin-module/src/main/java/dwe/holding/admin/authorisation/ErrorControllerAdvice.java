@@ -12,22 +12,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
 
-@ControllerAdvice
-@Controller
+// @ControllerAdvice
+// @Controller
 @Slf4j
 public class ErrorControllerAdvice implements ErrorController {
 
 
-    @ExceptionHandler(Exception.class)
+    // @ExceptionHandler(Exception.class)
     public String handleAllExceptions(Exception ex, HttpServletRequest request, HttpSession session, Model model) {
         // TODO remove for production
         ex.printStackTrace();
-
+        // check and if known, print extra info:
+        // ((HandlerMethodValidationException)ex).validationResult.
         log.error("<table><tr><td>Date time</td><td>" + LocalDateTime.now() + "</td></tr>"
                 + "<tr><td>request URL</td><td>" + request.getRequestURI() + "</td></tr>"
                 + "<tr><td>User</td><td>" + AutorisationUtils.getCurrentUserId() + "</td></tr>"

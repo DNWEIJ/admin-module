@@ -18,6 +18,7 @@
 <body>
 
 <section layout:fragment="content" class="login-page">
+    <p><h2>Hello and welcome at:</h2></p>
     <img th:src="@{/images/logo.png}">
     <article>
         <header><h2 th:text="#{login.signin}"></h2></header>
@@ -27,12 +28,11 @@
         <p style="color:red; display: none" id="capslock-warning">WARNING! Caps lock is ON.</p>
         <form method="post" th:action="@{/admin/login}">
 
-            <fieldset>
                 <input id="id" name="id" th:value="${userId}" type="hidden">
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('username', 'login.username', 'account', '1')}" th:with="required=false"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('password', 'login.password', 'password', '2')}" th:with="type='password', required=false"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','login.shortcode', 'shortCode','3')}" th:with="required=false"></th:block>
-            </fieldset>
+
             <button name="_save" type="submit" th:text="#{login.button.signin}"></button>
         </form>
     </article>

@@ -15,7 +15,7 @@
     <th:block th:each="historyItem : ${historyItems}">
         <tr>
             <td th:text="${#temporals.format(historyItem.visitDate, 'dd-MM-yy')}"></td>
-            <td th:text="${categoryNames.get(historyItem.categoryId)}" class="desktop-only"></td>
+            <td th:text="${categoryNames.get(historyItem.categoryId.toString)}" class="desktop-only"></td>
             <td th:utext="${historyItem.nomenclature}"></td>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${historyItem.quantity}, false)}"></th:block>
         </tr>

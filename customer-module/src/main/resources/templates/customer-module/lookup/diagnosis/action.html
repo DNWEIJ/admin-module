@@ -15,6 +15,7 @@
 
         <fieldset class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.lookupDiagnose.nomenclature','lookupDiagnosis.nomenclature','1')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','label.location.deleted',${lookupDiagnosis.deleted}, ${yesNoList}, true,'0')}"></th:block>
         </fieldset>
     </form>
     <th:block th:insert="~{fragments/elements/audit::audit('lookupDiagnosis.addedBy','lookupDiagnosis.addedOn', 'lookupDiagnosis.lastEditedBy', 'lookupDiagnosis.lastEditedOn')}"></th:block>

@@ -4,7 +4,6 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
-import dwe.holding.salesconsult.consult.model.type.InvoiceStatusEnum;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import dwe.holding.salesconsult.sales.controller.SalesType;
@@ -14,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,12 +46,7 @@ public class AppointmentVisitService {
                                 .purpose(formPet.purpose())
                                 .estimatedTimeInMinutes(formPet.timeNeeded().isEmpty() ? 0 : Integer.parseInt(formPet.timeNeeded()))
                                 .veterinarian(AutorisationUtils.getCurrentUserAccount())
-                                .status(salesType.isOtc()? VisitStatusEnum.FINISHED_CONSULT : VisitStatusEnum.WAITING)
-                                .sentToInsurance(YesNoEnum.No)
-                                .invoiceStatus(InvoiceStatusEnum.NEW)
-                                .totalAmountIncTax(BigDecimal.ZERO)
-                                .totalServiceTax(BigDecimal.ZERO)
-                                .totalProductTax(BigDecimal.ZERO)
+                                .status(salesType.isOtc() ? VisitStatusEnum.FINISHED_CONSULT : VisitStatusEnum.WAITING)
                                 .build()
                 ).collect(Collectors.toSet())
         );
@@ -62,7 +55,7 @@ public class AppointmentVisitService {
 
     public Appointment addPetsToAppointment(Long customerId, List<CreatePet> pets, Appointment app) {
         app.getVisits().addAll(
-                pets.stream().filter(pet -> pet.checked() != null).map(formPet ->
+                pets.stream().map(formPet ->
                         Visit.builder()
                                 .appointment(app)
                                 .pet(customerService.getPet(customerId, formPet.id()))
@@ -71,8 +64,6 @@ public class AppointmentVisitService {
                                 .estimatedTimeInMinutes(Integer.parseInt(formPet.timeNeeded))
                                 .veterinarian(AutorisationUtils.getCurrentUserAccount())
                                 .status(VisitStatusEnum.CONSULT)
-                                .sentToInsurance(YesNoEnum.No)
-                                .invoiceStatus(InvoiceStatusEnum.NEW)
                                 .build()
                 ).collect(Collectors.toSet()));
         Appointment savedApp = appointmentRepository.save(app);
@@ -88,7 +79,7 @@ public class AppointmentVisitService {
     }
 
     @Transactional
-    public Visit deletePetFromAppointment(Visit visit, Long petId){
+    public Visit deletePetFromAppointment(Visit visit, Long petId) {
         Appointment app = visit.getAppointment();
 
         if (app == null || app.getVisits() == null || app.getVisits().isEmpty() || app.getVisits().size() == 1) {
@@ -108,6 +99,7 @@ public class AppointmentVisitService {
             vet = vet == null ? "" : vet;
             room = room == null ? "" : room;
         }
+
         public CreatePet withVet(String newVet) {
             return new CreatePet(id, checked, purpose, timeNeeded, newVet, room);
         }

@@ -96,7 +96,7 @@ public class VisitController {
         updateCustomerAndPetsInModel(model, customerService.searchCustomer(customerId));
         updateRoomsInModel(model, lookupRoomRepository);
         updateLocationsInModel(model, lookupLocationRepository);
-        updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
+        updateDiagnosesInModel(model, lookupDiagnosesRepository, AutorisationUtils.getCurrentUserMid());
         updateReasonsInModel(model, lookupPurposeRepository);
         customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.findById(customerId).orElseThrow());
 
@@ -188,10 +188,9 @@ public class VisitController {
         updateReasonsInModel(model, lookupPurposeRepository);
         updateRoomsInModel(model, lookupRoomRepository);
         updateLocationsInModel(model, lookupLocationRepository);
-        updateDiagnosesInModel(model, lookupDiagnosesRepository, List.of(-1L));
+        updateDiagnosesInModel(model, lookupDiagnosesRepository,AutorisationUtils.getCurrentUserMid());
         updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());
         updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
-        List<AnalyseItem> analyseItems = analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId());
 
         customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
 
@@ -204,6 +203,7 @@ public class VisitController {
                     default -> throw new IllegalArgumentException("Unsupported callFrom: " + callFrom);
                 };
 
+        List<AnalyseItem> analyseItems = analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId());
         model
                 .addAttribute("appointmentList", app)
                 .addAttribute("userIsAllowed", AutorisationUtils.getCurrentUserIsAuthorized())
@@ -213,17 +213,20 @@ public class VisitController {
                 .addAttribute("petsOnAppointment", visit.getAppointment().getVisits().stream()
                         .sorted(Comparator.comparing(v -> v.getPet().getNameWithDeceased()))
                         .map(vist -> new PresentationElement(vist.getId(), vist.getPet().getNameWithDeceased())).toList())
-                // the analyse descriptions will be available when there is a description selected on the visit screen.
-                .addAttribute("categoryNames", productService.getCategories())
-                .addAttribute("analyseDescription", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("templates", pref.getConsultTextRecords(objectMapper))
+
+                .addAttribute("categoryNames", productService.getCategoriesWithoutDeletedRecs())
+                .addAttribute("productSearchUrl", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
+                .addAttribute("productSearchForm", new ProductController.ListForm(null,null, Boolean.FALSE))
+
+                .addAttribute("templates", pref.getConsultTextTemplate(objectMapper))
                 .addAttribute("ynvaluesList", YesNoEnum.getWebList())
                 .addAttribute("staffList", userService.getStaffMembers(AutorisationUtils.getCurrentUserMid()))
-                .addAttribute("productSearchUrl", VISIT_URL.replace("{customerId}", customer.id().toString()).replace("{visitId}", visit.getId().toString()))
+
+                // the analyse descriptions will be available when there is a description selected on the visit screen.
+                .addAttribute("analyseDescription", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyseItems", analyseItems)
                 .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())
-                .addAttribute("costingSearchForm", new ProductController.ListForm(null,null, Boolean.FALSE))
         ;
 
 

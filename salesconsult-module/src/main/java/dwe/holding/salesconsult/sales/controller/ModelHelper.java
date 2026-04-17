@@ -11,10 +11,11 @@ import org.springframework.ui.Model;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 
 public class ModelHelper {
+
+    // TODO add map with member - list, to have ready PresentationElements, instead of retrieving everytime
 
     public static Model updateLineItemsInModel(Model model, Collection<? extends CostCalc> lineItems) {
         if (!lineItems.isEmpty()) {
@@ -54,8 +55,8 @@ public class ModelHelper {
         return model;
     }
 
-    public static Model updateDiagnosesInModel(Model model, LookupDiagnosesRepository lookupDiagnosesRepository, List<Long> memberIds) {
-        model.addAttribute("diagnoses", lookupDiagnosesRepository.findByMemberIdIn(memberIds)
+    public static Model updateDiagnosesInModel(Model model, LookupDiagnosesRepository lookupDiagnosesRepository, Long memberId) {
+        model.addAttribute("diagnoses", lookupDiagnosesRepository.findByMemberId(memberId)
                 .stream().map(rec -> new PresentationElement(rec.getId(), rec.getNomenclature())).sorted(Comparator.comparing(PresentationElement::getName)).toList()
         );
         return model;

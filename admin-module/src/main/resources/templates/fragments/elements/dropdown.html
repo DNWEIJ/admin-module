@@ -1,12 +1,17 @@
 <th:block th:fragment="dbDropdown(name, label, dbFieldValue, list, required, tabindex)"
           th:with=" isPleaseChoose=${isPleaseChoose}?:true,  isSelectAll=${isSelectAll}?:false,  dataOnChange=${dataOnchange}?:${dataOnchange}, class=${class}?:${class}">
-    <th:block th:if="${list != null and list.size() > 0}">
+    <th:block th:if="${list != null}">
         <th:block th:if="${label != ''}">
             <label th:for="${name}" th:value="${label}">[[#{${label}}]]
         </th:block>
-        <select th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}"
-                th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
-            <th:block th:unless="${list.size() == 1}">
+        <th:block th:if="${list.size() == 0}">
+            <select th:classappend="${class}" th:id="${name}" th:name="${name}" disabeld="disabeld" th:required="${required}" th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
+                <option selected value="--">--</option>
+        </th:block>
+        <th:block th:unless="${list.size() == 0}">
+        <select th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
+        </th:block>
+            <th:block th:if="${list.size() > 1}">
                 <th:block th:if="${isSelectAll}">
                     <option selected="true" value="0" th:text="#{label.selectall}"></option>
                 </th:block>
@@ -82,7 +87,7 @@
             <label th:for="${name}" th:value="${label}">[[#{${label}}]]
         </th:block>
         <div>
-            <select th:hx-get="${hxget}" th:hx-target="${hxtarget}"  hx-ext="path-params"
+            <select th:hx-get="${hxget}" th:hx-target="${hxtarget}" hx-ext="path-params"
                     th:classappend="${class}" th:id="${name}" th:name="${name}" th:required="${required}"
                     th:tabindex="${tabindex}" th:attr="onchange=${dataOnChange}">
                 <th:block th:unless="${list.size() == 1}">
@@ -107,45 +112,69 @@
 </th:block>
 
 
-<th:block th:fragment="propDropdown(name, label, dbFieldValue, list, required, tabindex)" th:with=" class=${class}?:${class}">
+<th:block th:fragment="propDropdown(name, label, dbFieldValue, list, required, tabindex)" th:with="class=${class}?:${class}">
     <th:block th:if="${label != ''}">
         <label th:class="${class}" th:for="${name}" th:value="${label}" th:utext="#{${label}}">
     </th:block>
-    <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}">
-        <th:block th:if="${list.size() == 1}">
-            <option selected th:text="${list[0].name}" th:value="${list[0].id}"></option>
-        </th:block>
 
-        <th:block th:unless="${list.size() == 1}">
-            </option>
-            <th:block th:each="element : ${list}">
-                <option th:selected="${#strings.equals(dbFieldValue, element.name)}" th:text="#{${element.label}}"
-                        th:value="${element.name}"></option>
-            </th:block>
+    <th:block th:if="${list.size() == 0}">
+        <select th:id="${name}" th:name="${name}" disabled="disabled" th:required="${required}" th:tabindex="${tabindex}">
+            <option selected value="--">--</option>
+    </th:block>
+    <th:block th:unless="${list.size() == 0}">
+        <select th:id="${name}" th:name="${name}" th:required="${required}" th:tabindex="${tabindex}">
+    </th:block>
+
+    <th:block th:if="${list.size() == 1}">
+        <option selected th:text="${list[0].name}" th:value="${list[0].id}"></option>
+    </th:block>
+
+    <th:block th:unless="${list.size() == 1}">
+        </option>
+        <th:block th:each="element : ${list}">
+            <option th:selected="${#strings.equals(dbFieldValue, element.name)}" th:text="#{${element.label}}"
+                    th:value="${element.name}"></option>
         </th:block>
+    </th:block>
     </select>
     <th:block th:if="${label != ''}">
         </label>
     </th:block>
 </th:block>
 
+<th:block th:fragment="dbDropdownAutocompleteJs">
+    <script>
+        function getDataIdFromDataListInHiddenField(name) {
+            inputField = document.getElementById(name + '_input');
+            hiddenField = document.getElementById(name + '_hidden');
+            dataList = document.getElementById(name);
+            const option = Array.from(inputField.list.options).find(option => option.value === inputField.value)
+            if (option) {
+                hiddenField.value = option.dataset.id
+            } else {
+                hiddenField.value = ''
+                inputField.value = ''
+                setTimeout(() => {
+                    alert('[[#{label.error.diagnoses}]]')
+                }, 0)
+            }
+        }
+
+        function setEmptyInput(...names) {
+            names.forEach(name => {
+                inputField = document.getElementById(name + '_input').value = ''
+                hiddenField = document.getElementById(name + '_hidden').value = ''
+            });
+        }
+    </script>
+</th:block>
 
 <th:block th:fragment="dbDropdownAutocomplete(name, label, dbFieldValue, list, required, tabindex)">
-    <!-- ensure to have javascript with name dropdownWithDtaList available so we can call the function -->
-    <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            dropdownWithDataList(
-                document.getElementById([[${name}]] + '_input'),
-                document.getElementById([[${name}]] + '_hidden'),
-                document.getElementById([[${name}]])
-            )
-        })
-    </script>
     <th:block th:if="${label != ''}">
         <label th:for="${name}+ '_input'" th:value="${label}">[[#{${label}}]]
     </th:block>
-    <input th:id="${name}+'_input'" th:name="${name}+'_input'" th:list="${name}" autocomplete="off" required>
-    <input type="hidden" th:id="${name}+'_hidden'" th:name="name+'_hidden'">
+    <input th:id="${name}+'_input'" th:name="${name}+'_input'" th:list="${name}" autocomplete="off" required th:onblur="getDataIdFromDataListInHiddenField(this.list.id)"/>
+    <input type="hidden" th:id="${name}+'_hidden'" th:name="${name}"/>
     <datalist th:id="${name}">
         <th:block th:each="element : ${list}">
             <option th:value="${element.name}" th:data-id="${element.id}"></option>

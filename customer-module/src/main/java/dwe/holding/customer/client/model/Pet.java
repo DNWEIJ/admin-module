@@ -7,6 +7,7 @@ import dwe.holding.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

@@ -25,7 +25,7 @@ public class PricingProductController {
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
                 .addAttribute("productSearchUrl", "/product/search/product")
-                .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.TRUE))
                 .addAttribute("products", List.of())
         ;
         return "supplies-module/product/pricing/list";

@@ -8,7 +8,8 @@
             </div>
         </header>
         <p id="modalPetFormPart">
-        <form id="addPetForm" hx-target="#selectPetId" hx-include="#selectPetId" hx-swap="outerHTML" th:hx-post="'/generic/customer/'+ ${customerId} + '/appointment/'+ ${appointmentId} + '/addpet/'+ ${salesType}">
+        <form id="addPetForm" hx-target="#selectPetId" hx-include="#selectPetId" hx-swap="outerHTML"
+              th:hx-post="'/generic/customer/'+ ${customerId} + '/appointment/'+ ${appointmentId} + '/addpet/'+ ${salesType}">
             <th:block th:insert="~{salesconsult-generic-module/petselect::petSelect(${customer}, ${pets}, ${deceasedPets}, ${salesType}, false)}"></th:block>
         </form>
         </p>

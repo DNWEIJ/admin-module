@@ -48,7 +48,7 @@ public class HtmxSoapAndHistoryController {
                 model
                         .addAttribute("headertitle", messageSource.getMessage("label.history.product", null, local))
                         .addAttribute("historyItems", soapAndHistoryService.getHistoryForProducts(petId))
-                        .addAttribute("categoryNames", productService.getCategories())
+                        .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted())
                         .addAttribute("fragment", "consult-module/visit/dialog/history/productshistory");
                 break;
             }

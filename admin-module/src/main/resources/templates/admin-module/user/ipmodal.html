@@ -1,0 +1,30 @@
+<dialog id="ipnumber-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.create} +' '+ #{label.title.ipnumber}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <form id="ipnumber" hx-post="" hx-target="none" >
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('numberOne','label.user.ipnumber','numberOne','0')}" th:with="type='wholenumber'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('numberTwo','label.user.ipnumber','numberTo','0')}" th:with="type='wholenumber'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('numberThree','label.user.ipnumber','numberThree','0')}" th:with="type='wholenumber'"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('numberFour','label.user.ipnumber','numberFour','0')}" th:with="type='wholenumber'"></th:block>
+        </form>
+        <footer>
+            <div class="grid">
+                <input name="_save" type="submit" form="ipnumber" th:value="#{label.button.save}"/>
+                <input type="button" data-target="ipnumber-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </div>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("ipnumber-modal")
+            closeModal(modal)
+            location.reload();
+        });
+    </script>
+</dialog>

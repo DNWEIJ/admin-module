@@ -2,7 +2,7 @@
     <div class="twocolumn-spread">
         <h3 th:if="${id == null}" th:text="#{label.create} +' '+ ${entityName}"></h3>
         <h3 th:if="${id != null}" th:text="#{label.update} + ' '+ ${entityName}"></h3>
-        <a role="button" class="outline" th:href="${link}" th:if="${list != ''}" th:text="'Show list'"></a>
+        <a role="button" class="outline" th:href="${link}" th:if="${list != ''}" th:text="#{label.showlist}"></a>
     </div>
 </th:block>
 

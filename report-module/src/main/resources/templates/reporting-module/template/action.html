@@ -14,7 +14,7 @@
     <style>
         .ck-editor__editable {
             /* height: calc(100vh - 200px - 60px);   200px header + 60px footer */
-            height: 100%;
+            height: calc(100vh - 35rem);
         }
         .placeholder-token {
             background: #eef;
@@ -29,11 +29,11 @@
 </head>
 
 <section layout:fragment="content">
-
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${template.id}, 'Template','/report/templates')}"></th:block>
 
     <form th:action="@{/report/template}" method="post" onsubmit="document.getElementById('contentToSave').value = window.editor.getData();">
-        <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
+        <button name="submitButton" value="_save"  type="submit"  th:text="#{label.button.save}"></button>
+        <button name="submitButton" value="_preview" type="submit" formtarget="_blank" th:text="#{label.button.preview} +' '+ #{label.saved.first}"></button>
         <fieldset class="grid">
             <input type="hidden" id="id" name="id" th:value="${template.id}"/>
             <input type="hidden" id="version" name="version" th:value="${template.version}"/>

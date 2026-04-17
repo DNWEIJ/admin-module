@@ -126,6 +126,10 @@ public class AutorisationUtils {
                 .filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow();
     }
 
+    public static String getCurrentLocalMemberJsonPreferences() {
+        return getCurrentUserDetails().getUser().getMember().getLocalMembers().stream()
+                .filter(a -> a.getId().equals(getCurrentUserMlid())).findFirst().orElseThrow().getMetaLocalMemberPreferences().getPreferencesJson();
+    }
     public static LocalMemberTax getVatPercentages(@NotNull LocalDate date) {
         for (LocalMemberTax localTax : getCurrentLocalMember().getMemberLocalTaxs()) {
             LocalDate startDate = localTax.getStartDate();

@@ -16,7 +16,7 @@
                        th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
             </label>
             <th:block
-                    th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"
+                    th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'0')}"
                     th:with="isSelectAll=true"></th:block>
             <th:block
                     th:insert="~{fragments/elements/dropdown::propDropdown('paymentListType','visit.headerlist.send', ${form.paymentListType}, ${paymentListType}, true,'0')}"

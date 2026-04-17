@@ -31,7 +31,7 @@ public class ProductAndPricingAndInventoryPartialController {
 
 
     @GetMapping("/product/{productId}/partialedit/{type}")
-    String readProductHtmx(Model model, @PathVariable Long productId, @PathVariable String type, ProductController.ListForm costingSearchForm) {
+    String readProductHtmx(Model model, @PathVariable Long productId, @PathVariable String type, ProductController.ListForm productSearchForm) {
         model
                 .addAttribute("product", productRepository.findByIdAndMemberIdToDto(productId, AutorisationUtils.getCurrentUserMid(), LocalDate.now()))
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
@@ -39,7 +39,7 @@ public class ProductAndPricingAndInventoryPartialController {
                 .addAttribute("taxTypes", TaxedTypeEnum.getWebList())
                 .addAttribute("locals", AutorisationUtils.getLocalMemberMapShort())
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
-                .addAttribute("costingSearchForm", costingSearchForm)
+                .addAttribute("productSearchForm", productSearchForm)
         ;
         return type.equals(PRICING) ? "supplies-module/product/htmx/pricingsbody::editableTR" :
                 type.equals(INVENTORY) ? "supplies-module/product/inventory/inventorybody::editableTR" : "/supplies-module/product/htmx/productsbody::editableTR";
@@ -64,11 +64,11 @@ public class ProductAndPricingAndInventoryPartialController {
                 type.equals(INVENTORY) ? "supplies-module/product/inventory/inventorybody::readonlyTR" : "/supplies-module/product/htmx/productsbody::readonlyTR";
     }
 
-    @PostMapping("/product/{costingId}/partialsave/{type}")
-    String updateProductHtmx(Product productForm, Model model, @PathVariable Long costingId, @PathVariable String type) {
-        if (!costingId.equals(productForm.getId())) throw new IllegalArgumentException("costingId must be equals to costingId");
+    @PostMapping("/product/{productId}/partialsave/{type}")
+    String updateProductHtmx(Product productForm, Model model, @PathVariable Long productId, @PathVariable String type) {
+        if (!productId.equals(productForm.getId())) throw new IllegalArgumentException("productId must be equals to productId");
 
-        Product product = productRepository.findByIdAndMemberId(costingId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        Product product = productRepository.findByIdAndMemberId(productId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         if (type.equals(PRICING)) {
             product.setUplift(productForm.getUplift());
@@ -99,11 +99,11 @@ public class ProductAndPricingAndInventoryPartialController {
     @PostMapping(value = {"/search/product/lineitem", "/search/product"})
     String userSelectedGetProductsHtmx(Model model, ProductController.ListForm form, @RequestHeader(value = "HX-Current-URL", required = false) String parentCallingUrl) {
 
-        if (form.inputCostingId() == null && form.categoryId() == null) {
+        if (form.inputProductId() == null && form.categoryId() == null) {
             model.addAttribute("products", List.of());
         } else {
-            if (form.inputCostingId() != null) {
-                model.addAttribute("products", productRepository.findByIdAndMemberIdToDto(form.inputCostingId(), AutorisationUtils.getCurrentUserMid(), LocalDate.now()));
+            if (form.inputProductId() != null) {
+                model.addAttribute("products",  List.of(productRepository.findByIdAndMemberIdToDto(form.inputProductId(), AutorisationUtils.getCurrentUserMid(), LocalDate.now())));
             }
             if (form.categoryId() != null) {
                 model.addAttribute("products", productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclatureToDto(form.categoryId(), AutorisationUtils.getCurrentUserMid(), LocalDate.now()));
@@ -115,7 +115,7 @@ public class ProductAndPricingAndInventoryPartialController {
         model
                 .addAttribute("taxGoodPercentage", taxes.getTaxLow())
                 .addAttribute("taxServicePercentage", taxes.getTaxHigh())
-                .addAttribute("costingSearchForm", ProductController.getListForm(form))
+                .addAttribute("productSearchForm", ProductController.getListForm(form))
                 .addAttribute("locals", AutorisationUtils.getLocalMemberMapShort())
         ;
         return

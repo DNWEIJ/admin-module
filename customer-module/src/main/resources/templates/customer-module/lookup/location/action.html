@@ -1,0 +1,24 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title>[[#{label.title.location}]]</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:replace="~{customer-module/fragments/lookup/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${location.id}, #{label.title.location},'/customer/lookup/location','')}"></th:block>
+
+    <form id="createForm" th:action="@{/customer/lookup/location}" method="post">
+
+        <input id="id" name="id" th:value="${location.id}" type="hidden"/>
+        <input id="version" name="version" th:value="${location.version}" type="hidden"/>
+
+        <fieldset class="grid">
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.location.name','location.nomenclature','0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deleted','label.location.deleted',${location.deleted}, ${yesNoList}, true,'0')}"></th:block>
+        </fieldset>
+    </form>
+    <th:block th:insert="~{fragments/elements/audit::audit('location.addedBy','location.addedOn', 'location.lastEditedBy', 'location.lastEditedOn')}"></th:block>
+</section>
+</body>
+</html>

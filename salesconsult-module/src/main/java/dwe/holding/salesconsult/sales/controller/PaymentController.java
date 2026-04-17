@@ -5,6 +5,7 @@ import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
+import dwe.holding.salesconsult.sales.Service.FinancialService;
 import dwe.holding.salesconsult.sales.Service.PaymentService;
 import dwe.holding.salesconsult.sales.model.Payment;
 import dwe.holding.salesconsult.sales.repository.PaymentRepository;
@@ -30,6 +31,7 @@ public class PaymentController {
     private final CustomerRepository customerRepository;
     private final VisitRepository visitRepository;
     private final PaymentService paymentService;
+    private final FinancialService financialService;
 
     @PostMapping("/customer/{customerId}/payment")
     String newOrUpdateRecord(@PathVariable Long customerId, Payment paymentForm, RedirectAttributes redirect) {
@@ -54,6 +56,9 @@ public class PaymentController {
                             .build()
             );
             customerRepository.save(customer);
+
+            financialService.updateCustomerBalanceAndVisitTotal(customer.getId(), 0L);
+
             redirect.addFlashAttribute("message", "label.saved");
             return "redirect:/customer/customer/" + customer.getId() + "/payments";
         } else {
@@ -70,7 +75,7 @@ public class PaymentController {
             payment.setReferenceNumber(paymentForm.getReferenceNumber());
 
             paymentRepository.save(payment);
-            return "redirect:/customer/customer/" + payment.getCustomer().getId() + "/payments";
+            return "redirect:/sales/customer/" + payment.getCustomer().getId() + "/payments";
         }
     }
 

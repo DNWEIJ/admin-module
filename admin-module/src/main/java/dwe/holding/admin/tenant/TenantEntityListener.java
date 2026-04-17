@@ -1,7 +1,10 @@
 package dwe.holding.admin.tenant;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
+import jakarta.annotation.PreDestroy;
+import jakarta.persistence.PostRemove;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.TenantId;
@@ -21,8 +24,10 @@ public class TenantEntityListener {
 
     private static final Map<Class<?>, List<Field>> TENANT_FIELDS_CACHE = new ConcurrentHashMap<>();
 
+
     @PrePersist
     @PreUpdate
+    @PostRemove
     public void setTenant(Object entity) {
 
         if (entity.getClass().getName().equals("dwe.holding.admin.model.tenant.User") && !AutorisationUtils.isLoggedIn()) return;

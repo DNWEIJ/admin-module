@@ -4,7 +4,6 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
-import dwe.holding.salesconsult.consult.service.AppointmentVisitService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.supplyinventory.expose.ProductService;
@@ -56,7 +55,7 @@ public class HtmxVisitLineItemsController {
 
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}/lineitem")
    public  String postLineItemViaHtmx(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId,
-                               @NotNull BigDecimal inputCostingQuantity, String inputBatchNumber, Long inputCostingId, String spillageName, Model model, RedirectAttributes redirect) {
+                               @NotNull BigDecimal inputProductQuantity, String inputBatchNumber, Long inputProductId, String spillageName, Model model, RedirectAttributes redirect) {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         if (!validateAppointmenIsOk(visit.getAppointment(), redirect))
             return "redirect:/consult/visit/search"; // todo: to far back, see if we can just refresh the page..so it shows no lineitems adding anymore
@@ -66,7 +65,7 @@ public class HtmxVisitLineItemsController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/sales/visit/search";
         }
-        boolean visitChanged =lineItemService.createOtcAndConsultLineItem(visit.getAppointment(), visit.getPet().getId(), inputCostingId, inputCostingQuantity, inputBatchNumber, spillageName);
+        boolean visitChanged =lineItemService.createOtcAndConsultLineItem(visit.getAppointment(), visit.getPet().getId(), inputProductId, inputProductQuantity, inputBatchNumber, spillageName);
         updateModel(model, visit, customerId);
         if (visitChanged) {
             return "sales-module/fragments/htmx/lineitemsfulltableplusactionbar";
@@ -78,7 +77,7 @@ public class HtmxVisitLineItemsController {
     private void updateModel(Model model, Visit visit, Long customerId) {
         updateLineItemsInModel(model, lineItemService.getLineItemsForPet(visit.getPet().getId(), visit.getAppointment().getId()));
         model
-                .addAttribute("categoryNames", productService.getCategories())
+                .addAttribute("categoryNames", productService.getCategoriesWithoutDeletedRecs())
                 .addAttribute("visit", visit)
                 .addAttribute("salesType", SalesType.VISIT)
                 .addAttribute("productSearchUrl", "/consult/visit/customer/" + customerId + "/visit/" + visit.getId());

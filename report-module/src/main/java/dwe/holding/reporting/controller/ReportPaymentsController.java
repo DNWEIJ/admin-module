@@ -5,7 +5,6 @@ import dwe.holding.reporting.PaymentListTypeEnum;
 import dwe.holding.reporting.repository.dsl.EntityListDsls;
 import dwe.holding.reporting.repository.projection.PaymentListProjection;
 import lombok.AllArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,15 +31,16 @@ public class ReportPaymentsController {
                 .addAttribute("paymentListType", PaymentListTypeEnum.getWebList())
                 .addAttribute("payments", getList(form))
         ;
-        return "reporting-module/payments";
+        return "reporting-module/reporting/payments";
     }
 
     List<PaymentListProjection> getList(PaymentsForm form) {
         if (PaymentListTypeEnum.STANDARD.equals(form.paymentListType)) {
-         return entityListDsls.findPaymentsWithBalance(AutorisationUtils.getCurrentUserMid(),form.localMemberId(), form.from(), form.includeTill());
+            return entityListDsls.findPaymentsWithBalance(AutorisationUtils.getCurrentUserMid(), form.localMemberId(), form.from(), form.includeTill());
         }
         return null;
     }
+
     public record PaymentsForm(LocalDate from, LocalDate includeTill, Long localMemberId, PaymentListTypeEnum paymentListType) {
     }
 

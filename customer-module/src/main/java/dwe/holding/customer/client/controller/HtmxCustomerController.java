@@ -98,7 +98,8 @@ public class HtmxCustomerController {
     private List<String> IfCustomerRecordExists(String zipCode, String houseNumber) {
         Pattern pattern = Pattern.compile(Pattern.quote(zipCode), Pattern.CASE_INSENSITIVE);
         List<Customer> list = customerRepository.findByZipCodeAndMemberId(zipCode, AutorisationUtils.getCurrentUserMid());
-        return list.stream().filter(customer -> customer.getStreetNumber().contains(houseNumber)).map(f -> getOption(f, pattern, new Selectors(false,false,false, false))).toList();
+        return list.stream().filter(customer -> ((customer.getStreetNumber()!= null) && customer.getStreetNumber().contains(houseNumber)))
+                .map(f -> getOption(f, pattern, new Selectors(false,false,false, false))).toList();
     }
 
     @GetMapping("/search/customer")

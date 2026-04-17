@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/costing")
+@RequestMapping("/product")
 @AllArgsConstructor
 public class ProductBatchNumberHtmxController {
 
     private final ProductBatchNumberRepository productBatchNumberRepository;
 
-    @GetMapping("/costing/{costingId}/batchnumbers")
-    String getBatchListHtmx(@PathVariable Long costingId, Model model) {
-        model.addAttribute("batchList", productBatchNumberRepository.findByProductIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(costingId, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid()));
+    @GetMapping("/product/{productId}/batchnumbers")
+    String getBatchListHtmx(@PathVariable Long productId, Model model) {
+        model.addAttribute("batchList", productBatchNumberRepository.findByProductIdAndMemberIdAndLocalMemberIdAndEndDateIsNull(productId, AutorisationUtils.getCurrentUserMid(), AutorisationUtils.getCurrentUserMlid()));
         return "supplies-module/fragments/costing/batchlist";
     }
 }

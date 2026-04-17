@@ -17,7 +17,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     List<Customer> findByAddress2ContainingAndMemberIdOrderByLastNameAscFirstNameAsc(String prefix, Long currentUserMid);
 
-    List<Customer> findByHomePhoneOrWorkPhoneContainingOrMobilePhoneContainingAndMemberIdOrderByLastNameAscFirstNameAsc(String homePhone, String workPhone, String mobilePhone, Long currentUserMid);
+    List<Customer> findByHomePhoneOrWorkPhoneContainingOrMobilePhoneContainingOrFirstNameContainingAndMemberIdOrderByLastNameAscFirstNameAsc(String homePhone, String workPhone, String mobilePhone,String firstName, Long currentUserMid);
 
     Optional<Customer> findByIdAndMemberId(Long customerId, Long memberId);
 
@@ -28,7 +28,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findByZipCodeAndStreetNumberStartingWithAndMemberId(String zipCode, String streetNumber, Long MemberId);
 
     default List<Customer> findByTelAndMemberIdOrderByLastNameAscFirstNameAsc(String searchCriteria, long memberId) {
-        return findByHomePhoneOrWorkPhoneContainingOrMobilePhoneContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, searchCriteria, searchCriteria, memberId);
+        return findByHomePhoneOrWorkPhoneContainingOrMobilePhoneContainingOrFirstNameContainingAndMemberIdOrderByLastNameAscFirstNameAsc(searchCriteria, searchCriteria, searchCriteria,searchCriteria, memberId);
     }
 
     @Query("""

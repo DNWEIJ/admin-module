@@ -7,14 +7,14 @@
                th:href="@{/consult/visit/customer/{customerId}/visits(customerId=${customerId})}" th:text="#{label.title.visit}"></a>
             <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null"
                th:href="@{/sales/customer/{customerId}/payments(customerId=${customerId})}" th:text="#{label.title.payment}"></a>
+            <a role="button" th:class="${activeMenu == 'refunds'} ? 'secondary' : null"
+               th:href="@{/sales/price/customer/{customerId}/refunds(customerId=${customerId})}" th:text="#{label.title.refund}"></a>
             <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null"
                th:href="@{/supplies/customer/{customerId}/reminders(customerId=${customerId})}" th:text="#{label.title.reminder}"></a>
             <a role="button" th:class="${activeMenu == 'notes'} ? 'secondary' : null"
                th:href="@{/customer/customer/{customerId}/notes(customerId=${customerId})}" th:text="#{label.title.notes}"></a>
             <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null"
                th:href="@{/consult/customer/{customerId}/estimates(customerId=${customerId})}" th:text="#{label.title.estimate}"></a>
-            <a role="button" th:class="${activeMenu == 'refunds'} ? 'secondary' : null"
-               th:href="@{/sales/price/customer/{customerId}/refunds(customerId=${customerId})}" th:text="#{label.title.refund}"></a>
         </div>
     </div>
     <div class="mobile-only">
@@ -25,6 +25,8 @@
                th:href="@{/consult/visit/customer/{customerId}/visits(customerId=${customerId})}" th:text="#{label.title.visit}"></a>
             <a role="button" th:class="${activeMenu == 'payments'} ? 'secondary' : null"
                th:href="@{/sales/customer/{customerId}/payments(customerId=${customerId})}" th:text="#{label.title.payment}"></a>
+            <a role="button" th:class="${activeMenu == 'refunds'} ? 'secondary' : null"
+               th:href="@{/sales/price/customer/{customerId}/refunds(customerId=${customerId})}" th:text="#{label.title.refund}"></a>
         </div>
         <div role="group">
             <a role="button" th:class="${activeMenu == 'reminders'} ? 'secondary' : null"
@@ -33,9 +35,6 @@
                th:href="@{/customer/customer/{customerId}/notes(customerId=${customerId})}" th:text="#{label.title.notes}"></a>
             <a role="button" th:class="${activeMenu == 'estimates'} ? 'secondary' : null"
                th:href="@{/consult/customer/{customerId}/estimates(customerId=${customerId})}" th:text="#{label.title.estimate}"></a>
-            <a role="button" th:class="${activeMenu == 'refunds'} ? 'secondary' : null"
-               th:href="@{/sales/price/customer/{customerId}/refunds(customerId=${customerId})}" th:text="#{label.title.refund}"></a>
-
         </div>
     </div>
     <hr/>

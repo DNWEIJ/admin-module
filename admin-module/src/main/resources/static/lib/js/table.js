@@ -1,6 +1,9 @@
 (function () {
     'use strict'
 
+    //
+    //
+    //
     function enableTableMultiSelect(tableElement) {
         const rows = Array.from(tableElement.querySelectorAll("tbody tr"));
         let isMouseDown = false;
@@ -43,7 +46,6 @@
             row.addEventListener('mousedown', (e) => {
                 // ignore clicks on links or buttons inside the row
                 if (e.target.closest('a, button')) return;
-
                 isMouseDown = true;
                 anchorIndex = index;
                 highlightRange(index, index);
@@ -96,6 +98,10 @@
     }
 })()
 
+
+//
+//
+//
 function toggleTableColumns(tableId, columns, visible) {
     const table = document.getElementById(tableId);
     if (!table) return;
@@ -184,15 +190,9 @@ function sortingTables() {
             const aNum = parseFloat(aText);
             const bNum = parseFloat(bText);
 
-            if (!isNaN(aNum) && !isNaN(bNum)) {
-                return newDirection === "asc"
-                    ? aNum - bNum
-                    : bNum - aNum;
-            }
-
             return newDirection === "asc"
-                ? aText.localeCompare(bText)
-                : bText.localeCompare(aText);
+                ? aText.localeCompare(bText, undefined, { numeric: true })
+                : bText.localeCompare(aText, undefined, { numeric: true });
         });
 
         // Re-append sorted rows

@@ -31,24 +31,24 @@ import java.util.Set;
 @Setter
 public class Visit extends MemberBaseBO {
 
-    private Double weight;
-    private Double glucose;
-    private Double temperature;
-
-    @NotNull
-    @Column(nullable = false)
-    private String veterinarian;
+    @Builder.Default
+    private Double weight = 0.0;
+    @Builder.Default
+    private Double glucose = 0.0;
+    @Builder.Default
+    private Double temperature = 0.0;
 
     @NotNull
     @Column(nullable = false)
     private String purpose;
 
-    @NotNull
+    private String veterinarian;
     private String room;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = VisitStatusConverter.class)
-    private VisitStatusEnum status;
+    @Builder.Default
+    private VisitStatusEnum status = VisitStatusEnum.WAITING;
 
     @Lob
     private String comments;
@@ -59,33 +59,40 @@ public class Visit extends MemberBaseBO {
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = YesNoEnumConverter.class)
-    private YesNoEnum sentToInsurance;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Pet pet;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Appointment appointment;
+    @Builder.Default
+    private YesNoEnum sentToInsurance = YesNoEnum.No;
 
     // The following three fields are duplicating information from line-items as summations.
     // Using visit instead of line-items will reduce reporting time considerably
     @Column(nullable = false)
+    @Builder.Default
     private BigDecimal totalAmountIncTax = BigDecimal.ZERO;
     @Column(nullable = false)
+    @Builder.Default
     private BigDecimal totalServiceTax = BigDecimal.ZERO;
     @Column(nullable = false)
+    @Builder.Default
     private BigDecimal totalProductTax = BigDecimal.ZERO;
+
 
     // TODO move to invoice handling
     @Column(columnDefinition = "varchar(1)", nullable = false)
     @Convert(converter = InvoiceStatusConverter.class)
-    private InvoiceStatusEnum invoiceStatus;
+    @Builder.Default
+    private InvoiceStatusEnum invoiceStatus = InvoiceStatusEnum.NEW;
+
     private LocalDate invoiceDate;
     private Long invoiceNumber;
     private LocalDate reminderSendDate;
     private LocalDate reminderSendDate2;
     private LocalDate reminderSendDate3;
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Pet pet;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Appointment appointment;
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "visit")
     @Builder.Default

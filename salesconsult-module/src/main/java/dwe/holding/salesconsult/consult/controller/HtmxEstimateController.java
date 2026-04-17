@@ -5,11 +5,13 @@ import dwe.holding.salesconsult.consult.mapper.LineItemMapper;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Estimate;
 import dwe.holding.salesconsult.consult.model.EstimateForPet;
+import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.service.EstimateService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -32,9 +34,10 @@ public class HtmxEstimateController {
     private final EstimateService estimateService;
     private final ProductService productService;
 
-    @PostMapping("/customer/{customerId}/estimate/{estimateId}/{petId}")
+    @PostMapping("/customer/{customerId}/estimate/{estimateId}/pet/{petId}/lineitem")
     String saveHtmxEstimateLineItem(@PathVariable Long customerId, @PathVariable Long estimateId, @PathVariable Long petId,
-                                    @NotNull BigDecimal inputCostingQuantity, @NotNull Long inputCostingId, Model model, RedirectAttributes redirect) {
+                                    @NotNull BigDecimal inputProductQuantity, @NotNull Long inputProductId,
+                                    Model model, RedirectAttributes redirect) {
         CustomerService.Customer customer = customerService.searchCustomerFromPet(petId);
         if (!customer.id().equals(customerId)) {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
@@ -43,27 +46,32 @@ public class HtmxEstimateController {
         Estimate estimate = estimateService.getEstimate(estimateId, petId);
 
         estimateService.saveEstimateLineItems(lineItemMapper.toEstimateLineItemList(
-                        lineItemService.createEstimateLineItem(inputCostingId, inputCostingQuantity, customerService.getPet(customerId, petId))
+                        lineItemService.createEstimateLineItem(inputProductId, inputProductQuantity, customerService.getPet(customerId, petId))
                         , estimate
                 )
         );
 
-        // save estimate line items
+        Appointment app = Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build();
+        Visit visit = Visit.builder().appointment(app).build();
         model
-                .addAttribute("productSearchUrl", "/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + petId)
-                .addAttribute("appointment", Appointment.builder().cancelled(YesNoEnum.No).completed(YesNoEnum.No).build())
-                .addAttribute("categoryNames", productService.getCategories());
+                .addAttribute("productSearchUrl", EstimateController.getUrl(customerId, petId, estimate.getId()))
+                .addAttribute("appointment", app)
+                .addAttribute("visit", visit)
+                .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted());
         ModelHelper.updateLineItemsInModel(model, estimateService.getAllLineItems(estimateId, petId));
         return "sales-module/fragments/htmx/lineitemsfulltable";
     }
 
     @PostMapping("/customer/{customerId}/estimateforpet")
-    String saveHtmxEstimateForPet(@PathVariable Long customerId, EstimateForPet estimateForPetForm, Model model) {
-        // validate the customer exists
+    String saveHtmxEstimateForPet(@PathVariable Long customerId, EstimateForPet estimateForPetForm, String submitButton, Model model, HttpServletResponse response) {
         customerService.searchCustomer(customerId);
         model.addAttribute("estimateForPet",
                 estimateService.saveEstimateForPet(estimateForPetForm.getId(), estimateForPetForm.getPurpose(), estimateForPetForm.getComments())
         );
+        if (submitButton.equals("_done")) {
+            response.setHeader("HX-Redirect", "loginUrl");
+            return "";
+        }
         model.addAttribute("message", "Estimate saved successfully");
         return "consult-module/estimate/estimateforpetform";
     }

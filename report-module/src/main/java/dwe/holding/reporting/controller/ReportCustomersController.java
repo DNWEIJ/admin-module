@@ -44,13 +44,13 @@ public class ReportCustomersController {
                 .addAttribute("monthList", IntStream.rangeClosed(1, 24).mapToObj(i -> new PresentationElement((long) i, String.valueOf(i))).toList())
                 .addAttribute("ynvaluesList", YesNoEnum.getWebListDoNotCare())
                 .addAttribute("sexTypeList", SexTypeEnum.getWebListDoNotCare())
-                .addAttribute("species", lookupSpeciesRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L))
+                .addAttribute("species", lookupSpeciesRepository.findByMemberId(AutorisationUtils.getCurrentUserMid())
                         .stream().map(f -> new PresentationElement(f.getId(), f.getSpecies()))
                         .sorted(comparing(PresentationElement::getName)).toList())
                 .addAttribute("customers", (isThereInput(docForm)) ? entityListDsls.findCustomers(AutorisationUtils.getCurrentUserMid(), docForm) : List.of())
         ;
 
-        return "reporting-module/customeremail";
+        return "reporting-module/reporting/customeremail";
     }
 
     @PostMapping("customerlist")

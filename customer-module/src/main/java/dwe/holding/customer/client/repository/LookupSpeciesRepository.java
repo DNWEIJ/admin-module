@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface LookupSpeciesRepository extends JpaRepository<LookupSpecies, Long> {
 
-    List<LookupSpecies>  findByMemberIdIn(List <Long> memberIds);
+    List<LookupSpecies>  findByMemberId(Long memberId);
 }

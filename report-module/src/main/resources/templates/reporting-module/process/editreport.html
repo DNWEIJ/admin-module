@@ -34,7 +34,7 @@
             <form action="/report/retrieve/selectedreport">
                 <div>
                     <input type="hidden" name="reportType" th:value="${reportType}">
-                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('templateId','label.template.purpose', ${templateId}, ${reportList}, false,'0')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('templateId','label.template.purpose', ${templateId}, ${reportList}, true,'0')}"></th:block>
                 </div>
                 <div><input type="submit" th:value="#{label.button.next}"></div>
             </form>

@@ -34,6 +34,7 @@ import {
     Strikethrough,
     Table,
     TableToolbar,
+    TableProperties,
     toWidget,
     Underline,
     Undo,
@@ -68,6 +69,24 @@ const PLACEHOLDERS = [
         items: [
             {label: 'datum', value: 'data.reminder.dueDate'},
             {label: 'herinnering', value: 'data.reminder.reminderText'}
+        ]
+    },
+    {
+        group: 'localmember',
+        items: [
+            {label: 'name', value: 'data.localmember.name'}
+        ]
+    },
+    {
+        group: 'Label',
+        items: [
+            {label: 'exipireDate', value: 'data.expireDate'},
+            {label: 'ownerName', value: 'data.ownerName'},
+            {label: 'petName', value: 'data.petName'},
+            {label: 'prescription', value: 'data.prescription'},
+            {label: 'explenation', value: 'data.explenation'},
+            {label: 'vet', value: 'data.vet'},
+            {label: 'expiryDate', value: 'data.expiryDate'},
         ]
     }
 ];
@@ -447,8 +466,9 @@ function initWhenReady() {
     }
 
     ClassicEditor.create(editorElement, {
+        allowedContent: true,
         plugins: [
-            Essentials, Bold, Italic, Underline, Strikethrough, Font, Paragraph, Heading, List, Link, BlockQuote, Table, TableToolbar,
+            Essentials, Bold, Italic, Underline, Strikethrough, Font, Paragraph, Heading, List, Link, BlockQuote, Table, TableToolbar,TableProperties,
             Alignment, Indent, HorizontalLine, SpecialCharacters, SpecialCharactersEssentials, RemoveFormat, Undo, SourceEditing,
             PlaceholderPlugin, ButtonPlugin,
             Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, ImageInsert, Base64UploadAdapter
@@ -456,7 +476,9 @@ function initWhenReady() {
         toolbar: {
             items: [
                 'placeholders', 'ctaButton', '|', 'heading', '|', 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
-                'alignment', '|', 'numberedList', 'bulletedList', '|', 'outdent', 'indent', '|', 'link', 'insertImage', 'insertTable', 'blockQuote', '|', 'horizontalLine', 'specialCharacters', '|',
+                'alignment', '|', 'numberedList', 'bulletedList', '|', 'outdent', 'indent', '|', 'link', 'insertImage',
+                'insertTable', 'tableProperties',
+                'blockQuote', '|', 'horizontalLine', 'specialCharacters', '|',
                 'removeFormat', '|', 'undo', 'redo', '|', 'sourceEditing'
             ],
             shouldNotGroupWhenFull: true

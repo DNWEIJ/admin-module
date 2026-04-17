@@ -40,7 +40,7 @@ public class RefundController {
     private final RefundListDsl refundListDsl;
     private final RefundRepository refundRepository;
     private final LineItemService lineItemService;
-    LookupProductCategoryRepository lookupProductCategoryRepository;
+    private final ProductService productService;
     private final CustomerService customerService;
     private final LineItemMapper lineItemMapper;
 
@@ -77,9 +77,9 @@ public class RefundController {
 
     @PostMapping("/customer/{customerId}/refund/lineitem")
     String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, Model model,
-                                          @NotNull Long inputCostingId, @NotNull BigDecimal inputCostingQuantity,
+                                          @NotNull Long ProductId, @NotNull BigDecimal inputProductQuantity,
                                           @ModelAttribute(value = "lineItems") ArrayList<LineItem> lineItems) {
-        List<LineItem> list = lineItemService.createPricing(inputCostingId, inputCostingQuantity);
+        List<LineItem> list = lineItemService.createPricing(ProductId, inputProductQuantity);
         AtomicLong counter = new AtomicLong(lineItems.size() + 1);
         list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
         lineItems.addAll(list);
@@ -175,7 +175,7 @@ public class RefundController {
     private void updateModel(Long customerId, Model model) {
         model
                 .addAttribute("productSearchUrl", SALES_PRICE_SELL.formatted(customerId))
-                .addAttribute("categoryNames", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
+                .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)
                 .addAttribute("salesType", SalesType.PRICE_INFO);

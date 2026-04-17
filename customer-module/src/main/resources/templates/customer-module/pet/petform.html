@@ -12,54 +12,80 @@
     <fieldset>
         <legend th:text="#{label.title.pet}"></legend>
         <div class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','pet.name','pet.name','1')}" th:with="shouldFocus=true"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('birthday','pet.birthday','pet.birthday','2')}" th:with="type='date',required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('idealWeight','pet.idealWeight','pet.idealWeight','3')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','pet.name','pet.name','0')}" th:with="shouldFocus=true"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('birthday','pet.birthday','pet.birthday','0')}" th:with="type='date',required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('idealWeight','pet.idealWeight','pet.idealWeight','0')}" th:with="required=false"></th:block>
         </div>
         <div class="grid">
             <!-- species in url is a placeholder for param htmx exntension -->
             <th:block
                     th:insert="~{fragments/elements/dropdown::dbDropdownWithHtmx('species', 'pet.species', ${pet.species}, ${speciesList}, true, '/customer/customer/pet/species/{species}', '#breed')}"
                     th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('breed', 'pet.breed', ${pet.breed}, ${speciesList}, true,'5')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sex','pet.sex', ${pet.sex}, ${sexTypeList}, true,'6')}"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('breed', 'pet.breed', ${pet.breed}, ${breedList}, true,'0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('sex','pet.sex', ${pet.sex}, ${sexTypeList}, true,'0')}"></th:block>
         </div>
     </fieldset>
     <fieldset>
+        <script>
+            function setAutoYesNo() {
+                document.getElementById('insuredBy').addEventListener('blur', function () {
+                    document.getElementById('insured').value = this.value.trim() ? 'Yes' : 'No'
+                })
+                document.getElementById('allergiesDescription').addEventListener('blur', function () {
+                    document.getElementById('allergies').value = this.value.trim() ? 'Yes' : 'No'
+                })
+                document.getElementById('gpwarningDescription').addEventListener('blur', function () {
+                    document.getElementById('gpwarning').value = this.value.trim() ? 'Yes' : 'No'
+                })
+                document.getElementById('deceasedDate').addEventListener('blur', function () {
+                    document.getElementById('deceased').value = this.value.trim() ? 'Yes' : 'No'
+                })
+            }
+
+            document.body.addEventListener('htmx:afterSwap', function (evt) {
+                setAutoYesNo()
+            })
+
+            document.addEventListener('DOMContentLoaded', function () {
+                setAutoYesNo()
+            })
+        </script>
         <legend th:text="#{customer.legend.otherInformation}"></legend>
         <div>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('briefDescription','pet.briefDescription','pet.briefDescription','7')}"
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('briefDescription','pet.briefDescription','pet.briefDescription','0')}"
                       th:with="required=false"></th:block>
         </div>
         <div class="grid-row">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('allergies','pet.allergies', ${pet.allergies}, ${ynvaluesList}, true,'8')}"
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('allergies','pet.allergies', ${pet.allergies}, ${ynvaluesList}, true,'0')}"
                       th:with="required=false, class='verysmall'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('allergiesDescription','pet.allergiesDescription','pet.allergiesDescription','9')}"
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('allergiesDescription','pet.allergiesDescription','pet.allergiesDescription','0')}"
                       th:with="required=false"></th:block>
 
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('insured','pet.insured', ${pet.insured}, ${ynvaluesList}, true,'10')}"
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('insured','pet.insured', ${pet.insured}, ${ynvaluesList}, true,'0')}"
                       th:with="required=false, class='verysmall'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('insuredBy','pet.insuredBy','pet.insuredBy','11')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('insuredBy','pet.insuredBy','pet.insuredBy','0')}"
+                      th:with="required=false"></th:block>
         </div>
         <div class="grid-row">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('gpwarning','pet.gpwarning', ${pet.gpwarning}, ${ynvaluesList}, true,'12')}"
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('gpwarning','pet.gpwarning', ${pet.gpwarning}, ${ynvaluesList}, true,'0')}"
                       th:with="required=false, class='verysmall'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('gpwarningDescription','pet.gpwarningDescription','pet.gpwarningDescription','13')}"
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('gpwarningDescription','pet.gpwarningDescription','pet.gpwarningDescription','0')}"
                       th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deceased','pet.deceased', ${pet.deceased}, ${ynvaluesList}, true,'14')}"
+
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('deceased','pet.deceased', ${pet.deceased}, ${ynvaluesList}, true,'0')}"
                       th:with="required=false, class='verysmall'"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('deceasedDate','pet.deceasedDate','pet.deceasedDate','15')}"
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('deceasedDate','pet.deceasedDate','pet.deceasedDate','')}"
                       th:with="type='date',required=false"></th:block>
         </div>
         <div class="grid">
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('passportNumber','pet.passportNumber','pet.passportNumber','16')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipTattooId','pet.chipTattooId','pet.chipTattooId','17')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipDate','pet.chipDate','pet.chipDate','18')}" th:with="type='date', required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('passportNumber','pet.passportNumber','pet.passportNumber','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipTattooId','pet.chipTattooId','pet.chipTattooId','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipDate','pet.chipDate','pet.chipDate','0')}" th:with="type='date', required=false"></th:block>
         </div>
 
         <label for="pet.comments">
             <th:block th:utext="#{pet.comments}"/>
-            <textarea cols="110" id="pet.comments" name="comments" rows="8" tab="19" th:utext="${pet.comments}"></textarea>
+            <textarea cols="110" id="pet.comments" name="comments" rows="8"  th:utext="${pet.comments}"></textarea>
         </label>
     </fieldset>
     </form>

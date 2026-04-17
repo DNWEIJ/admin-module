@@ -9,5 +9,5 @@
             <textarea cols="110" id="comments" name="comments" rows="8" tab="19" th:utext="${estimateForPet.comments}"></textarea>
         </label>
     </fieldset>
-    <button name="_save" type="submit" form="estimateForm" th:text="#{label.button.save}"></button>
+    <button name="submitButton" value="_save" type="submit" form="estimateForm" th:text="#{label.button.save}"></button>
 </div>

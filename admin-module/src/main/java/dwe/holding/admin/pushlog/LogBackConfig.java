@@ -5,9 +5,8 @@ import ch.qos.logback.classic.LoggerContext;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @AllArgsConstructor
 public class LogBackConfig {
 

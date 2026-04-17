@@ -10,14 +10,14 @@
         <legend>[[#{label.payment.details}]]</legend>
         <div class="grid">
             <th:block th:with="paymentAmount=${#numbers.formatDecimal(payment.amount, 1, 2, 'POINT')}">
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','paymentAmount','2')}"
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.payment.amount','paymentAmount','0')}"
                           th:with="shouldFocus=true,pattern='^(?!0+(?:\.0+)?$)\d+(?:\.\d{1,2})?$'"></th:block>
             </th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('paymentDate','label.payment.paymentDate','payment.paymentDate','3')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('paymentDate','label.payment.paymentDate','payment.paymentDate','0')}"></th:block>
         </div>
         <div class="grid">
-            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method',${payment.method}, ${payMethodsList}, true,'1')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('referenceNumber','label.payment.referenceNumber','payment.referenceNumber','4')}"
+            <th:block th:insert="~{fragments/elements/dropdown::propDropdown('method','label.payment.method',${payment.method}, ${payMethodsList}, true,'0')}"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('referenceNumber','label.payment.referenceNumber','payment.referenceNumber','0')}"
                       th:with="required=false"></th:block>
         </div>
         <div class="grid">
@@ -39,7 +39,7 @@
             <div id="connectConsultForm">
                 <div th:text="#{label.payment.addconsult}"></div>
                 <div class="grid">
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('newVisitId','label.title.Visit','','0')}" th:with="type='number'"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('newVisitId','label.title.Visit','','0')}" th:with="required=false,type='number'"></th:block>
                 <button type="button" th:hx-post="'/sales/payment/'+ ${payment.id}+ '/add'" hx-include="#connectConsultForm" hx-target="#paymentvisitTable"
                         onclick="
                                 const input = document.getElementById('newVisitId');
@@ -72,11 +72,12 @@
                                        hx-on:htmx:before-request="messageDisplay(this.dataset.savedMsg)">🗑</a></td>
                                 <td th:if="${paymentvisit.visit.appointment.isOTC}">
                                     <a th:href="'/sales/otc/customer/'+ ${paymentvisit.visit.pet.customer.id} + '/visit/'+  ${paymentvisit.visit.id}"
-                                       th:text="${#temporals.format(paymentvisit.visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' - '+ paymentvisit.visit.id} +' (OTC)'}"></a>
+                                       th:text="${#temporals.format(paymentvisit.visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' - '+ paymentvisit.visit.id + ' (OTC)'}"></a>
+
                                 </td>
                                 <td th:unless="${paymentvisit.visit.appointment.isOTC}">
                                     <a th:href="'/consult/visit/customer/'+ ${paymentvisit.visit.pet.customer.id} + '/visit/'+ ${paymentvisit.visit.id} + '?callFrom=customer'"
-                                       th:text="${#temporals.format(paymentvisit.visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' - '+ paymentvisit.visit.id}"></a>
+                                       th:text="${#temporals.format(paymentvisit.visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' - ' + paymentvisit.visit.id}"></a>
                                 </td>
                                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${paymentvisit.visit.totalAmountIncTax}, false)}"></th:block>
                             </tr>

@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface LookupDiagnosesRepository extends JpaRepository<LookupDiagnose, Long> {
 
-    @Nullable List<LookupDiagnose> findByMemberIdIn(List<Long> memberIds);
-
-    @Nullable List<LookupDiagnose> getByMemberId(Long currentUserMid);
+    @Nullable List<LookupDiagnose> findByMemberId(Long memberId);
 }

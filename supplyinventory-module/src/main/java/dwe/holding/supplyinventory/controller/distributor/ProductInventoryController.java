@@ -27,13 +27,13 @@ public class ProductInventoryController {
 //
     @GetMapping("/inventory")
     String showListPage(Model model, ProductController.ListForm form) {
-        if (form.inputCostingId() == null && form.categoryId() == null)
+        if (form.inputProductId() == null && form.categoryId() == null)
             form = new ProductController.ListForm(null, null, Boolean.FALSE);
         model
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
                 .addAttribute("salesType", new ProductController.SalesTypeDummy())
                 .addAttribute("productSearchUrl", "/product/search/product")
-                .addAttribute("costingSearchForm", form)
+                .addAttribute("productSearchForm", form)
                 .addAttribute("products", List.of())
         ;
         return "supplies-module/product/inventory/list";

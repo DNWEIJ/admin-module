@@ -76,10 +76,7 @@ public class Customer extends MemberBaseBO {
     @Builder.Default
     private Set<Pet> pets = new HashSet<Pet>(0);
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-//    private Set<Payment> payments = new HashSet<Payment>(0);
 
-    /*********************************************************/
     public String getAddress2() {
         return address2 == null ? "" : address2;
     }
@@ -102,16 +99,16 @@ public class Customer extends MemberBaseBO {
     public String getSalutation() {
         String salutation = new String();
 
-        if((this.getTitle() != null) && (!this.getTitle().isEmpty())) {
+        if ((this.getTitle() != null) && (!this.getTitle().isEmpty())) {
             salutation += this.getTitle();
         }
-        if((this.getFirstName() != null) && (!this.getFirstName().isEmpty())) {
+        if ((this.getFirstName() != null) && (!this.getFirstName().isEmpty())) {
             salutation += (salutation.isEmpty() ? "" : " ") + this.getFirstName();
         }
-        if((this.getMiddleInitial() != null) && (!this.getMiddleInitial().isEmpty())) {
+        if ((this.getMiddleInitial() != null) && (!this.getMiddleInitial().isEmpty())) {
             salutation += (salutation.isEmpty() ? "" : " ") + this.getMiddleInitial();
         }
-        if((this.getLastName() != null) && (!this.getLastName().isEmpty())) {
+        if ((this.getLastName() != null) && (!this.getLastName().isEmpty())) {
             salutation += (salutation.isEmpty() ? "" : " ") + this.getLastName();
         }
         return salutation;
@@ -158,39 +155,8 @@ public class Customer extends MemberBaseBO {
         return formattedHtmlAddress(this.address2, this.zipCode, this.city);
     }
 
-    public Customer(
-            Long id,
-            String firstName,
-            String surName,
-            String lastName,
-            String middleInitial,
-            String email,
-            YesNoEnum newsletter,
-            String homePhone,
-            String workPhone,
-            String mobilePhone,
-            String address2,
-            String city,
-            String zipCode,
-            CustomerStatusEnum status,
-            BigDecimal balance,
-            Set<Pet> pets
-    ) {
-        this.setId(id);
-        this.firstName = firstName;
-        this.surName = surName;
-        this.lastName = lastName;
-        this.middleInitial = middleInitial;
-        this.email = email;
-        this.newsletter = newsletter;
-        this.homePhone = homePhone;
-        this.workPhone = workPhone;
-        this.mobilePhone = mobilePhone;
-        this.address2 = address2;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.status = status;
-        this.balance = balance;
-        this.pets = pets;
+    public void setAddressIntoAddressLines() {
+        this.address2 = this.street.trim() + " " + this.streetNumber;
+        this.address3 = this.zipCode + " " + this.city.trim();
     }
 }

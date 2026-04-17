@@ -17,9 +17,10 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class LookupBreeds extends MemberBaseBO {
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lookupspecies_id", nullable = false)
     private LookupSpecies species;
+
     @Column(nullable = false)
     @NotEmpty
     private String speciesName;

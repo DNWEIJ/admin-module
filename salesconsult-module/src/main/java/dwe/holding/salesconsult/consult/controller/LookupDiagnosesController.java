@@ -3,6 +3,7 @@ package dwe.holding.salesconsult.consult.controller;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.salesconsult.consult.model.LookupDiagnose;
 import dwe.holding.salesconsult.consult.repository.LookupDiagnosesRepository;
+import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class LookupDiagnosesController {
 
     @GetMapping("lookup/diagnosis")
     String list(Model model) {
-        model.addAttribute("diagnoses", lookupDiagnosesRepository.getByMemberId(AutorisationUtils.getCurrentUserMid()));
+        model.addAttribute("diagnoses", lookupDiagnosesRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()));
         model.addAttribute("activeMenu", "diagnosis");
         return "customer-module/lookup/diagnosis/list";
     }
@@ -34,6 +35,7 @@ public class LookupDiagnosesController {
     String newRecord(Model model) {
         model.addAttribute("lookupDiagnosis", new LookupDiagnose());
         model.addAttribute("activeMenu", "diagnosis");
+        model.addAttribute("yesNoList", YesNoEnum.getWebList());
         return "customer-module/lookup/diagnosis/action";
     }
 
@@ -43,6 +45,7 @@ public class LookupDiagnosesController {
         model.addAttribute("lookupDiagnosis", diagnoses.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? diagnoses : new LookupDiagnose());
         //AutorisationUtils.getCurrentUserMid()
         model.addAttribute("activeMenu", "diagnosis");
+        model.addAttribute("yesNoList", YesNoEnum.getWebList());
         return "customer-module/lookup/diagnosis/action";
     }
 

@@ -69,9 +69,9 @@ public class PriceSellController {
     private Model updateModel(Model model, List<LineItem> lineItems) {
         ModelHelper.updateLineItemsInModel(model, lineItems);
         model
-                .addAttribute("categoryNames", productService.getCategories())
+                .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted())
                 .addAttribute("productSearchUrl", SALES_PRICE_SELL)
-                .addAttribute("costingSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", appointment)
                 .addAttribute("salesType", SalesType.PRICE_INFO);

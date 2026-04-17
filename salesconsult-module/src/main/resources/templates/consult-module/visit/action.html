@@ -51,17 +51,14 @@
                             th:insert="~{fragments/elements/dropdown::propDropdown('sentToInsurance','visit.insurance',${visit.sentToInsurance}, ${ynvaluesList}, false, '0')}"></th:block>
                 </div>
                 <div class="grid-row">
-                            <a href="#" class="emoji-icon align-center verysmall" th:title="#{label.history.weight.history}"
-                               th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/weight'}"
-                               hx-target="#modal-container" hx-swap="innerHTML"/>📜</a>
-                            <th:block
-                                    th:insert="~{fragments/elements/input::inputHtmlLift('weight','visit.weight','visit.weight','0')}"
-                                    th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('temperature','visit.temperature','visit.temperature','0')}"
+                    <a href="#" class="emoji-icon align-center verysmall" th:title="#{label.history.weight.history}"
+                       th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/weight'}"
+                       hx-target="#modal-container" hx-swap="innerHTML"/>📜</a>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('weight','visit.weight','visit.weight','0')}"
                             th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','0')}"
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('temperature','visit.temperature','visit.temperature','0')}"
+                            th:with="required=false"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('glucose','visit.glucose','visit.glucose','0')}"
                             th:with="required=false"></th:block>
                 </div>
                 <th:block
@@ -93,7 +90,7 @@
             </summary>
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
             <!-- TODO: Check on visit isOpen -->
-            <div id="replacePartForCostingSearch" th:if="${!(appointment.isCancelled || appointment.isCompleted)}"
+            <div id="replacePartForProductSearch" th:if="${!(appointment.isCancelled || appointment.isCompleted)}"
                  th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></div>
         </details>
 

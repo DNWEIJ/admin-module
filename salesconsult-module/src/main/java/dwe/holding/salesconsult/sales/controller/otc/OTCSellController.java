@@ -65,7 +65,7 @@ public class OTCSellController {
                 .addAttribute("selectedPet", visit.getPet())
                 .addAttribute("pets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && !pet.deceased()))
                 .addAttribute("deceasedPets", customer.pets().stream().filter(pet -> !listPetsOnAppointment.contains(pet.id()) && pet.deceased()))
-                .addAttribute("costingSearchForm", new ProductController.ListForm(null,null, Boolean.FALSE))
+                .addAttribute("productSearchForm", new ProductController.ListForm(null,null, Boolean.FALSE))
         ;
         updateModel(model, visit, customer.id());
         return "salesconsult-generic-module/productpage";
@@ -137,7 +137,7 @@ public class OTCSellController {
                 .addAttribute("productSearchUrl", "/sales/otc/customer/" + customerId + "/visit/" + visit.getId())
                 .addAttribute("visit", visit)
                 .addAttribute("appointment", visit.getAppointment())
-                .addAttribute("categoryNames", productService.getCategories())
+                .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted())
                 .addAttribute("salesType", SalesType.OTC);
     }
 }

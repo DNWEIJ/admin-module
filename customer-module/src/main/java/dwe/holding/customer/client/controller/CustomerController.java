@@ -71,27 +71,29 @@ public class CustomerController {
         }
 
         if (customerForm.isNew()) {
-            Customer savedCustomer = customerRepository.save(
-                    Customer.builder()
-                            // fill per item all fields
-                            .firstName(customerForm.getFirstName()).surName(customerForm.getSurName()).lastName(customerForm.getLastName()).middleInitial(customerForm.getMiddleInitial()).title(customerForm.getTitle())
 
-                            .email(customerForm.getEmail()).homePhone(customerForm.getHomePhone()).workPhone(customerForm.getWorkPhone()).mobilePhone(customerForm.getMobilePhone())
+            Customer newCustomer = Customer.builder()
+                    // fill per item all fields
+                    .firstName(customerForm.getFirstName()).surName(customerForm.getSurName()).lastName(customerForm.getLastName()).middleInitial(customerForm.getMiddleInitial()).title(customerForm.getTitle())
 
-                            .status(customerForm.getStatus()).newsletter(customerForm.getNewsletter())
+                    .email(customerForm.getEmail()).homePhone(customerForm.getHomePhone()).workPhone(customerForm.getWorkPhone()).mobilePhone(customerForm.getMobilePhone())
 
-                            // TODO: Add conversion to the address1,2,3 to normal fields; in copy_sql_customer address2,3 split into
-                            .extraAddressInfo(customerForm.getExtraAddressInfo()).address2(customerForm.getAddress2()).address3(customerForm.getAddress3())
-                            .oldAddressInfo(customerForm.getOldAddressInfo())
-                            .zipCode(customerForm.getZipCode()).street(customerForm.getStreet()).streetNumber(customerForm.getStreetNumber()).city(customerForm.getCity())
+                    .status(customerForm.getStatus()).newsletter(customerForm.getNewsletter())
 
-                            .emergencyContact(customerForm.getEmergencyContact()).emergencyContactPhone(customerForm.getEmergencyContactPhone())
+                    // TODO: Add conversion to the address1,2,3 to normal fields; in copy_sql_customer address2,3 split into
+                    .extraAddressInfo(customerForm.getExtraAddressInfo())
+                    .address2(customerForm.getAddress2()).address3(customerForm.getAddress3())
+                    .oldAddressInfo(customerForm.getOldAddressInfo())
+                    .zipCode(customerForm.getZipCode()).street(customerForm.getStreet()).streetNumber(customerForm.getStreetNumber()).city(customerForm.getCity())
 
-                            .previousVeterinarian(customerForm.getPreviousVeterinarian()).previousVeterinarianPhone(customerForm.getPreviousVeterinarianPhone())
-                            .ubn(customerForm.getUbn())
-                            .comments(customerForm.getComments())
-                            .build()
-            );
+                    .emergencyContact(customerForm.getEmergencyContact()).emergencyContactPhone(customerForm.getEmergencyContactPhone())
+
+                    .previousVeterinarian(customerForm.getPreviousVeterinarian()).previousVeterinarianPhone(customerForm.getPreviousVeterinarianPhone())
+                    .ubn(customerForm.getUbn())
+                    .comments(customerForm.getComments())
+                    .build();
+
+            Customer savedCustomer = customerRepository.save(newCustomer);
             return "redirect:/customer/customer/" + savedCustomer.getId();
         } else {
             Customer customer = customerRepository.findById(customerForm.getId()).get();
@@ -100,6 +102,7 @@ public class CustomerController {
                 return "redirect:/customer/customer";
             }
             customerMapper.updateCustomerFromForm(customerForm, customer);
+            customer.setAddressIntoAddressLines();
             redirect.addFlashAttribute("message", "label.saved");
             return "redirect:/customer/customer/" + customerRepository.save(customer).getId();
         }

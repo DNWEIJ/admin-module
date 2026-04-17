@@ -9,7 +9,8 @@ INSERT INTO consult_diagnose
  added_by,
  added_on,
  last_edited_by,
- last_edited_on)
+ last_edited_on
+ )
 SELECT d.DIAGNOSE_ID,
        d.VERSION,
        d.MID,
@@ -21,6 +22,7 @@ SELECT d.DIAGNOSE_ID,
        d.ADDEDON,
        'system',
        now()
+
 from vmas.diagnose d
          join vmas.location l on l.DIAGNOSE_ID = d.DIAGNOSE_ID
 where l.diagnose_id not in(

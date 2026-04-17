@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,36 +20,36 @@ import java.util.regex.Pattern;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/costing")
+@RequestMapping("/product")
 @Slf4j
 public class ProductSearchController {
 
     private final ProductRepository productRepository;
     private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
-    @GetMapping("/costing/search/category/dropdown")
-    public String searchLookupCostingDropdown(Model model) {
+    @GetMapping("/product/searching/category/dropdown")
+    public String searchLookupProductDropdown(Model model) {
         LocalDateTime now = LocalDateTime.now();
-        model.addAttribute("lookupCostings", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No));
+        model.addAttribute("lookupProductss", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No));
         return "supplies-module/fragments/costing/selectcosting";
     }
 
-    @PostMapping("/costing/search/costing/dropdown/found/costing")
+    @PostMapping("/product/searching/product/dropdown/found/product")
     public String searchProductForDropDown(Long categoryId, Model model) {
         StringBuilder sb = new StringBuilder();
-        productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclature(categoryId, AutorisationUtils.getCurrentUserMid()).forEach(costingProj ->
-                sb.append("<option data-has-batch=\"").append(costingProj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
-                        .append("\" data-id=\"").append(costingProj.id())
-                        .append("\" data-nomenclature=\"").append(costingProj.nomenclature())
+        productRepository.findAllByLookupProductCategory_IdAndMemberIdOrderByNomenclature(categoryId, AutorisationUtils.getCurrentUserMid()).forEach(proj ->
+                sb.append("<option data-has-batch=\"").append(proj.hasBatchNr().equals(YesNoEnum.Yes) ? "true" : "false")
+                        .append("\" data-id=\"").append(proj.id())
+                        .append("\" data-nomenclature=\"").append(proj.nomenclature())
                         .append("\">")
-                        .append(costingProj.nomenclature())
+                        .append(proj.nomenclature())
                         .append("</option>"));
         model.addAttribute("flatData", sb.toString());
         return "fragments/elements/flatData";
     }
 
 
-    @PostMapping("/search/costing")
+    @PostMapping("/searching/product")
     public String searchCustomerHtmx(Model model, String searchCriteria) {
         LocalDateTime now = LocalDateTime.now();
         if (searchCriteria == null || searchCriteria.isEmpty()) {
@@ -68,7 +67,6 @@ public class ProductSearchController {
             list = productRepository.getProductOnNomenclature(searchCriteria, AutorisationUtils.getCurrentUserMid());
         }
         model.addAttribute("flatData", wrap(list.stream().map(str -> getOption(str, pattern)).toList()));
-        log.info("searchCustomerHtmx::Spending time for lookup: " + Duration.between(now, LocalDateTime.now()));
         return "fragments/elements/flatData";
     }
 

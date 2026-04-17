@@ -14,6 +14,8 @@ public interface CustomerMapper {
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "balance", ignore = true)
     @Mapping(target = "memberId", ignore = true)
+    @Mapping(target = "addedBy", ignore = true)
+    @Mapping(target = "addedOn", ignore = true)
     void updateCustomerFromForm(Customer form, @MappingTarget Customer customer);
 
     CustomerService.Customer toCustomer(Customer customer);

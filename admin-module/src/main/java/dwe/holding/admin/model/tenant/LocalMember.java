@@ -1,12 +1,14 @@
 package dwe.holding.admin.model.tenant;
 
 import dwe.holding.admin.model.base.MemberBaseBO;
+import dwe.holding.admin.preferences.LocalMemberPreferences;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +34,23 @@ public class LocalMember extends MemberBaseBO {
     private String zipCode;
     private String email;
 
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "localMember")
     private List<LocalMemberTax> memberLocalTaxs = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private MetaLocalMemberPreferences metaLocalMemberPreferences;
+
+    @Transient
+    private LocalMemberPreferences pref = new LocalMemberPreferences();
+
+    public String getPrefJson(ObjectMapper objectMapper) {
+        return objectMapper.writeValueAsString(pref);
+    }
+
+    public void setPref(ObjectMapper objectMapper, String json) {
+        pref = objectMapper.readValue(json, LocalMemberPreferences.class);
+    }
 
     public String getShortMemberName() {
         return localMemberName.split(" ")[1];

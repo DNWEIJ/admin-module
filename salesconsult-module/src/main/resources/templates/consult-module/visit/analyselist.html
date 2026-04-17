@@ -4,7 +4,7 @@
 <th:block th:if="${!isAnalyseItemsFromDb}">
     <form id="analyseForm" hx-ext="debug" th:hx-post="'/consult/visit/'+ ${visit.id} + '/analyse/copy'" hx-include="#analyseDropDown" hx-target="#analyseReplaceHtmx" hx-swap="innerHTML">
 </th:block>
-<table class="analyse no-sorting striped">
+<table class="analyse no-sorting striped" data-no-export>
     <thead>
     <tr>
         <th th:text="#{analyses.label.nnbVet}"> </th>
@@ -43,7 +43,7 @@
                 ownerName=${'analyseItems[' + iterStat.index + '].ownerIndicator'},
                 quantityName=${'analyseItems[' + iterStat.index + '].quantity'},
                 idName=${'analyseItems[' + iterStat.index + '].id'},
-                costingId=${'analyseItems[' + iterStat.index + '].costingId'}">
+                productId=${'analyseItems[' + iterStat.index + '].productId'}">
             <td>
                 <input type="hidden" th:value="${analyseItem.id}" th:name="${idName}">
                 <th:block th:insert="~{fragments/elements/select::selectCheckBox(${vetName},'','','')}"></th:block>
@@ -60,7 +60,7 @@
                        th:id="${'quantity_'+ analyseItem.id}" th:name="${quantityName}" th:value="${analyseItem.quantity}">
                 <input type="hidden" th:value="${analyseItem.totalIncTax}" th:id="${'origTotalIncTax_'+ analyseItem.id}">
                 <input type="hidden" th:value="${analyseItem.quantity}" th:id="${'origQuantity_'+ analyseItem.id}">
-                <input type="hidden" th:value="${analyseItem.costingId}" th:name="${costingId}">
+                <input type="hidden" th:value="${analyseItem.productId}" th:name="${productId}">
             </td>
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${analyseItem.totalIncTax},false,'analyseTotalIncTax')}"></th:block>
         </tr>

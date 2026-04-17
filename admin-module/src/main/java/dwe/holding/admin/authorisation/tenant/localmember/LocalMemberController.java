@@ -1,5 +1,6 @@
 package dwe.holding.admin.authorisation.tenant.localmember;
 
+import dwe.holding.admin.authorisation.tenant.mapper.LocalMemberMapper;
 import dwe.holding.admin.model.tenant.LocalMember;
 import dwe.holding.admin.model.type.AgendaTypeEnum;
 import dwe.holding.admin.preferences.LocalMemberPreferences;
@@ -12,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +31,21 @@ import java.util.stream.IntStream;
 public class LocalMemberController {
     private final LocalMemberRepository localMemberRepository;
     private final ObjectMapper objectMapper;
+    private final LocalMemberMapper localMemberMapper;
 
-    // move local member preferences to vmas
-//    private final LookupRoomRepository lookupRoomRepository;
+    @GetMapping("/localmembers")
+    String listScreen(Model model) {
+        model.addAttribute("action", "List");
+        model.addAttribute("localmembers", AutorisationUtils.getCurrentMember().getLocalMembers());
+        return "admin-module/localmember/list";
+    }
+
     @GetMapping("/localmember")
     String newScreen(Model model) {
         model.addAttribute("action", "Create");
         setModelData(model, new LocalMember());
         return "admin-module/localmember/action";
     }
-
 
     @GetMapping("/localmember/{id}")
     String showEditScreen(@PathVariable @NotNull Long id, Model model) {
@@ -50,25 +55,12 @@ public class LocalMemberController {
         return "admin-module/localmember/action";
     }
 
-    @GetMapping("/localmembers")
-    String listScreen(Model model) {
-        model.addAttribute("action", "List");
-        model.addAttribute("localmembers", AutorisationUtils.getCurrentMember().getLocalMembers());
-        return "admin-module/localmember/list";
-    }
-
-
     @PostMapping("/localmember")
-    String save(@Valid LocalMember localMember, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "admin-module/localmember/action";
-        }
-        processMemberLocal(localMember);
+    String save(@Valid LocalMember localMemberForm, RedirectAttributes redirect) {
+        processMemberLocal(localMemberForm);
         redirect.addFlashAttribute("message", "label.saved");
-        return "redirect:/localmembers";
+        return "redirect:/admin/localmembers";
     }
-
 
     private void setModelData(Model model, LocalMember local) {
         LocalMemberPreferences pref = objectMapper.readValue(local.getMetaLocalMemberPreferences().getPreferencesJson(), LocalMemberPreferences.class);
@@ -77,18 +69,22 @@ public class LocalMemberController {
                 .addAttribute("localmember", local)
                 .addAttribute("pref", pref)
                 .addAttribute("paymentList", PaymentMethodEnum.getWebList())
-                .addAttribute("templates", pref.getConsultTextRecords(objectMapper))
+                .addAttribute("templates", pref.getConsultTextTemplate(objectMapper))
                 .addAttribute("agendaTypeList", AgendaTypeEnum.getWebList())
                 .addAttribute("yesNoList", YesNoEnum.getWebList())
                 .addAttribute("timeList", IntStream.rangeClosed(1, 24).map(i -> i * 5).mapToObj(i -> new PresentationElement(String.valueOf(i), String.valueOf(i))).toList())
-// todo move preference to vmas
+// todo move preference to vmas (user and LocalMember)
                 .addAttribute("rooms", List.of())
 // lookupRoomRepository.findByLocalMemberIdAndMemberId(AutorisationUtils.getCurrentUserMlid(), AutorisationUtils.getCurrentUserMid()) )
         ;
     }
 
-    private Long processMemberLocal(LocalMember localMember) {
-        LocalMember savedLocalMember = localMemberRepository.save(localMember);
-        return savedLocalMember.getId();
+    private void processMemberLocal(LocalMember localMemberForm) {
+        LocalMember localMember = localMemberRepository.findById(localMemberForm.getId()).orElseThrow();
+        localMemberMapper.updateLocalMemberFromForm(localMember, localMemberForm);
+        // preferences update to json before storing
+        localMemberForm.getPref().setConsultTextTemplate(objectMapper);
+        localMember.getMetaLocalMemberPreferences().setPreferencesJson(localMemberForm.getPrefJson(objectMapper));
+        localMemberRepository.save(localMember);
     }
 }

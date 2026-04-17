@@ -25,4 +25,9 @@ public interface LookupProductCategoryRepository extends JpaRepository<LookupPro
             "FROM LookupProductCategory c WHERE c.deleted = :deleted " +
             "ORDER BY c.categoryName")
     List<PresentationElement> findByDeletedOrderByCategoryName(YesNoEnum deleted);
+
+    @Query("SELECT new dwe.holding.shared.model.frontend.PresentationElement(c.id, c.categoryName) " +
+            "FROM LookupProductCategory c "+
+            "ORDER BY c.categoryName")
+    List<PresentationElement> findByOrderByCategoryName();
 }

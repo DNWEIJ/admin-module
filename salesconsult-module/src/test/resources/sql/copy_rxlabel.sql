@@ -1,0 +1,31 @@
+INSERT INTO new_vmas.sales_prescription_label
+(id,
+ version,
+ member_id,
+ appointment_id,
+ owner_name,
+ pet_name,
+ staff_member,
+ expiration_date,
+ drug_dosage,
+ usage_description,
+ added_by,
+ added_on,
+ last_edited_by,
+ last_edited_on)
+SELECT PHARMACEUTICALLABEL_ID,
+       VERSION,
+       MID,
+       APPOINTMENT_ID,
+       OWNER,
+       PET,
+       STAFFMEMBER,
+       DRUGDOSAGE,
+       EXPIRATIONDATE,
+       DIRECTIONS,
+       'system',
+       CREATEDATE,
+       'system',
+       now()
+FROM vmas.pharmaceuticallabel
+WHERE MID = 77;

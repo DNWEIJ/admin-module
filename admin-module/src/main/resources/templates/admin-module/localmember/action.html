@@ -37,6 +37,7 @@
     </style>
 
     <form th:action="@{/admin/localmember}" method="post" onsubmit="document.getElementById('contentToSave').value = window.editor.getData();">
+        <input type="hidden" id="contentToSave" name="pref.firstPageMessage">
 
         <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
         <hr/>
@@ -60,13 +61,10 @@
                     </div>
                 </section>
                 <section class="panel">
-
                     <script>
                         let editor;
                         ClassicEditor.create(document.querySelector('#editor')).then(e => editor = e);
                     </script>
-                    <div th:text="#{localmember.pref.firstPageMsssage}"></div>
-
                     <div id="editor" th:utext="${pref.firstPageMessage}"></div>
                 </section>
             </div>

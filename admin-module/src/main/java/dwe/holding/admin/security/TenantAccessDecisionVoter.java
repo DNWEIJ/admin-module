@@ -138,7 +138,7 @@ public class TenantAccessDecisionVoter {
     //    /sales/otc/search/70823
     //    /sales/otc/search
     //    /urilist
-    //    /costing/search/costing
+
 
 
     // *  Request methods mapping for others: urls are build more in a resty feeling, where IDs are added in the url, to have links that can access direclty

@@ -72,7 +72,7 @@ public class User extends LocalAndMemberBaseBO {
     private MetaUserPreferences metaUserPreferences;
 
     @Builder.Default
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     private Set<UserRole> userRoles = new HashSet<>(0);
 
     @Builder.Default
@@ -80,6 +80,6 @@ public class User extends LocalAndMemberBaseBO {
     private List<String> roles = new ArrayList<>(0);
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "userId", orphanRemoval = true)
     private List<IPSecurity> ipNumbers = new ArrayList<>(0);
 }

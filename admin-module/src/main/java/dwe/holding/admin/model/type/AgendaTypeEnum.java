@@ -1,6 +1,7 @@
 package dwe.holding.admin.model.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ public enum AgendaTypeEnum {
     Vet("V", "label.agendatype.vetenarian", 2),
     Week("W", "label.agendatype.week", 3);
 
-
+    @JsonValue
     private final String databaseField;
     private final String label;
     private final int order;

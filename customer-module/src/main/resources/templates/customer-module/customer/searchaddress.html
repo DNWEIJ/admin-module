@@ -7,30 +7,53 @@
                 <span id="notification-message-modal"></span>
             </div>
         </header>
-        <form hx-get="/customer/search/customer/address/{searchZipCode}/{searchHouseNumber}" hx-include="#searchZipCode, #searchHouseNumber"
-              hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
-            <fieldset class="grid">
-                <legend th:text="#{label.search.zip}"></legend>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchZipCode','customer.zipcode','','')}"
-                          th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
-                </th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber','customer.street.number','','')}"></th:block>
-                <input name="_save" type="submit" th:value="#{label.button.search}"/>
-            </fieldset>
-        </form>
-        <form hx-get="/customer/search/customer/address/street/{searchStreet2}/{searchHouseNumber2}/{searchCity2}" hx-include="#searchStreet2,#searchHouseNumber2, #searchCity2"
-              hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
-            <fieldset class="grid addressLayout">
-                <legend th:text="#{label.search.address}"></legend>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchStreet2','customer.street','','')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber2','customer.street.number','','')}"></th:block>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchCity2','customer.city','','')}"></th:block>
-                <input type="submit" th:value="#{label.button.search}"/>
-            </fieldset>
-        </form>
+        <style>
+            /* Show the panel corresponding to the checked tab */
+            #tab-zipcode:checked ~ .panels .panel:nth-child(1),
+            #tab-street:checked ~ .panels .panel:nth-child(2) {
+                display: block;
+            }
+        </style>
+        <div class="tabs">
+            <input type="radio" name="address-tabs" id="tab-zipcode" checked>
+            <label for="tab-zipcode" th:text="#{label.search.zip}"></label>
+            <input type="radio" name="address-tabs" id="tab-street">
+            <label for="tab-street" th:text="#{label.search.address}"></label>
+
+            <div class="panels">
+                <section class="panel" id="panel-zipcode">
+                    <div>
+                    <form hx-get="/customer/search/customer/address/{searchZipCode}/{searchHouseNumber}" hx-include="#searchZipCode, #searchHouseNumber"
+                          hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
+                        <fieldset class="grid">
+
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchZipCode','customer.zipcode','','')}"
+                                      th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
+                            </th:block>
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber','customer.street.number','','')}"></th:block>
+                            <input name="_save" type="submit" th:value="#{label.button.search}"/>
+                        </fieldset>
+                    </form>
+                    </div>
+                </section>
+                <section class="panel" id="panel-street">
+                    <div>
+                    <form hx-get="/customer/search/customer/address/street/{searchStreet2}/{searchHouseNumber2}/{searchCity2}" hx-include="#searchStreet2,#searchHouseNumber2, #searchCity2"
+                          hx-target="#addressResult" hx-swap="innerHTML" hx-ext="path-params">
+                        <fieldset class="grid addressLayout">
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchStreet2','customer.street','','')}"></th:block>
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber2','customer.street.number','','')}"></th:block>
+                            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchCity2','customer.city','','')}"></th:block>
+                            <input type="submit" th:value="#{label.button.search}"/>
+                        </fieldset>
+                    </form>
+                    </div>
+                </section>
+            </div>
+        </div>
         <fieldset>
             <legend th:text="#{label.search.result}"></legend>
-            <div id="addressResult" th:text="#{label.not-found}">div>
+            <div id="addressResult" th:text="#{label.not-found}"></div>
         </fieldset>
         <footer>
             <fieldset class="grid">

@@ -60,7 +60,7 @@ public class HtmxVisitAnalyseController {
     }
 
     // id = analyseId added in the lineItem during creation of the lineItem
-    record AnalyseItemForm(Long id, BigDecimal quantity, Boolean ownerIndicator, Boolean vetIndicator, Long costingId) {
+    record AnalyseItemForm(Long id, BigDecimal quantity, Boolean ownerIndicator, Boolean vetIndicator, Long productId) {
     }
 
     record AnalyseForm(Long analyseDropDown, List<AnalyseItemForm> analyseItems) {
@@ -71,7 +71,7 @@ public class HtmxVisitAnalyseController {
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         List<Analyse> definedAnalyseList = analyseRepository.findByMemberIdAndAnalyseDescription_Id(AutorisationUtils.getCurrentUserMid(), analyseForm.analyseDropDown());
 
-        Map<Long, AnalyseItemForm> userMap = analyseForm.analyseItems.stream().collect(Collectors.toMap(element -> element.costingId, element -> element));
+        Map<Long, AnalyseItemForm> userMap = analyseForm.analyseItems.stream().collect(Collectors.toMap(element -> element.productId, element -> element));
         List<AnalyseItem> analyseItemToBeSaved = new ArrayList<>();
 
         List<LineItem> lineItemsToBeSaved = definedAnalyseList.stream().flatMap(formAnalyse ->
@@ -82,7 +82,7 @@ public class HtmxVisitAnalyseController {
                             .filter(lineItem -> {
                                         AnalyseItemForm rec = userMap.get(lineItem.getProductId());
                                         if (rec == null) {
-                                            throw new RuntimeException("AnalyseForm doesn't contain costingId");
+                                            throw new RuntimeException("AnalyseForm doesn't contain productId");
                                         }
 
                                         mapFormToAnalyseItem(analyseItemToBeSaved, lineItem, rec, visit);
@@ -100,7 +100,7 @@ public class HtmxVisitAnalyseController {
                 .addAttribute("customerId", visit.getPet().getCustomer().getId())
                 .addAttribute("petId", visit.getPet().getId())
                 .addAttribute("productSearchUrl", VisitController.VISIT_URL.replace("{customerId}", visit.getPet().getCustomer().getId().toString()).replace("{visitId}", visit.getId().toString()))
-                .addAttribute("categoryNames", productService.getCategories())
+                .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted())
                 .addAttribute("salesType", SalesType.VISIT);
         return "/consult-module/fragments/htmx/replaceanalyseandlineitems";
     }

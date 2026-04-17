@@ -1,8 +1,12 @@
 package dwe.holding.shared.model.type;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.List;
-
+@Getter
 public enum PaymentMethodEnum {
     CASH("0", "label.paymentmethod.cash", 2),
     CHECK("1", "label.paymentmethod.check", 8),
@@ -10,10 +14,10 @@ public enum PaymentMethodEnum {
     OTHER("3", "label.paymentmethod.other", 6),
     CHIP("4", "label.paymentmethod.chip", 1),
     PIN("5", "label.paymentmethod.pin", 5),
-
     BANK("6", "label.paymentmethod.bank", 4),
     ONETIME("7", "label.paymentmethod.onetime", 3);
 
+    @JsonValue
     private final String databaseField;
     private final String label;
     private final int order;
@@ -37,7 +41,7 @@ public enum PaymentMethodEnum {
         throw new IllegalArgumentException();
     }
 
-
+    @JsonCreator
     public static PaymentMethodEnum getEnumFromDbField(String value) {
         if (value == null)
             throw new IllegalArgumentException();
@@ -46,14 +50,7 @@ public enum PaymentMethodEnum {
         throw new IllegalArgumentException();
     }
 
-    public int getOrder() {
-        return order;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
+    @JsonValue
     public String getDatabaseField() {
         return databaseField;
     }

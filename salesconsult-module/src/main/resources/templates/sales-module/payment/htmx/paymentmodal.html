@@ -17,6 +17,7 @@
                             <th></th>
                             <th th:text="#{label.otc.petName}"></th>
                             <th class="text-align-right" th:text="#{label.payment.amount}"></th>
+                            <th class="text-align-right" th:text="#{label.payment.amount}"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -25,7 +26,17 @@
                             </td>
                             <td th:text="${visit.pet.name}"></td>
                             <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${visit.totalAmountIncTax},false, ${amountClass})}"></th:block>
-                        </tr>
+                            <td>
+                                <table>
+                               <th:block th:each="paymentvisit : ${visit.paymentVisits}">
+                                   <tr>
+                                       <td th:value="paymentvisit.payment.paymentDate"></td>
+                                       <td th:value="paymentvisit.payment.amount"></td>
+                                   </tr>
+                               </th:block>
+                                </table>
+                            </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
