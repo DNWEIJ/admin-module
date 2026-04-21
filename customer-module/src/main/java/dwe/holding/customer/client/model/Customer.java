@@ -159,4 +159,41 @@ public class Customer extends MemberBaseBO {
         this.address2 = this.street.trim() + " " + this.streetNumber;
         this.address3 = this.zipCode + " " + this.city.trim();
     }
+
+    // constructor used in EnntityListDsls.java
+    public Customer(
+            Long id,
+            String firstName,
+            String surName,
+            String lastName,
+            String middleInitial,
+            String email,
+            YesNoEnum newsletter,
+            String homePhone,
+            String workPhone,
+            String mobilePhone,
+            String address2,
+            String city,
+            String zipCode,
+            CustomerStatusEnum status,
+            BigDecimal balance,
+            Set<Pet> pets
+    ) {
+        this.setId(id);
+        this.firstName = firstName;
+        this.surName = surName;
+        this.lastName = lastName;
+        this.middleInitial = middleInitial;
+        this.email = email;
+        this.newsletter = newsletter;
+        this.homePhone = homePhone;
+        this.workPhone = workPhone;
+        this.mobilePhone = mobilePhone;
+        this.address2 = address2;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.status = status;
+        this.balance = balance;
+        this.pets = pets;
+    }
 }

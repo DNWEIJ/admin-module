@@ -8,7 +8,7 @@
     <form action="" method="get">
         <details id="reportRemindersInfo" open>
             <summary>
-                <span th:text="#{label.report.reminder.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/reminders" title="More information" class="emoji-icon">ℹ️</a>
+                <span th:text="#{label.report.reminder.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/reminders" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <div class="grid">
                 <label th:for="recDateTimeStart">[[#{visit.headerlist.from}]]
@@ -73,6 +73,7 @@
                 <th class="no-sorting">
                     <input role="switch" type="checkbox" th:checked="false" onchange="toggleAllCheckBoxesInSurroundingElement(this, 'table')">
                 </th>
+                <th th:text="#{label.reminder.notified}"></th>
                 <th th:text="#{report.reminders.headerlist.dueDate}"></th>
                 <th th:text="#{report.reminders.headerlist.reminder}"></th>
                 <th th:text="#{report.reminders.headerlist.customerName}"></th>
@@ -85,13 +86,14 @@
             <tbody>
             <tr th:each="rec : ${reminders}">
                 <td><input role="switch" type="checkbox" name="reminderSelected" th:value="${rec.reminderId}"/></td>
+                <td th:text="#{__${rec.hasBeenNotified.label}__}"></td>
                 <td th:text="${#temporals.format(rec.dueDate, 'dd-MM-yy')}"></td>
                 <td th:text="${rec.reminderText}"></td>
                 <td th:text="${T(dwe.holding.customer.client.model.Customer).getCustomerName(rec.lastName, rec.surName, rec.firstName, rec.middleInitial)}"></td>
                 <td th:text="${rec.email}"></td>
                 <td th:text="${rec.mobilePhone + '/'+rec.workPhone}"></td>
                 <td th:text="${rec.petName + ' (' + rec.species + '/' +rec.breed +')'}"></td>
-                <td th:text="${rec.originatingAppointmentId}"></td>
+                <td> <a th:href=" ${rec.originatingAppointmentId}"></td>
             </tr>
             </tbody>
             <tfoot>
@@ -110,7 +112,7 @@
                 <fieldset>
                     <legend th:text="#{label.report.progress}"></legend>
                     <div hx-get="/report/reminders/selectedreport/status"
-                         hx-trigger="load, every .1s [this.querySelector('span')?.dataset.counter === 'false']"
+                         hx-trigger="load, every 1s [this.querySelector('span')?.dataset.counter === 'false']"
                          hx-swap="innerHTML">
                         <span data-counter="false">
                             <progress value="" max="" />

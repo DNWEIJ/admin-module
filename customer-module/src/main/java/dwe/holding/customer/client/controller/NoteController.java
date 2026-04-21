@@ -69,7 +69,7 @@ public class NoteController {
     }
 
     @PostMapping("/customer/{customerId}/note")
-    public String saveRecord(@PathVariable Long customerId, Note formNote, Model model, RedirectAttributes redirect) {
+    public String saveRecord(@PathVariable Long customerId, Note formNote, RedirectAttributes redirect) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
 
         Pet pet = petRepository.findById(formNote.getPet().getId()).orElseThrow();
@@ -92,7 +92,7 @@ public class NoteController {
             note.setStaffMember(formNote.getStaffMember());
         }
         noteRepository.save(note);
-
+        redirect.addFlashAttribute("message", "label.saved");
         return "redirect:/customer/customer/" + customerId + "/notes";
     }
 

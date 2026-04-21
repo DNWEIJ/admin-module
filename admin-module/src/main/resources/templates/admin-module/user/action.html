@@ -7,7 +7,8 @@
 
     <details id="reportRemindersInfo" open>
         <summary>
-            <span th:text="#{label.user.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/admin/user" title="More information"
+            <span th:text="#{label.user.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/admin/user"
+                                                                th:title="#{label.more.information}"
                                                                 class="emoji-icon">ℹ️</a>
         </summary>
 
@@ -46,29 +47,74 @@
             </div>
         </fieldset>
     </form>
+    <hr/>
+    <th:block th:replace="~{this::editIpNumber(ipNumberParts=${ipNumberParts})}"></th:block>
+    <hr/>
     <form>
-        <div class="grid">
-            <table>
-                <thead>
-                <tr>
-                    <th><a thx-get="" th:text="#{label.button.createnew}"></a></th>
-                    <th>[[#{user.ipnumber}]]</th>
-                </tr>
-
-                </thead>
-                <th:block th:if="${user.ipNumbers.size == 0}">
-                    <tr><td colspan="2">No data</td></tr>
-                </th:block>
-                <th:block th:if="${user.ipNumbers.size != 0}" th:each="ipnumber : ${user.ipNumbers}">
-                    <tr>
-                        <td>delete|edit</td>
-                        <td th:text="${ipnumber}"></td>
-                    </tr>
-                </th:block>
-            </table>
-
-        </div>
-
+        <th:block th:replace="~{this::bodyTableIpNumbers}"></th:block>
     </form>
-
 </section>
+</body>
+</html>
+
+<th:block th:fragment="bodyTableIpNumbers">
+    <table id="IpNumbers">
+        <thead>
+        <tr>
+            <th></th>
+            <th>[[#{user.ipnumber}]]</th>
+        </tr>
+
+        </thead>
+        <th:block th:if="${user.ipNumbers.size == 0}">
+            <tr>
+                <td colspan="2">No data</td>
+            </tr>
+        </th:block>
+        <th:block th:if="${user.ipNumbers.size != 0}" th:each="ipnumber : ${user.ipNumbers}">
+            <th:block th:replace="~{this::readonlyIpNumber(ipNumber=${ipnumber})}"></th:block>
+        </th:block>
+    </table>
+</th:block>
+<th:block th:fragment="readonlyIpNumber(ipNumber)">
+    <tr>
+        <td class="no-sorting">
+            <a th:hx-delete="'/admin/user/'+ ${user.id}+ '/ipnumber/' + ${ipNumber.id}" hx-target="closest tr" hx-swap="outerHTML">🗑️️️</a>
+            <a th:hx-get="'/admin/user/'+ ${user.id}+ '/ipnumber/' + ${ipNumber.id}" hx-target="closest tr" hx-swap="outerHTML">✏️️</a>
+        </td>
+        <td th:text="${ipNumber.ipnumber}"></td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="editTrIpNumber">
+    <tr>
+        <td>
+            <th:block th:replace="~{this::editIpNumber(ipNumberParts=${ipNumberParts})}"></th:block>
+        </td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="editIpNumber(ipNumberParts)">
+    <label th:text="#{user.ipnumber.add}"></label>
+    <form th:hx-post="'/admin/user/'+ ${user.id} +'/ipnumber'" hx-trigger="click from:#btn" hx-on:htmx:beforeRequest="if (!validate()) event.preventDefault()">
+        <div class="grid">
+            <input id="one" name="numberOne" tabindex="0" type="number" min="0" max="255" th:value="${ipNumberParts.getNumberOne()}" placeholder="" autocomplete="off" required="required">
+            <input id="two" name="numberTwo" tabindex="0" type="number" min="0" max="255"  th:value="${ipNumberParts.getNumberTwo()}" placeholder="" autocomplete="off" required="required">
+            <input id="three" name="numberThree" tabindex="0" type="number" min="0" max="255"  th:value="${ipNumberParts.getNumberThree()}" placeholder="" autocomplete="off" required="required">
+            <input id="four" name="numberFour" tabindex="0" type="number" min="0" max="255"  th:value="${ipNumberParts.getNumberFour()}" placeholder="" autocomplete="off" required="required">
+            <button id="btn" th:text="#{label.button.save}" hx-confirm=" " onclick="validate()"></button>
+        </div>
+        <script>
+            function validate() {
+                if (document.getElementById('one').value != '' &&
+                    document.getElementById('two').value != '' &&
+                    document.getElementById('three').value != '' &&
+                    document.getElementById('four').value != '') {
+                    return true
+                } else {
+                    alert('all four fields should be filled')
+                    return false
+                }
+            }
+        </script>
+</th:block>

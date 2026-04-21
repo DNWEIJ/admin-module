@@ -12,8 +12,8 @@ import dwe.holding.salesconsult.sales.model.Refund;
 import dwe.holding.salesconsult.sales.repository.RefundRepository;
 import dwe.holding.salesconsult.sales.repository.dsl.RefundListDsl;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.controller.ProductController;
 import dwe.holding.supplyinventory.expose.ProductService;
-import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +23,7 @@ import org.springframework.data.web.ProjectedPayload;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -57,7 +58,8 @@ public class RefundController {
     String startCustomerRefund(Model model, @PathVariable Long customerId) {
         model
                 .addAttribute("refunds", refundRepository.findByCustomerId(customerId))
-                .addAttribute("localMembersMap", AutorisationUtils.getLocalMemberMap());
+                .addAttribute("localMembersMap", AutorisationUtils.getLocalMemberMap())
+        ;
         return "sales-module/refund/list";
     }
 
@@ -69,74 +71,21 @@ public class RefundController {
 
         model
                 .addAttribute("refund", newRefund)
-                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList());
+                .addAttribute("localMembersList", AutorisationUtils.getLocalMemberList())
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
+        ;
         updateModel(customerId, model);
         return "sales-module/refund/action";
     }
 
 
-    @PostMapping("/customer/{customerId}/refund/lineitem")
-    String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, Model model,
-                                          @NotNull Long ProductId, @NotNull BigDecimal inputProductQuantity,
-                                          @ModelAttribute(value = "lineItems") ArrayList<LineItem> lineItems) {
-        List<LineItem> list = lineItemService.createPricing(ProductId, inputProductQuantity);
-        AtomicLong counter = new AtomicLong(lineItems.size() + 1);
-        list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
-        lineItems.addAll(list);
-
-        ModelHelper.updateLineItemsInModel(model, lineItems);
-        updateModel(customerId, model);
-
-        return "sales-module/fragments/htmx/lineitemsfulltable";
-    }
-
-    @DeleteMapping("/customer/{customerId}/refund/lineitem/{lineItemId}")
-    String deleteProductFromLineItemsViaHtmx(@NotNull @PathVariable Long customerId, @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
-        List<LineItem> currentLst = lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).collect(Collectors.toList());
-        ModelHelper.updateLineItemsInModel(model, currentLst);
-        updateModel(customerId, model);
-        return "sales-module/fragments/htmx/lineitemsfulltable";
-    }
-
-    @PostMapping("/customer/{customerId}/refund")
-    String saveRefund(Refund refund, @PathVariable Long customerId,
-                      @ProjectedPayload @ModelAttribute("lineItems") List<LineItem> lineItems) {
-
-        if (refund.getId() == null) {
-            CustomerService.Customer customer = customerService.searchCustomer(customerId);
-
-            Refund tobeSavedRefund = Refund.builder()
-                    .refundDate(refund.getRefundDate())
-                    .amount(refund.getAmount())
-                    .localMemberId(refund.getLocalMemberId())
-                    .customerId(customer.id())
-                    .build();
-            tobeSavedRefund.setRefundLineItems(lineItemMapper.toRefundLineItemList(lineItems, tobeSavedRefund));
-            refundRepository.save(tobeSavedRefund);
-        } else {
-            Refund ref = refundRepository.findByIdAndCustomerId(refund.getId(), customerId).orElseThrow();
-            ref.setRefundLineItems(null);
-            refundRepository.save(ref);
-
-            // mapper changes id,version to null - dropping the refundLineItems and adding them again
-            ref.setRefundLineItems(lineItemMapper.toRefundLineItemList(lineItems, ref));
-            ref.setAmount(refund.getAmount());
-            ref.setLocalMemberId(refund.getLocalMemberId());
-            ref.setRefundDate(refund.getRefundDate());
-            refundRepository.save(ref);
-        }
-        return "redirect:/sales/price/customer/" + customerId + "/refunds";
-    }
-
-
     @GetMapping("/customer/{customerId}/refund/{refundId}")
-        // Since for new we need to use a sessionStorage, to ensure we add the refund direclty with all info,
+        // Since for new we need to use a sessionStorage, to ensure we add the refund directly with all info,
         // we will move the lines to the session lineitem and on save we will remove all lineitems and add them again.
         // Since refunds are not happing that much, the easiest solution instead of finding out changed/new etc.
     String getRefund(Model model, @NotNull @PathVariable Long customerId, @NotNull @PathVariable Long refundId) {
         customerService.searchCustomer(customerId);
         Refund refund = refundRepository.findByIdAndCustomerId(refundId, customerId).orElseThrow();
-        model.addAttribute("refund", refund);
         // ids are null, set them
         AtomicLong counter = new AtomicLong(1);
         List<LineItem> changeLineItems = lineItemMapper.fromRefundLineItemList(refund.getRefundLineItems(), appointment);
@@ -144,11 +93,15 @@ public class RefundController {
 
         ModelHelper.updateLineItemsInModel(model, changeLineItems);
         updateModel(customerId, model);
+        model
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
+                .addAttribute("refund", refund)
+        ;
         return "sales-module/refund/action";
     }
 
     @GetMapping("/refund")
-    String startFinancialRefund(Model model, RefundListForm form) {
+    String startReportFinancialRefund(Model model, RefundListForm form) {
         if (form.from == null || form.getIncludeTill() == null) {
             form = new RefundListForm(LocalDate.now().minusDays(1), LocalDate.now(), AutorisationUtils.getCurrentUserMlid());
         }
@@ -161,6 +114,64 @@ public class RefundController {
                 .addAttribute("form", form);
         return "sales-module/refund/list";
     }
+
+    @PostMapping("/customer/{customerId}/refund/lineitem")
+    String foundProductAddLineItemViaHtmx(@PathVariable Long customerId, @NotNull Long inputProductId, @NotNull BigDecimal inputProductQuantity,
+                                          @ModelAttribute(value = "lineItems") ArrayList<LineItem> lineItems, Model model) {
+        List<LineItem> list = lineItemService.createPricing(inputProductId, inputProductQuantity);
+        AtomicLong counter = new AtomicLong(lineItems.size() + 1);
+        list.forEach((lineItem -> lineItem.setId(counter.getAndIncrement())));
+        lineItems.addAll(list);
+
+        ModelHelper.updateLineItemsInModel(model, lineItems);
+        model.addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE));
+        updateModel(customerId, model);
+        return "sales-module/fragments/htmx/lineitemsfulltable";
+    }
+
+    @DeleteMapping("/customer/{customerId}/refund/lineitem/{lineItemId}")
+    String deleteProductFromLineItemsViaHtmx(@NotNull @PathVariable Long customerId, @PathVariable Long lineItemId, @ModelAttribute("lineItems") List<LineItem> lineItems, Model model) {
+        List<LineItem> currentLst = lineItems.stream().filter(lineitem -> !lineitem.getId().equals(lineItemId)).collect(Collectors.toList());
+        ModelHelper.updateLineItemsInModel(model, currentLst);
+        updateModel(customerId, model);
+        return "sales-module/fragments/htmx/lineitemsfulltable";
+    }
+
+    @PostMapping("/customer/{customerId}/refund")
+    String saveRefund(Refund refundForm, @PathVariable Long customerId,
+                      @ProjectedPayload @ModelAttribute("lineItems") List<LineItem> lineItems, RedirectAttributes redirect) {
+
+        if (refundForm.getId() == null) {
+            CustomerService.Customer customer = customerService.searchCustomer(customerId);
+
+            Refund tobeSavedRefund = Refund.builder()
+                    .refundDate(refundForm.getRefundDate())
+                    .amount(refundForm.getAmount())
+                    .localMemberId(refundForm.getLocalMemberId())
+                    .comments(refundForm.getComments())
+                    .customerId(customer.id())
+                    .build();
+            tobeSavedRefund.setRefundLineItems(lineItemMapper.toRefundLineItemList(lineItems, tobeSavedRefund));
+            tobeSavedRefund.getRefundLineItems().stream().forEach(lineItm -> lineItm.setRefund(tobeSavedRefund));
+            refundRepository.save(tobeSavedRefund);
+        } else {
+            Refund ref = refundRepository.findByIdAndCustomerId(refundForm.getId(), customerId).orElseThrow();
+
+            // mapper changes id,version to null - dropping the refundLineItems and adding them again
+            ref.getRefundLineItems().clear();
+            ref.getRefundLineItems().addAll(lineItemMapper.toRefundLineItemList(lineItems, ref));
+            ref.getRefundLineItems().stream().forEach(lineItm -> lineItm.setRefund(ref));
+
+            ref.setRefundDate(refundForm.getRefundDate());
+            ref.setAmount(refundForm.getAmount());
+            ref.setLocalMemberId(refundForm.getLocalMemberId());
+            ref.setComments(refundForm.getComments());
+            refundRepository.save(ref);
+        }
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/sales/price/customer/" + customerId + "/refunds";
+    }
+
 
     @NoArgsConstructor
     @AllArgsConstructor

@@ -20,7 +20,7 @@ select LOOKUPLOCATION_ID,
 FROM vmas.lookuplocation;
 
  INSERT INTO consult_lookup_location
- (id,
+ (
   version,
   member_id,
   nomenclature,
@@ -29,7 +29,7 @@ FROM vmas.lookuplocation;
   last_edited_by,
   last_edited_on,
   deleted)
- select LOOKUPLOCATION_ID,
+ select
         VERSION,
         77,
         NOMENCLATURE,
@@ -38,4 +38,4 @@ FROM vmas.lookuplocation;
         'migration',
         now(),
         'N'
- FROM vmas.lookuplocation
+ FROM consult_lookup_location where member_id = -1

@@ -8,7 +8,7 @@
     <form action="" method="get">
         <details id="reportCustomerEmailInfo" open>
             <summary>
-                <span th:text="#{label.report.email.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/customeremail" title="More information" class="emoji-icon">ℹ️</a>
+                <span th:text="#{label.report.email.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/customeremail" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <div style="font-size: 1.2rem;margin:1rem" th:utext="'<b>' + #{label.mailToCustomer.stepInfoOne} + '</b>'"></div>
             <fieldset class="grid">
@@ -44,7 +44,8 @@
             <fieldset class="grid">
                 <legend th:text="#{label.history.product}"></legend>
                 <div>
-                    show product list to send
+                    <div id="replacePartForProductSearch"  th:insert="~{supplies-module/fragments/costing/costingSearch::costingSearch}">
+                    </div>
                 </div>
             </fieldset>
             <input type="submit" th:value="#{label.button.search}"/>
@@ -63,7 +64,7 @@
                 <td></td>
             </tr>
         </table>
-        <table class="table-tight " id="rec-table">
+        <table class="table-tight " data-multi-select id="rec-table">
             <thead>
             <tr>
                 <th class="no-sorting">

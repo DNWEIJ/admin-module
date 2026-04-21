@@ -2,7 +2,7 @@ package dwe.holding.salesconsult.consult.mapper;
 
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Estimate;
-import dwe.holding.salesconsult.consult.model.Estimatelineitem;
+import dwe.holding.salesconsult.consult.model.EstimateLineItem;
 import dwe.holding.salesconsult.sales.model.LineItem;
 import dwe.holding.salesconsult.sales.model.Refund;
 import dwe.holding.salesconsult.sales.model.RefundLineItem;
@@ -14,13 +14,14 @@ import java.util.List;
 public interface LineItemMapper {
 
     @Mapping(target = "memberId", ignore = true)
-    Estimatelineitem toEstimateLineItem(LineItem lineItem, @Context Estimate estimate);
+    EstimateLineItem toEstimateLineItem(LineItem lineItem, @Context Estimate estimate);
 
-    List<Estimatelineitem> toEstimateLineItemList(
+    List<EstimateLineItem> toEstimateLineItemList(
             List<LineItem> lineItems, @Context Estimate estimate);
+
     @AfterMapping
     default void setEstimate(
-            @MappingTarget Estimatelineitem target, @Context Estimate estimate) {
+            @MappingTarget EstimateLineItem target, @Context Estimate estimate) {
         target.setEstimate(estimate);
     }
 
@@ -28,11 +29,7 @@ public interface LineItemMapper {
     @Mapping(target = "memberId", ignore = true)
     RefundLineItem toRefundLineItem(LineItem lineItem, @Context Refund refund);
 
-    List<RefundLineItem> toRefundLineItemList(
-            List<LineItem> lineItem,
-            @Context Refund refund
-    );
-
+    List<RefundLineItem> toRefundLineItemList(List<LineItem> lineItem, @Context Refund refund);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "memberId", ignore = true)

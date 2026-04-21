@@ -10,11 +10,11 @@
 
 <fieldset>
     <div>
-    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selecPurposetOnChange','label.notes.purpose.select', ${note.notepurpose}, ${purposeList}, true,'1')}"></th:block>
+    <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('selecPurposetOnChange','label.notes.purpose.select', ${note.notepurpose}, ${purposeList}, false,'1')}"></th:block>
     <!-- on the modal, there is another purpose field, so we need to have a different id here -->
-    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','label.notes.purpose','note.notepurpose','0')}"></th:block>
+    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('notepurpose','label.notes.purpose','note.notepurpose','0')}" th:with="required=true"></th:block>
     <br/>
-    <textarea cols="110" id="note" name="textnote" rows="8" required th:utext="${note.textnote}"></textarea>
+    <textarea class="field" cols="110" id="note" name="textnote" rows="8" required th:utext="${note.textnote}"></textarea>
     </div>
 </fieldset>
 

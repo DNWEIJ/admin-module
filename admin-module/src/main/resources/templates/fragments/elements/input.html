@@ -4,6 +4,7 @@
     <input th:id="${name}" th:name="${name}" th:placeholder="${placeholder}" th:required="${required}"
            th:tabindex="${tabindex}" th:type="${type == 'wholenumber'? 'number':'number'}" th:step="${type == 'wholenumber'}?'1.0': type == 'number'?:'0.01'"  th:value="${__${dbField}__}"
            th:text="${text}"
+
     autocomplete="off">
 </th:block>
 
@@ -18,7 +19,12 @@
                th:step="${type == 'wholenumber'?'1.0': (type == 'number'? '0.01':'')}"
                th:value="${__${dbField}__ ?: ''}"
                placeholder="" autocomplete="off">
-        <label th:for="${name}" th:utext="#{${label}}"></label>
+        <th:block th:if="${label == null or label.isEmpty()}">
+            <label th:for="${name}"></label>
+        </th:block>
+        <th:block th:unless="${label == null or label.isEmpty()}">
+            <label th:for="${name}" th:utext="#{${label}}"></label>
+        </th:block>
     </div>
 </th:block>
 

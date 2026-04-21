@@ -4,14 +4,12 @@ import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.mapper.LineItemMapper;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Estimate;
-import dwe.holding.salesconsult.consult.model.EstimateForPet;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.service.EstimateService;
 import dwe.holding.salesconsult.sales.Service.LineItemService;
 import dwe.holding.salesconsult.sales.controller.ModelHelper;
 import dwe.holding.shared.model.type.YesNoEnum;
 import dwe.holding.supplyinventory.expose.ProductService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -60,19 +58,5 @@ public class HtmxEstimateController {
                 .addAttribute("categoryNames", productService.getAllCategoriesInclDeleted());
         ModelHelper.updateLineItemsInModel(model, estimateService.getAllLineItems(estimateId, petId));
         return "sales-module/fragments/htmx/lineitemsfulltable";
-    }
-
-    @PostMapping("/customer/{customerId}/estimateforpet")
-    String saveHtmxEstimateForPet(@PathVariable Long customerId, EstimateForPet estimateForPetForm, String submitButton, Model model, HttpServletResponse response) {
-        customerService.searchCustomer(customerId);
-        model.addAttribute("estimateForPet",
-                estimateService.saveEstimateForPet(estimateForPetForm.getId(), estimateForPetForm.getPurpose(), estimateForPetForm.getComments())
-        );
-        if (submitButton.equals("_done")) {
-            response.setHeader("HX-Redirect", "loginUrl");
-            return "";
-        }
-        model.addAttribute("message", "Estimate saved successfully");
-        return "consult-module/estimate/estimateforpetform";
     }
 }

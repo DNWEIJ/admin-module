@@ -22,7 +22,7 @@ import java.util.Set;
 public class Estimate extends LocalAndMemberBaseBO {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "estimate")
-    private Set<Estimatelineitem> estimatelineitems = new HashSet<>();
+    private Set<EstimateLineItem> estimateLineItems = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "estimate", cascade = CascadeType.ALL)
 

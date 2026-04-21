@@ -5,13 +5,17 @@
     //
     //
     function enableTableMultiSelect(tableElement) {
-        const rows = Array.from(tableElement.querySelectorAll("tbody tr"));
         let isMouseDown = false;
         let anchorIndex = null;
         let lastHoveredIndex = null;
         let currentHighlight = [];
 
+        function getRows() {
+            return Array.from(tableElement.querySelectorAll("tbody tr"));
+        }
+
         function highlightRange(start, end) {
+            const rows = getRows();
             const [min, max] = [start, end].sort((a, b) => a - b);
             currentHighlight.forEach(row => row.classList.remove('multiSelected'));
             currentHighlight = [];
@@ -26,47 +30,52 @@
         function commitSelection() {
             if (currentHighlight.length === 0) return;
 
-            // Check if all checkboxes are already checked
             const allChecked = currentHighlight.every(row => {
                 const checkbox = row.querySelector('input[type="checkbox"]');
                 return checkbox.checked;
             });
 
-            // Toggle based on current state
             currentHighlight.forEach(row => {
                 const checkbox = row.querySelector('input[type="checkbox"]');
-                checkbox.checked = !allChecked; // if all were checked, uncheck; else check
+                checkbox.checked = !allChecked;
                 row.classList.remove('multiSelected');
             });
 
             currentHighlight = [];
         }
 
-        rows.forEach((row, index) => {
-            row.addEventListener('mousedown', (e) => {
-                // ignore clicks on links or buttons inside the row
-                if (e.target.closest('a, button')) return;
-                isMouseDown = true;
-                anchorIndex = index;
-                highlightRange(index, index);
-                e.preventDefault(); // prevent text selection
-            });
+        tableElement.addEventListener('mousedown', (e) => {
+            const row = e.target.closest('tbody tr');
+            if (!row || e.target.closest('a, button')) return;
 
-            row.addEventListener('mouseenter', () => {
-                if (!isMouseDown) return;
-                lastHoveredIndex = rows.indexOf(row);
-                highlightRange(anchorIndex, lastHoveredIndex);
-            });
+            const rows = getRows();
+            const index = rows.indexOf(row);
 
-            row.addEventListener('click', (e) => {
-                if (e.target.closest('a, button')) return;
+            isMouseDown = true;
+            anchorIndex = index;
+            highlightRange(index, index);
+            e.preventDefault();
+        });
 
-                // If not dragging, treat click as single row selection
-                if (!isMouseDown) {
-                    const checkbox = row.querySelector('input[type="checkbox"]');
-                    checkbox.checked = true;
-                }
-            });
+        tableElement.addEventListener('mouseenter', (e) => {
+            if (!isMouseDown) return;
+
+            const row = e.target.closest('tbody tr');
+            if (!row) return;
+
+            const rows = getRows();
+            lastHoveredIndex = rows.indexOf(row);
+            highlightRange(anchorIndex, lastHoveredIndex);
+        }, true);
+
+        tableElement.addEventListener('click', (e) => {
+            const row = e.target.closest('tbody tr');
+            if (!row || e.target.closest('a, button')) return;
+
+            if (!isMouseDown) {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                checkbox.checked = true;
+            }
         });
 
         document.addEventListener('mouseup', () => {
@@ -80,15 +89,12 @@
     }
 
     function initEnableTableMultiSelect(){
-        // Find all tables
         const tables = document.querySelectorAll('table[data-multi-select]')
-
         tables.forEach(table => {
             enableTableMultiSelect(table)
         })
     }
 
-    // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             initEnableTableMultiSelect()

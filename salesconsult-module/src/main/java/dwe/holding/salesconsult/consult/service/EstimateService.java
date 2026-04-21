@@ -4,7 +4,7 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.expose.CustomerService;
 import dwe.holding.salesconsult.consult.model.Estimate;
 import dwe.holding.salesconsult.consult.model.EstimateForPet;
-import dwe.holding.salesconsult.consult.model.Estimatelineitem;
+import dwe.holding.salesconsult.consult.model.EstimateLineItem;
 import dwe.holding.salesconsult.consult.repository.EstimateForPetRepository;
 import dwe.holding.salesconsult.consult.repository.EstimateLineitemRepository;
 import dwe.holding.salesconsult.consult.repository.EstimateRepository;
@@ -35,7 +35,7 @@ public class EstimateService {
                                 efp.getPet().getId(),
                                 efp.getEstimate().getEstimateDate(),
                                 efp.getPurpose(),
-                                efp.getEstimate().getEstimatelineitems().stream().map(CostCalc::getTotalIncTax).reduce(java.math.BigDecimal::add).orElse(BigDecimal.ZERO),
+                                efp.getEstimate().getEstimateLineItems().stream().map(CostCalc::getTotalIncTax).reduce(java.math.BigDecimal::add).orElse(BigDecimal.ZERO),
                                 efp.getEstimate().getTransToVisit(),
                                 Objects.isNull(efp.getEstimate().getTransToVisit())
                         )
@@ -47,7 +47,7 @@ public class EstimateService {
 
     public Estimate createEstimate(List<AppointmentVisitService.CreatePet> pets, Long customerId) {
 
-        Estimate estimate = Estimate.builder().estimateDate(LocalDate.now()).build();
+        Estimate estimate = Estimate.builder().estimateDate(LocalDate.now()).localMemberId(AutorisationUtils.getCurrentUserMlid()).build();
 
         estimate.setEstimateForPets(
                 pets.stream().map(formPet ->
@@ -58,9 +58,11 @@ public class EstimateService {
                                 .comments("")
                                 .build()
                 ).collect(Collectors.toSet()));
-        estimateRepository.save(estimate);
+        return estimateRepository.save(estimate);
+    }
 
-        return estimate;
+    public Estimate getEstimate(Long estimateId) {
+        return estimateRepository.findByIdAndMemberId(estimateId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
     }
 
     public Estimate getEstimate(Long estimateId, Long petId) {
@@ -70,19 +72,21 @@ public class EstimateService {
         return estimate;
     }
 
-    public List<Estimatelineitem> saveEstimateLineItems(Collection<Estimatelineitem> estimateList) {
+    public List<EstimateLineItem> saveEstimateLineItems(Collection<EstimateLineItem> estimateList) {
         return estimateLineitemRepository.saveAll(estimateList);
     }
 
-    public EstimateForPet saveEstimateForPet(Long estimateForPetId, String purpose, String comments) {
+    public EstimateForPet saveEstimateForPet(Long estimateForPetId, String purpose, String comments, LocalDate localDate) {
         EstimateForPet estimateForPet = estimateForPetRepository.findByIdAndMemberId(estimateForPetId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         estimateForPet.setPurpose(purpose);
         estimateForPet.setComments(comments);
         estimateForPet.setMemberId(AutorisationUtils.getCurrentUserMid());
+        estimateForPet.getEstimate().setLocalMemberId(AutorisationUtils.getCurrentUserMlid());
+        estimateForPet.getEstimate().setEstimateDate(localDate);
         return estimateForPetRepository.save(estimateForPet);
     }
 
-    public List<Estimatelineitem> getAllLineItems(Long estimateId, Long petId) {
+    public List<EstimateLineItem> getAllLineItems(Long estimateId, Long petId) {
         return estimateLineitemRepository.findByEstimate_IdAndPet_Id(estimateId, petId);
     }
 }

@@ -4,22 +4,32 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
+    <div th:replace="~{customer-module/fragments/customer/links}"></div>
+    <th:block
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${null}, #{label.title.estimate},'/consult/customer/'+ ${customerId}+ '/estimates', ${customerInformation})}"></th:block>
 
-    <fieldset class="no-background">
-        <div th:text="${#temporals.format(estimateForPet.estimate.estimateDate, 'dd-MM-yyyy')}"></div>
-    </fieldset>
     <fieldset>
-        <form id="estimateForm"
-              th:hx-post="'/consult/customer/'+${customerId}+ '/estimateforpet'"
-              hx-target="#estimateFormFields"
-              hx-swap="innerHTML"
-              th:data-saved-msg="#{label.saved}"
-              hx-on:htmx:before-request="messageDisplay(this.dataset.savedMsg)">
+        <form id="createForm" th:action="'/consult/customer/'+${customerId}+ '/estimateforpet'" method="post">
+            <details id="estimateInfo" open>
+                <summary>
+                    <span th:text="#{estimate.info.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/estimate" th:title="#{label.more.information}"
+                                                                     class="emoji-icon">ℹ️</a>
+                </summary>
+                <div class="grid">
 
-        <span id="estimateFormFields">
-            <th:include th:replace="~{consult-module/estimate/estimateforpetform}"></th:include>
-        </span>
+                    <input name="id" th:value="${estimateForPet.id}" type="hidden"/>
+                    <input name="version" th:value="${estimateForPet.version}" type="hidden"/>
+                    <input name="pet.id" th:value="${estimateForPet.pet.id}" type="hidden"/>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('estimate.estimateDate','estimateforpet.estimateDate', 'estimateForPet.estimate.estimateDate','1')}" th:with="type='date'"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('purpose','estimateforpet.purpose', 'estimateForPet.purpose','1')}"></th:block>
+                </div>
+                <div class="grid">
+                    <label for="comments">
+                        <th:block th:utext="#{estimateforpet.comments}"/>
+                        <textarea cols="110" id="comments" name="comments" rows="8" tab="19" th:utext="${estimateForPet.comments}"></textarea>
+                    </label>
+                </div>
+            </details>
         </form>
     </fieldset>
 
@@ -27,7 +37,7 @@
         <!-- body and footer -->
         <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
     </table>
+    <hr/>
     <div id="replacePartForProductSearch" th:include="~{supplies-module/fragments/costing/costingSearch::costingSearch}"></div>
-    <br/>
-    <button name="submitButton" value="_done" type="submit" form="estimateForm" th:text="#{label.button.finished}"></button>
+    <hr/>
 </section>

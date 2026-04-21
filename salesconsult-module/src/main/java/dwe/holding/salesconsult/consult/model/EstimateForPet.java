@@ -25,7 +25,7 @@ public class EstimateForPet extends MemberBaseBO {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "estimate_id")
-    private Estimate estimate;
+    private Estimate estimate = new Estimate();
 
     private String purpose;
     @Lob

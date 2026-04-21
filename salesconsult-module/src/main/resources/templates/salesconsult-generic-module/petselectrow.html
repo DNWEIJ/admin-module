@@ -38,9 +38,9 @@
 
 <th:block th:fragment="petName">
     <th:block th:if="${pet.hasWarning}">
-        <td class="red-text" th:utext="${pet.name} + '&nbsp;&nbsp;'+ ${pet.species ?: ''} +' ' + ${pet.warningShort}" th:data-tooltip="${pet.warningInfo}"></td>
+        <td class="red-text" th:utext="${pet.name} + '&nbsp;&nbsp;'+ ${pet.species ?: ''} +' (' + ${pet.warningShort}+ ')'" th:data-tooltip="${pet.warningInfo}"></td>
     </th:block>
     <th:block th:if="${!pet.hasWarning}">
-        <td th:utext="${pet.name} + ' '+ ${pet.species()}+'&nbsp;&nbsp;' + ${pet.warningShort}"></td>
+        <td th:utext="${pet.name} + ' '+ ${pet.species()}+'&nbsp;&nbsp;(' + ${pet.warningShort} + ')'"></td>
     </th:block>
 </th:block>

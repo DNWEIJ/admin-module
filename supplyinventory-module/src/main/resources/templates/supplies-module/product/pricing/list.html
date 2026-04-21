@@ -7,7 +7,7 @@
     <details open>
         <summary>
             <span th:text="#{label.report.pricing.input.title}"></span>
-            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/pricing" title="More information" class="emoji-icon">ℹ️</a>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/pricing" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
         <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Pricing','')}"></th:block>
         <div class="grid">

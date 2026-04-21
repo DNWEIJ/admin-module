@@ -45,9 +45,7 @@
         </header>
     </th:block>
     <main>
-        <div>
-            <!-- TODO implement aside for bigger screen -->
-            <!--        <aside><div th:replace="~{navigation}"></div></aside>-->
+        <div class="grid-row">
             <th:block id="content" layout:fragment="content"></th:block>
         </div>
 
@@ -60,17 +58,33 @@
             <span>DWE Holding &copy;</span>
             <th:block th:if="${T(dwe.holding.admin.sessionstorage.AutorisationUtils).isLoggedIn()}">
                 <span
-                   th:text="'loggedin User: ' + ${T(dwe.holding.admin.sessionstorage.AutorisationUtils).getCurrentUserAccount()}"></span>
+                        th:text="'loggedin User: ' + ${T(dwe.holding.admin.sessionstorage.AutorisationUtils).getCurrentUserAccount()}"></span>
             </th:block>
 
         </p>
     </footer>
     <div id="modal-container"></div>
 </div>
-<div id="searching-indicator2" class="htmx-indicator showSplash"><div>Searching information</div></div>
+<div id="searching-indicator2" class="htmx-indicator showSplash">
+    <div>Searching information</div>
+</div>
 <th:block th:if="${T(dwe.holding.admin.sessionstorage.AutorisationUtils).isLoggedIn()}">
     <div th:replace="~{/fragments/elements/sessiontimeout}"></div>
     <div th:replace="~{/fragments/elements/message::message}"></div>
 </th:block>
+
+<dialog id="error-modal">
+    <article class="error-dialog">
+        <header>
+            <button aria-label="Close" rel="prev" data-target="error-modal" onclick="toggleModal(event)"></button>
+        </header>
+        <p id="error-message">
+            Something went wrong.
+        </p>
+        <footer>
+            <button data-target="error-modal" onclick="toggleModal(event)" th:text="#{label.button.close}"></button>
+        </footer>
+    </article>
+</dialog>
 </body>
 </html>

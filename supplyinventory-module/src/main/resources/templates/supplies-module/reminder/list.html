@@ -15,6 +15,7 @@
             <th>[[#{label.reminder.petname}]]</th>
             <th>[[#{label.reminder.duedate}]]</th>
             <th>[[#{label.reminder.reminder}]]</th>
+            <th>[[#{label.reminder.notified}]]</th>
             <th class="desktop-only">[[#{label.list.auditinfo}]]</th>
         </tr>
         </thead>
@@ -24,6 +25,7 @@
                 <td><a th:href="'/supplies/customer/'+ ${customerId}+ '/reminder/'+ ${reminder.id}" th:utext="${reminder.pet.nameWithDeceased}"></a></td>
                 <td th:attr="data-sort-value=${reminder.dueDate}" th:text="${#temporals.format(reminder.dueDate, 'dd-MM-yyyy')}"></td>
                 <td>[[${reminder.reminderText}]]</td>
+                <td>[[@{__${reminder.hasBeenNotified}__}]]</td>
                 <th:block
                         th:insert="~{fragments/elements/audit::lastEditedByOn_td(${reminder.addedBy},${reminder.addedOn},${reminder.lastEditedBy},${reminder.lastEditedOn})}"></th:block>
             </tr>

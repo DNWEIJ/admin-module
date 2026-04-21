@@ -19,12 +19,19 @@
         </tr>
         </thead>
         <tbody>
+
+
+
+
+        </form>
+
         <tr th:each="estimateForPet : ${estimates}">
             <td>
-                <a class="emoji-icon" href="/" th:title="#{estimate.transfer.print}">🖨️</a>
-                <a class="emoji-icon" th:if="${estimateForPet.canEdit}" href="" th:title="#{estimate.transfer.alt}">🔀️</a>
+                <a class="emoji-icon" target="_blank" th:href="'/report/customer/'+${customerId}+'/print/estimate/'+${estimateForPet.id}" th:title="#{estimate.transfer.print}">🖨️</a>
+                <a class="emoji-icon" th:href="'/consult/customer/'+ ${customerId} + '/estimate/'+ ${estimateForPet.id} + '/pet/'+ ${estimateForPet.petId} + '/change'">🔀️</a>
+            </td>
             <td>
-                <a th:href="'/consult/customer/'+ ${customerId} + '/estimate/'+ ${estimateForPet.id} + '/'+ ${estimateForPet.petId}" th:utext="${pets.get(estimateForPet.petId)}"></a>
+                <a th:href="'/consult/customer/'+ ${customerId} + '/estimate/'+ ${estimateForPet.id} + '/pet/'+ ${estimateForPet.petId}" th:utext="${pets.get(estimateForPet.petId)}"></a>
             </td>
             <td th:attr="data-sort-value=${estimateForPet.estimateDate}" th:text="${#temporals.format(estimateForPet.estimateDate, 'dd-MM-yyyy')}"></td>
             <td th:text="${estimateForPet.purpose}"></td>

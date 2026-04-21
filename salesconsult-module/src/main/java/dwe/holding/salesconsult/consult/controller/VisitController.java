@@ -162,12 +162,6 @@ public class VisitController {
     String saveVisitXhtm(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Visit visitForm, HttpServletResponse response, Locale locale) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
-//        if (!validateAppointmenIsOk(visit.getAppointment(), redirect)) {
-//            // message = "not succesfull;"
-//            response.setHeader("HX-Trigger", "{\"messageDisplay\":{\"messageText\":\""
-//                    + messageSource.getMessage("label.error", null, locale)
-//                    + "\"}}");
-//            return "fragments/elements/empty";        }
         updateVisit(visit, visitForm);
         visitRepository.save(visit);
         response.setHeader("HX-Trigger", "{\"messageDisplay\":{\"messageText\":\""
@@ -206,6 +200,7 @@ public class VisitController {
         List<AnalyseItem> analyseItems = analyseItemRepository.findByMemberIdAndAppointmentIdAndPetId(AutorisationUtils.getCurrentUserMid(), visit.getAppointment().getId(), visit.getPet().getId());
         model
                 .addAttribute("appointmentList", app)
+                .addAttribute("callFrom", callFrom)
                 .addAttribute("userIsAllowed", AutorisationUtils.getCurrentUserIsAuthorized())
                 .addAttribute("customer", customer)
                 .addAttribute("visit", visit)

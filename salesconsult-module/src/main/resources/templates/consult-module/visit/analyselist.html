@@ -1,15 +1,17 @@
 <th:block th:if="${isAnalyseItemsFromDb}">
-    <form id="analyseForm" hx-ext="debug" th:hx-post="'/consult/visit/'+ ${visit.id} + '/analyse/update'" hx-include="#analyseDropDown" hx-target="#analyseReplaceHtmx" hx-swap="innerHTML">
+    <form id="analyseForm" hx-ext="debug" th:hx-post="'/consult/visit/'+ ${visit.id} + '/analyse/update'" hx-include="#analyseDropDown"
+          hx-target="#analyseReplaceHtmx" hx-swap="innerHTML">
 </th:block>
 <th:block th:if="${!isAnalyseItemsFromDb}">
-    <form id="analyseForm" hx-ext="debug" th:hx-post="'/consult/visit/'+ ${visit.id} + '/analyse/copy'" hx-include="#analyseDropDown" hx-target="#analyseReplaceHtmx" hx-swap="innerHTML">
+    <form id="analyseForm" hx-ext="debug" th:hx-post="'/consult/visit/'+ ${visit.id} + '/analyse/copy'" hx-include="#analyseDropDown"
+          hx-target="#analyseReplaceHtmx" hx-swap="innerHTML">
 </th:block>
 <table class="analyse no-sorting striped" data-no-export>
     <thead>
     <tr>
-        <th th:text="#{analyses.label.nnbVet}"> </th>
+        <th th:text="#{analyses.label.nnbVet}"></th>
         <th th:text="#{analyses.label.activity}"></th>
-        <th th:text="#{analyses.label.nnbOwner}"> </th>
+        <th th:text="#{analyses.label.nnbOwner}"></th>
         <th:block th:if="${!isAnalyseItemsFromDb}">
             <th th:text="#{analyses.label.exclPrice}"></th>
             <th th:text="#{analyses.label.tax}">/th>
@@ -18,7 +20,7 @@
         <th th:text="#{analyses.label.quantity}"></th>
 
         <th:block th:if="${!isAnalyseItemsFromDb}">
-            <th th:text="#{analyses.label.inclPrice}"> </th>
+            <th th:text="#{analyses.label.inclPrice}"></th>
         </th:block>
         <th:block th:if="${isAnalyseItemsFromDb}">
             <th th:text="#{analyses.label.outcome}"></th>
@@ -54,9 +56,11 @@
             </td>
 
             <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${analyseItem.salesPriceExTax},true,'analyseSalesPrice')}"></th:block>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${analyseItem.taxPortionOfProduct + analyseItem.taxPortionOfProcessingFeeService},true,'analyseTaxPortion')}"></th:block>
+            <th:block
+                    th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${analyseItem.taxPortionOfProduct + analyseItem.taxPortionOfProcessingFeeService},true,'analyseTaxPortion')}"></th:block>
             <td>
-                <input class="number-font" style="width:5rem; padding:0;margin:0;height:1.4rem" placeholder="" type="number" min="0" step="0.01" autocomplete="off" required="required"
+                <input class="number-font" style="width:5rem; padding:0;margin:0;height:1.4rem" placeholder="" type="number" min="0" step="0.01" autocomplete="off"
+                       required="required"
                        th:id="${'quantity_'+ analyseItem.id}" th:name="${quantityName}" th:value="${analyseItem.quantity}">
                 <input type="hidden" th:value="${analyseItem.totalIncTax}" th:id="${'origTotalIncTax_'+ analyseItem.id}">
                 <input type="hidden" th:value="${analyseItem.quantity}" th:id="${'origQuantity_'+ analyseItem.id}">
@@ -68,7 +72,8 @@
 
     <!-- the list is analyseItems; from the database -->
     <th:block th:if="${!analyseItems.isEmpty() and isAnalyseItemsFromDb}">
-        <th:block th:each="analyseItem : ${analyseItems}">
+        <th:block th:each="analyseItem,iterStat : ${analyseItems}"
+                  th:with="idName=${'analyseItems[' + iterStat.index + '].id'}, comment=${'analyseItems[' + iterStat.index + '].comment'}">
             <tr>
                 <td>
                     <th:block th:with="isChecked=${T(dwe.holding.shared.model.type.YesNoEnum).Yes.equals(analyseItem.vetIndicator)}">
@@ -82,9 +87,8 @@
                     </th:block>
                 </td>
                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${analyseItem.quantity},true)}"></th:block>
-                <td>
-                    <input class="number-font" style="padding:0;margin:0;height:1.4rem" placeholder="" type="input" autocomplete="off"
-                           th:id="${'comment_'+ analyseItem.id}" th:name="${comment}" th:value="${analyseItem.comment}">
+                <td> <input type="hidden" th:value="${analyseItem.id}" th:name="${idName}">
+                    <input th:id="${comment}"  th:name="${comment}" th:value="${analyseItem.comment}" class="number-font" style="padding:0;margin:0;height:1.4rem" type="input" autocomplete="off">
                 </td>
             </tr>
         </th:block>
@@ -99,9 +103,15 @@
             <th></th>
             <th></th>
             <th style="font-size: 150%; font-family: monospace" class="right" th:text="#{label.otc.sell.total}"></th>
-            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${analyseTotalAmount}, false,'analyseTotalAmount')}" th:with="increaseFont=150"></th:block>
+            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberAddClass_td(${analyseTotalAmount}, false,'analyseTotalAmount')}"
+                      th:with="increaseFont=150"></th:block>
         </tr>
         </tfoot>
     </th:block>
 </table>
 </form>
+<th:block th:if="${!analyseItems.isEmpty()}">
+    <div style="padding-left: var(--pico-grid-column-gap); padding-right: var(--pico-grid-column-gap);">
+        <button name="_save" type="submit" form="analyseForm" th:text="#{label.button.save}"></button>
+    </div>
+</th:block>

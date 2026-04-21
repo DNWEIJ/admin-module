@@ -13,12 +13,12 @@
         <input id="id" name="id" th:value="${refund.id}" type="hidden"/>
         <input id="version" name="version" th:value="${refund.version}" type="hidden"/>
         <fieldset>
-            <legend>[[#{label.refund.details}]]</legend>
+            <legend th:text="#{label.refund.details}"></legend>
 
             <div class="grid-row">
-                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.refund.amount',${totalAmount},'0')}"  th:with="type='number'"></th:block></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('amount','label.refund.amount',${refund.amount},'0')}"  th:with="type='number'"></th:block></th:block>
                     <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId', 'userpreferences.clinic', ${refund.localMemberId}, ${localMembersList}, true,'0')}"></th:block>
-                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('refundDate','label.refund.refundDate','refund.refundDate','0')}"></th:block>
+                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('refundDate','label.refund.refundDate','refund.refundDate','0')}" th:with="type='date'"></th:block>
                 </div>
             </div>
             <div class="grid">
@@ -34,7 +34,7 @@
         <details id="lineitems" open>
             <summary class="three-elements">
                 <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
-                <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/lineitem" title="More information" class="emoji-icon">ℹ️</a>
+                <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/lineitem" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
             <hr/>

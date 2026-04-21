@@ -7,7 +7,7 @@
     <details id="reportRemindersInfo" open>
         <summary>
             <span th:text="#{label.localmember.tittle}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit"
-                                                                          title="More information" class="emoji-icon">ℹ️</a>
+                                                                          th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
         <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.localmember.tittle},'/admin/localmember')}"></th:block>
     </details>

@@ -4,8 +4,11 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.customer.client.repository.LookupSpeciesRepository;
 import dwe.holding.reporting.repository.dsl.EntityListDsls;
+import dwe.holding.salesconsult.sales.controller.SalesType;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import dwe.holding.shared.model.type.YesNoEnum;
+import dwe.holding.supplyinventory.controller.ProductController;
+import dwe.holding.supplyinventory.repository.LookupProductCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +33,7 @@ public class ReportCustomersController {
     public static final String DO_NOT_CARE = "doNotCare";
     private final LookupSpeciesRepository lookupSpeciesRepository;
     private final EntityListDsls entityListDsls;
+    private final LookupProductCategoryRepository lookupProductCategoryRepository;
 
     @GetMapping("customerlist")
     String setupMail(Model model, DocForm docForm) {
@@ -48,6 +52,11 @@ public class ReportCustomersController {
                         .stream().map(f -> new PresentationElement(f.getId(), f.getSpecies()))
                         .sorted(comparing(PresentationElement::getName)).toList())
                 .addAttribute("customers", (isThereInput(docForm)) ? entityListDsls.findCustomers(AutorisationUtils.getCurrentUserMid(), docForm) : List.of())
+                // for selecting products, we use COSTING type, so we do not have an input field; rather then making a new value again.
+                .addAttribute("salesType", SalesType.COSTINGPRODUCT)
+                .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
+                .addAttribute("productSearchUrl", "/report/productlist")
+                .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
         ;
 
         return "reporting-module/reporting/customeremail";

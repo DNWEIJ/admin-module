@@ -22,7 +22,7 @@
 
         <details id="visitInfo" open>
             <summary>
-                <span th:text="#{visit.info.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/visit" title="More information" class="emoji-icon">ℹ️</a>
+                <span th:text="#{visit.info.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/visit" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <div class="grid">
                 <!-- define extra buttons to add behind -->
@@ -72,7 +72,7 @@
         </details>
         <details id="analyses" open>
             <summary>
-                <span th:text="#{visit.analyse.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/customerpet" title="More information" class="emoji-icon">ℹ️</a>
+                <span th:text="#{visit.analyse.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/customerpet" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <div id="analyseReplaceHtmx">
                 <th:include th:replace="~{consult-module/visit/analyse}"></th:include>
@@ -86,7 +86,7 @@
                    hx-target="#modal-container"
                    hx-swap="innerHTML">️🛒</a>
                 <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
-                <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/lineitem" title="More information" class="emoji-icon">ℹ️</a>
+                <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/lineitem" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
             <!-- TODO: Check on visit isOpen -->
@@ -100,7 +100,7 @@
                    th:hx-get="${'/consult/visit/customer/'+ customer.id + '/pet/'  + visit.pet.id + '/history/diagnose'}"
                    hx-target="#modal-container" hx-swap="innerHTML">🏷️</a>
                 <span class="center-text" th:text="#{label.diagnose}"></span>
-                <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/diagnose" title="More information" class="emoji-icon">ℹ️</a>
+                <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/diagnose" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
             </summary>
             <div id="replaceDiagnose" th:insert="~{consult-module/fragments/diagnose::diagnose()}"></div>
         </details>

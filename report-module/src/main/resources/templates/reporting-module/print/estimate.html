@@ -1,0 +1,260 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/reporting-module/print/invoiceprint.html}">
+<head>
+    <title th:text="'Estimate-'  + ${#strings.replace(estimateForPet.pet.name,' ','_') + '_' + estimateForPet.pet.id + '_'+ #temporals.format(#temporals.createNow(),'dd-MM-yyyy-HH:mm')}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+    <style>
+        .header {
+            text-align: center;
+            color: green;
+            font-size: 1.4rem;
+        }
+
+        .invoice-title {
+            font-size: 1.4rem;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .invoice-date {
+            text-align: right;
+        }
+
+        .address {
+            width: 100%;
+        }
+
+        .invoice-label {
+            display: block;
+            margin-left: 50%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: underline;
+            color: green;
+
+        }
+
+        .invoice-content {
+            margin-left: 55%;
+        }
+
+
+        .section-title {
+            font-weight: bold;
+            font-size: 110%;
+        }
+
+        .totals-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 6rem;
+        }
+
+        .payment-table,
+        .invoice-totals {
+            border-collapse: collapse;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .row {
+            position: relative;
+            text-align: center;
+        }
+
+        .center {
+            display: inline-block;
+        }
+
+        .absoluteright {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        /** html elements **/
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.0rem;
+        }
+
+        tr, th {
+            text-align: left;
+        }
+
+        th {
+            border-bottom: 1px solid #ddd;
+        }
+
+        fieldset {
+            padding-left: 0;
+            padding-right: 0;
+            border: none;
+        }
+
+        /** paged js specific **/
+        .payment-info {
+            text-align: center;
+            border-top: 1px solid #ccc;
+
+            /* Paged.js multi-page support */
+            position: running(paymentContent);
+
+            /* Single-page fallback: stick to bottom */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /**** text alingment ****/
+        .text-align-center {
+            text-align: center;
+        }
+
+        .text-align-right {
+            text-align: right;
+        }
+
+        .text-align-left {
+            text-align: left;
+        }
+
+        /* Multi-page: show only on last page at bottom */
+        @page :last {
+            @bottom-center {
+                content: element(paymentContent);
+                text-align: center;
+            }
+        }
+
+        /* Prevent overlapping content in single page */
+        .payment-info::before {
+            content: "";
+            display: block;
+            height: .5rem; /* same as footer padding */
+        }
+    </style>
+    <div class="row">
+        <div class="center header">Sterkliniek dierenartsen Amsterdam</div>
+        <div class="absoluteright invoice-title" th:text="#{label.print.proforma}"></div>
+    </div>
+    <div class="invoice-date" th:text="${#temporals.format(printDate, 'dd-MM-yyyy')}"></div>
+    <div style="line-height: 180%">&nbsp;</div>
+
+    <fieldset class="addess">
+        <div class="invoice-label" th:text="#{label.print.invoice.customer.proforma}"></div>
+        <div style="line-height: 50%">&nbsp;</div>
+        <div class="invoice-content">
+            <b>
+                <div th:utext="${customer.customerName}"></div>
+            </b>
+            <div th:utext="${customer.formattedHtmlAddress}"></div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <table style="width: 100%">
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="width:34%">
+                    <b th:text="#{label.print.invoice.visitdate}"> </b>
+                    <span th:text="${#temporals.format(estimate.estimateDate, 'dd-MM-yyyy')}"></span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset style="break-inside: avoid; page-break-inside: avoid; border-top: 1px solid #000;">
+        <fieldset>
+            <div class="section-title" th:text="#{label.print.invoice.petInfo}"></div>
+            <table>
+                <thead>
+                <tr>
+                    <th th:text="#{label.print.invoice.naam}"></th>
+                    <th th:text="#{label.print.invoice.soortRas}"></th>
+                    <th th:text="#{label.print.invoice.chipTattooId}"></th>
+                    <th th:text="#{label.print.invoice.geslacht}"></th>
+                    <th th:text="#{label.print.invoice.leeftijd}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${estimateForPet.pet.name}"></td>
+                    <td>
+                        <span th:text="${estimateForPet.pet.species}"></span> /
+                        <span th:text="${estimateForPet.pet.breed}"></span>
+                    </td>
+                    <td th:text="${estimateForPet.pet.chipTattooId}"></td>
+                    <td th:text="#{__${estimateForPet.pet.sex.label}__}"></td>
+                    <td>
+                        <th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}" th:text="${estimateForPet.pet.getAgePresentation(year,month)}"></th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="section-title" th:text="#{label.print.invoice.product}"></div>
+            <table>
+                <thead>
+                <tr>
+                    <th th:text="#{label.print.invoice.beschrijving}"></th>
+                    <th style="text-align: right" th:text="#{label.print.invoice.aantal}"></th>
+                    <th style="text-align: right" th:text="#{label.print.invoice.regelTotaalInclBtw}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="lineItem : ${estimate.estimatelineitems}">
+                    <tr>
+                        <td th:utext="${lineItem.nomenclature}"></td>
+                        <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineItem.quantity},false)}"></th:block>
+                        <td class="number-font right" th:text="'€ ' +${#numbers.formatDecimal(lineItem.totalIncTax, 1, 2, 'COMMA')}">
+                    </tr>
+                </th:block>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td style="font-weight:bold; text-align: right"
+                        th:text="#{label.print.invoice.subtotal} + '&nbsp;&nbsp;&nbsp;€ ' + ${#numbers.formatDecimal(totalsPerPet.get(estimateForPet.pet.id).amount, 1, 2, 'COMMA')}"></td>
+                </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+    </fieldset>
+    </th:block>
+    <fieldset>
+        <div class="totals-wrapper">
+            <table class="invoice-totals">
+                <tbody>
+                <tr>
+                    <th class="section-title" th:text="#{label.print.invoice.factuurTotaal}"></th>
+                    <th class="section-title number-font right" th:text="'€ '+ ${#numbers.formatDecimal(invoiceTotals.amount, 1, 2, 'COMMA')}"></th>
+                </tr>
+                <tr>
+                    <td th:text="#{label.print.invoice.totaalBtwLaag}"></td>
+                    <td class="text-align-right number-font" th:text="'€ '+ ${#numbers.formatDecimal(invoiceTotals.taxProductAmount, 1, 2, 'COMMA')}"></td>
+                </tr>
+                <tr>
+                    <td th:text="#{label.print.invoice.totaalBtwHoog}"></td>
+                    <td class="text-align-right number-font" th:text="'€ '+ ${#numbers.formatDecimal(invoiceTotals.taxServiceAmount, 1, 2, 'COMMA')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+   <th:block th:insert="~{reporting-module/print/fragments/footer_receipt}"></th:block>
+</section>
+</body>
+</html>

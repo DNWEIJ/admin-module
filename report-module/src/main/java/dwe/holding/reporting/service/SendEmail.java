@@ -16,7 +16,7 @@ public class SendEmail {
 
     private final JavaMailSender mailSender;
 
-    public void sendHtmlEmail(String to, String subject, String htmlContent) throws MessagingException {
+    public void sendHtmlEmail(String to, String subject, String htmlContent) {
         sendHtmlEmail(to, subject, htmlContent, null);
     }
 
@@ -36,7 +36,7 @@ public class SendEmail {
             helper.setText(plainText, htmlContent);
             mailSender.send(message);
             return true;
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("cannot send email message" + e.getMessage(), e);
         }
         return false;

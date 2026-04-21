@@ -1,5 +1,6 @@
 package dwe.holding.reporting.repository.projection;
 
+import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
@@ -24,4 +25,5 @@ public class RemindersListProjection {
     public final String reminderText;
     public final Long reminderId;
     public final Long originatingAppointmentId;
+    public final YesNoEnum hasBeenNotified;
 }

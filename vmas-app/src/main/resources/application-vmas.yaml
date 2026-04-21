@@ -38,7 +38,7 @@ spring:
 #      use_sql_comments: true
 
 #        format_sql: true
-    show_sql: true
+#    show_sql: true
   ssl:
     bundle:
       jks:
@@ -65,14 +65,15 @@ spring:
     properties:
       mail:
         smtp:
+          pool: true
+          poolSize: 5
           auth: true
           starttls:
             enable: true
             required: true
           connectiontimeout: 5000
-          timeout: 3000
+          timeout: 5000
           writetimeout: 5000
-
 
 logging:
   level:
@@ -80,10 +81,24 @@ logging:
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.hibernate.tool.schema: INFO
+#
+#    org.hibernate: DEBUG
+#    org.hibernate.orm: DEBUG
+
+#    org.antlr.v4.runtime: DEBUG
+#    org.antlr.v4.runtime.atn: TRACE
+#    org.springframework.data.jpa: DEBUG
+
+#    org.springframework.data.repository.query: TRACE
+#    org.hibernate: DEBUG
+
 #    org.hibernate.SQL: DEBUG
 #    org.hibernate.orm.jdbc.bind: TRACE
 #    org.hibernate.type.descriptor.sql: TRACE
 
+#  org.springframework.mail: DEBUG
+#  jakarta.mail: DEBUG
+#  com.sun.mail: DEBUG
 
 server:
   servlet:

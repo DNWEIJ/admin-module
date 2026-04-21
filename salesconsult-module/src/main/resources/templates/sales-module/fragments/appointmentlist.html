@@ -1,104 +1,122 @@
-<style>
-    .table-wrapper {
-        overflow-y: auto;
-        border-radius: var(--pico-border-radius);
-        background: var(--pico-background-color);
-    }
+<th:block th:if="${appointmentList.size != 0}">
+    <style>
+        .table-wrapper {
+            overflow-y: auto;
+            border-radius: var(--pico-border-radius);
+            background: var(--pico-background-color);
+        }
 
-    #appointmentList {
-        border-collapse: collapse;
-        table-layout: auto; /* columns shrink to fit content */
-        width: 100%; /* table fills wrapper width */
-    }
+        #appointmentList {
+            border-collapse: collapse;
+            table-layout: auto; /* columns shrink to fit content */
+            width: 100%; /* table fills wrapper width */
+        }
 
-    #appointmentList th,
-    #appointmentList td {
-        padding: 0.3rem 0.5rem;
-        white-space: nowrap; /* prevent wrapping for normal columns */
-        text-align: left;
-    }
+        #appointmentList th,
+        #appointmentList td {
+            padding: 0.3rem 0.5rem;
+            white-space: nowrap; /* prevent wrapping for normal columns */
+            text-align: left;
+        }
 
-    /* last column stretches */
-    #appointmentList th:last-child,
-    #appointmentList td:last-child {
-        white-space: normal; /* allow wrapping */
-        width: 100%; /* takes remaining space */
-    }
+        /* last column stretches */
+        #appointmentList th:last-child,
+        #appointmentList td:last-child {
+            white-space: normal; /* allow wrapping */
+            width: 100%; /* takes remaining space */
+        }
 
-    /* sticky header */
-    #appointmentList thead th {
-        position: sticky;
-        top: 0;
-        background-color: #fff;
-        z-index: 2;
-    }
-</style>
-<script th:inline="javascript">
-    function tableShowMax5Lines(targetId) {
-        const wrapper = document.querySelector('.table-wrapper');
-        const tbody = document.querySelector('#appointmentList tbody');
-        if (!tbody || !wrapper) return;
+        /* sticky header */
+        #appointmentList thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            z-index: 2;
+        }
+    </style>
+    <script th:inline="javascript">
+        function tableShowMax5Lines(targetId) {
+            const wrapper = document.querySelector('.table-wrapper')
+            const tbody = document.querySelector('#appointmentList tbody')
+            if (!tbody || !wrapper) return
 
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        if (!rows.length || rows.length < 5) return;
+            const rows = Array.from(tbody.querySelectorAll('tr'))
+            if (!rows.length || rows.length < 5) return
 
-        // Calculate total height of first 5 rows
-        const firstFive = rows.slice(0, 5);
-        const totalHeight = firstFive.reduce((sum, r) => sum + r.offsetHeight, 0);
+            // Calculate total height of first 5 rows
+            const firstFive = rows.slice(0, 5)
+            const totalHeight = firstFive.reduce((sum, r) => sum + r.offsetHeight, 0)
 
-        // Set wrapper height to exactly 5 rows
-        wrapper.style.maxHeight = totalHeight + 'px';
+            // Set wrapper height to exactly 5 rows
+            wrapper.style.maxHeight = totalHeight + 'px'
 
-        // Highlight and center target row
-        const targetRow = document.getElementById(targetId);
-        if (!targetRow) return;
+            // Highlight and center target row
+            const targetRow = document.getElementById(targetId)
+            if (!targetRow) return
 
-        targetRow.classList.add('highlight');
+            targetRow.classList.add('highlight')
 
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const rowRect = targetRow.getBoundingClientRect();
+            const wrapperRect = wrapper.getBoundingClientRect()
+            const rowRect = targetRow.getBoundingClientRect()
 
-        wrapper.scrollTop += (rowRect.top - wrapperRect.top) - (wrapper.clientHeight / 2) + (rowRect.height / 2);
-    }
-    document.addEventListener('DOMContentLoaded', () => tableShowMax5Lines([[${visit.id}]]))
-</script>
-<fieldset>
-    <div id="class-wrapper-list-app" class="table-wrapper">
-        <table id="appointmentList" class="table-tight striped no-sorting" data-no-export>
-            <thead>
-            <tr>
-                <th th:text="#{label.consultlist.date}">Date</th>
-                <th th:text="#{label.consultlist.status}">Status</th>
-                <th th:text="#{label.consultlist.owner}">Owner</th>
-                <th th:text="#{label.consultlist.pet}">Pet</th>
-                <th th:text="#{label.consultlist.type}">Type</th>
-                <th th:text="#{label.consultlist.veterinarianRoom}">Veterinarian / Room</th>
-                <th th:text="#{label.consultlist.purpose}">Purpose</th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:if="${appointmentList.size == 0}">
-                <tr><td>&nbsp;</td><td colspan="6">[[#{label.not-found}]]</td></tr>
-            </th:block>
-            <th:block th:each="app : ${appointmentList}">
-                <th:block th:each="visit : ${app.visits}">
-                    <tr th:id="${visit.id}">
-                        <td>
-                            <a th:href="'/consult/visit/customer/'+ ${customerId}+ '/visit/'+ ${visit.id} + '?callFrom=customer'">
-                        <span th:text="${#temporals.format(app.visitDateTime, 'dd-MM-yyyy HH:mm')}"
-                              th:remove="tag"></span>
-                            </a>
-                        </td>
-                        <td th:style="${'background-color:' + visit.backgroundColor + '; color:' + visit.textColor}" th:text="#{__${visit.status.label}__}"></td>
-                        <td th:text="${visit.pet.customer.customerName}"></td>
-                        <td><th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}" th:text="${visit.pet.name + ' ' + visit.pet.getAgePresentation(year, month)}"/></td>
-                        <td th:text="${visit.pet.species + '/'+visit.pet.breed }"></td>
-                        <td th:text="${visit.veterinarian + '/' + visit.room}"></td>
-                        <td th:text="${visit.purpose}"></td>
+            wrapper.scrollTop += (rowRect.top - wrapperRect.top) - (wrapper.clientHeight / 2) + (rowRect.height / 2)
+        }
+
+        document.addEventListener('DOMContentLoaded', () => tableShowMax5Lines([[${visit.id}]]))
+
+    </script>
+    <div id="overlay"
+         style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+            z-index:1000; display:none; background:white; padding:20px;">
+    </div>
+    <fieldset>
+        <div id="class-wrapper-list-app" class="table-wrapper">
+            <table id="appointmentList" class="table-tight striped no-sorting" data-no-export>
+                <thead>
+                <tr>
+                    <th th:text="#{label.consultlist.date}">Date</th>
+                    <th th:text="#{label.consultlist.status}">Status</th>
+                    <th th:text="#{label.consultlist.owner}">Owner</th>
+                    <th th:text="#{label.consultlist.pet}">Pet</th>
+                    <th class="desktop-only" th:text="#{label.consultlist.type}">Type</th>
+                    <th class="desktop-only" th:text="#{label.consultlist.veterinarianRoom}">Veterinarian / Room</th>
+                    <th class="desktop-only" th:text="#{label.consultlist.purpose}">Purpose</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:if="${appointmentList.size == 0}">
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="6">[[#{label.not-found}]]</td>
                     </tr>
                 </th:block>
-            </th:block>
-            </tbody>
-        </table>
-    </div>
-</fieldset>
+                <th:block th:each="app : ${appointmentList}">
+                    <th:block th:each="visit : ${app.visits}">
+                        <tr th:id="${visit.id}"
+                            th:hx-get="${'/consult/visit/customer/' + visit.pet.customer.id} + '/petinfo'"
+                            hx-trigger="mouseenter delay:1s, mouseleave"
+                            hx-target="#overlay"
+                            hx-swap="innerHTML"
+                            hx-on:mouseenter="document.getElementById('overlay').style.display='block'"
+                            hx-on:mouseleave="document.getElementById('overlay').style.display='none'; this.removeAttribute('hx-request')">
+                            <td>
+                                <a th:href="'/consult/visit/customer/'+ ${customerId}+ '/visit/'+ ${visit.id} + '?callFrom=' + ${callFrom}">
+                                     <span th:text="${#temporals.format(app.visitDateTime, 'dd-MM-yyyy HH:mm')}" th:remove="tag"></span>
+                                </a>
+                            </td>
+                            <td th:style="${'background-color:' + visit.backgroundColor + '; color:' + visit.textColor}" th:text="#{__${visit.status.label}__}"></td>
+                            <td th:text="${visit.pet.customer.customerName}"></td>
+                            <td>
+                                <th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}" th:text="${visit.pet.name + ' ' + visit.pet.getAgePresentation(year, month)}"/>
+                            </td>
+                            <td class="desktop-only" th:text="${visit.pet.species + '/'+visit.pet.breed }"></td>
+                            <td class="desktop-only" th:text="${visit.veterinarian + '/' + visit.room}"></td>
+                            <td class="desktop-only" th:text="${visit.purpose}"></td>
+                        </tr>
+                    </th:block>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</th:block>

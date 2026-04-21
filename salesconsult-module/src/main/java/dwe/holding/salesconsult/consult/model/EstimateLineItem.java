@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Estimatelineitem extends CostCalc {
+public class EstimateLineItem extends CostCalc {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estimate_id")
     private Estimate estimate;

@@ -15,10 +15,12 @@
         <div th:text="${appointment.id} + ' - ' + ${selectedPet.name}"></div>
     </div>
 
-    <div id="actionbar">
-        <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
-    </div>
-    
+    <block th:unless="${salesType.isPriceInfo}">
+        <div id="actionbar">
+            <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
+        </div>
+    </block>
+
     <block th:if="${!salesType.isPriceInfo}">
         <th:block th:insert="~{sales-module/fragments/customerpetinfo::customerPetInfo(${customer}, ${selectedPet}, false)}"></th:block>
         <fieldset class="grid">
@@ -33,12 +35,12 @@
     <details id="lineitems" open>
         <summary class="three-elements">
             <th:block th:if="!salesType.isPriceInfo">
-            <a href="" th:title="#{visit.lineitems.history}" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}"
-               hx-target="#modal-container"
-               hx-swap="innerHTML">️🛒</a>
+                <a href="" th:title="#{visit.lineitems.history}" th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + petId + '/history/product'}"
+                   hx-target="#modal-container"
+                   hx-swap="innerHTML">️🛒</a>
             </th:block>
             <span class="center-text" th:text="#{label.otc.legend.lineitems}"></span>
-            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/lineiteminfo" title="More information" class="emoji-icon">ℹ️</a>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/lineiteminfo" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
         <th:include th:replace="~{sales-module/fragments/htmx/lineitemsfulltable}"></th:include>
         <!-- TODO: Check on visit isOpen -->

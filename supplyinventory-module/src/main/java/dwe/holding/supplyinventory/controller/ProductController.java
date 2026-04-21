@@ -44,7 +44,14 @@ public class ProductController {
     /*** SINGLE NEW RECORD ***/
     @GetMapping("/product")
     String newProduct(Model model) {
-        Product product = Product.builder().lookupProductCategory(new LookupProductCategory()).hasBatchNr(YesNoEnum.No).hasSpillage(YesNoEnum.No).taxed(TaxedTypeEnum.SERVICE).build();
+        Product product = Product.builder()
+                .lookupProductCategory(new LookupProductCategory())
+                .deleted(YesNoEnum.No)
+                .hasBatchNr(YesNoEnum.No)
+                .hasSpillage(YesNoEnum.No)
+                .deceasedPetPrompt(YesNoEnum.No)
+                .taxed(TaxedTypeEnum.SERVICE)
+                .build();
         model
                 .addAttribute("product", product)
                 .addAttribute("categories", lookupProductCategoryRepository.findByDeletedOrderByCategoryName(YesNoEnum.No))
@@ -72,6 +79,7 @@ public class ProductController {
 
     @PostMapping("/product")
     String saveProduct(Product productForm, RedirectAttributes redirect) {
+        // fix boolean coming in
         Product product = new Product();
         if (productForm.getId() != null)
             product = productRepository.findById(productForm.getId()).orElseThrow();

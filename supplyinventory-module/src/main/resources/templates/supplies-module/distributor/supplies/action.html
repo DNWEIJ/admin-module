@@ -8,7 +8,7 @@
     <details open>
         <summary>
             <span th:text="#{label.report.supplies.input.title}"></span>
-            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/supplies/edit" title="More information" class="emoji-icon">ℹ️</a>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/supplies/edit" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
 
     <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Supply','/supplies/distributor/supplies')}"></th:block>

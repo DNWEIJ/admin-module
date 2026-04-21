@@ -102,7 +102,6 @@ public class ReportRemindersController {
         return "redirect:/report/process/selectreport?reportType=" + SessionStorageReporting.ReportTypePage.REMINDER + "&actionType=" + actionType.name();
     }
 
-
     @PostMapping("/reminders/selectedreport/action")
     String previewOrAction(Model model, Long templateId, String content, String submitButton, HttpSession session) {
         final ReportTemplate template = documentTemplateRepository.findById(templateId).orElseThrow();
@@ -133,7 +132,6 @@ public class ReportRemindersController {
     @GetMapping("/reminders/selectedreport/status")
     String showStatusOfProcessingEmailsHtmx(Model model, HttpSession session) {
         Counter counter = (Counter) session.getAttribute(Counter.name);
-        log.info("session counter: " + counter.getIncrementValue());
         model.addAttribute("flatData",
                 String.format(
                         """
@@ -154,7 +152,7 @@ public class ReportRemindersController {
                 reminderForm.from, reminderForm.includeTill,
                 (reminderForm.species == null || reminderForm.species.size() == reminderForm.speciesListLength) ? List.of() : reminderForm.species,
                 (reminderForm.reminderTypes == null || reminderForm.reminderTypes.size() == reminderForm.speciesListLength) ? List.of() : reminderForm.reminderTypes,
-                reminderForm.dueDateType, reminderForm.lastNameFilter, reminderForm.onlyActiveWithLivePet);
+                reminderForm.dueDateType, reminderForm.lastNameFilter, reminderForm.onlyActiveWithLivePet == null ? Boolean.FALSE : reminderForm.onlyActiveWithLivePet);
     }
 
     @NoArgsConstructor

@@ -44,24 +44,29 @@ public class ReminderGenerateEmailAndSendOrCreateReport {
                 }
                 if (SessionStorageReporting.ActionType.EMAIL.equals(actionType)) {
                     if (reminder.getPet().getCustomer().getEmail() != null && !reminder.getPet().getCustomer().getEmail().isEmpty()) {
-                        if (sendEmail.sendHtmlEmail(reminder.getPet().getCustomer().getEmail(), template.getSubject(),
+                        if (sendEmail.sendHtmlEmail(
+                                reminder.getPet().getCustomer().getEmail(),
+                                template.getSubject(),
                                 mainTemplate.getContent().replace("{{emailContentPlaceholder}}", emailText),
                                 "noreply@dweholding.nl")
                         ) {
-                            // todo add reference to email that didn't send
-                            errorLines.add("Cannot send email due to error. For " + reminder.getPet().getCustomer().getCustomerNameWithId());
+                            reminder.setHasBeenNotified(YesNoEnum.Yes);
+                            reminderRepository.save(reminder);
+                        } else{
+                            errorLines.add("Cannot send email due to error. For " + reminder.getPet().getCustomer().getCustomerNameWithId() + ". Reminder Id: " + reminder.getId());
                         }
                     } else {
-                        errorLines.add("Cannot send email because emailaddress is not available. For " + reminder.getPet().getCustomer().getCustomerNameWithId());
+                        errorLines.add("Cannot send email because emailaddress is not available. For " + reminder.getPet().getCustomer().getCustomerNameWithId() + ". Reminder Id: " + reminder.getId());
                     }
-                    reminder.setHasBeenNotified(YesNoEnum.Yes);
-                    reminderRepository.save(reminder);
+
                 }
             }
             counter.increment();
-            log.info("increment counter: " + counter.getIncrementValue());
         });
         counter.setFinished(true);
+        if (!errorLines.isEmpty()) {
+            log.error("email send produced errors: \n" + String.join("\n", errorLines));
+        }
         return new ResultAndError(reports, errorLines);
     }
 

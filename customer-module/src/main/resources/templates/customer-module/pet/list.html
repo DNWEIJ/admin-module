@@ -15,7 +15,7 @@
             <th>[[#{pet.name}]]</th>
             <th class="desktop-only">[[#{pet.species}]]</th>
             <th>[[#{pet.breed}]]</th>
-
+            <th class="no-sorting">[[#{pet.pettypes}]]</th>
             <th class="mobile-only">[[#{pet.sex}]]</th>
             <th class="tablet-only">[[#{pet.sex}]]</th>
 
@@ -41,7 +41,7 @@
                         th:utext="${pet.nameWithDeceasedAndDate}" th:remove="tag"></span></a></td>
                 <td class="desktop-only">[[${pet.species}]]</td>
                 <td>[[${pet.breed}]]</td>
-
+                <td th:text="'A: ' + #{__${pet.allergies.label}__} + ' D: ' + #{__${pet.gpwarning.label}__} + ' I: '+ #{__${pet.insured.label}__}  "></td>
                 <td class="mobile-only">[[${pet.sex.databaseField}]]</td>
                 <td class="tablet-only">[[#{${pet.sex.getLabel}}]]</td>
 

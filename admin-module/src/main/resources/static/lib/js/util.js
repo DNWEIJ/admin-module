@@ -56,9 +56,25 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     document.body.addEventListener("htmx:responseError", function (evt) {
         const status = evt.detail.xhr.status
+        const xhr = evt.detail.xhr
 
         if (status === 401 || status === 403) {
             window.location.href = "/admin/login"
+        }
+        if (status == 500) {
+
+            var message = "Something went really wrong. refresh the page, and try again. If it still doesn't work, notify your manager"
+            const contentType = xhr.getResponseHeader("Content-Type") || "";
+            if (contentType.includes("application/json")) {
+                try {
+                    const json = JSON.parse(xhr.responseText);
+                    message = json.message || json.error || message;
+                } catch (_) {}
+            } else if (xhr.responseText) {
+                message = xhr.responseText.substring(0, 300);
+            }
+            document.getElementById('error-message').textContent = message
+            document.getElementById('error-modal').showModal()
         }
     })
 

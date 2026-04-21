@@ -2,13 +2,20 @@ package dwe.holding.admin.authorisation;
 
 
 import dwe.holding.admin.exception.SystemException;
+import lombok.Getter;
 
+@Getter
 public class IPNumber {
     private Integer numberOne;
     private Integer numberTwo;
     private Integer numberThree;
     private Integer numberFour;
 
+    public IPNumber(){}
+
+    public IPNumber(String ipnumber) {
+        this.fromString(ipnumber);
+    }
     public final String toString() {
         if (validate()) {
             return numberOne + "." + numberTwo + "." + numberThree + "." + numberFour;

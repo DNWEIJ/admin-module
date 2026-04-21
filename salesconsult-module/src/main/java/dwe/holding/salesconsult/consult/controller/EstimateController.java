@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class EstimateController {
         model
                 .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
                 .addAttribute("salesType", SalesType.ESTIMATE);
-        return "salesconsult-generic-module/petanddateselectpage";
+        return "consult-module/estimate/estimateselect";
     }
 
     @PostMapping("/customer/{customerId}/estimate")
@@ -67,10 +68,10 @@ public class EstimateController {
 
         Estimate estimate = estimateService.createEstimate(pets, customerId);
         // start selling for the first pet in the list...
-        return "redirect:/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/" + estimate.getEstimateForPets().iterator().next().getPet().getId();
+        return "redirect:/consult/customer/" + customerId + "/estimate/" + estimate.getId() + "/pet/" + estimate.getEstimateForPets().iterator().next().getPet().getId();
     }
 
-    @GetMapping("/customer/{customerId}/estimate/{estimateId}/{petId}")
+    @GetMapping("/customer/{customerId}/estimate/{estimateId}/pet/{petId}")
     String showEstimeInformation(Model model, @PathVariable Long customerId, @PathVariable Long estimateId, @PathVariable Long petId) {
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
         Estimate estimate = estimateService.getEstimate(estimateId, petId);
@@ -96,11 +97,29 @@ public class EstimateController {
                 .addAttribute("productSearchUrl", getUrl(customerId, petId, estimate.getId()))
                 .addAttribute("productSearchForm", new ProductController.ListForm(null, null, Boolean.FALSE))
                 .addAttribute("salesType", SalesType.ESTIMATE);
-        ModelHelper.updateLineItemsInModel(model, estimateService.saveEstimateLineItems(estimate.getEstimatelineitems()));
+        ModelHelper.updateLineItemsInModel(model, estimateService.saveEstimateLineItems(estimate.getEstimateLineItems()));
         return "consult-module/estimate/estimateforpet";
     }
 
-    public static  String getUrl(Long customerId, Long petId, Long estimateId) {
+    @GetMapping("/customer/{customerId}/estimate/{estimateId}/pet/{petId}/change")
+    String changeToConsult() {
+        // ask for:
+        //         location / date/ time period <- maybe reask for doel / timeperiod.
+        return "";
+    }
+
+    @PostMapping("/customer/{customerId}/estimateforpet")
+    String saveEstimateForPet(@PathVariable Long customerId, EstimateForPet estimateForPetForm, Model model, RedirectAttributes redirect) {
+        customerService.searchCustomer(customerId);
+        model.addAttribute("estimateForPet",
+                estimateService.saveEstimateForPet(estimateForPetForm.getId(), estimateForPetForm.getPurpose(), estimateForPetForm.getComments(), estimateForPetForm.getEstimate().getEstimateDate())
+        );
+
+        redirect.addFlashAttribute("message", "label.saved");
+        return "redirect:/consult/customer/" + customerId + "/estimates";
+    }
+
+    public static String getUrl(Long customerId, Long petId, Long estimateId) {
         return "/consult/customer/" + customerId + "/estimate/" + estimateId + "/pet/" + petId;
     }
 

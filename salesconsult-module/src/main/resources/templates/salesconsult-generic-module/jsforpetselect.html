@@ -32,25 +32,34 @@
 
         // prevent submitting the form if no checkbox is checked
         if (document.getElementById('createForm')) {
-            document.getElementById('createForm').addEventListener("submit", function (e) {
-                if (!this.querySelectorAll('input[type=checkbox]:checked').length) {
-                    // @formatter:off
-                alert([[#{label.otc.pet.checkbox.error}]])
-                // @formatter:on
-                    e.preventDefault();
-                }
+            document.getElementById('createForm').addEventListener("submit", function (event) {
+                validateCheckbox(this, event)
             });
         }
         if (document.getElementById('addPetForm')) {
-            document.getElementById('addPetForm').addEventListener("submit", function (e) {
-                if (!this.querySelectorAll('input[type=checkbox]:checked').length) {
-                    // @formatter:off
-                    alert([[#{label.otc.pet.checkbox.error}]])
-                    // @formatter:on
-                    e.preventDefault();
-                }
+            document.getElementById('addPetForm').addEventListener("submit", function (event) {
+                validateCheckbox(this, event)
             });
         }
     }
+
+    var isEstimate = /*[[${salesType.isEstimate}]]*/ false;
+
+    function validateCheckbox(me, event) {
+        var checkedCount = me.querySelectorAll('input[type=checkbox]:checked').length;
+
+        if (checkedCount === 0) {
+            alert(/*[[#{label.otc.pet.checkbox.error}]]*/ 'Please select at least one checkbox');
+            event.preventDefault();
+            return;
+        }
+
+        if (isEstimate && checkedCount !== 1) {
+            alert(/*[[#{label.otc.pet.checkbox.morethenone.error}]]*/ 'Please select exactly one checkbox');
+            event.preventDefault();
+        }
+    }
+
+
     document.addEventListener("DOMContentLoaded", addEventListenersForPetSelect);
 </script>

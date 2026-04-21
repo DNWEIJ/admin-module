@@ -1,0 +1,24 @@
+<div>
+    <div th:utext=" '<h5>' + ${customer.customerName} +  '</h5>'"></div>
+    <table>
+        <th:block th:each="pet : ${customer.pets}">
+            <tr>
+                <td th:utext="'<b>'+${pet.name} + '</b>'"></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td th:text="'A: ' + #{__${pet.allergies().label}__}"></td><td th:text="${pet.allergiesDescription}"></td>
+                        </tr>
+                        <tr>
+                            <td th:text="'D: ' + #{__${pet.gpwarning().label}__}"></td><td th:text="${pet.gpwarningDescription}"></td>
+                        </tr>
+                        <tr>
+                            <td th:text="'I: ' + #{__${pet.insured().label}__}"></td><td th:text="${pet.insuredBy}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+    </table>
+</div>

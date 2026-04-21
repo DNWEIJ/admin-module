@@ -69,9 +69,11 @@ public class ReminderController {
             );
         } else {
             formReminder.setOriginatingAppointmentId(-1L);
+            formReminder.setPet(pet);
             Reminder savedReminder = reminderRepository.save(formReminder);
             pet.getReminders().add(savedReminder);
         }
+        redirect.addFlashAttribute("message", "label.saved");
         return "redirect:/supplies/customer/" + customerId + "/reminders";
     }
 

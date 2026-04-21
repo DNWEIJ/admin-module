@@ -1,6 +1,6 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/reporting-module/print/invoiceprint.html}">
 <head>
-    <title th:text="${(printType == 'invoice')?'Invoice-':'Receipt-'} + ${#strings.replace(visit.pet.name,' ','_') + '_' + visit.pet.id + '_'+ #temporals.format(#temporals.createNow(),'dd-MM-yyyy-HH:mm')}"></title>
+    <title th:text="${(printType == 'invoice')? 'Invoice-' : (printType == 'receipt'? 'Receipt-' : '') } + ${#strings.replace(visit.pet.name,' ','_') + '_' + visit.pet.id + '_'+ #temporals.format(#temporals.createNow(),'dd-MM-yyyy-HH:mm')}"></title>
 </head>
 <body>
 <section layout:fragment="content">
@@ -49,7 +49,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap:6rem;
+            gap: 6rem;
         }
 
         .payment-table,
@@ -147,17 +147,14 @@
     <div class="row">
         <div class="center header">Sterkliniek dierenartsen Amsterdam</div>
         <th:block th:if="${printType == 'invoice'}">
-            <div class="absoluteright invoice-title">FACTUUR</div>
+            <div class="absoluteright invoice-title" th:text="#{label.print.invoice}"></div>
         </th:block>
         <th:block th:if="${printType == 'receipt'}">
-            <div class="absoluteright invoice-title">KWITANTIE</div>
+            <div class="absoluteright invoice-title" th:text="#{label.print.receipt}"></div>
         </th:block>
     </div>
-
-    <div class="invoice-date" th:text="${printDate}"></div>
-
+    <div class="invoice-date" th:text="${#temporals.format(printDate, 'dd-MM-yyyy')}"></div>
     <div style="line-height: 180%">&nbsp;</div>
-
     <fieldset class="addess">
         <th:block th:if="${printType == 'invoice'}">
             <div class="invoice-label" th:text="#{label.print.invoice.customer}"></div>
@@ -250,7 +247,9 @@
                         </td>
                         <td th:text="${visitFromList.pet.chipTattooId}"></td>
                         <td th:text="#{__${visitFromList.pet.sex.label}__}"></td>
-                        <td><th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}"  th:text="${visitFromList.pet.getAgePresentation(year,month)}"></th:block></td>
+                        <td>
+                            <th:block th:with="year=#{label.generic.year}, month=#{label.generic.month}" th:text="${visitFromList.pet.getAgePresentation(year,month)}"></th:block>
+                        </td>
                         <td class="right" th:text="${visitFromList.weight}"></td>
                     </tr>
                     </tbody>
@@ -275,9 +274,10 @@
                     <th:block th:each="lineItem : ${appointment.lineItems}">
                         <th:block th:if="${lineItem.pet.id == visitFromList.pet.id}">
                             <tr>
-                                <td th:tuext="${lineItem.nomenclature}"></td>
+                                <td th:utext="${lineItem.nomenclature}"></td>
                                 <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${lineItem.quantity},false)}"></th:block>
-                                <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${lineItem.totalIncTax},false,'')}"></th:block>
+                                <td class="number-font right" th:text="'€ ' +${#numbers.formatDecimal(lineItem.totalIncTax, 1, 2, 'COMMA')}">
+                                </td>
                             </tr>
                         </th:block>
                     </th:block>
@@ -307,8 +307,8 @@
                 </tr>
                 <tr>
                     <td th:text="${#temporals.format(lastPaymentDate, 'dd-MM-yyyy')}"></td>
-                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${lastPaymentAmount},false,'')}"></th:block>
-                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${balanceInfo},false,'')}"></th:block>
+                    <td class="text-align-right number-font" th:text="'€ '+ ${#numbers.formatDecimal(lastPaymentAmount, 1, 2, 'COMMA')}"></td>
+                    <td class="text-align-right number-font" th:text="'€ '+ ${#numbers.formatDecimal(balanceInfo, 1, 2, 'COMMA')}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -320,11 +320,11 @@
                 </tr>
                 <tr>
                     <td th:text="#{label.print.invoice.totaalBtwLaag}"></td>
-                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${invoiceTotals.taxProductAmount},false,'')}"></th:block>
+                    <td class="text-align-right number-font" th:text="'€ '+ ${#numbers.formatDecimal(invoiceTotals.taxProductAmount, 1, 2, 'COMMA')}"></td>
                 </tr>
                 <tr>
                     <td th:text="#{label.print.invoice.totaalBtwHoog}"></td>
-                    <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${invoiceTotals.taxServiceAmount}, false, '')}"></th:block>
+                    <td class="text-align-right number-font" th:text="'€ '+ ${#numbers.formatDecimal(invoiceTotals.taxServiceAmount, 1, 2, 'COMMA')}"></td>
                 </tr>
                 </tbody>
             </table>

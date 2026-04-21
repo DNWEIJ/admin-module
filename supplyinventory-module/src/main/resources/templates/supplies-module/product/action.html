@@ -19,26 +19,28 @@
     <details open>
         <summary>
             <span th:text="#{label.report.category.input.title}"></span>
-            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/categories/edit" title="More information" class="emoji-icon">ℹ️</a>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/categories/edit" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
 
         <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${product.id}, 'Product','/product/products')}"></th:block>
     </details>
-    <form th:action="@{/product}" method="post">
+    <form th:action="@{/product/product}" method="post">
         <th:block th:insert="~{fragments/elements/buttons::saveButtons}"></th:block>
-        <fieldset class="grid">
+        <fieldset>
             <input id="id" name="id" th:value="${product.id}" type="hidden"/>
             <input id="version" name="version" th:value="${product.version}" type="hidden"/>
-            <input id="delete" name="delete" th:value="${product.deleted}" type="hidden"/>
 
             <!-- General Information -->
             <legend>General Information</legend>
-            <th:block
-                    th:insert="~{fragments/elements/dropdown::propDropdown('deleted','label.costing.product.deleted',${product.deleted},${yesNoOptions}, true, '0')}" th:with="required=false"></th:block>
-            <th:block
-                    th:insert="~{fragments/elements/dropdown::dbDropdown('lookupProductCategory.id','label.costing.product.category', ${product.lookupProductCategory.id}, ${categories}, true,'0')}"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.costing.product.invoiceInformation','product.nomenclature','0')}"></th:block>
             <div class="grid">
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::dbDropdown('lookupProductCategory.id','label.costing.product.category', ${product.lookupProductCategory.id}, ${categories}, true,'0')}"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('nomenclature','label.costing.product.invoiceInformation','product.nomenclature','0')}"></th:block>
+            </div>
+            <div class="grid">
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('deleted','label.costing.product.deleted',${product.deleted},${yesNoOptions}, true, '0')}"
+                        th:with="required=false"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('salesPriceExTax','label.costing.product.cost',
                     ${#numbers.formatDecimal(product.salesPriceExTax, 1, 2, 'POINT')}, '0')}" th:with="type='number'"></th:block>
                 <th:block th:insert="~{fragments/elements/input::inputHtmlLift('processingFeeExTax','label.costing.product.processingFee',
@@ -46,7 +48,7 @@
                 <th:block th:insert="~{fragments/elements/dropdown::propDropdown('taxed','label.costing.product.taxedItem',${product.taxed},${taxTypes}, true, '0')}"></th:block>
             </div>
         </fieldset>
-        <fieldset class="grid">
+        <div class="grid">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('shortCode','label.costing.product.quickReferenceCode','product.shortCode','0')}"
                       th:with="required=false"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('barcode','label.costing.product.barcode','product.barcode','0')}" th:with="required=false"></th:block>
@@ -56,7 +58,7 @@
             <th:block
                     th:insert="~{fragments/elements/dropdown::propDropdown('spillage','label.costing.product.spillageAccounted',${product.hasSpillage},${yesNoOptions}, true, '0')}"
                     th:with="required=false"></th:block>
-        </fieldset>
+        </div>
         <!-- Tabs Sections -->
         <hr/>
         <br/>
@@ -83,7 +85,7 @@
                             th:with="required=false"></th:block>
                     <th:block
                             th:insert="~{fragments/elements/input::inputHtmlLift('intervalInWeeks','label.costing.product.intervalInWeeks','product.intervalInWeeks','0')}"
-                            th:with="type='number'"></th:block>
+                            th:with="type='number', required=false"></th:block>
                     <th:block
                             th:insert="~{fragments/elements/input::inputHtmlLift('rRemovePendingRemindersContaining','label.costing.product.removePendingReminders','product.rRemovePendingRemindersContaining','8')}"
                             th:with="required=false"></th:block>
@@ -101,18 +103,18 @@
                 </section>
                 <section class="panel" id="panel-certificate">
                     <div>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','0')}"
-                            th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','0')}"
-                            th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','0')}"
-                            th:with="required=false"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','0')}"
-                            th:with="type='date',required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/input::inputHtmlLift('certificateManufacturer','label.costing.product.manufacturer','product.certificateManufacturer','0')}"
+                                th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/input::inputHtmlLift('certificateType','label.costing.product.certificateType','product.certificateType','0')}"
+                                th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/input::inputHtmlLift('certificateSerialNumber','label.costing.product.serialNumber','product.certificateSerialNumber','0')}"
+                                th:with="required=false"></th:block>
+                        <th:block
+                                th:insert="~{fragments/elements/input::inputHtmlLift('certificateVaccineExpires','label.costing.product.expires','product.certificateVaccineExpires','0')}"
+                                th:with="type='date',required=false"></th:block>
                     </div>
                 </section>
                 <section class="panel" id="panel-instructions">
@@ -123,9 +125,10 @@
                     <label for="prescriptionLabel" th:text="#{label.costing.product.prescriptionLabel}"></label>
                     <textarea cols="80" id="prescriptionLabel" name="prescriptionLabel" rows="8" th:text="${product.prescriptionLabel}"></textarea>
                 </section>
-                <section class="panel"  id="panel-actions">
-                    <label for="deceasedPetPrompt" th:text="#{label.costing.product.deceasedPetPrompt}"></label>
-                    <label><input id="deceasedPetPrompt" name="deceasedPetPrompt" type="checkbox" th:checked="${product.deceasedPetPrompt}"></label>
+                <section class="panel" id="panel-actions">
+                    <th:block
+                            th:insert="~{fragments/elements/select::selectCheckBox('deceasedPetPrompt',#{label.costing.product.deceasedPetPrompt},${product.deceasedPetPrompt},'0')}"
+                            th:with="extraClass='verysmall align-center'"></th:block>
                 </section>
             </div>
         </div>

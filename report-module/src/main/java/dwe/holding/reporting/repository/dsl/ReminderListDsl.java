@@ -92,7 +92,8 @@ public class ReminderListDsl {
                 reminder.dueDate,
                 reminder.reminderText,
                 reminder.id,
-                reminder.originatingAppointmentId
+                reminder.originatingAppointmentId,
+                reminder.hasBeenNotified
         ));
 
         query.where(where)

@@ -1,4 +1,4 @@
-INSERT INTO admin_user_preferences
+INSERT INTO ADMIN_USER_IP
 (id,
  version,
  member_id,

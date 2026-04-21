@@ -5,6 +5,7 @@ import dwe.holding.customer.client.repository.PetRepository;
 import dwe.holding.reporting.model.MeasureIndicator;
 import dwe.holding.salesconsult.consult.repository.AppointmentRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-public class ReportIndicators {
+@Controller
+public class ReportIndicatorsController {
 
     private final CustomerRepository customerRepository;
     private final AppointmentRepository appointmentRepository;

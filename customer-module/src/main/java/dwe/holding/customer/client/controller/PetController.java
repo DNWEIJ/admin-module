@@ -99,6 +99,8 @@ public class PetController {
             redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             return "redirect:/customer/" + customerId + "/pets";
         }
+        redirect.addFlashAttribute("message", "label.saved");
+
         petRepository.save(copyPetFromForm(petForm,pet));
 
         final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
