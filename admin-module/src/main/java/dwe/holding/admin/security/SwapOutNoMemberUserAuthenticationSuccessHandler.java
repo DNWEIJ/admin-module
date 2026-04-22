@@ -23,7 +23,7 @@ public class SwapOutNoMemberUserAuthenticationSuccessHandler implements Authenti
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         AdminUserDetails userDetails = (AdminUserDetails) authentication.getPrincipal();
-        // first swap in a pseudo User so we will retrieve the memeberId when loading the full user
+        // first swap in a pseudo User so we will retrieve the memberId when loading the full user
         List<String> roles = List.of("dummy");
         userDetails.setUser(User.builder().member(
                                 Member.builder().id(userDetails.getUserNoMember().getMemberId()).build()

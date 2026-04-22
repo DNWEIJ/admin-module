@@ -33,7 +33,7 @@ public class HtmxNoteController {
 
     @PostMapping("/visit/customer/{customerId}/pet/{petId}/note")
     String saveNoteModal(@PathVariable Long customerId, @PathVariable Long petId, @ModelAttribute Note note, Model model, RedirectAttributes redirect, HttpServletResponse response) {
-        noteController.saveRecord(customerId, note, model, redirect);
+        noteController.saveRecord(customerId, note, redirect);
         if (redirect.getFlashAttributes().containsKey("message")) {
             model.addAttribute("message", redirect.getFlashAttributes().get("message"));
         } else {

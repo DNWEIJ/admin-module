@@ -97,7 +97,7 @@ public class PrintController {
 
 
     @GetMapping("/customer/{customerId}/print/estimate/{estimateId}")
-    String printEstminate(@PathVariable Long estimateId, @PathVariable Long customerId, Model model){
+    String printEstimate(@PathVariable Long estimateId, @PathVariable Long customerId, Model model) {
         Estimate estimate = estimateService.getEstimate(estimateId);
 
         CustomerService.Customer customer = customerService.searchCustomer(customerId);
