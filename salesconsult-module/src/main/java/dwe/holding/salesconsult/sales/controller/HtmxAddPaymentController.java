@@ -5,13 +5,11 @@ import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.repository.CustomerRepository;
 import dwe.holding.customer.client.service.CustomerFinancialInfo;
-import dwe.holding.customer.client.service.intrfce.FinancialServiceInterface;
 import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.Visit;
 import dwe.holding.salesconsult.consult.repository.VisitRepository;
 import dwe.holding.salesconsult.sales.Service.PaymentService;
 import dwe.holding.salesconsult.sales.model.Payment;
-import dwe.holding.salesconsult.sales.repository.PaymentRepository;
 import dwe.holding.shared.model.type.PaymentMethodEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -34,11 +32,9 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/sales")
 public class HtmxAddPaymentController {
-    private final PaymentRepository paymentRepository;
     private final VisitRepository visitRepository;
     private final CustomerRepository customerRepository;
     private final CustomerFinancialInfo customerFinancialInfo;
-    private final FinancialServiceInterface financialService;
     private final PaymentService paymentService;
     private final ObjectMapper objectMapper;
 
@@ -85,9 +81,6 @@ public class HtmxAddPaymentController {
 
         response.setHeader("HX-Trigger", "closeModal");
         return "sales-module/fragments/htmx/updatebalancelastpayment";
-    }
-
-    record PetRec(Long petId, String petName, BigDecimal amount) {
     }
 
     @Getter

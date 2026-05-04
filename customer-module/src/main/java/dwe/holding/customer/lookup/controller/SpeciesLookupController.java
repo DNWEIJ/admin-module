@@ -5,6 +5,7 @@ import dwe.holding.customer.client.model.lookup.LookupSpecies;
 import dwe.holding.customer.lookup.repository.SpeciesLookupRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,17 +52,18 @@ public class SpeciesLookupController {
 
     @PostMapping("lookup/specy")
     @Transactional
-    String saveRecord(LookupSpecies formSpecy, RedirectAttributes redirect) {
+    @CacheEvict("species")
+    public String saveRecord(LookupSpecies formSpecy, RedirectAttributes redirect) {
         if (formSpecy.isNew()) {
             speciesLookupRepository.save(
                     LookupSpecies.builder()
-                            .species(formSpecy.getSpecies())
+                            .specy(formSpecy.getSpecy())
                             .build()
             );
         } else {
             LookupSpecies specy = speciesLookupRepository.findById(formSpecy.getId()).orElseThrow();
             if (specy.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ) { //AutorisationUtils.getCurrentUserMid())) {
-                specy.setSpecies(formSpecy.getSpecies());
+                specy.setSpecy(formSpecy.getSpecy());
                 speciesLookupRepository.save(specy);
             } else {
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");

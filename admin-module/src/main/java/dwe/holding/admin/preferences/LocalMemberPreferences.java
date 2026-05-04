@@ -4,7 +4,11 @@ import dwe.holding.admin.model.type.AgendaTypeEnum;
 import dwe.holding.shared.model.type.PaymentMethodEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.Transient;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
@@ -38,7 +42,12 @@ public class LocalMemberPreferences {
     private List<Template> template = new ArrayList<>();
 
     public List<Template> getConsultTextTemplate(ObjectMapper objectMapper) {
-        return objectMapper.readValue(getConsultTextTemplate(), TemplatesResponse.class).getTemplates();
+        if (consultTextTemplate == null || consultTextTemplate.isEmpty() || consultTextTemplate.equals("[]")) {
+            return List.of(new Template(0,"","", true));
+        } else {
+            return objectMapper.readValue(getConsultTextTemplate(), new TypeReference<>() {
+            });
+        }
     }
 
     public void setConsultTextTemplate(ObjectMapper objectMapper) {

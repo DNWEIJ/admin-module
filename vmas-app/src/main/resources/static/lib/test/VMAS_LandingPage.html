@@ -1,0 +1,428 @@
+<!-- chat gtp prompt -->
+<!--
+Create a **premium, production-quality landing page** for a SaaS product called:
+
+**VMAS — Veterinary Management Application System**
+
+---
+
+### Tech constraints
+
+* Use **pure HTML + PicoCSS (v2)**
+* No frameworks (no React, no Tailwind)
+* Minimal custom CSS allowed (for polish: glassmorphism, gradients)
+* Use **vanilla JavaScript** for interactions
+
+---
+
+### Core requirement (IMPORTANT)
+
+The page must support **multi-language (English + Dutch)** with a **language switcher**.
+
+#### i18n requirements:
+
+* Provide a **language toggle (EN / NL)** in the navigation
+* All visible text must switch dynamically (no page reload)
+* Use a simple JS-based dictionary object like:
+
+  * `translations = { en: {...}, nl: {...} }`
+* Default language: **English**
+* Dutch must be **correct and natural**, not literal translation
+
+---
+
+### Design direction
+
+* Premium SaaS (Stripe / Linear level)
+* Clean, minimal, high-end
+* Use:
+
+  * soft gradients
+  * glassmorphism cards
+  * strong typography hierarchy
+* Avoid generic template feel
+
+---
+
+### Target audience
+
+* Veterinary clinics
+* Use **domain-specific language**:
+
+  * patients (pets)
+  * owners
+  * consults
+  * vaccinations
+  * inventory (medication, supplies)
+
+---
+
+### Required sections
+
+#### 1. Hero
+
+* Strong headline (reduce admin, improve care, increase revenue)
+* CTA: “Book Demo”
+* KPI strip:
+
+  * reduce no-shows
+  * improve revenue capture
+  * vaccination tracking
+
+#### 2. Product Preview
+
+* Premium mockup container (placeholder)
+
+#### 3. Features (workflow-based)
+
+* Patient timeline (medical history)
+* Consult agenda (per owner/pet)
+* Vaccination automation
+* Inventory & supply tracking
+* Billing, invoices, reminders
+
+#### 4. Carousel (MANDATORY)
+
+* Working carousel (vanilla JS)
+* Slides:
+
+  * screenshot placeholders
+  * one video slide
+* Include:
+
+  * Prev / Next buttons
+* Video slide must:
+
+  * open **modal**
+  * embed **YouTube iframe**
+
+#### 5. “Day in the Clinic”
+
+* Timeline:
+
+  * Morning prep
+  * Consult
+  * Billing
+  * Follow-ups
+* Must feel realistic to vets
+
+#### 6. Pricing
+
+* Per vet pricing
+* Per clinic pricing
+* Enterprise tier
+
+#### 7. Compliance
+
+* GDPR
+* Medical record retention
+* Role-based access
+
+#### 8. Demo Form
+
+* Name
+* Email
+* Clinic name
+
+#### 9. Footer
+
+---
+
+### Functional requirements
+
+* Language switch must update ALL text live
+* Carousel must work
+* Modal video must open/close correctly
+* Fully responsive
+* Clean semantic HTML
+
+---
+
+### Tone
+
+* Professional, clinical, precise
+* No hype or fluff
+* Avoid generic SaaS phrases
+
+---
+Create a **premium, production-quality landing page** for a SaaS product called:
+
+**VMAS — Veterinary Management Application System**
+
+---
+
+### Tech constraints
+
+* Use **pure HTML + PicoCSS (v2)**
+* No frameworks (no React, no Tailwind)
+* Minimal custom CSS allowed (for polish: glassmorphism, gradients)
+* Use **vanilla JavaScript** for interactions
+
+---
+
+### Core requirement (IMPORTANT)
+
+The page must support **multi-language (English + Dutch)** with a **language switcher**.
+
+#### i18n requirements:
+
+* Provide a **language toggle (EN / NL)** in the navigation
+* All visible text must switch dynamically (no page reload)
+* Use a simple JS-based dictionary object like:
+
+  * `translations = { en: {...}, nl: {...} }`
+* Default language: **English**
+* Dutch must be **correct and natural**, not literal translation
+
+---
+
+### Design direction
+
+* Premium SaaS (Stripe / Linear level)
+* Clean, minimal, high-end
+* Use:
+
+  * soft gradients
+  * glassmorphism cards
+  * strong typography hierarchy
+* Avoid generic template feel
+
+---
+
+### Target audience
+
+* Veterinary clinics
+* Use **domain-specific language**:
+
+  * patients (pets)
+  * owners
+  * consults
+  * vaccinations
+  * inventory (medication, supplies)
+
+---
+
+### Required sections
+
+#### 1. Hero
+
+* Strong headline (reduce admin, improve care, increase revenue)
+* CTA: “Book Demo”
+* KPI strip:
+
+  * reduce no-shows
+  * improve revenue capture
+  * vaccination tracking
+
+#### 2. Product Preview
+
+* Premium mockup container (placeholder)
+
+#### 3. Features (workflow-based)
+
+* Patient timeline (medical history)
+* Consult agenda (per owner/pet)
+* Vaccination automation
+* Inventory & supply tracking
+* Billing, invoices, reminders
+
+#### 4. Carousel (MANDATORY)
+
+* Working carousel (vanilla JS)
+* Slides:
+
+  * screenshot placeholders
+  * one video slide
+* Include:
+
+  * Prev / Next buttons
+* Video slide must:
+
+  * open **modal**
+  * embed **YouTube iframe**
+
+#### 5. “Day in the Clinic”
+
+* Timeline:
+
+  * Morning prep
+  * Consult
+  * Billing
+  * Follow-ups
+* Must feel realistic to vets
+
+#### 6. Pricing
+
+* Per vet pricing
+* Per clinic pricing
+* Enterprise tier
+
+#### 7. Compliance
+
+* GDPR
+* Medical record retention
+* Role-based access
+
+#### 8. Demo Form
+
+* Name
+* Email
+* Clinic name
+
+#### 9. Footer
+
+---
+
+### Functional requirements
+
+* Language switch must update ALL text live
+* Carousel must work
+* Modal video must open/close correctly
+* Fully responsive
+* Clean semantic HTML
+
+---
+
+### Tone
+
+* Professional, clinical, precise
+* No hype or fluff
+* Avoid generic SaaS phrases
+
+---
+
+### Output
+
+* Return a **single complete HTML file**
+* No explanations, only code
+
+
+-->
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VMAS — Veterinary Management Application System</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2/css/pico.min.css">
+    <style>
+        :root{--primary:#2f7d6b}
+        body{background:radial-gradient(circle at top,#f4f7ff,#eef2f6)}
+        header{padding:5rem 0 3rem;text-align:center}
+        .glass{background:rgba(255,255,255,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.5);border-radius:14px}
+        .mock{height:320px;display:flex;align-items:center;justify-content:center}
+        .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem}
+        .carousel{overflow:hidden}
+        .track{display:flex;transition:.4s}
+        .slide{min-width:100%;padding:.5rem}
+        dialog iframe{width:100%;height:420px;border:none}
+        footer{text-align:center;opacity:.6;margin-top:3rem}
+    </style>
+</head>
+<body>
+
+<nav class="container-fluid">
+    <ul><li><strong>VMAS</strong></li></ul>
+    <ul>
+        <li><a href="#features" data-i18n="nav_features"></a></li>
+        <li><a href="#pricing" data-i18n="nav_pricing"></a></li>
+        <li><a href="#demo" role="button" data-i18n="nav_demo"></a></li>
+        <li>
+            <select id="lang">
+                <option value="en">EN</option>
+                <option value="nl">NL</option>
+            </select>
+        </li>
+    </ul>
+</nav>
+
+<header class="container">
+    <h1 data-i18n="hero_title"></h1>
+    <p data-i18n="hero_sub"></p>
+    <a href="#demo" role="button" data-i18n="cta"></a>
+</header>
+
+<section class="container">
+    <div class="glass mock" data-i18n="preview"></div>
+</section>
+
+<section id="features" class="container">
+    <h2 data-i18n="features_title"></h2>
+    <div class="grid-auto">
+        <article class="glass"><h3 data-i18n="f1"></h3><p data-i18n="f1d"></p></article>
+        <article class="glass"><h3 data-i18n="f2"></h3><p data-i18n="f2d"></p></article>
+        <article class="glass"><h3 data-i18n="f3"></h3><p data-i18n="f3d"></p></article>
+        <article class="glass"><h3 data-i18n="f4"></h3><p data-i18n="f4d"></p></article>
+        <article class="glass"><h3 data-i18n="f5"></h3><p data-i18n="f5d"></p></article>
+    </div>
+</section>
+
+<section class="container">
+    <h2 data-i18n="carousel_title"></h2>
+    <div class="carousel" data-carousel>
+        <div class="track">
+            <div class="slide"><div class="glass mock">Dashboard</div></div>
+            <div class="slide"><div class="glass mock">Patient</div></div>
+            <div class="slide"><div class="glass mock">Agenda</div></div>
+            <div class="slide"><div class="glass mock"><button onclick="openVideo()" data-i18n="watch"></button></div></div>
+        </div>
+        <nav>
+            <button data-prev>Prev</button>
+            <button data-next>Next</button>
+        </nav>
+    </div>
+</section>
+
+<section id="pricing" class="container">
+    <h2 data-i18n="pricing"></h2>
+    <div class="grid">
+        <article class="glass"><h3 data-i18n="p1"></h3><p>€29</p></article>
+        <article class="glass"><h3 data-i18n="p2"></h3><p>€79</p></article>
+        <article class="glass"><h3 data-i18n="p3"></h3><p>Custom</p></article>
+    </div>
+</section>
+
+<section id="demo" class="container">
+    <h2 data-i18n="demo"></h2>
+    <form class="glass">
+        <input type="text" placeholder="Name">
+        <input type="email" placeholder="Email">
+        <input type="text" placeholder="Clinic">
+        <button data-i18n="submit"></button>
+    </form>
+</section>
+
+<dialog id="video">
+    <article>
+        <a href="#" onclick="closeVideo()">X</a>
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+    </article>
+</dialog>
+
+<footer class="container">© VMAS 2026</footer>
+
+<script>
+    const t={
+        en:{nav_features:"Features",nav_pricing:"Pricing",nav_demo:"Demo",hero_title:"Reduce Admin. Improve Care.",hero_sub:"Veterinary workflows in one system.",cta:"Book Demo",preview:"App Preview",features_title:"Clinic Workflow",f1:"Patient Timeline",f1d:"Full medical history.",f2:"Agenda",f2d:"Owner + pet scheduling.",f3:"Vaccination",f3d:"Automated reminders.",f4:"Inventory",f4d:"Track supplies.",f5:"Billing",f5d:"Invoices + reminders.",carousel_title:"Product",watch:"Watch Video",pricing:"Pricing",p1:"Per Vet",p2:"Per Clinic",p3:"Enterprise",demo:"Request Demo",submit:"Submit"},
+        nl:{nav_features:"Functies",nav_pricing:"Prijzen",nav_demo:"Demo",hero_title:"Minder administratie. Betere zorg.",hero_sub:"Alles voor dierenartsen in één systeem.",cta:"Demo aanvragen",preview:"Applicatie voorbeeld",features_title:"Werkproces",f1:"Patiënt dossier",f1d:"Volledige medische historie.",f2:"Agenda",f2d:"Planning per eigenaar en dier.",f3:"Vaccinaties",f3d:"Automatische herinneringen.",f4:"Voorraad",f4d:"Beheer van medicatie.",f5:"Facturatie",f5d:"Facturen en herinneringen.",carousel_title:"Product",watch:"Bekijk video",pricing:"Prijzen",p1:"Per dierenarts",p2:"Per kliniek",p3:"Enterprise",demo:"Demo aanvragen",submit:"Versturen"}
+    };
+
+    function setLang(l){document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t[l][e.dataset.i18n])}
+    setLang('en');
+    document.getElementById('lang').onchange=e=>setLang(e.target.value);
+
+    const c=document.querySelector('[data-carousel]');
+    let i=0;const slides=c.querySelectorAll('.slide');
+    const track=c.querySelector('.track');
+    function update(){track.style.transform=`translateX(-${i*100}%)`}
+    c.querySelector('[data-next]').onclick=()=>{i=(i+1)%slides.length;update()}
+    c.querySelector('[data-prev]').onclick=()=>{i=(i-1+slides.length)%slides.length;update()}
+
+    const modal=document.getElementById('video');
+    function openVideo(){modal.showModal()}
+    function closeVideo(){modal.close()}
+</script>
+
+</body>
+</html>

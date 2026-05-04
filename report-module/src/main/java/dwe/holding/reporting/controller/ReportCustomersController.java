@@ -49,7 +49,7 @@ public class ReportCustomersController {
                 .addAttribute("ynvaluesList", YesNoEnum.getWebListDoNotCare())
                 .addAttribute("sexTypeList", SexTypeEnum.getWebListDoNotCare())
                 .addAttribute("species", lookupSpeciesRepository.findByMemberId(AutorisationUtils.getCurrentUserMid())
-                        .stream().map(f -> new PresentationElement(f.getId(), f.getSpecies()))
+                        .stream().map(f -> new PresentationElement(f.getId(), f.getSpecy()))
                         .sorted(comparing(PresentationElement::getName)).toList())
                 .addAttribute("customers", (isThereInput(docForm)) ? entityListDsls.findCustomers(AutorisationUtils.getCurrentUserMid(), docForm) : List.of())
                 // for selecting products, we use COSTING type, so we do not have an input field; rather then making a new value again.
@@ -63,10 +63,10 @@ public class ReportCustomersController {
     }
 
     @PostMapping("customerlist")
-    String sendpMailPreview(Model model,  @RequestParam List<String> petRec, @RequestParam List<Long> selectedRec) {
+    String sendpMailPreview(@RequestParam List<String> petRec, @RequestParam List<Long> selectedRec) {
 
         Set<Long> selectedSet = new HashSet<>(selectedRec);
-
+        // TODO find out what to do
         Map<Long, List<Long>> result = petRec.stream()
                 .map(s -> s.split("_"))
                 .filter(arr -> arr.length == 2)

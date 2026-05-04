@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ZipCodeApiTest {
+class ZipCodeApiClientTest {
 
-    private final ZipCodeApi api = new ZipCodeApi();
+    private final ZipCodeApiClient api = new ZipCodeApiClient();
 
     @Test
     void callsRealOpenPostcodeApi_Succes() {
-        ZipCodeApi.Address address =
+        ZipCodeApiClient.Address address =
                 api.getAddress("2215MT", "18").get();
 
         assertThat(address).isNotNull();
@@ -21,7 +21,7 @@ class ZipCodeApiTest {
 
     @Test
     void callsRealOpenPostcodeApi_NotFound() {
-        ZipCodeApi.Address address = api.getAddress("2215MT", "1800").get();
+        ZipCodeApiClient.Address address = api.getAddress("2215MT", "1800").get();
         assertThat(address).isNotNull();
         assertThat(address.street()).isNull();
         assertThat(address.city()).isNull();
@@ -30,7 +30,7 @@ class ZipCodeApiTest {
 
     @Test
     void callsRealOpenPostcodeStreetApi_Succes() {
-        ZipCodeApi.Address address =
+        ZipCodeApiClient.Address address =
                 api.getAddressViaStreetAndCity("Jacob van Lennepkade","2-1", "Amsterdam").get();
         assertThat(address).isNotNull();
         assertThat(address.street()).isNotBlank();

@@ -6,18 +6,27 @@
         </summary>
 
 
-        <div class="threecolumn-spread">
+        <style>
+            #infoBalancePayment.threecolumn-spread {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        </style>
+        <div id="infoBalancePayment" class="threecolumn-spread">
             <div class="one">
                 <div th:if="${visit != null and visit.appointment != null}"
-                     th:text="${#temporals.format(visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm') + ' (' +appointment.id+ ')'}">
+                     th:text="|${#temporals.format(visit.appointment.visitDateTime, 'dd-MM-yyyy HH:mm')} (${visit.appointment.id} #{__${visit.getStatusLabel()}__})|">
                 </div>
             </div>
             <div class="two">
-                <div id="balancePaymentReplace">
+                <div id="balancePaymentReplace">    
                     <th:block th:replace="~{::balanceLastPayment}"/>
                 </div>
             </div>
-            <div class="three">Payment connected: TODO</div>
+
+            <th:block th:if="${attachedPayment != null}">
+                <div class="three">[[#{visit.attached.payment}]] <a target="_blank" th:href="${'/sales/customer/'+ customerId + '/payment/'+ attachedPayment.id}"
+                     th:text="${'€ ' + #numbers.formatDecimal(attachedPayment.amount, 1, 2, 'POINT') +' ('+ #temporals.format(attachedPayment.paymentDate, 'dd-MM-yyyy') + ')'}"></a></div>
+            </th:block>
         </div>
 
         <div th:if="${!backbutton and pet == null}" class="grid">
@@ -80,32 +89,20 @@
 
 <th:block th:fragment="customerInfo">
     <th:block th:if="${customer != null}">
-        <script>
-            function copyToClipboard(el) {
-                const span = el.previousElementSibling;
-                if (!span) return;
-                const text = span.innerText;
-                navigator.clipboard.writeText(text);
-                span.innerText = 'Copied!';
-                setTimeout(() => span.innerText = text, 800);
-            }
-        </script>
         <h6>
             <a th:hx-get="${'/customer/customer/'+ customer.id}" hx-target="#modal-container" hx-swap="innerHTML"
                th:with="colorClass=${customer.status.name.equals('LATE_PAYMENT') or customer.status.name.equals('INCASSO')}?'red':''" th:class="${colorClass}"
                th:utext="${customer.customerName} +' ('+ ${customer.id} + ' Status: '+ ${customer.status.databaseField} + ')'">
             </a>
         </h6>
-        <div><span id="copy-customer-email"
-                   th:text="${#strings.isEmpty(customer.email)} ? #{customer.email.no_email} : ${customer.email}"
-                   th:class="${#strings.isEmpty(customer.email)} ? 'red-text' : ''"></span>
-            <a th:if="${!#strings.isEmpty(customer.email)}" href="javascript:void(0);" onclick="copyToClipboard(this)"
-               title="Copy email">📋</a>
+        <div>
+            <span th:if="${#strings.isEmpty(customer.email)}" th:text="#{customer.email.no_email}" class="red-text"></span>
+            <span th:unless="${#strings.isEmpty(customer.email)}" data-copy-element="Email" th:text="${customer.email}"></span>
+
             <a th:if="${!#strings.isEmpty(customer.email)}" title="Send email" th:href="'mailto:' + ${customer.email}">✉️</a>
         </div>
         <div th:if="${!#strings.isEmpty(customer.address2)  and !#strings.isEmpty(customer.zipCode)}">
-            <span id="copy-customer-address" th:text="${customer.address2}+', '+ ${customer.zipCode} + '&nbsp;&nbsp;' +${customer.city}"></span>
-            <a href="javascript:void(0);" onclick="copyToClipboard(this)" title="Copy address">📋</a>
+            <span data-copy-element="Address" th:text="${customer.address2}+', '+ ${customer.zipCode} + '&nbsp;&nbsp;' +${customer.city}"></span>
         </div>
         <div th:text="${(customer.homePhone != null ? customer.homePhone + ', ' : '') + (customer.workPhone != null ? customer.workPhone + ', ' : '') + (customer.mobilePhone ?: '')}">
         </div>

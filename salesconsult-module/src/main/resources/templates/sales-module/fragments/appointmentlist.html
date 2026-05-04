@@ -65,7 +65,7 @@
         document.addEventListener('DOMContentLoaded', () => tableShowMax5Lines([[${visit.id}]]))
 
     </script>
-    <div id="overlay"
+    <div id="financialAndPetDetailsPopup"
          style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
             z-index:1000; display:none; background:white; padding:20px;">
     </div>
@@ -84,7 +84,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:if="${appointmentList.size == 0}">
+
+                <th:block th:if="${appointmentList.isEmpty == 0}">
                     <tr>
                         <td>&nbsp;</td>
                         <td colspan="6">[[#{label.not-found}]]</td>
@@ -95,10 +96,10 @@
                         <tr th:id="${visit.id}"
                             th:hx-get="${'/consult/visit/customer/' + visit.pet.customer.id} + '/petinfo'"
                             hx-trigger="mouseenter delay:1s, mouseleave"
-                            hx-target="#overlay"
+                            hx-target="#financialAndPetDetailsPopup"
                             hx-swap="innerHTML"
-                            hx-on:mouseenter="document.getElementById('overlay').style.display='block'"
-                            hx-on:mouseleave="document.getElementById('overlay').style.display='none'; this.removeAttribute('hx-request')">
+                            hx-on:mouseenter="document.getElementById('financialAndPetDetailsPopup').style.display='block'"
+                            hx-on:mouseleave="document.getElementById('financialAndPetDetailsPopup').style.display='none'; this.removeAttribute('hx-request')">
                             <td>
                                 <a th:href="'/consult/visit/customer/'+ ${customerId}+ '/visit/'+ ${visit.id} + '?callFrom=' + ${callFrom}">
                                      <span th:text="${#temporals.format(app.visitDateTime, 'dd-MM-yyyy HH:mm')}" th:remove="tag"></span>

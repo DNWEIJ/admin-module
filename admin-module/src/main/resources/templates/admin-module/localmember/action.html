@@ -16,14 +16,11 @@
 
         }
     </style>
-    <title>Sub Member Settings</title>
+    <title th:text="#{label.localmember.title}"></title>
 </head>
 <body>
 
 <section layout:fragment="content">
-
-    <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, 'Local Member','/admin/localmembers')}"></th:block>
-
     <style>
         #tab-general:checked ~ .panels .panel:nth-child(1),
         #tab-pref:checked ~ .panels .panel:nth-child(2),
@@ -35,6 +32,14 @@
             max-height: 100%
         }
     </style>
+
+    <details id="localMemberId" open>
+        <summary>
+            <span th:text="#{label.localmember.title}"></span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/admin/localmember" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
+        </summary>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitle(${id}, #{label.localmember.title},'/admin/localmembers')}"></th:block>
+    </details>
 
     <form th:action="@{/admin/localmember}" method="post" onsubmit="document.getElementById('contentToSave').value = window.editor.getData();">
         <input type="hidden" id="contentToSave" name="pref.firstPageMessage">
@@ -50,7 +55,7 @@
             <label for="tab-infotext" th:text="#{label.memberlocal.infotext}"></label>
 
             <div class="panels">
-                <section class="panel" id="">
+                <section class="panel">
                     <div>
                         <th:block th:insert="~{admin-module/localmember/snippets/general}"></th:block>
                     </div>
@@ -61,11 +66,14 @@
                     </div>
                 </section>
                 <section class="panel">
-                    <script>
-                        let editor;
-                        ClassicEditor.create(document.querySelector('#editor')).then(e => editor = e);
-                    </script>
                     <div id="editor" th:utext="${pref.firstPageMessage}"></div>
+<!--                    <script>-->
+<!--                        document.addEventListener('DOMContentLoaded', function(){-->
+<!--                            let editor;-->
+<!--                            ClassicEditor.create(document.querySelector('#editor')).then(e => editor = e);-->
+<!--                        })-->
+<!--                    </script>-->
+
                 </section>
             </div>
         </div>

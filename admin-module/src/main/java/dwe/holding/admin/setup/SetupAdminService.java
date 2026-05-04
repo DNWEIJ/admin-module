@@ -33,7 +33,13 @@ public class SetupAdminService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
 
+
     @Transactional
+    public void createFunctionList() {
+
+    }
+
+        @Transactional
     public void updateDaniel() {
 
         UserNoMember userNoMember = userNoMemberRepository.findByAccount("daniel").stream().filter(usr -> usr.getMemberId().equals(77L)).findFirst().orElseThrow();

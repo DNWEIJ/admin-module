@@ -84,6 +84,12 @@
             </tr>
             </thead>
             <tbody>
+            <th:block th:if="${#lists.size(reminders) == 0}">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="6">[[#{label.not-found}]]</td>
+                </tr>
+            </th:block>
             <tr th:each="rec : ${reminders}">
                 <td><input role="switch" type="checkbox" name="reminderSelected" th:value="${rec.reminderId}"/></td>
                 <td th:text="#{__${rec.hasBeenNotified.label}__}"></td>
@@ -93,7 +99,10 @@
                 <td th:text="${rec.email}"></td>
                 <td th:text="${rec.mobilePhone + '/'+rec.workPhone}"></td>
                 <td th:text="${rec.petName + ' (' + rec.species + '/' +rec.breed +')'}"></td>
-                <td> <a th:href=" ${rec.originatingAppointmentId}"></td>
+                <td>
+                    <a th:if="${rec.originatingAppointmentId != -1}" th:href="${'/consult/visit/customer/'+ rec.customerId+'/appointment/'+ rec.originatingAppointmentId+'/pet/'+ rec.petId+'?callFrom=customer'}" target="_blank" th:text="${rec.originatingAppointmentId}"></a>
+                    <th:block th:unless="${rec.originatingAppointmentId != -1}"></th:block>
+                </td>
             </tr>
             </tbody>
             <tfoot>

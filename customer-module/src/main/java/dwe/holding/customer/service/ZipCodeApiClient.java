@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ZipCodeApi {
+public class ZipCodeApiClient {
     private final RestClient restClient = RestClient.create();
 
     public Optional<Address> getAddress(String ZipCode, String houseNumber) {
@@ -82,10 +82,6 @@ public class ZipCodeApi {
 
     public record AddressErrors(String error,
                                 List<String> suggestions
-    ) {
-    }
-
-    public record AddressZipCodes(List<String> postcodes
     ) {
     }
 

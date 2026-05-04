@@ -12,6 +12,7 @@
     <table class=" striped" id="visit-table" data-no-export>
         <thead>
         <tr>
+            <th>ID</th>
             <th class="asc" th:text="#{visit.header.visitDate}"></th>
             <th th:text="#{visit.headerlist.status}"></th>
             <th th:text="#{visit.headerlist.totalamount}"></th>
@@ -22,6 +23,7 @@
         </thead>
         <tbody>
         <tr th:each="visit : ${visits}">
+            <td th:text="${visit.id}"></td>
             <td  th:attr="data-sort-value=${visit.appointmentVisitDateTime}">
                 <th:block th:if="${visit.appointmentOTC.booleanValue}">
                 <a th:href="'/sales/otc/customer/'+ ${customerId} + '/visit/'+ ${visit.id} + '?callFrom=customer'"

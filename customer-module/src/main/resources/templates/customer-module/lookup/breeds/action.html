@@ -6,7 +6,7 @@
 <section layout:fragment="content">
     <div th:replace="~{customer-module/fragments/lookup/links}"></div>
     <th:block
-            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${breed.id}, #{label.title.breeds},'/customer/lookup/breeds','')}"></th:block>
+            th:insert="~{fragments/elements/pagetitle::pageTitleCreateThreePlusSave(${breed.id}, #{label.title.breeds},'/customer/lookup/species','')}"></th:block>
 
     <form id="createForm" th:action="@{/customer/lookup/breed}" method="post">
 
@@ -15,10 +15,10 @@
 
         <fieldset class="grid">
             <div>
-                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesId','', ${breed.species.id}, ${species}, true,'-1')}"></th:block>
+                <th:block th:insert="~{fragments/elements/dropdown::dbDropdown('speciesId','label.title.species', ${breed.species.id}, ${species}, true,'-1')}"></th:block>
             </div>
             <div>
-                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('species','label.title.species','breed.breed','1')}"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('species','label.title.breeds','breed.breed','1')}"></th:block>
             </div>
         </fieldset>
     </form>

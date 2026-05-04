@@ -30,7 +30,7 @@
     </form>
     </th:block>
 
-    <table class="striped" id="show-table" data-no-export>
+    <table class="striped" id="show-table" >
         <thead>
         <tr>
             <th class="asc" th:text="#{label.refund.refundDate}"></th>
@@ -41,6 +41,11 @@
         </tr>
         </thead>
         <tbody>
+        <th:block th:if="${#lists.size(refunds) == 0}">
+            <tr>
+                <td colspan="4">[[#{label.not-found}]]</td>
+            </tr>
+        </th:block>
         <th:block th:each="refund : ${refunds}">
             <tr>
                 <td th:attr="data-sort-value=${refund.refundDate}">

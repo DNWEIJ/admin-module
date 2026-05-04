@@ -43,4 +43,7 @@ public class Payment extends LocalAndMemberBaseBO {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<PaymentVisit> paymentVisits = new HashSet<>(0);
+
+    @Transient
+    BigDecimal balanceFromDate = BigDecimal.ZERO;
 }

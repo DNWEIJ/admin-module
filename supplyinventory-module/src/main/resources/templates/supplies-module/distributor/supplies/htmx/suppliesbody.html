@@ -1,5 +1,11 @@
 <th:block th:fragment="suppliesbody(isFromHere)">
     <tbody id="supplyItemsTable">
+    <th:block th:if="${#lists.size(supplies) == 0}">
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="6">[[#{label.not-found}]]</td>
+        </tr>
+    </th:block>
     <th:block th:each="supply : ${supplies}">
         <th:block th:replace="~{this::readonlyTR(supply=${supply}, isFromHere=${isFromHere})}"></th:block>
     </th:block>

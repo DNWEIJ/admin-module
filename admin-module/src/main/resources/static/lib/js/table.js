@@ -10,6 +10,10 @@
         let lastHoveredIndex = null;
         let currentHighlight = [];
 
+        let startX = 0;
+        let startY = 0;
+        let dragActivated = false;
+
         function getRows() {
             return Array.from(tableElement.querySelectorAll("tbody tr"));
         }
@@ -45,6 +49,8 @@
         }
 
         tableElement.addEventListener('mousedown', (e) => {
+            if (e.target.matches('input[type="checkbox"]')) return;
+
             const row = e.target.closest('tbody tr');
             if (!row || e.target.closest('a, button')) return;
 
@@ -53,12 +59,25 @@
 
             isMouseDown = true;
             anchorIndex = index;
+
+            startX = e.clientX;
+            startY = e.clientY;
+            dragActivated = false;
+
             highlightRange(index, index);
             e.preventDefault();
         });
 
         tableElement.addEventListener('mouseenter', (e) => {
             if (!isMouseDown) return;
+
+            if (!dragActivated) {
+                const dx = Math.abs(e.clientX - startX);
+                const dy = Math.abs(e.clientY - startY);
+
+                if (dx < 3 && dy < 3) return;
+                dragActivated = true;
+            }
 
             const row = e.target.closest('tbody tr');
             if (!row) return;
@@ -69,6 +88,8 @@
         }, true);
 
         tableElement.addEventListener('click', (e) => {
+            if (e.target.matches('input[type="checkbox"]')) return;
+
             const row = e.target.closest('tbody tr');
             if (!row || e.target.closest('a, button')) return;
 
@@ -80,15 +101,18 @@
 
         document.addEventListener('mouseup', () => {
             if (isMouseDown) {
-                commitSelection();
+                if (dragActivated) {
+                    commitSelection();
+                }
                 isMouseDown = false;
                 anchorIndex = null;
                 lastHoveredIndex = null;
+                dragActivated = false;
             }
         });
     }
-
-    function initEnableTableMultiSelect(){
+    
+    function initEnableTableMultiSelect() {
         const tables = document.querySelectorAll('table[data-multi-select]')
         tables.forEach(table => {
             enableTableMultiSelect(table)
@@ -96,7 +120,7 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initEnableTableMultiSelect()
         })
     } else {
@@ -197,8 +221,8 @@ function sortingTables() {
             const bNum = parseFloat(bText);
 
             return newDirection === "asc"
-                ? aText.localeCompare(bText, undefined, { numeric: true })
-                : bText.localeCompare(aText, undefined, { numeric: true });
+                ? aText.localeCompare(bText, undefined, {numeric: true})
+                : bText.localeCompare(aText, undefined, {numeric: true});
         });
 
         // Re-append sorted rows
@@ -212,9 +236,9 @@ function sortingTables() {
 }
 
 
-
 function enableTableKeyboardNavigation(table) {
     let currentRow = null;
+
     function setActiveRow(row) {
         if (!row) return;
 
@@ -224,7 +248,7 @@ function enableTableKeyboardNavigation(table) {
 
         currentRow = row;
         currentRow.classList.add('table-row-active');
-        currentRow.scrollIntoView({ block: 'nearest' });
+        currentRow.scrollIntoView({block: 'nearest'});
     }
 
     // Click to activate row

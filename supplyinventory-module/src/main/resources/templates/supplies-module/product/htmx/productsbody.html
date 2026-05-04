@@ -1,5 +1,11 @@
 <th:block th:fragment="productsbody">
     <tbody id="lineItemsTable">
+    <th:block th:if="${#lists.size(products) == 0}">
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="6">[[#{label.not-found}]]</td>
+        </tr>
+    </th:block>
     <th:block th:unless="${#lists.size(products) == 0}">
         <th:block th:each="product : ${products}">
             <th:block th:replace="~{this::readonlyTR(product=${product})}"></th:block>

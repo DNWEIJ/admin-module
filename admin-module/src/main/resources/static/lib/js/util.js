@@ -1,3 +1,27 @@
+function copyToClipboard(el) {
+    const ref = el.previousElementSibling;
+    if (!ref) return;
+    // input or text element
+    const originalText = ref.value !== undefined ? ref.value : ref.innerText;
+    navigator.clipboard.writeText(originalText);
+    if (ref.value !== undefined) {
+        ref.value = 'Copied!';
+        setTimeout(() => ref.value = originalText, 800);
+    } else {
+        ref.innerText = 'Copied!';
+        setTimeout(() => ref.innerText = originalText, 800);
+    }
+}
+function setupCopyClipBoard() {
+    document.querySelectorAll('[data-copy-element]').forEach(el => {
+        el.insertAdjacentHTML('afterend',
+            `<a  title="Copy ${el.dataset.copyElement}">📋</a>`
+        );
+        const button = el.nextElementSibling;
+        button.onclick = () => copyToClipboard(button);
+    });
+}
+
 function toggleAllCheckBoxesInSurroundingElement(masterCheckbox, surroundingElement) {
 
     const fieldset = masterCheckbox.closest(surroundingElement)
@@ -33,9 +57,9 @@ function setupEventSource() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-
     // setupEventSource()
-    
+    setupCopyClipBoard()
+
     document.body.addEventListener("refreshPage", function (evt) {
         const detail = evt.detail || ''
         const url = detail.url

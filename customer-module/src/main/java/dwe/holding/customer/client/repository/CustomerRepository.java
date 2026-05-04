@@ -35,7 +35,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
                 SELECT c FROM Customer c
                 WHERE LOWER(c.lastName) LIKE LOWER(CONCAT(:prefix, '%'))
                   AND c.memberId = :currentUserMid
-                ORDER BY 
+                ORDER BY
                   CASE WHEN LOWER(c.lastName) LIKE LOWER(CONCAT(:prefix, '%')) THEN 0 ELSE 1 END,
                   c.lastName ASC,
                   c.firstName ASC
@@ -46,7 +46,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
                 SELECT c FROM Customer c
                 WHERE LOWER(c.lastName) LIKE LOWER(CONCAT('%',CONCAT(:prefix, '%')))
                   AND c.memberId = :currentUserMid
-                ORDER BY 
+                ORDER BY
                   CASE WHEN LOWER(c.lastName) LIKE LOWER(CONCAT('%',CONCAT(:prefix, '%'))) THEN 0 ELSE 1 END,
                   c.lastName ASC,
                   c.firstName ASC
@@ -75,7 +75,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query(value = """
             SELECT YEAR(c.addedOn) as year, COUNT(DISTINCT c.id) as customers
-            FROM Customer c 
+            FROM Customer c
             JOIN c.pets p
             WHERE c.memberId = :memberId
             GROUP BY YEAR(c.addedOn)
@@ -84,7 +84,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Object[]> countCustomersPerYear(@Param("memberId") Long memberId);
 
     @Query(value = """
-            SELECT COUNT(DISTINCT p.customer.id) 
+            SELECT COUNT(DISTINCT p.customer.id)
             FROM Appointment a
             JOIN a.visits v 
             JOIN v.pet p
@@ -98,7 +98,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Long countNewCustomers(LocalDateTime customerFrom, LocalDateTime customerTill,LocalDateTime appointmentFrom,  LocalDateTime appointmentTill, Long memberId);
 
     @Query(value = """
-            SELECT COUNT(DISTINCT p.customer.id) 
+            SELECT COUNT(DISTINCT p.customer.id)
                     FROM Appointment a
             JOIN a.visits v 
             JOIN v.pet p
@@ -111,6 +111,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Long countActiveCustomers(LocalDateTime from,LocalDateTime till,  Long memberId);
 
     long countByBalanceIsNull();
+
+
+    List<Customer> findByBalanceGreaterThan(BigDecimal zero);
+
+    List<Customer> findByBalanceLessThan(BigDecimal zero);
 
     public record CustomerPetDto(Customer customer, Pet pet) {
     }

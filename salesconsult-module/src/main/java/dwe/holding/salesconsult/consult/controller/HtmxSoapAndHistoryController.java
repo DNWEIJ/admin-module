@@ -34,7 +34,7 @@ public class HtmxSoapAndHistoryController {
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/history/{action}")
     String returnHistoryModal(@PathVariable Long customerId, @PathVariable Long petId, @PathVariable String action, Model model, Locale local) {
-        CustomerService.Customer customer = customerService.searchCustomerAndPet(customerId, petId);
+        customerService.searchCustomerAndPet(customerId, petId);
 
         switch (action) {
             case "weight": {
@@ -100,15 +100,16 @@ public class HtmxSoapAndHistoryController {
 
     private String editAddress(LocalMember memberLocal) {
         StringBuilder sb = new StringBuilder();
-        sb.append((memberLocal.getAddress1() == null ? "" : memberLocal.getAddress1()));
-        if (StringUtils.isNotEmpty(memberLocal.getAddress1())) {
+        sb.append((memberLocal.getStreetAndNr() == null ? "" : memberLocal.getStreetAndNr()));
+        if (StringUtils.isNotEmpty(memberLocal.getStreetAndNr())) {
             sb.append(" - ");
         }
-        sb.append((memberLocal.getAddress2() == null ? "" : memberLocal.getAddress2()));
-        if (StringUtils.isNotEmpty(memberLocal.getAddress2()) && StringUtils.isNotEmpty(memberLocal.getAddress3())) {
+        sb.append((memberLocal.getZipCode() == null ? "" : memberLocal.getZipCode()));
+        // TODO check
+        if (StringUtils.isNotEmpty(memberLocal.getZipCode()) && StringUtils.isNotEmpty(memberLocal.getZipCode())) {
             sb.append(" - ");
         }
-        sb.append((memberLocal.getAddress3() == null ? "" : memberLocal.getAddress3()));
+        sb.append((memberLocal.getCity() == null ? "" : memberLocal.getCity()));
         return sb.toString();
     }
 }

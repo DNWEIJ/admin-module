@@ -6,26 +6,20 @@
 <script>
     function messageDisplay(messageText) {
         const element = document.querySelector('.notification-message')
-        console.log("show message if it is there")
-        console.log(element)
         if (messageText) element.textContent = messageText;
         if (element.textContent.length !== 0) {
-            console.log("show message it is there")
             element.classList.add('show');
             setTimeout(function () {
-                console.log("remove message")
                 element.classList.remove('show');
             }, 1600)
         }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        console.log("show message")
         messageDisplay();
     });
     // From the backend push a message for e.g. after save
     document.body.addEventListener("messageDisplay", function (event) {
-        console.log('sow the message to display: '+event.data);
         messageDisplay(event.detail.messageText);
     });
 </script>

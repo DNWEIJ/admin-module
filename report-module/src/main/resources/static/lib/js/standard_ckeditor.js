@@ -87,7 +87,7 @@ function initWhenReady() {
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWhenReady);
+    initWhenReady();
 } else {
     initWhenReady();
 }

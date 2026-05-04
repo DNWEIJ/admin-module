@@ -2,7 +2,7 @@ INSERT INTO customer_lookup_species
 (id,
  version,
  member_id,
- species,
+ specy,
  added_by,
  added_on,
  last_edited_by,
@@ -26,13 +26,13 @@ INSERT INTO new_vmas.customer_lookup_species
  last_edited_on,
  version,
  member_id,
- species)
+ specy)
 SELECT added_by,
        added_on,
        last_edited_by,
        last_edited_on,
        version,
        77,
-       species
+       specy
 FROM new_vmas.customer_lookup_species
 WHERE member_id = -1;

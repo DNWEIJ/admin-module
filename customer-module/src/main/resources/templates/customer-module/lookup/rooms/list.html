@@ -9,27 +9,6 @@
 
     <hr/>
     <div class="overflow-auto">
-        <table id="show-table" data-no-export class=" striped">
-            <thead>
-            <tr>
-                <th>[[#{label.room.room}]]</th>
-                <th>[[#{label.location}]]</th>
-                <th>[[#{label.list.auditinfo}]]</th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:each="room : ${rooms}">
-                <tr>
-                    <td><a th:href="'/customer/lookup/room/'+ ${room.id}">[[${room.room}]]</a></td>
-                    <td th:text="${localMembersList.get(room.localMemberId)}"></td>
-                    <td>
-                        <small th:data-tooltip="'Created by  '+${room.addedBy}+' on ' +${#temporals.format(room.addedOn, 'dd-MM-yy')}">
-                            [[${room.lastEditedBy}]] • [[${#temporals.format(room.lastEditedOn, 'dd-MM-yy')}]]
-                        </small>
-                    </td>
-                </tr>
-            </th:block>
-            </tbody>
-        </table>
+        <th:block th:insert="~{/customer-module/lookup/rooms/table}"></th:block>
     </div>
 </section>

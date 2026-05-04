@@ -9,6 +9,7 @@ import dwe.holding.shared.model.frontend.PresentationElement;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class BreedLookupController {
     @GetMapping("lookup/specy/{specyId}/breeds")
     String list(Model model, @PathVariable Long specyId) {
         model.addAttribute("breeds", breedLookupRepository.findBySpecies_Id(specyId));
-        model.addAttribute("activeMenu", "breeds");
+        model.addAttribute("activeMenu", "species");
         return "customer-module/lookup/breeds/list";
     }
 
@@ -39,8 +40,8 @@ public class BreedLookupController {
     String newRecord(Model model) {
         model.addAttribute("breed", LookupBreeds.builder().species(new LookupSpecies()).build());
         model.addAttribute("species", speciesLookupRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L)).stream()
-                .map(sp -> new PresentationElement(sp.getId(), sp.getSpecies() )).toList());
-        model.addAttribute("activeMenu", "breeds");
+                .map(sp -> new PresentationElement(sp.getId(), sp.getSpecy() )).toList());
+        model.addAttribute("activeMenu", "species");
         return "customer-module/lookup/breeds/action";
     }
 
@@ -49,16 +50,17 @@ public class BreedLookupController {
         LookupBreeds Breed = breedLookupRepository.findById(breedId).orElseThrow();
         model.addAttribute("breed", Breed.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ? Breed : new LookupBreeds());
         model.addAttribute("species", speciesLookupRepository.findByMemberIdIn(List.of(AutorisationUtils.getCurrentUserMid(), -1L)).stream()
-                .map(sp -> new PresentationElement(sp.getId(), sp.getSpecies() )).toList());
+                .map(sp -> new PresentationElement(sp.getId(), sp.getSpecy() )).toList());
 
-        model.addAttribute("activeMenu", "breeds");
+        model.addAttribute("activeMenu", "species");
 
         return "customer-module/lookup/breeds/action";
     }
 
     @PostMapping("lookup/breed")
     @Transactional
-    String saveRecord(LookupBreeds breed, RedirectAttributes redirect) {
+    @CacheEvict("breeds")
+    public String saveRecord(LookupBreeds breed, RedirectAttributes redirect) {
         if (breed.isNew()) {
             breedLookupRepository.save(
                     LookupBreeds.builder()

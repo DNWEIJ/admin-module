@@ -47,7 +47,7 @@
 
                 <td class="desktop-only" th:text="${#temporals.format(pet.birthday, 'dd-MM-yyyy')}"></td>
                 <td class="desktop-only">[[${pet.passportNumber}]]</td>
-                <td class="desktop-only">[[${pet.chipTattooId}]]</td>
+                <td class="desktop-only"><a th:hx-get="${'/consult/visit/customer/'+ customerId + '/pet/'  + pet.id + '/chipnr'}" hx-target="#modal-container" hx-swap="innerHTML" th:text="${pet.chipTattooId}"></a></td>
                 <th:block
                         th:insert="~{fragments/elements/audit::lastEditedByOn_td(${pet.addedBy},${pet.addedOn},${pet.lastEditedBy},${pet.lastEditedOn})}"></th:block>
             </tr>

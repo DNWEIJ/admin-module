@@ -1,10 +1,12 @@
-    <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/html" layout:decorate="~{/layout.html}">
 <head>
-    <title>[[#{label.title.appoinmentlist}]]</title>
+    <title>[[#{label.title.payments}]]</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <section layout:fragment="content">
-    <form action="" method="get">
+    <th:block th:if="${form.paymentListType.isStandard}">
+    <form action="" method="get" id="queryForm">
         <fieldset class="grid">
             <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
                 <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
@@ -22,13 +24,25 @@
                     th:insert="~{fragments/elements/dropdown::propDropdown('paymentListType','visit.headerlist.send', ${form.paymentListType}, ${paymentListType}, true,'0')}"
                     th:with="required=false"></th:block>
         </fieldset>
-        <input type="submit" th:value="#{label.button.search}"/>
     </form>
+    <div class="grid">
+        <input type="submit" form="queryForm" th:value="#{label.button.search}"/>
+    </div>
+    <details closed>
+    <summary>Graphical view</summary>
+    <div class="grid">
+        <select><option>week</option><option>month</option></select>
+        <button id="btnAmount">Amount per location</button>
+        <button id="btnVisits">Visits per location</button>
+    </div>
+    </details>
+    <hr/>
+    </th:block>
 
     <div class="table-wrapper">
         <table id="paymentList" class="table-tight">
             <thead>
-            <tr>
+            <tr th:if="${form.paymentListType.isStandard()}">
                 <th class="asc" th:text="#{label.payment.paymentDate}"></th>
                 <th class="text-align-right" th:text="#{label.payment.amount}"></th>
                 <th th:text="#{label.payment.method}"></th>
@@ -37,57 +51,126 @@
                 <th th:text="#{label.payment.customername}"></th>
                 <th th:text="#{label.payment.balance}"></th>
                 <th class="desktop-only" th:text="#{label.payment.location}"></th>
-                <th class="desktop-only" th:text="#{label.payment.lasteditedby}"></th>
+            </tr>
+            <tr th:if="${form.paymentListType.isAR()}">
+                <th th:text="#{label.payment.customername}"></th>
+                <th th:text="#{label.payment.balance}"></th>
+                <th th:text="#{label.payment.balance}"></th>
+                <th th:text="#{label.payment.balance}"></th>
+                <th th:text="#{label.payment.balance}"></th>
+                <th th:text="#{label.payment.balance}"></th>
+            </tr>
+            <tr th:if="${form.paymentListType.isOver or form.paymentListType.isOut}">
+                <th th:text="#{label.payment.customername}"></th>
+                <th th:text="#{label.payment.balance}"></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <th:block th:if="${#lists.size(payments) == 0}">
                 <tr>
-                <td colspan="3" class="center">
-                    <th:block th:text="#{label.not-found}"></th:block>
-                </td>
+                    <td colspan="3" class="center">
+                        <th:block th:text="#{label.not-found}"></th:block>
+                    </td>
                 </tr>
             </th:block>
-            <th:block th:each="payment : ${payments}">
+            <th:block th:if="${form.paymentListType.isAR}">
+                <th:block th:each="payment : ${payments}">
+                    <tr>
+                        <td th:text="${payment.customerName}"></td>
+                        <td th:text="${payment.balance}"></td>
+                        <td th:text="${payment.firstMonthPayment}"></td>
+                        <td th:text="${payment.secondMonthPayment}"></td>
+                        <td th:text="${payment.thirdMonthPayment}"></td>
+                        <td th:text="${payment.fourthMonthPayment}"></td>
+                    </tr>
+                </th:block>
+            </th:block>
+
+            <th:block th:if="${form.paymentListType.isOver or form.paymentListType.isOut}">
+                <th:block th:each="payment : ${payments}">
+                    <tr>
+                        <td th:text="${payment.customerName}"></td>
+                        <td th:text="${payment.balance}"></td>
+                        <td colspan="4"></td>
+                    </tr>
+                </th:block>
+            </th:block>
+            <th:block th:if="${form.paymentListType.isStandard()}">
+            <th:block  th:each="payment : ${payments}">
                 <tr>
                     <td th:attr="data-sort-value=${payment.paymentDate}">
-                        <a th:href="'/sales/customer/'+ ${customerId}+ '/payment/'+ ${payment.id}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a>
+                        <a th:href="'/sales/customer/'+ ${payment.customerId}+ '/payment/'+ ${payment.paymentId}">[[${#temporals.format(payment.paymentDate, 'dd-MM-yyyy')}]]</a>
                     </td>
                     <th:block th:insert="~{fragments/elements/numberdisplay::showNumber_td(${payment.amount}, false)}"></th:block>
-                    <td th:text="#{${payment.method.getLabel}}"></td>
+                    <td th:text="#{__${payment.method.getLabel}__}"></td>
                     <td th:text="${payment.referenceNumber}"></td>
                     <td>
-                        <th:block th:each="paymentvisit : ${payment.getPaymentVisits()}">
-                            <a th:if="${paymentvisit.visit.appointment.isOTC}"
-                               th:href="'/sales/otc/customer/'+ ${paymentvisit.payment.customer.id} + '/visit/'+  ${paymentvisit.visit.id}"
-                               th:text="${paymentvisit.visit.id}">
+                        <th:block th:each="paymentvisit : ${payment.visitIdAppointmentId}">
+                            <a th:if="${paymentvisit.isOTC}"
+                               th:href="'/sales/otc/customer/'+ ${payment.customerId} + '/visit/'+  ${paymentvisit.visitId}"
+                               th:text="${paymentvisit.visitId}">
                             </a>
-                            <a th:unless="${paymentvisit.visit.appointment.isOTC}"
-                               th:href="'/consult/visit/customer/'+ ${paymentvisit.payment.customer.id} + '/visit/'+ ${paymentvisit.visit.id} + '?callFrom=customer'"
-                               th:text="${paymentvisit.visit.id}">
+                            <a th:unless="${paymentvisit.isOTC}"
+                               th:href="'/consult/visit/customer/'+ ${payment.customerId} + '/visit/'+ ${paymentvisit.visitId} + '?callFrom=customer'"
+                               th:text="${paymentvisit.visitId}">
                             </a>
                         </th:block>
                     </td>
-                    <td class="desktop-only" th:text="${localMembersList.get(payment.localMemberId)}"></td>
-                    <th:block
-                            th:insert="~{fragments/elements/audit::lastEditedByOn_td(${payment.addedBy},${payment.addedOn},${payment.lastEditedBy},${payment.lastEditedOn})}"></th:block>
+                    <td th:text="${payment.customerName}"></td>
+                    <td th:text="${payment.balance}"></td>
+                    </td>
+                    <td class="desktop-only" th:text="${localMembersDisplay.get(payment.localMemberId)}"></td>
                 </tr>
             </th:block>
-           </tbody>
+            </th:block>
+            </tbody>
         </table>
-    </div>
-    <script>
-        document.getElementById("invoice").addEventListener("change", function () {
-            toggleTableColumns("appointmentList", [9,10], this.checked);
-        });
-        document.getElementById("insurance").addEventListener("change", function () {
-            toggleTableColumns("appointmentList", [7,8], this.checked);
-        });
-        document.getElementById("vetroom").addEventListener("change", function () {
-            toggleTableColumns("appointmentList", [5], this.checked);
-        });
-        document.getElementById("petname").addEventListener("change", function () {
-            toggleTableColumns("appointmentList", [4], this.checked);
-        });
+      </div>
+    <th:block th:if="${form.paymentListType.isStandard()}">
+    <script type="module">
+        import {createTableChart} from "/lib/js/chart.js"
+
+        const chart = createTableChart({
+            tableSelector: "#paymentList",
+
+            extractRow: (tds) => ({
+                date: tds[0].dataset.sortValue,
+                amount: parseFloat(tds[1].textContent) || 0,
+                visits: tds[4].querySelectorAll("a").length,
+                balance: parseFloat(tds[6].textContent) || 0,
+                location: tds[7].textContent.trim()
+            }),
+
+            groupKey: (row, mode) => {
+                const dt = new Date(row.date)
+
+                if (isNaN(dt)) return "invalid-date" // critical safety
+
+                if (mode === "day") return row.date
+
+                if (mode === "month") {
+                    return `${dt.getFullYear()}-${dt.getMonth() + 1}`
+                }
+
+                if (mode === "week") {
+                    const first = new Date(dt.getFullYear(), 0, 1)
+                    const week = Math.ceil((((dt - first) / 86400000) + first.getDay() + 1) / 7)
+                    return `${dt.getFullYear()}-W${week}`
+                }
+
+                return "unknown-mode" // critical fallback
+            },
+
+            datasetKey: row => row.location,
+            valueKey: (row, field) => row[field] || 0
+        })
+
+        btnAmount.onclick = () => chart.render("amount", "week")
+        btnVisits.onclick = () => chart.render("visits", "week")
     </script>
+    </th:block>
 </section>

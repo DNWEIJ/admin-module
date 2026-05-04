@@ -44,5 +44,5 @@ where mid = -1 OR mid=77;
      new_species.id
  FROM new_vmas.customer_lookup_breeds b
           JOIN customer_lookup_species old_species ON b.lookupspecies_id = old_species.id AND old_species.member_id = -1
-          JOIN customer_lookup_species new_species ON old_species.species = new_species.species AND new_species.member_id = 77
+          JOIN customer_lookup_species new_species ON old_species.specy = new_species.specy AND new_species.member_id = 77
  WHERE b.member_id = -1;

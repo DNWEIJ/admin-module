@@ -67,32 +67,30 @@ public class UserController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/user/{userId}/ipnumber/{ipId}")
-    String getNewIp(@PathVariable Long userId, @PathVariable Long ipId, Model model) {
-        User user = userRepository.findById(userId).orElseThrow();
-        IPSecurity ip = user.getIpNumbers().stream().filter(ipn -> ipn.getId().equals(ipId)).findFirst().orElseThrow();
-        model.addAttribute("user", user);
-        model.addAttribute("ipNumberParts", ip);
-        return "admin-module/user/action::editIpNumber";
-    }
-
     @PostMapping("/user/{userId}/ipnumber")
-    String saveNewIp(@PathVariable Long userId, IPNumber ipnumber, Model model) {
+    String saveNewIp(@PathVariable Long userId, @NotNull Integer numberOne, @NotNull Integer numberTwo, @NotNull Integer numberThree, @NotNull Integer numberFour, Model model) {
         User user = userRepository.findById(userId).orElseThrow();
+        IPNumber ipnumber = new IPNumber(numberOne, numberTwo, numberThree, numberFour);
         user.getIpNumbers().add(
                 IPSecurity.builder().userId(user.getId()).ipnumber(ipnumber.toString()).build()
         );
-        userRepository.save(user);
-        return "admin-module/user/ipmodal";
+        model
+                .addAttribute("user", userRepository.save(user))
+                .addAttribute("ipNumberParts", new IPNumber());
+        return "admin-module/user/fragments/fragments::bodyTableIpNumbers";
     }
 
     @DeleteMapping("/user/{userId}/ipnumber/{ipnumber}")
-    String deleteIp(@PathVariable Long userId, Long ipnumber, Model model) {
+    String deleteIp(@PathVariable Long userId, @PathVariable Long ipnumber, Model model) {
         User user = userRepository.findById(userId).orElseThrow();
         user.getIpNumbers().remove(
-                user.getIpNumbers().stream().filter(ip -> ip.equals(ipnumber)).findFirst().get()
+                user.getIpNumbers().stream().filter(ip -> ip.getId().equals(ipnumber)).findFirst().orElseThrow()
         );
-        return "admin-module/user/ipmodal";
+        model
+                .addAttribute("user", userRepository.save(user))
+                .addAttribute("ipNumberParts", new IPNumber());
+        userRepository.save(user);
+        return "admin-module/user/fragments/fragments::bodyTableIpNumbers";
     }
 
 

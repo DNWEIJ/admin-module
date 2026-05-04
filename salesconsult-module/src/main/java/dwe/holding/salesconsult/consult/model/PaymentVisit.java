@@ -19,11 +19,11 @@ import lombok.experimental.SuperBuilder;
 @Setter
 public class PaymentVisit extends MemberBaseBO {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit_id", nullable = false)
     private Visit visit;
 }

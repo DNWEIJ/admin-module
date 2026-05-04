@@ -1,5 +1,6 @@
 package dwe.holding.reporting.repository.projection;
 
+import dwe.holding.salesconsult.consult.model.Appointment;
 import dwe.holding.salesconsult.consult.model.type.VisitStatusEnum;
 import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
@@ -105,6 +106,13 @@ public class VisitListProjection {
 
     public boolean isCompleted() {
         return completed.equals(YesNoEnum.Yes);
+    }
+
+    // copied from visit
+    public String getStatusLabel() {
+        if (this.isCancelled()) return Appointment.CANCELLED_LABEL_TEXT;
+        if (this.isCompleted()) return Appointment.FINISHED_LABEL_TEXT;
+        return status.getLabel();
     }
 
 }

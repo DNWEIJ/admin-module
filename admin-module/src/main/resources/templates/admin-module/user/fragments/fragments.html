@@ -1,0 +1,72 @@
+<th:block th:fragment="bodyTableIpNumbers">
+    <table id="IpNumbers" data-no-export  hx-on:htmx:afterSwap="clear(); messageDisplay('saved')">
+        <thead>
+        <tr>
+            <th></th>
+            <th>[[#{user.ipnumber}]]</th>
+        </tr>
+
+        </thead>
+        <th:block th:if="${user.ipNumbers.size == 0}">
+            <tr>
+                <td colspan="2">No data</td>
+            </tr>
+        </th:block>
+        <th:block th:if="${user.ipNumbers.size != 0}" th:each="ipnumber : ${user.ipNumbers}">
+            <th:block th:replace="~{this::readonlyIpNumber(ipNumber=${ipnumber})}"></th:block>
+        </th:block>
+    </table>
+</th:block>
+
+<th:block th:fragment="readonlyIpNumber(ipNumber)">
+    <tr>
+        <td class="no-sorting">
+            <a th:hx-delete="'/admin/user/'+ ${user.id}+ '/ipnumber/' + ${ipNumber.id}" hx-target="#IpNumbers" hx-swap="outerHTML">🗑️️️</a>
+        </td>
+        <td th:text="${ipNumber.ipnumber}"></td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="editIpNumber(ipNumberParts)">
+        <form th:hx-post="'/admin/user/'+ ${user.id} +'/ipnumber'" hx-target="#IpNumbers" hx-swap="outerHTML" hx-trigger="click from:#btn">
+            <div class="grid-row">
+                <input id="one" name="numberOne" tabindex="0" type="number" min="0" max="255" th:value="${ipNumberParts.getNumberOne()}" placeholder="127" autocomplete="off"
+                       required="required">●
+                <input id="two" name="numberTwo" tabindex="0" type="number" min="0" max="255" th:value="${ipNumberParts.getNumberTwo()}" placeholder="0" autocomplete="off"
+                       required="required"> ●
+                <input id="three" name="numberThree" tabindex="0" type="number" min="0" max="255" th:value="${ipNumberParts.getNumberThree()}" placeholder="0" autocomplete="off"
+                       required="required"> ●
+                <input id="four" name="numberFour" tabindex="0" type="number" min="0" max="255" th:value="${ipNumberParts.getNumberFour()}" placeholder="1" autocomplete="off"
+                       required="required">
+            </div>
+            <input type="submit" th:value="#{user.ipnumber.save}" id="btn" role="button" onclick="(!validate()); event.preventDefault()"></input>
+            <script>
+                function validate() {
+                    if (document.getElementById('one').value != '' &&
+                        document.getElementById('two').value != '' &&
+                        document.getElementById('three').value != '' &&
+                        document.getElementById('four').value != '') {
+                        if (document.getElementById('one').value > 255 ||
+                            document.getElementById('two').value > 255 ||
+                            document.getElementById('three').value > 255 ||
+                            document.getElementById('four').value > 255) {
+                            alert('cannot be greater then 255')
+                            return false
+                        } else {
+                            return true
+                        }
+                    } else {
+                        alert('all four fields should be filled')
+                        return false
+                    }
+                }
+
+                function clear() {
+                    document.getElementById('one').value = ''
+                    document.getElementById('two').value = ''
+                    document.getElementById('three').value = ''
+                    document.getElementById('four').value = ''
+                }
+            </script>
+        </form>
+</th:block>

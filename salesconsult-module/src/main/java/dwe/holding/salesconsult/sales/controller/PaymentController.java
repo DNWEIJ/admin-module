@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -43,7 +44,7 @@ public class PaymentController {
                 return "redirect:/customer/customer";
             }
 
-            Payment savedPayment = paymentRepository.save(
+            paymentRepository.save(
                     Payment.builder()
                             .paymentDate(paymentForm.getPaymentDate())
                             .method(paymentForm.getMethod())
@@ -103,10 +104,12 @@ public class PaymentController {
     }
 
     @GetMapping("/customer/{customerId}/payment/{paymentId}")
-    String editRecord(@PathVariable Long customerId, @PathVariable Long paymentId, Model model, RedirectAttributes redirect) {
+    String editRecord(@PathVariable Long customerId, @PathVariable Long paymentId, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Payment payment = paymentRepository.findById(paymentId).get();
         model.addAttribute("payment", payment.getCustomer().getId().equals(customerId) ? payment : new Payment());
+        model.addAttribute("totalPaymentAmount", payment.getPaymentVisits().stream().map(v -> v.getVisit().getTotalAmountIncTax())
+                .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
         setModel(model, payment.getCustomer().getId());
         return "sales-module/payment/action";
     }

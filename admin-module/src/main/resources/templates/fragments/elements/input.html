@@ -11,14 +11,17 @@
 
 <th:block th:fragment="inputHtmlLift(name, label, dbField, tabindex)"
           th:with="type=${type}?:'text', required=${required}?:true, pattern=${pattern}?:'',
-                      onblur=${onblur}?:'', autofocus=${shouldFocus}?:false, extraClass=${extraClass}?:''">
+          datacopyelement=${datacopyelement}?:'', onblur=${onblur}?:'', autofocus=${shouldFocus}?:false,
+           extraClass=${extraClass}?:''">
+
     <div class="field" th:classappend="${extraClass}">
-        <input th:id="${name}" th:name="${name}" th:required="${required}" th:attr="onblur=''+ ${onblur}"
+        <input th:id="${name}" th:name="${name}" th:required="${required}"
+               th:attr="onblur=${onblur}, data-copy-element=${datacopyelement != '' ? datacopyelement : null}"
                th:autofocus="${shouldFocus}" th:pattern="${pattern}" th:tabindex="${tabindex}"
                th:type="${type == 'wholenumber'? 'number': type}"
                th:step="${type == 'wholenumber'?'1.0': (type == 'number'? '0.01':'')}"
                th:value="${__${dbField}__ ?: ''}"
-               placeholder="" autocomplete="off">
+               placeholder="" autocomplete="off" >
         <th:block th:if="${label == null or label.isEmpty()}">
             <label th:for="${name}"></label>
         </th:block>

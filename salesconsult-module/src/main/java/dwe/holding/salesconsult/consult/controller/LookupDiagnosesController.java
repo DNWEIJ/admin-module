@@ -6,6 +6,7 @@ import dwe.holding.salesconsult.consult.repository.LookupDiagnosesRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,8 @@ public class LookupDiagnosesController {
 
     @PostMapping("lookup/diagnosis")
     @Transactional
-    String saveRecord(LookupDiagnose formDiagnose, RedirectAttributes redirect) {
+    @CacheEvict("purposes")
+    public String saveRecord(LookupDiagnose formDiagnose, RedirectAttributes redirect) {
         if (formDiagnose.isNew()) {
             lookupDiagnosesRepository.save(
                     LookupDiagnose.builder()

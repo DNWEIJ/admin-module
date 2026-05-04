@@ -26,6 +26,7 @@
         <module>scorekeeper-app</module>
         <module>report-module</module>
         <module>salesconsult-module</module>
+        <module>vmas-sse-app</module>
     </modules>
     <properties>
         <java.version>25</java.version>
@@ -81,7 +82,7 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.17.2</version>
+                <version>1.22.2</version>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>

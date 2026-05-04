@@ -1,25 +1,20 @@
-
-
 /* ================= THEME VARIABLES ================= */
 :root {
     --nav-bg: color-mix(in srgb, var(--pico-primary-background) 15%, white);
     --border-color: #dcdcdc;
     --dropdown-bg: #f9fafb;
-    --dropdown-hover: #eef2f6;
+    --dropdown-hover: color-mix(in srgb, var(--pico-primary-background) 15%, white);
     --text-color: #222;
-    --muted-bg: #f5f5f5;
-    --focus-color: #2563eb;
 
     --gap-sm: .2rem;
     --gap-md: .1rem;
     --gap-lg: .2rem;
 
-    --dropdown-width: 14rem;
+    --dropdown-min-width: 14rem;
     --dropdown-radius: 0.375rem;
     --dropdown-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.08);
 
     --anim-fast: 150ms;
-    --anim-normal: 250ms;
     --easing: cubic-bezier(.4, 0, .2, 1);
 }
 
@@ -53,6 +48,9 @@ div[role="buttons"] {
 div[role="icons"] ul {
     display: flex;
     gap: var(--gap-md);
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 div[role="icons"] ul li {
@@ -65,107 +63,163 @@ div[role="dropdown"] > ul {
     display: flex;
     gap: var(--gap-lg);
     flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-div[role="dropdown"] ul li {
+div[role="dropdown"] > ul > li {
     padding: 0;
     margin: 0 0 0 .5rem;
     list-style-type: none;
 }
 
-
-div[role="dropdown"] ul li a {
-    text-align: center;
-    width: 100%;
-    text-decoration: none;
-}
-/* ================= DETAILS ================= */
-div[role="dropdown"] details {
+/* ================= GENERIC DROPDOWN ITEM ================= */
+.dropdown-item {
     position: relative;
-    flex-shrink: 1;
-    z-index: 100;
+    width: 100%;
 }
 
-div[role="dropdown"] summary {
+/* ================= GENERIC DROPDOWN TRIGGER ================= */
+.dropdown-trigger {
     cursor: pointer;
     font-weight: 500;
     font-size: 1rem;
     white-space: nowrap;
-    margin-left: .6rem;
-    text-align: center;
+    margin: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    padding: 0.5rem 0.75rem;
+    display: block;
+    font-family: inherit;
+    font-size: inherit;
+    transition: background-color var(--anim-fast) var(--easing);
+    width: 100%;
 }
 
-div[role="dropdown"] summary::-webkit-details-marker {
-    display: none;
+/* Remove all ::after triangles */
+.dropdown-trigger::after {
+    content: none;
 }
 
-/* ================= DROPDOWN PANEL (ALL LEVELS) ================= */
-div[role="dropdown"] details > ul {
+/* Top-level dropdown hover/active highlight */
+div[role="dropdown"] > ul > li > .dropdown-item:hover > .dropdown-trigger {
+    background-color: var(--dropdown-hover);
+}
+
+/* ================= GENERIC DROPDOWN PANEL ================= */
+.dropdown-panel {
     position: absolute;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-
-    width: var(--dropdown-width);
+    min-width: var(--dropdown-min-width);
+    width: max-content;
 
     background: var(--dropdown-bg);
-    border: 0.0625rem solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--dropdown-radius);
     box-shadow: var(--dropdown-shadow);
 
     opacity: 0;
     pointer-events: none;
-    z-index: 4500;
+    transition: opacity var(--anim-fast) var(--easing);
 
-    transition:
-            opacity var(--anim-normal) var(--easing),
-            transform var(--anim-normal) var(--easing);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
 }
 
-/* ===== LEVEL 1 (OPEN DOWN) ===== */
-div[role="dropdown"] > ul > li > details > ul {
-    top: 2.55rem;
+/* ===== POSITIONING: First level centered, nested to the right ===== */
+.dropdown-panel {
+    top: 100%;
+    margin-top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Nested dropdowns stick out to the right with offset */
+.dropdown-panel .dropdown-panel {
+    top: -0.25rem;
+    left: 100%;
+    transform: none;
+    margin-top: 0;
+    margin-left: 0.5rem;
+}
+
+/* ===== INVISIBLE BRIDGE - prevents gap between trigger and panel ===== */
+.dropdown-item::before {
+    content: '';
+    position: absolute;
+    top: 100%;
     left: 0;
-    transform: translateY(.25rem);
+    right: 0;
+    height: 0.25rem;
+    z-index: 999;
 }
 
-/* ===== LEVEL 2+ (OPEN RIGHT) ===== */
-div[role="dropdown"] details ul li > details > ul {
+.dropdown-panel .dropdown-item::before {
     top: 0;
     left: 100%;
-    transform: translateX(.25rem);
+    width: 0.5rem;
+    height: 100%;
 }
 
-/* ===== ENABLE POINTER EVENTS WHEN OPEN ===== */
-div[role="dropdown"] details[open] > ul {
+/* ===== SHOW ON HOVER ===== */
+.dropdown-item:hover > .dropdown-panel {
     opacity: 1;
     pointer-events: auto;
-    transform: none;
 }
 
-/* ===== DESKTOP HOVER SUPPORT ===== */
-@media (hover: hover) {
-    div[role="dropdown"] details:hover > ul {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-div[role="dropdown"] details ul li {
-    background-color: var(--dropdown-bg);
+/* ================= GENERIC LIST ITEMS IN PANEL ================= */
+.dropdown-panel > li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     width: 100%;
-    padding: 1rem;
 }
 
-div[role="dropdown"] details ul li:hover {
-    background: var(--dropdown-hover);
+/* Generic clickable items (links and buttons) - FULL WIDTH HIGHLIGHT, NO WRAP */
+.dropdown-panel > li > a,
+.dropdown-panel > li > .dropdown-item > .dropdown-trigger {
+    display: block;
+    padding: 0.6rem 1rem;
+    text-align: center;
+    color: var(--text-color);
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    transition: background-color var(--anim-fast) var(--easing);
+    width: 100%;
+    margin: 0;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
-/* ================= BUTTONS ================= */
+.dropdown-panel > li > a:hover,
+.dropdown-panel > li > .dropdown-item > .dropdown-trigger:hover,
+.dropdown-panel > li > .dropdown-item:hover > .dropdown-trigger {
+    background-color: var(--dropdown-hover);
+}
+
+/* ================= BUTTONS (PicoCSS handles styling) ================= */
 div[role="buttons"] ul {
     display: flex;
     gap: var(--gap-sm);
     flex-wrap: nowrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+div[role="buttons"] li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 /* == HAMBURGER ICON == */
@@ -235,6 +289,7 @@ label[data-role="burger"] {
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
+        width: 100%;
     }
 
     div[role="dropdown"] > ul {
@@ -243,57 +298,77 @@ label[data-role="burger"] {
         list-style: none;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
-    div[role="dropdown"] details {
+    .dropdown-item {
         position: relative;
-        width: auto;
-        text-align: center;
+
+        width: 100%;
     }
 
-    div[role="dropdown"] summary {
+    .dropdown-item::before {
+        display: none;
+    }
+
+    .dropdown-trigger {
         text-align: center;
         font-size: 1rem;
-        background: var(--muted-bg);
+        background: #f5f5f5;
         border: 0.0625rem solid var(--border-color);
         border-radius: var(--dropdown-radius);
         white-space: nowrap;
-        list-style: none;
+        padding: 0.5rem 1rem;
+        margin: 0;
+        width: 100%;
+        display: block;
     }
 
-    div[role="dropdown"] details[open] summary {
-        background: var(--dropdown-hover);
-    }
-
-    div[role="dropdown"] details > ul {
+    .dropdown-panel {
         position: static;
-        transform: none;
+        transform: none !important;
         opacity: 1;
         pointer-events: auto;
         box-shadow: none;
         border: none;
         background: transparent;
-        width: auto;
+        width: 100%;
         padding: 0.25rem 0;
-        gap: 0.25rem;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+        z-index: auto;
     }
 
-    div[role="dropdown"] details ul li {
+    .dropdown-panel > li {
         margin: 0;
         padding: 0;
+        width: 100%;
     }
 
-    div[role="dropdown"] details ul li a {
+    .dropdown-panel > li > a,
+    .dropdown-panel > li > .dropdown-item > .dropdown-trigger {
         display: block;
         padding: 0.5rem 1rem;
         text-align: center;
         color: var(--text-color);
         text-decoration: none;
         border-radius: 0.25rem;
+        background: transparent;
+        border: none;
+        width: 100%;
     }
 
-    div[role="dropdown"] details ul li a:hover {
+    .dropdown-panel > li > a:hover,
+    .dropdown-panel > li > .dropdown-item > .dropdown-trigger:hover {
         background: var(--dropdown-hover);
+    }
+
+    .dropdown-trigger::after {
+        display: none;
+    }
+
+    .dropdown-panel > li > .dropdown-item > .dropdown-trigger::after {
+        display: none;
     }
 }
 
@@ -312,8 +387,6 @@ label[data-role="burger"] {
         --dropdown-hover: #334155;
         --border-color: #334155;
         --text-color: #e5e7eb;
-        --muted-bg: #1e293b;
-        --focus-color: #60a5fa;
         --dropdown-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.4);
     }
 }

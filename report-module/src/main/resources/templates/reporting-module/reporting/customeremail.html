@@ -81,6 +81,12 @@
             </tr>
             </thead>
             <tbody>
+            <th:block th:if="${#lists.size(customers) == 0}">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="6">[[#{label.not-found}]]</td>
+                </tr>
+            </th:block>
             <th:block th:each="rec, iterStat : ${customers}">
                 <tr class="table-primary">
                     <td><th:block th:insert="~{fragments/elements/select::switch('selectedRec', ${rec.id})}"></th:block></td>

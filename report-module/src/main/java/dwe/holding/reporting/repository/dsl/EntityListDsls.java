@@ -15,7 +15,6 @@ import dwe.holding.customer.client.model.QPet;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.model.type.SexTypeEnum;
 import dwe.holding.reporting.controller.ReportCustomersController;
-import dwe.holding.reporting.repository.projection.PaymentListProjection;
 import dwe.holding.reporting.repository.projection.VisitListProjection;
 import dwe.holding.salesconsult.consult.model.QAppointment;
 import dwe.holding.salesconsult.consult.model.QPaymentVisit;
@@ -81,7 +80,7 @@ public class EntityListDsls {
                         pet.memberId.eq(memberId),
                         (docForm.certainPetAge().equals(DONOTCARE) ? null : docForm.certainPetAge().equals(No) ? null : pet.birthday.between(oldestBirthday, youngestBirthday)),
                         (docForm.onlyLivingPets().equals(DONOTCARE) ? null : docForm.onlyLivingPets().equals(Yes) ?
-                                (pet.deceased.eq(YesNoEnum.No).and(pet.deceasedDate.isNull())) : pet.deceased.eq(YesNoEnum.Yes).or(pet.deceasedDate.isNotNull())),
+                                                                             (pet.deceased.eq(YesNoEnum.No).and(pet.deceasedDate.isNull())) : pet.deceased.eq(YesNoEnum.Yes).or(pet.deceasedDate.isNotNull())),
 
                         (docForm.sexType().equals(DONOTCARE) ? null : pet.sex.eq(SexTypeEnum.valueOf(docForm.sexType()))),
                         (docForm.species() == null ? null : pet.species.in(docForm.species()))
@@ -281,50 +280,64 @@ public class EntityListDsls {
                 .fetch();
     }
 
-    public List<PaymentListProjection> findPaymentsWithBalance(Long memberId, Long localMemberId, LocalDate fromDate, LocalDate toDate) {
+  //  public List<PaymentListProjection> findPaymentsWithBalance(Long memberId, Long localMemberId, LocalDate fromDate, LocalDate toDate) {
 
-        List<PaymentListProjection> records = paymentsWithBalance(memberId, localMemberId, fromDate, toDate);
+//        List<PaymentListProjection> projections = em.createQuery("""
+//                        SELECT new dwe.holding.salesconsult.sales.repository.PaymentListProjection(
+//                            p.id, p.paymentDate, p.localMemberId, p.referenceNumber, p.method, p.amount,null,
+//                            c.id, c.lastName, c.firstName, c.surName, c.middleInitial, c.balance)
+//                        FROM Payment p
+//                        JOIN p.customer c
+//                        WHERE p.paymentDate BETWEEN :fromDate AND :toDate
+//                        AND p.memberId = :memberId
+//                        AND (:localMemberId = 0 OR p.localMemberId = :localMemberId)
+//                        ORDER BY p.paymentDate ASC
+//                        """, PaymentListProjection.class)
+//                .setParameter("fromDate", fromDate)
+//                .setParameter("toDate", toDate)
+//                .setParameter("memberId", memberId)
+//                .setParameter("localMemberId", localMemberId)
+//                .getResultList();
+//
+//        List<Long> paymentIds = projections.stream().map(PaymentListProjection::getPaymentId).toList();
+//
+//        Map<Long, Set<PaymentVisit>> visitsMap = em.createQuery("""
+//                        SELECT pv.payment.id, pv
+//                        FROM PaymentVisit pv
+//                        JOIN FETCH pv.visit v
+//                        JOIN FETCH v.appointment
+//                        WHERE pv.payment.id IN :paymentIds
+//                        """, Object[].class)
+//                .setParameter("paymentIds", paymentIds)
+//                .getResultStream()
+//                .collect(Collectors.groupingBy(
+//                        row -> (Long) row[0],
+//                        Collectors.mapping(row -> (PaymentVisit) row[1], Collectors.toSet())
+//                ));
+//
+//        projections.forEach(p -> p.setPaymentVisits(visitsMap.getOrDefault(p.getPaymentId(), new HashSet<>())));
+//
+//        return projections;
 
-        records.stream().forEach(p -> p.setBalanceFromDate(
-                customerBalance(p.getCustomerId(), localMemberId, p.getPaymentDate())
-        ));
-        return records;
-
-    }
-
-    private List<PaymentListProjection> paymentsWithBalance(Long memberId, Long localMemberId, LocalDate fromDate, LocalDate toDate) {
-
-        JPAQuery<Customer> query = new JPAQuery<>(em);
-        QPayment payment = QPayment.payment;
-        QCustomer customer = QCustomer.customer;
-
-        return query
-                .select(Projections.constructor(
-                                PaymentListProjection.class,
-                                payment.paymentDate,
-                                payment.localMemberId,
-                                payment.referenceNumber,
-                                payment.method,
-                                payment.amount,
-                                customer.id,
-                                customer.lastName,
-                                customer.firstName,
-                                customer.surName,
-                                customer.middleInitial,
-                                customer.balance,
-                                customer.balance
-                        )
-                )
-                .from(payment)
-                .join(customer).on(customer.id.eq(payment.customer.id))
-                .where(
-                        payment.paymentDate.between(fromDate, toDate),
-                        payment.memberId.eq(memberId),
-                        (localMemberId == null) ? null : payment.localMemberId.eq(localMemberId)
-                )
-                .orderBy(payment.paymentDate.asc())
-                .fetch();
-    }
+//        return em.createQuery("""
+//                        SELECT DISTINCT p
+//                        FROM Payment p
+//                        JOIN FETCH p.paymentVisits pv
+//                        JOIN FETCH pv.visit v
+//                        JOIN FETCH v.pet pet
+//                        JOIN FETCH pet.customer
+//                        JOIN FETCH p.customer c
+//                        WHERE p.paymentDate BETWEEN :fromDate AND :toDate
+//                        AND p.memberId = :memberId
+//                        AND (:localMemberId = 0 OR p.localMemberId = :localMemberId)
+//                        ORDER BY p.paymentDate ASC
+//                        """, Payment.class)
+//                .setParameter("fromDate", fromDate)
+//                .setParameter("toDate", toDate)
+//                .setParameter("memberId", memberId)
+//                .setParameter("localMemberId", localMemberId)
+//                .getResultList();
+  //  }
 
     private BigDecimal customerBalance(Long customerId, Long memberLocalId, LocalDate toDate) {
         // todo ask claude

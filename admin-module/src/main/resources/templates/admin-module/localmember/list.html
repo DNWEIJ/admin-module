@@ -1,15 +1,15 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
 <head>
-    <title>Member lijst</title>
+    <title th:text="#{label.localmember.title}"></title>
 </head>
 <body>
 <section layout:fragment="content">
     <details id="reportRemindersInfo" open>
         <summary>
-            <span th:text="#{label.localmember.tittle}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit"
+            <span th:text="#{label.localmember.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit"
                                                                           th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
-        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.localmember.tittle},'/admin/localmember')}"></th:block>
+        <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList(#{label.localmember.title},'/admin/localmember')}"></th:block>
     </details>
     <table id="localmember-table">
         <thead>
@@ -29,7 +29,7 @@
                 <td>[[${localmember.email}]]</td>
                 <td>[[${localmember.phone1}]]</td>
                 <td>[[${localmember.phone2}]]</td>
-                <td>[[${localmember.Address1}]]</td>
+                <td>[[${localmember.streetAndNr}]]</td>
                 <td>[[${localmember.zipCode}]]</td>
             </tr>
         </th:block>

@@ -7,10 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -54,7 +51,6 @@ public class LookupRoomController {
     }
 
     @PostMapping("lookup/room")
-    @Transactional
     String saveRecord(LookupRoom formRoom, RedirectAttributes redirect) {
         if (formRoom.isNew()) {
             lookupRoomRepository.save(
@@ -73,5 +69,17 @@ public class LookupRoomController {
             }
         }
         return "redirect:/customer/lookup/rooms";
+    }
+
+    @DeleteMapping("lookup/room/{roomId}")
+    String deleteRecordHhtmx(@PathVariable Long roomId, Model model) {
+        LookupRoom room = lookupRoomRepository.findById(roomId).orElseThrow();
+        lookupRoomRepository.delete(room);
+        model
+            .addAttribute("rooms", lookupRoomRepository.getByMemberIdOrderByRoom(AutorisationUtils.getCurrentUserMid()))
+            .addAttribute("localMembersList", AutorisationUtils.getLocalMemberMap())
+    ;
+        return "/customer-module/lookup/rooms/table";
+
     }
 }

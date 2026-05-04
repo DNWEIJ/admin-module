@@ -12,6 +12,8 @@ app:
       driver-class-name: com.mysql.cj.jdbc.Driver
 
 spring:
+  cache:
+    type: simple
   thymeleaf:
     cache: false  # TODO turn on for production
 
@@ -24,7 +26,7 @@ spring:
         implicit-strategy: dwe.holding.admin.hibernatenamingstrategy.CustomImplicitNamingStrategy
       ddl-auto: update
 
-    generate-ddl: false
+    generate-ddl: true
     database: mysql
     properties:
       hibernate:
@@ -32,13 +34,12 @@ spring:
           start_up_check: true # production false
         jdbc.batch_size: 1000
         hibernate.order_updates: true
-#      javax.persistence.schema-generation.create-source: metadata
-#      javax.persistence.schema-generation.scripts.action: create
-#      javax.persistence.schema-generation.scripts.create-target: create_new-vmas.sql
+      javax.persistence.schema-generation.create-source: metadata
+      javax.persistence.schema-generation.scripts.action: create
+      javax.persistence.schema-generation.scripts.create-target: create_new-vmas.sql
 #      use_sql_comments: true
-
 #        format_sql: true
-#    show_sql: true
+    show_sql: true
   ssl:
     bundle:
       jks:

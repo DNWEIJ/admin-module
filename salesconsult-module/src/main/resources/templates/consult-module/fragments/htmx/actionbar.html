@@ -1,14 +1,14 @@
 <style>
-    .threecolumn-spread {
+    #actionbar > .threecolumn-spread {
         grid-template-columns: 10fr 17fr 10fr;
         padding-bottom: .5rem;
     }
 
-    .column-wrapper {
+    #actionbar .column-wrapper {
         position: relative;
     }
 
-    .column-header {
+    #actionbar .column-header {
         padding: 0.5rem;
         text-align: center;
         font-weight: bold;
@@ -18,7 +18,7 @@
         background: var(--pico-background-color);
     }
 
-    .column-content {
+    #actionbar .column-content {
         position: absolute;
         top: 2.3rem;
         left: 0;
@@ -32,7 +32,6 @@
         border-top: none;
         z-index: 9;
 
-        /* transition setup */
         opacity: 0;
         transform: translateY(-6px);
         visibility: hidden;
@@ -42,19 +41,17 @@
         visibility 0ms linear 200ms;
     }
 
-    .column-content .grid {
+    #actionbar .column-content .grid {
         display: grid;
         align-items: start;
     }
 
-    .column-wrapper:hover .column-header {
+    #actionbar .column-wrapper:hover .column-header {
         background: var(--pico-table-row-stripped-background-color);
-
     }
 
-    /* open on hover */
-    .column-wrapper:hover .column-content,
-    .column-wrapper.open .column-content {
+    #actionbar .column-wrapper:hover .column-content,
+    #actionbar .column-wrapper.open .column-content {
         opacity: 1;
         transform: translateY(0);
         visibility: visible;
@@ -64,42 +61,43 @@
         visibility 0ms;
     }
 </style>
-
-<div class="threecolumn-spread">
-    <div class="column-wrapper">
-        <div class="column-header" th:text="#{label.actionbar.visit.actions}">Actions</div>
-        <th:block th:if="${salesType.isPriceInfo or salesType.isOtc }">
-            <div></div>
-        </th:block>
-        <th:block th:unless="${salesType.isPriceInfo}">
-            <div class="column-content">
-                <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitStatusButtons}"/>
-                <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitReactivateButtons}"/>
-            </div>
-        </th:block>
-    </div>
-    <div class="column-wrapper">
-        <div class="column-header" th:text="#{label.actionbar.visit.status}">Visit Status</div>
-        <th:block th:if="${salesType.isPriceInfo or salesType.isOtc}">
-            <div></div>
-        </th:block>
-        <th:block th:unless="${salesType.isPriceInfo}">
-            <div class="column-content">
-                <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::openVisitStatus}"/>
-                <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::closedVisitStatus}"/>
-            </div>
-        </th:block>
-    </div>
-    <div class="column-wrapper">
-        <div class="column-header" th:text="#{label.actionbar.visit.print}">Print</div>
-        <th:block th:if="${salesType.isPriceInfo}">
-            <div></div>
-        </th:block>
-        <th:block th:if="${!salesType.isPriceInfo}">
-            <div class="column-content">
-                <th:block th:insert="~{sales-module/fragments/htmx/printing}"/>
-            </div>
-        </th:block>
+<div id="actionbar">
+    <div class="threecolumn-spread">
+        <div class="column-wrapper">
+            <div class="column-header" th:text="#{label.actionbar.visit.actions}">Actions</div>
+            <th:block th:if="${salesType.isPriceInfo or salesType.isOtc }">
+                <div></div>
+            </th:block>
+            <th:block th:unless="${salesType.isPriceInfo}">
+                <div class="column-content">
+                    <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitStatusButtons}"/>
+                    <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/extrabuttons::visitReactivateButtons}"/>
+                </div>
+            </th:block>
+        </div>
+        <div class="column-wrapper">
+            <div class="column-header" th:text="#{label.actionbar.visit.status}">Visit Status</div>
+            <th:block th:if="${salesType.isPriceInfo or salesType.isOtc}">
+                <div></div>
+            </th:block>
+            <th:block th:unless="${salesType.isPriceInfo}">
+                <div class="column-content">
+                    <th:block th:if="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::openVisitStatus}"/>
+                    <th:block th:unless="${visit.isOpen()}" th:insert="~{sales-module/fragments/htmx/visitstatus::closedVisitStatus}"/>
+                </div>
+            </th:block>
+        </div>
+        <div class="column-wrapper">
+            <div class="column-header" th:text="#{label.actionbar.visit.print}">Print</div>
+            <th:block th:if="${salesType.isPriceInfo}">
+                <div></div>
+            </th:block>
+            <th:block th:if="${!salesType.isPriceInfo}">
+                <div class="column-content">
+                    <th:block th:insert="~{sales-module/fragments/htmx/printing}"/>
+                </div>
+            </th:block>
+        </div>
     </div>
 </div>
 <hr/>

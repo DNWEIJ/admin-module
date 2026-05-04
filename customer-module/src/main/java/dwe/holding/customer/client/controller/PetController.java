@@ -183,7 +183,7 @@ public class PetController {
             model.addAttribute("pet", pet)
                     .addAttribute("speciesList", lookupSpeciesRepository.findByMemberId(AutorisationUtils.getCurrentUserMid())
                             .stream().map(
-                                    f -> new PresentationElement(f.getSpecies(), f.getSpecies())
+                                    f -> new PresentationElement(f.getSpecy(), f.getSpecy())
                             )
                             .sorted(comparing(PresentationElement::getName)).toList()
                     )

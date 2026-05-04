@@ -6,6 +6,7 @@ import dwe.holding.salesconsult.consult.repository.LookupPurposeRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,20 +46,21 @@ public class LookupPurposeController {
 
     @PostMapping("lookup/purpose")
     @Transactional
-    String saveRecord(LookupPurpose formNotePurpose, RedirectAttributes redirect) {
-        if (formNotePurpose.isNew()) {
+    @CacheEvict("purpose")
+    public String saveRecord(LookupPurpose formPurpose, RedirectAttributes redirect) {
+        if (formPurpose.isNew()) {
             lookupPurposeRepository.save(
                     LookupPurpose.builder()
-                            .definedPurpose(formNotePurpose.getDefinedPurpose())
-                            .timeInMinutes(formNotePurpose.getTimeInMinutes())
+                            .definedPurpose(formPurpose.getDefinedPurpose())
+                            .timeInMinutes(formPurpose.getTimeInMinutes())
                             .build()
             );
         } else {
-            LookupPurpose notePurpose = lookupPurposeRepository.findById(formNotePurpose.getId()).orElseThrow();
-            if (notePurpose.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ) {
-                notePurpose.setDefinedPurpose(formNotePurpose.getDefinedPurpose());
-                notePurpose.setTimeInMinutes(formNotePurpose.getTimeInMinutes());
-                lookupPurposeRepository.save(notePurpose);
+            LookupPurpose lookupPurpose = lookupPurposeRepository.findById(formPurpose.getId()).orElseThrow();
+            if (lookupPurpose.getMemberId().equals(AutorisationUtils.getCurrentUserMid()) ) {
+                lookupPurpose.setDefinedPurpose(formPurpose.getDefinedPurpose());
+                lookupPurpose.setTimeInMinutes(formPurpose.getTimeInMinutes());
+                lookupPurposeRepository.save(lookupPurpose);
             } else {
                 redirect.addFlashAttribute("message", "Something went wrong. Please try again");
             }

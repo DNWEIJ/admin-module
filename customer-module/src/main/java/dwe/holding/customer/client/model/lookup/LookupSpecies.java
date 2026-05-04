@@ -19,7 +19,7 @@ import java.util.Set;
 public class LookupSpecies extends MemberBaseBO {
     @NotEmpty
     @Column(nullable = false)
-    private String species; // todo make it specy
+    private String specy;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "species")
     @Builder.Default

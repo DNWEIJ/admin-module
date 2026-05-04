@@ -65,7 +65,7 @@ public class ReportRemindersController {
                         .stream().map(reminder -> new PresentationElement(reminder, reminder, true)).toList()
                 )
                 .addAttribute("species", lookupSpeciesRepository.findByMemberId(AutorisationUtils.getCurrentUserMid())
-                        .stream().map(f -> new PresentationElement(f.getId(), f.getSpecies()))
+                        .stream().map(f -> new PresentationElement(f.getId(), f.getSpecy()))
                         .sorted(comparing(PresentationElement::getName)).toList()
                 )
                 .addAttribute("reminders", getReminders(reminderForm))
@@ -81,7 +81,7 @@ public class ReportRemindersController {
                     new SessionStorageReporting.ReportingSettings(SessionStorageReporting.ReportTypePage.REMINDER, actionType, "/report/reminders", objectMapper.writeValueAsString(reminderSelected))
             );
             case LATEST_CONSULT, CONSULT -> {
-                Reminder reminder = reminderRepository.findById(reminderSelected.get(0)).orElseThrow();
+                Reminder reminder = reminderRepository.findById(reminderSelected.getFirst()).orElseThrow();
                 Visit visit = null;
                 if (reminder.getOriginatingAppointmentId().equals(-1)) {
                     VisitProjection visitProjection = visitRepository.findByMemberIdAndPet_IdInOrderByAppointment_VisitDateTimeDesc(AutorisationUtils.getCurrentUserMid(), List.of(reminder.getPet().getId()))

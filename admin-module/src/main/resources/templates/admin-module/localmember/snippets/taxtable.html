@@ -1,0 +1,20 @@
+<table id="TaxTable" data-no-export>
+    <thead>
+    <tr>
+        <th>start</th>
+        <th>low</th>
+        <th>high</th>
+        <th>end</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="memberLocalTax : ${localmember.memberLocalTaxs}">
+        <tr>
+            <td th:text="${#temporals.format(memberLocalTax.startDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#numbers.formatDecimal(memberLocalTax.taxLow, 1, 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(memberLocalTax.taxHigh, 1, 2, 'POINT')}"></td>
+            <td th:text="${#temporals.format(memberLocalTax.endDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>

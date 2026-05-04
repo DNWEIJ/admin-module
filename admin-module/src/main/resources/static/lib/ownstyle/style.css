@@ -230,13 +230,14 @@ a:hover {
 
 .grid-grid-row {
     display: grid;
-    grid-template-columns: 8rem 1fr;
+    grid-template-columns: 1fr 5fr;
     column-gap: .1rem;
     row-gap: .5rem;
     align-items: end;
     margin-left: var(--pico-grid-column-gap);
     margin-right: var(--pico-grid-column-gap);
 }
+
 /* Smaller columns */
 .grid-grid-row > *.small {
     flex: 0.5 1 0; /* roughly half width relative to normal items */
@@ -248,6 +249,7 @@ a:hover {
     column-gap: 12px;
     row-gap: 12px;
 }
+
 .left-center {
     align-self: center;
 }
@@ -696,16 +698,15 @@ label {
     font-style: italic;
 }
 
-/* input field: place the label on top */
+/* original - without button */
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
     left: .4rem;
-    top: -1.0rem; /* keep inside container */
+    top: -1.0rem;
     transform: translateY(-10%);
     transform-origin: left top;
     background: var(--pico-background-color);
     padding: 0 .4rem;
-
     font-weight: bold;
     color: var(--pico-primary-underline);
     background: var(--pico-background-color);
@@ -713,6 +714,37 @@ label {
     border-bottom: none;
     border-radius: var(--pico-border-radius);
     z-index: 100;
+}
+
+/* with copy button (or other functionality */
+.field input:focus + a + label,
+.field input:not(:placeholder-shown) + a + label {
+    left: .4rem;
+    top: -1.0rem;
+    transform: translateY(-10%);
+    transform-origin: left top;
+    background: var(--pico-background-color);
+    padding: 0 .4rem;
+    font-weight: bold;
+    color: var(--pico-primary-underline);
+    background: var(--pico-background-color);
+    border: 1px solid var(--pico-form-element-border-color);
+    border-bottom: none;
+    border-radius: var(--pico-border-radius);
+    z-index: 100;
+}
+
+/* the copy emoji */
+.field > a {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    z-index: 50;
 }
 
 /* select field: to align with an input in a grid */
@@ -774,7 +806,76 @@ label {
 .tabs .panels .panel .field {
     padding-bottom: 1rem;
 }
+
 /* Mapping of the panels is in the page as a seperate style element */
+
+
+/***********************************************/
+/***********************************************/
+/***************** ACTIONBAR *******************/
+/***********************************************/
+/***********************************************/
+#actionbar > .threecolumn-spread {
+    grid-template-columns: 10fr 17fr 10fr;
+    padding-bottom: .5rem;
+}
+
+#actionbar .column-wrapper {
+    position: relative;
+}
+
+#actionbar .column-header {
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid;
+    border-radius: var(--pico-border-radius);
+    background: var(--pico-background-color);
+}
+
+#actionbar .column-content {
+    position: absolute;
+    top: 2.3rem;
+    left: 0;
+    right: 0;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    padding-top: 0.8rem;
+    background: var(--pico-background-color);
+    border: 1px solid;
+    border-radius: var(--pico-border-radius);
+    border-top: none;
+    z-index: 9;
+
+    opacity: 0;
+    transform: translateY(-6px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 400ms ease-out,
+    transform 400ms ease-out,
+    visibility 0ms linear 200ms;
+}
+
+#actionbar .column-content .grid {
+    display: grid;
+    align-items: start;
+}
+
+#actionbar .column-wrapper:hover .column-header {
+    background: var(--pico-table-row-stripped-background-color);
+}
+
+#actionbar .column-wrapper:hover .column-content,
+#actionbar .column-wrapper.open .column-content {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 400ms ease-out,
+    transform 400ms ease-out,
+    visibility 0ms;
+}
 
 
 /****************/
@@ -840,7 +941,7 @@ html, body {
 
 body > div > header {
     position: relative;
-    z-index:1000;
+    z-index: 1000;
     flex-shrink: 0;
 }
 
@@ -965,6 +1066,10 @@ details summary a.emoji-icon {
 
 .medium-input {
     width: 8rem;
+}
+
+.header-background {
+    border-bottom: solid;
 }
 
 /********************************************/
@@ -1105,10 +1210,10 @@ details summary a.emoji-icon {
 tr.highlight td {
     background-color: #fff3cd !important;
 }
+
 tr.multiSelected td {
     background-color: #fff3cd !important;
 }
-
 
 
 .showSplash {

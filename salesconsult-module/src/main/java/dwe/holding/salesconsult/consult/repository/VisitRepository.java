@@ -1,6 +1,8 @@
 package dwe.holding.salesconsult.consult.repository;
 
 import dwe.holding.salesconsult.consult.model.Visit;
+import dwe.holding.salesconsult.sales.repository.projection.VisitDto;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +23,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
 
     long countByTotalAmountIncTaxEquals(BigDecimal value);
 
-    // this is a native mariaDB query. Since we else have to query three times (JPQL) the lineitems, sum every amount seperatly
+    // this is a native mariaDB query. Since we else have to query three times (JPQL) the lineitems, sum every amount separately
     @Modifying
     @Query(nativeQuery = true, value = """
             UPDATE consult_visit v
@@ -37,12 +39,63 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
                 v.total_service_tax     = l.total_service_tax,
                 v.total_product_tax     = l.total_product_tax
             """)
-    void updateAllTotalAmounts();
+    void updateAllTotalAmountsMaintenanceMethod();
 
     @Modifying
     @Query(nativeQuery = true, value = """
                     UPDATE consult_visit SET total_amount_inc_tax = 0, total_service_tax = 0, total_product_tax = 0;
             """)
+    void zeroAmountOnVisitMaintenanceMethod();
 
-    void zeroAmountOnVisit();
+    Optional<Visit> findByAppointment_IdAndPet_Id(@NotNull Long appointmentId, @NotNull Long petId);
+
+    @Query("""
+    select new dwe.holding.salesconsult.sales.repository.projection.VisitDto(
+                   v.id,
+                   v.totalAmountIncTax,
+                   c.id,
+                   a.visitDateTime
+               )
+    from Visit v
+    join v.pet p
+    join p.customer c
+    join v.appointment a
+    where c.id in :customerIds
+    order by c.id asc, a.visitDateTime asc
+""")
+    List<VisitDto> findByPet_CustomerIdInOrderByPet_CustomerIdAscAppointment_visitDateTimeAsc(List<Long> customerIds);
+
+
+
+
+    @Query("""
+            select new dwe.holding.salesconsult.sales.repository.projection.VisitDto(
+                   v.id,
+                   v.totalAmountIncTax,
+                   c.id,
+                   a.visitDateTime)
+            from Visit v
+            join v.pet p
+            join p.customer c
+            join v.appointment a
+            WHERE v.paymentVisits IS EMPTY and v.totalAmountIncTax <> 0.0
+            """)
+    List<VisitDto> findMigrationNotConnectedAndNotZeroAmount();
+
+    @Query("""
+            select new dwe.holding.salesconsult.sales.repository.projection.VisitDto(
+                   v.id,
+                   v.totalAmountIncTax,
+                   c.id,
+                   a.visitDateTime)
+            from Visit v
+            join v.pet p
+            join p.customer c
+            join v.appointment a
+            WHERE v.paymentVisits IS EMPTY
+            """)
+    List<VisitDto> findMigrationNotConnected();
+
+
+    List<Visit> findByPet_Customer_Id(Long customerId);
 }

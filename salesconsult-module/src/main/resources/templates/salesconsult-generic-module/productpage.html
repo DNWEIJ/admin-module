@@ -16,9 +16,7 @@
     </div>
 
     <block th:unless="${salesType.isPriceInfo}">
-        <div id="actionbar">
             <th:block th:insert="~{/consult-module/fragments/htmx/actionbar}"></th:block>
-        </div>
     </block>
 
     <block th:if="${!salesType.isPriceInfo}">

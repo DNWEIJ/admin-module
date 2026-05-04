@@ -13,6 +13,14 @@ public class IPNumber {
 
     public IPNumber(){}
 
+    public IPNumber(Integer numberOne, Integer numberTwo, Integer numberThree, Integer numberFour) {
+        this.numberOne = numberOne;
+        this.numberTwo= numberTwo;
+        this.numberThree = numberThree;
+        this.numberFour = numberFour;
+        if (!validate()) throw new IllegalArgumentException("not a correct ip number");
+    }
+
     public IPNumber(String ipnumber) {
         this.fromString(ipnumber);
     }
@@ -23,7 +31,7 @@ public class IPNumber {
     }
 
     public final void fromString(String IPNumber) {
-        String[] splitted = IPNumber.split(".");
+        String[] splitted = IPNumber.split("\\.");
         if (splitted.length != 4) {
             throw new SystemException(this.getClass().getName() + ": Not a correct IPNumber!!");
         }

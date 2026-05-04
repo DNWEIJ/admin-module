@@ -26,16 +26,14 @@ public class LocalMember extends MemberBaseBO {
     private String localMemberName;
     private String phone1;
     private String phone2;
-    private String address1;
-    private String address2;
-    private String address3;
+    private String streetAndNr;
     private String city;
     private String state;
     private String zipCode;
     private String email;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "localMember")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "localMember")
     private List<LocalMemberTax> memberLocalTaxs = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

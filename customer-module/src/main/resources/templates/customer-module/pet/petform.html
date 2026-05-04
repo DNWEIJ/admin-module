@@ -77,12 +77,13 @@
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('deceasedDate','pet.deceasedDate','pet.deceasedDate','')}"
                       th:with="type='date',required=false"></th:block>
         </div>
-        <div class="grid">
+        <div class="grid-row">
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('passportNumber','pet.passportNumber','pet.passportNumber','0')}" th:with="required=false"></th:block>
-            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipTattooId','pet.chipTattooId','pet.chipTattooId','0')}" th:with="required=false"></th:block>
+            <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipTattooId','pet.chipTattooId','pet.chipTattooId','0')}" th:with="required=false,datacopyelement='Chip ID'"></th:block>
             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('chipDate','pet.chipDate','pet.chipDate','0')}" th:with="type='date', required=false"></th:block>
-        </div>
+            <a class="small align-center" target="_blank" href="https://ndg.nl/frm/reg"  th:text="#{pet.register.ndg}"></a>
 
+        </div>
         <label for="pet.comments">
             <th:block th:utext="#{pet.comments}"/>
             <textarea cols="110" id="pet.comments" name="comments" rows="8"  th:utext="${pet.comments}"></textarea>

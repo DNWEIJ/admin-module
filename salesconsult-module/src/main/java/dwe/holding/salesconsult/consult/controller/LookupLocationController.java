@@ -6,6 +6,7 @@ import dwe.holding.salesconsult.consult.repository.LookupLocationRepository;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,8 @@ public class LookupLocationController {
 
     @PostMapping("lookup/location")
     @Transactional
-    String saveRecord(LookupLocation formLocation, RedirectAttributes redirect) {
+    @CacheEvict("locations")
+    public String saveRecord(LookupLocation formLocation, RedirectAttributes redirect) {
         if (formLocation.isNew()) {
             lookupLocationRepository.save(
                     LookupLocation.builder()

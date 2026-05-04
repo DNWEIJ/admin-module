@@ -14,4 +14,7 @@ call .\run_insert_scripts.bat
 cd C:\workspace\admin\salesconsult-module\src\test\resources\sql
 call .\run_insert_scripts.bat
 
+cd  c:\workspace\admin\vmas-app\src\test\resources\sql
+call .\run_cleanup_scripts.bat
+
 cd C:\workspace\admin\vmas-app\src\test\resources

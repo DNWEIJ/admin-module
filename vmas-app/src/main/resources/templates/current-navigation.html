@@ -1,0 +1,422 @@
+<div class="navigation-wrapper">
+<input id="nav_checkbox" type="checkbox"/>
+<label data-role="burger" for="nav_checkbox">☰</label>
+<nav role="menu">
+    <div role="icons">
+        <ul>
+            <li>
+                <a th:href="@{/consult/visit/search}" data-tooltip="New appointment" data-placement="right">
+                    <svg class="svg-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                        <style>
+                            .cal-primary {
+                                fill: var(--pico-primary, #4A90D9);
+                            }
+
+                            .cal-primary-dk {
+                                fill: var(--pico-primary-hover, #2C5F8A);
+                            }
+
+                            .cal-bg {
+                                fill: var(--pico-card-background-color, #ffffff);
+                            }
+
+                            .cal-muted {
+                                fill: var(--pico-muted-border-color, #D0E8FF);
+                            }
+
+                            .cal-accent {
+                                fill: var(--pico-ins-color, #4CAF50);
+                            }
+
+                            .cal-on-primary {
+                                fill: var(--pico-primary-inverse, #ffffff);
+                            }
+
+                            .cal-check {
+                                stroke: var(--pico-primary-inverse, #ffffff);
+                            }
+                        </style>
+
+                        <!-- Calendar body -->
+                        <rect x="6" y="14" width="40" height="36" rx="5" ry="5" class="cal-primary"/>
+                        <rect x="6" y="22" width="40" height="28" class="cal-bg"/>
+                        <rect x="6" y="22" width="40" height="8" class="cal-primary"/>
+
+                        <!-- Calendar rings -->
+                        <rect x="16" y="10" width="4" height="10" rx="2" class="cal-primary-dk"/>
+                        <rect x="32" y="10" width="4" height="10" rx="2" class="cal-primary-dk"/>
+
+                        <!-- Calendar grid dots -->
+                        <rect x="12" y="34" width="5" height="5" rx="1" class="cal-muted"/>
+                        <rect x="21" y="34" width="5" height="5" rx="1" class="cal-muted"/>
+                        <rect x="30" y="34" width="5" height="5" rx="1" class="cal-primary"/>
+                        <rect x="12" y="43" width="5" height="5" rx="1" class="cal-muted"/>
+                        <rect x="21" y="43" width="5" height="5" rx="1" class="cal-muted"/>
+                        <rect x="30" y="43" width="5" height="5" rx="1" class="cal-muted"/>
+
+                        <!-- Check mark on highlighted date -->
+                        <polyline points="31,35.5 32.5,37.5 35.5,34" class="cal-check" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+                        <!-- Person badge (bottom-right) -->
+                        <circle cx="51" cy="50" r="13" class="cal-accent"/>
+                        <circle cx="51" cy="43" r="4" class="cal-on-primary"/>
+                        <path d="M43 54 Q43 48 51 48 Q59 48 59 54" class="cal-on-primary"/>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/sales/otc/search}" data-tooltip="OTC" data-placement="bottom">
+                    <svg class="svg-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                        <style>
+                            .cart-primary {
+                                fill: var(--pico-primary, #4A90D9);
+                            }
+
+                            .cart-primary-dk {
+                                fill: var(--pico-primary-hover, #2C5F8A);
+                            }
+
+                            .cart-bg {
+                                fill: var(--pico-card-background-color, #ffffff);
+                            }
+
+                            .cart-muted {
+                                fill: var(--pico-muted-border-color, #ccd6e0);
+                            }
+
+                            .cart-accent {
+                                fill: var(--pico-ins-color, #4CAF50);
+                            }
+
+                            .cart-on-accent {
+                                fill: var(--pico-primary-inverse, #ffffff);
+                            }
+
+                            .cart-stroke {
+                                stroke: var(--pico-primary, #4A90D9);
+                            }
+                        </style>
+
+                        <!-- Cart handle -->
+                        <polyline points="4,8 10,8 16,38 48,38 52,18 12,18"
+                                  fill="none" class="cart-stroke" stroke-width="4"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+
+                        <!-- Cart body fill -->
+                        <polygon points="14,22 48,22 44,36 18,36" class="cart-primary" opacity="0.85"/>
+
+                        <!-- Wheels -->
+                        <circle cx="21" cy="44" r="4" class="cart-primary-dk"/>
+                        <circle cx="21" cy="44" r="1.8" class="cart-bg"/>
+                        <circle cx="41" cy="44" r="4" class="cart-primary-dk"/>
+                        <circle cx="41" cy="44" r="1.8" class="cart-bg"/>
+
+                        <!-- Money badge (bottom-right) — person is handing it -->
+                        <circle cx="51" cy="50" r="13" class="cart-accent"/>
+
+                        <!-- Euro symbol -->
+                        <text x="51" y="54"
+                              text-anchor="middle"
+                              font-size="15"
+                              font-family="Georgia, serif"
+                              font-weight="bold"
+                              class="cart-on-accent">€
+                        </text>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/sales/price/sell}" data-tooltip="Price Information" data-placement="bottom">
+                    <svg class="svg-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                        <style>
+                            .accent {
+                                fill: var(--pico-ins-color, #4CAF50);
+                            }
+
+                            .on-accent {
+                                fill: var(--pico-primary-inverse, #ffffff);
+                            }
+
+                            .mark {
+                                fill: var(--pico-primary, #4A90D9);
+                            }
+                        </style>
+
+                        <!-- Question mark -->
+                        <text x="18" y="52"
+                              font-size="54"
+                              font-family="Georgia, serif"
+                              font-weight="bold"
+                              class="mark">?
+                        </text>
+
+                        <!-- Euro money badge — bottom right -->
+                        <circle cx="51" cy="50" r="13" class="accent"/>
+                        <text x="51" y="55"
+                              text-anchor="middle"
+                              font-size="15"
+                              font-family="Georgia, serif"
+                              font-weight="bold"
+                              class="on-accent">€
+                        </text>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/agenda/agenda}" data-tooltip="Agenda" data-placement="bottom">
+                    <svg class="svg-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                        <style>
+                            .primary {
+                                fill: var(--pico-primary, #4A90D9);
+                            }
+
+                            .primary-dk {
+                                fill: var(--pico-primary-hover, #2C5F8A);
+                            }
+
+                            .primary-str {
+                                stroke: var(--pico-primary, #4A90D9);
+                            }
+
+                            .bg {
+                                fill: var(--pico-card-background-color, #ffffff);
+                            }
+
+                            .muted
+                                fill: var(--pico-muted-border-color, #ccd6e0);
+                            }
+
+                            .accent {
+                                fill: var(--pico-ins-color, #4CAF50);
+                            }
+
+                            .on-accent {
+                                fill: var(--pico-primary-inverse, #ffffff);
+                            }
+
+                            .on-primary {
+                                fill: var(--pico-primary-inverse, #ffffff);
+                            }
+
+                            .text-muted {
+                                fill: var(--pico-muted-color, #6b7f8e);
+                            }
+                        </style>
+
+                        <!-- Calendar body -->
+                        <rect x="4" y="10" width="46" height="44" rx="5" class="bg"
+                              stroke="var(--pico-muted-border-color, #ccd6e0)" stroke-width="1.5"/>
+
+                        <!-- Header bar -->
+                        <rect x="4" y="10" width="46" height="14" rx="5" class="primary"/>
+                        <rect x="4" y="17" width="46" height="7" class="primary"/>
+
+                        <!-- Ring clips -->
+                        <rect x="15" y="6" width="4" height="10" rx="2" class="primary-dk"/>
+                        <rect x="35" y="6" width="4" height="10" rx="2" class="primary-dk"/>
+
+                        <!-- Header label lines -->
+                        <rect x="18" y="14" width="18" height="2.5" rx="1" class="on-primary" opacity="0.7"/>
+
+                        <!-- Grid: day cells -->
+                        <!-- Row 1 -->
+                        <rect x="9" y="28" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="19" y="28" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="29" y="28" width="7" height="5" rx="1" class="primary" opacity="0.8"/>
+                        <rect x="39" y="28" width="7" height="5" rx="1" class="muted"/>
+
+                        <!-- Row 2 -->
+                        <rect x="9" y="36" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="19" y="36" width="7" height="5" rx="1" class="primary" opacity="0.8"/>
+                        <rect x="29" y="36" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="39" y="36" width="7" height="5" rx="1" class="muted"/>
+
+                        <!-- Row 3 -->
+                        <rect x="9" y="44" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="19" y="44" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="29" y="44" width="7" height="5" rx="1" class="muted"/>
+                        <rect x="39" y="44" width="7" height="5" rx="1" class="primary" opacity="0.8"/>
+
+                        <!-- Appointment lines on highlighted cells -->
+                        <rect x="30" y="29.5" width="5" height="1.2" rx="0.5" class="on-primary"/>
+                        <rect x="30" y="31.5" width="3.5" height="1.2" rx="0.5" class="on-primary" opacity="0.6"/>
+
+                        <rect x="20" y="37.5" width="5" height="1.2" rx="0.5" class="on-primary"/>
+                        <rect x="20" y="39.5" width="3.5" height="1.2" rx="0.5" class="on-primary" opacity="0.6"/>
+
+                        <rect x="40" y="45.5" width="5" height="1.2" rx="0.5" class="on-primary"/>
+                        <rect x="40" y="47.5" width="3.5" height="1.2" rx="0.5" class="on-primary" opacity="0.6"/>
+
+                        <!-- Clock badge — bottom right -->
+                        <circle cx="50" cy="50" r="13" class="accent"/>
+                        <circle cx="50" cy="50" r="10" class="on-accent"/>
+                        <!-- Clock face -->
+                        <circle cx="50" cy="50" r="1.2" class="accent"/>
+                        <!-- Hour hand ~10 o'clock -->
+                        <line x1="50" y1="50" x2="46" y2="45"
+                              stroke="var(--pico-ins-color, #4CAF50)" stroke-width="1.8" stroke-linecap="round"/>
+                        <!-- Minute hand ~12 o'clock -->
+                        <line x1="50" y1="50" x2="50" y2="43"
+                              stroke="var(--pico-ins-color, #4CAF50)" stroke-width="1.4" stroke-linecap="round"/>
+                        <!-- Clock tick marks -->
+                        <line x1="50" y1="41" x2="50" y2="42.5" stroke="var(--pico-muted-border-color, #ccd6e0)" stroke-width="1"/>
+                        <line x1="50" y1="57.5" x2="50" y2="59" stroke="var(--pico-muted-border-color, #ccd6e0)" stroke-width="1"/>
+                        <line x1="41" y1="50" x2="42.5" y2="50" stroke="var(--pico-muted-border-color, #ccd6e0)" stroke-width="1"/>
+                        <line x1="57.5" y1="50" x2="59" y2="50" stroke="var(--pico-muted-border-color, #ccd6e0)" stroke-width="1"/>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/customer/customer}" data-tooltip="Customer & Pet" data-placement="bottom">
+                    <svg class="svg-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                        <style>
+                            .primary { fill: var(--pico-primary, #4A90D9); }
+                            .on-primary { fill: var(--pico-primary-inverse, #ffffff); }
+                        </style>
+
+                        <!-- Main blue circle -->
+                        <circle cx="32" cy="32" r="27" class="primary"/>
+
+                        <!-- PERSON (upper center, doubled size) -->
+                        <circle cx="32" cy="19" r="7.5" class="on-primary"/>
+                        <path d="M19 32 Q19 25 32 25 Q45 25 45 32" fill="#ffffff"/>
+
+                        <!-- CAT (bottom left, almost touching dog) -->
+                        <circle cx="18" cy="49" r="13" fill="#c0a060"/>
+                        <polygon points="9,39 11.5,32 15.5,39" fill="#c0a060"/>
+                        <polygon points="21,39 24,32 27.5,39" fill="#c0a060"/>
+                        <polygon points="10,39 12,34 15,39" fill="#e8c8a0"/>
+                        <polygon points="22,39 24.5,34 27,39" fill="#e8c8a0"/>
+                        <circle cx="14" cy="47" r="1.3" fill="#333"/>
+                        <circle cx="22" cy="47" r="1.3" fill="#333"/>
+                        <ellipse cx="18" cy="50" rx="1.2" ry="0.8" fill="#e88080"/>
+                        <line x1="4" y1="49" x2="13" y2="50" stroke="#888" stroke-width="0.7"/>
+                        <line x1="4" y1="52" x2="13" y2="52" stroke="#888" stroke-width="0.7"/>
+                        <line x1="23" y1="50" x2="32" y2="49" stroke="#888" stroke-width="0.7"/>
+                        <line x1="23" y1="52" x2="32" y2="52" stroke="#888" stroke-width="0.7"/>
+                        <path d="M16 52.5 Q18 54.5 20 52.5" fill="none" stroke="#c06060" stroke-width="0.7" stroke-linecap="round"/>
+
+                        <!-- DOG (bottom right, almost touching cat) -->
+                        <circle cx="46" cy="49" r="13" fill="#d4956a"/>
+                        <ellipse cx="37" cy="44" rx="4" ry="6.5" fill="#b07040" transform="rotate(-15 37 44)"/>
+                        <ellipse cx="55" cy="44" rx="4" ry="6.5" fill="#b07040" transform="rotate(15 55 44)"/>
+                        <circle cx="42" cy="47" r="1.3" fill="#333"/>
+                        <circle cx="50" cy="47" r="1.3" fill="#333"/>
+                        <ellipse cx="46" cy="50" rx="4" ry="2.5" fill="#c07850"/>
+                        <ellipse cx="46" cy="49" rx="2" ry="1.3" fill="#222"/>
+                        <path d="M43 52 Q46 54.5 49 52" fill="none" stroke="#a05030" stroke-width="0.8" stroke-linecap="round"/>
+                        <ellipse cx="46" cy="54" rx="1.5" ry="1.8" fill="#e06060"/>
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div role="dropdown">
+        <ul>
+            <li>
+                <details name="menu-items">
+                    <summary>Task</summary>
+                    <ul>
+                        <li><a th:href="@{/report/visits}">Consult list</a></li>
+                        <li><a th:href="@{/report/reminders}">Report Reminders</a></li>
+                        <li><a href="">TODO Agenda Tasks</a></li>
+                        <li><a th:href="@{/report/customerlist}">(E)mail customers</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Supplies</summary>
+                    <ul>
+                        <li><a th:href="@{/supplies/distributors}">Distributor</a></li>
+                        <li><a th:href="@{/supplies/distributor/supplies}">Distributor supplies</a></li>
+                        <li><a th:href="@{/supplies/distributor/supplies}">TODO NEW: Create purchase list</a></li>
+                        <li><a th:href="@{/supplies/distributor/supplies}">TOD NEW: Process inventory</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Products</summary>
+                    <ul>
+                        <li><a th:href="@{/product/categories}">Product Categories</a></li>
+                        <li><a th:href="@{/product/products}">Products</a></li>
+                        <li><a th:href="@{/product/pricing}">Product Pricing</a></li>
+                        <li><a th:href="@{/product/inventory}">Product Inventory</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Financials</summary>
+                    <ul>
+                        <li>
+                            <details>
+                                <summary th:text="#{label.title.payment}"></summary>
+                                <ul>
+                                    <li><a th:href="@{/report/payment?paymentListType=STANDARD}" th:text="#{label.paymentlist.Standard}"></a></li>
+                                    <li><a th:href="@{/report/payment?paymentListType=OUT}"th:text="#{label.paymentlist.Out}"></a></li>
+                                    <li><a th:href="@{/report/payment?paymentListType=OVER}"th:text="#{label.paymentlist.Over}"></a></li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li><a th:href="@{/sales/price/refund}">Refunds</a></li>
+                        <li><a href="">TODO: Misc Expenses</a></li>
+                        <li style="text-align: center">---   ---   ---  ---</li>
+                        <li><a href="">TODO: Cash Flow</a></li>
+                        <li><a href="">TODO: Cash Basis</a></li>
+                        <li><a th:href="@{/report/payment?paymentListType=AR}"th:text="#{label.paymentlist.AR}"></a></li>
+                        <li><a href=""></a></li>
+
+                        <li><a href="">TODO: Email Reminder Invoice</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>Admin</summary>
+                    <ul>
+                        <li><a th:href="@{/admin/localmembers}">Local Member</a></li>
+                        <li><a th:href="@{/admin/users}">User</a></li>
+                        <li>
+                            <details>
+                                <summary>Lookup</summary>
+                                <ul>
+                                    <li><a th:href="@{/customer/lookup/rooms}" th:text="#{label.title.room}"></a></li>
+                                    <li><a th:href="@{/customer/lookup/notepurposes}" th:text="#{label.title.notepurpose}"></a></li>
+                                    <li><a th:href="@{/customer/lookup/diagnosis}" th:text="#{label.title.diagnosis}"></a></li>
+                                    <li><a th:href="@{/customer/lookup/locations}" th:text="#{label.title.location}"></a></li>
+                                    <li><a th:href="@{/customer/lookup/purposes}" th:text="#{label.title.purpose}"></a></li>
+                                    <li><a th:href="@{/customer/lookup/species}" th:text="#{label.title.species}"></a></li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li><a th:href="@{/admin/analyse/descriptions}">Analyses</a></li>
+                        <li><a href="">TODO Indicators</a></li>
+                        <li><a th:href="@{/report/templates}">Maintain templates</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details name="menu-items">
+                    <summary>SuperAdmin</summary>
+                    <ul>
+                        <li><a th:href="@{/admin/members}">Member</a></li>
+                        <li><a th:href="@{/admin/functions}">Function</a></li>
+                        <li><a th:href="@{/admin/roles}">Role</a></li>
+                        <li><a th:href="@{/admin/manuals}">NEW Manuals</a></li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
+    </div>
+    <div role="buttons">
+        <ul>
+            <li>
+                <button th:onclick="|window.location.href='@{/admin/logout}'|">Logout</button>
+                <button th:onclick="|window.location.href='@{/admin/something}'|">Something</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>

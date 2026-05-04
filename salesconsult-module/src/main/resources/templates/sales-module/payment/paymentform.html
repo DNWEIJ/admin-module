@@ -57,7 +57,7 @@
             </div>
             <div>
                 <div th:if="${payment.paymentVisits != null}">
-                    <table class="no-sorting" style="max-width:20rem;">
+                    <table data-no-export class="no-sorting" style="max-width:20rem;">
                         <thead>
                         <th th:text="#{label.button.delete} + '?'"></th>
                         <th th:text="#{label.title.Visit}"></th>
@@ -83,6 +83,14 @@
                             </tr>
                         </div>
                         </tbody>
+                        <tfoot>
+                        <tr></tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th:block th:insert="~{fragments/elements/numberdisplay::showNumberWithEuro_td(${totalPaymentAmount}, false,'')}" th:with="dataFieldMoneyTotal=true, increaseFont=120"></th:block>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div th:unless="${payment.paymentVisits != null}">

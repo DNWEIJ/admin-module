@@ -74,7 +74,7 @@ public class VmasUserPreferences {
                 agendaVet1 == null || agendaVet2 == null || agendaVet3 == null
                         || searchCustStart == null || searchCustStreet == null || searchCustNameTelephone == null || searchCustPet == null
                         || showVisitTotal == null || showCustomerPet == null || showConsult == null || showAnalyse == null
-                        || showProducts == null || showDiagnoses == null || color == null) {
+                        || showProducts == null || showDiagnoses == null) {
             return new VmasUserPreferences(); // one or more fields are null → invalid
         }
         return this; // all fields are non-null → valid

@@ -5,6 +5,8 @@ import dwe.holding.customer.client.model.lookup.LookupNotePurpose;
 import dwe.holding.customer.lookup.repository.NotePurposeLookupRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +50,8 @@ public class NotePurposeLookupController {
 
     @PostMapping("lookup/notepurpose")
     @Transactional
-    String saveRecord(LookupNotePurpose formNotePurpose, RedirectAttributes redirect) {
+    @CacheEvict("notePurpose")
+    public String saveRecord(LookupNotePurpose formNotePurpose, RedirectAttributes redirect) {
         if (formNotePurpose.isNew()) {
             notePurposeLookupRepository.save(
                     LookupNotePurpose.builder()

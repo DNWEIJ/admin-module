@@ -160,7 +160,7 @@ public class VisitController {
 
     @PostMapping("/visit/customer/{customerId}/visit/{visitId}")
     String saveVisitXhtm(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long visitId, Visit visitForm, HttpServletResponse response, Locale locale) {
-        CustomerService.Customer customer = customerService.searchCustomer(customerId);
+        customerService.searchCustomer(customerId);
         Visit visit = visitRepository.findByMemberIdAndId(AutorisationUtils.getCurrentUserMid(), visitId).orElseThrow();
         updateVisit(visit, visitForm);
         visitRepository.save(visit);
@@ -168,6 +168,12 @@ public class VisitController {
                 + messageSource.getMessage("label.saved", null, locale)
                 + "\"}}");
         return "fragments/elements/empty";
+    }
+
+    @GetMapping("/visit/customer/{customerId}/appointment/{appointmentId}/pet/{petId}")
+    String EditVisitFromReminderScreen(@NotNull @PathVariable Long customerId, @NotNull @PathVariable Long appointmentId,@NotNull  @PathVariable Long petId, @RequestParam String callFrom, Model model) {
+        Visit visit = visitRepository.findByAppointment_IdAndPet_Id(appointmentId, petId).orElseThrow();
+        return editVisit( customerId, visit.getId(), callFrom,  model);
     }
 
     @GetMapping("/visit/customer/{customerId}/visit/{visitId}")
@@ -186,7 +192,7 @@ public class VisitController {
         updatePetDiagnosesInModel(model, diagnoseRepository, AutorisationUtils.getCurrentUserMid(), visit.getPet().getId(), visit.getAppointment().getId());
         updateVisitStatusInModel(model, visit.getStatus(), SalesType.VISIT);
 
-        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.getById(customerId));
+        customerFinancialInfo.updateCustomerAndFinancialInfo(model, customerRepository.findById(customerId).orElseThrow());
 
         List<Appointment> app =
                 switch (callFrom) {
@@ -222,6 +228,7 @@ public class VisitController {
                 .addAttribute("analyses", analyseDescriptionRepository.findByMemberId(AutorisationUtils.getCurrentUserMid()))
                 .addAttribute("analyseItems", analyseItems)
                 .addAttribute("isAnalyseItemsFromDb", !analyseItems.isEmpty())
+                .addAttribute("attachedPayment", visit.getPaymentVisits().isEmpty() ? null : visit.getPaymentVisits().iterator().next().getPayment())
         ;
 
 

@@ -7,7 +7,7 @@ import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Pet;
 import dwe.holding.customer.client.model.type.CustomerStatusEnum;
 import dwe.holding.customer.client.repository.CustomerRepository;
-import dwe.holding.customer.service.ZipCodeApi;
+import dwe.holding.customer.service.ZipCodeApiClient;
 import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class HtmxCustomerController {
     private final CustomerRepository customerRepository;
-    private final ZipCodeApi zipCodeApi;
+    private final ZipCodeApiClient zipCodeApiClient;
     private final MessageSource messageSource;
 
 
@@ -54,12 +54,12 @@ public class HtmxCustomerController {
     @GetMapping("/search/customer/address/{zipCode}/{houseNumber}")
     @ResponseBody
     public String searchAddressHtmx(@PathVariable String houseNumber, @PathVariable String zipCode, Locale locale) {
-        Optional<ZipCodeApi.Address> optionalAddress = zipCodeApi.getAddress(zipCode, houseNumber);
+        Optional<ZipCodeApiClient.Address> optionalAddress = zipCodeApiClient.getAddress(zipCode, houseNumber);
         if (optionalAddress.isEmpty()) {
             return mainpart.formatted(messageSource.getMessage("address.notfound", null, locale), "", "", "", "", "", "");
         }
 
-        ZipCodeApi.Address address = optionalAddress.get();
+        ZipCodeApiClient.Address address = optionalAddress.get();
         if (address.street() == null && address.houseNumber() != null) {
             return mainpart.formatted(
                     messageSource.getMessage("address.notfound", null, locale),
@@ -77,12 +77,12 @@ public class HtmxCustomerController {
 
     @GetMapping("/search/customer/address/street/{streetName}/{houseNumber}/{city}")
     @ResponseBody
-    public String searchAddressViaStreetAndCityHtmx(Model model, @PathVariable String houseNumber, @PathVariable String streetName, @PathVariable String city, Locale locale) {
-        Optional<ZipCodeApi.Address> optionalAddress = zipCodeApi.getAddressViaStreetAndCity(streetName, houseNumber, city);
+    public String searchAddressViaStreetAndCityHtmx( @PathVariable String houseNumber, @PathVariable String streetName, @PathVariable String city, Locale locale) {
+        Optional<ZipCodeApiClient.Address> optionalAddress = zipCodeApiClient.getAddressViaStreetAndCity(streetName, houseNumber, city);
         if (optionalAddress.isEmpty()) {
             return mainpart.formatted(messageSource.getMessage("address.notfound", null, locale), "", "", "", "", "", "");
         }
-        ZipCodeApi.Address address = optionalAddress.get();
+        ZipCodeApiClient.Address address = optionalAddress.get();
         if (address.street() == null && address.houseNumber() != null) {
             return mainpart.formatted(
                     messageSource.getMessage("address.notfound", null, locale), "", "", "", "", ""
@@ -238,11 +238,6 @@ public class HtmxCustomerController {
 
     private String getStringText(String stringText) {
         return (stringText == null || stringText.isBlank()) ? "" : stringText + " ";
-    }
-
-    private void setModel(Model model) {
-        model.addAttribute("ynvaluesList", YesNoEnum.getWebList());
-        model.addAttribute("statusList", CustomerStatusEnum.getWebList());
     }
 
     private String highlightMatches(Pattern pattern, String input, boolean needMatching) {

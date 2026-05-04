@@ -7,39 +7,40 @@
 <section layout:fragment="content">
     <details id="reportRemindersInfo" open>
         <summary>
-            <span th:text="#{label.report.consult.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
+            <span th:text="#{label.report.consult.input.title}"></span><a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/report/visit"
+                                                                          th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
         </summary>
 
         <form action="" method="get">
 
-                <div class="grid">
-                    <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
-                        <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
-                               th:value="${#temporals.format(form.from, 'yyyy-MM-dd')}">
-                    </label>
-                    <label th:for="visitDateTimeEnd">[[#{visit.headerlist.untill}]]
-                        <input id="visitDateTimeEnd" name="includeTill" required type="date" autocomplete="off"
-                               max="9999-01-01"
-                               th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
-                    </label>
-                    <th:block
-                            th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"
-                            th:with="isSelectAll=true"></th:block>
-                    <th:block
-                            th:insert="~{fragments/elements/dropdown::propDropdown('invoiceSend','visit.headerlist.send', ${form.invoiceSend}, ${ynvaluesList}, true,'0')}"
-                            th:with="required=false">
-                    </th:block>
-
-                    <div style="display: flex; align-self: stretch;">
-                        <div style="display: flex; align-items: center;">
-                            <th:block
-                                    th:insert="~{fragments/elements/select::selectCheckBox('showAmountDiff',#{label.visit.checkbox.amountdiff},${form.showAmountDiff},'0')}"></th:block>
-                        </div>
+            <div class="grid">
+                <label th:for="visitDateTimeStart">[[#{visit.headerlist.from}]]
+                    <input id="visitDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"
+                           th:value="${#temporals.format(form.from, 'yyyy-MM-dd')}">
+                </label>
+                <label th:for="visitDateTimeEnd">[[#{visit.headerlist.untill}]]
+                    <input id="visitDateTimeEnd" name="includeTill" required type="date" autocomplete="off"
+                           max="9999-01-01"
+                           th:value="${#temporals.format(form.includeTill, 'yyyy-MM-dd')}">
+                </label>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::dbDropdown('localMemberId','userpreferences.clinic', ${form.localMemberId}, ${localMembersList}, true,'1')}"
+                        th:with="isSelectAll=true"></th:block>
+                <th:block
+                        th:insert="~{fragments/elements/dropdown::propDropdown('invoiceSend','visit.headerlist.send', ${form.invoiceSend}, ${ynvaluesList}, true,'0')}"
+                        th:with="required=false">
+                </th:block>
+                <div style="display: flex; align-self: stretch;">
+                    <div style="display: flex; align-items: center;">
+                        <th:block
+                                th:insert="~{fragments/elements/select::selectCheckBox('showAmountDiff',#{label.visit.checkbox.amountdiff},${form.showAmountDiff},'0')}"></th:block>
                     </div>
                 </div>
-                <input type="submit" th:value="#{label.button.search}"/>
-
-                <table data-no-highlight data-no-export>
+            </div>
+            <input type="submit" th:value="#{label.button.search}"/>
+            <fieldset style="padding-bottom: 0; margin-bottom: 0">
+                <legend>Show columns</legend>
+                <table data-no-highlight data-no-export class="table-tight">
                     <tr>
                         <td colspan="2">
                             <th:block th:insert="~{fragments/elements/select::selectCheckBox('showPetname',#{label.visit.checkbox.petname},${form.showPetname},'0')}"></th:block>
@@ -58,6 +59,7 @@
                         </td>
                     </tr>
                 </table>
+            </fieldset>
         </form>
     </details>
 
@@ -65,7 +67,6 @@
         <table id="appointmentList" data-multi-select class="table-tight">
             <thead>
             <tr>
-                <th class="no-sorting"><input role="switch" type="checkbox" th:checked="false" onchange="toggleAllCheckBoxesInSurroundingElement(this, 'table')"></th>
                 <th data-order="1" th:text="#{visit.headerlist.visitDate}"></th>
                 <th data-order="2" th:text="#{visit.headerlist.status}"></th>
                 <th data-order="3" th:text="#{visit.headerlist.owner}"></th>
@@ -79,14 +80,17 @@
             </tr>
             </thead>
             <tbody>
+            <tr th:if="${#lists.size(appointments) == 0}">
+                <td colspan="3" th:text="#{label.not-found}"></td>
+                <td colspan="7"></td>
+            </tr>
             <tr th:each="visit : ${appointments}">
-                <td><input role="switch" type="checkbox" name="reminderSelected" th:value="${visitId}"/></td>
                 <td th:if="${visit.otc.label == 'label.yesno.yes'}" th:attr="data-sort-value=${visit.visitDateTime}">
-                    <a th:href="'/sales/otc/customer/'+ ${visit.customerId} + '/visit/'+  ${visit.visitId}"
+                    <a target="_blank" th:href="'/sales/otc/customer/'+ ${visit.customerId} + '/visit/'+  ${visit.visitId}"
                        th:text="${#temporals.format(visit.visitDateTime, 'dd-MM-yyyy HH:mm') + ' (OTC)'}"></a>
                 </td>
                 <td th:if="${visit.otc.label == 'label.yesno.no'}" th:attr="data-sort-value=${visit.visitDateTime}">
-                    <a th:href="'/consult/visit/customer/'+ ${visit.customerId} + '/visit/'+ ${visit.visitId} + '?callFrom=customer'"
+                    <a target="_blank" th:href="'/consult/visit/customer/'+ ${visit.customerId} + '/visit/'+ ${visit.visitId} + '?callFrom=customer'"
                        th:text="${#temporals.format(visit.visitDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                 </td>
                 <th:block th:if="${visit.appointmentId == 0}">
@@ -95,7 +99,7 @@
                 <th:block th:unless="${visit.appointmentId == 0}">
                     <th:block th:with="backgroundColor=${T(dwe.holding.salesconsult.consult.model.Visit).getBackgroundColor(visit.isCancelled(), visit.isCompleted(), visit.status)},
                                     textColor=${T(dwe.holding.salesconsult.consult.model.Visit).getTextColor(backgroundColor)}">
-                        <td th:style="${'background-color:' + backgroundColor + '; color:' + textColor + '; margin-right:.2rem'}" th:text="#{__${visit.status.label}__}"></td>
+                        <td th:style="${'background-color:' + backgroundColor + '; color:' + textColor + '; margin-right:.2rem'}" th:text="#{__${visit.getStatusLabel()}__}"></td>
                     </th:block>
                 </th:block>
                 <td style="padding-left:.2rem"
@@ -116,9 +120,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <th colspan="2"></th>
-                <th></th>
-                <th></th>
+                <th colspan="3"></th>
                 <th></th>
                 <th></th>
                 <th></th>
