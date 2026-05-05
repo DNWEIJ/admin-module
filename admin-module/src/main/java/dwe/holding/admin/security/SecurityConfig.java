@@ -1,8 +1,8 @@
 package dwe.holding.admin.security;
 
 
+import dwe.holding.admin.security.local.AdminAuthenticationFilterLocal;
 import dwe.holding.admin.transactional.TransactionalUserService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +16,9 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -35,7 +34,6 @@ import static org.springframework.security.web.servlet.util.matcher.PathPatternR
 
 @EnableWebSecurity
 @Configuration
-@Profile("!local")
 public class SecurityConfig {
 
     @Autowired
@@ -47,22 +45,37 @@ public class SecurityConfig {
     @Value("${server.servlet.context-path:}")
     private String contextPath;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, AdminAuthorizationManager adminAuthorizationManager) {
 
-        AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, new AdminAuthenticationFilter());
+    @Bean
+    @Profile("prod")
+    public AuthenticationConverter adminAuthenticationFilter() {
+        return new AdminAuthenticationFilter();
+    }
+
+    @Bean
+    @Profile("local")
+    public AuthenticationConverter adminAuthenticationFilterLocal() {
+        return new AdminAuthenticationFilterLocal();
+    }
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager,
+                                           AdminAuthorizationManager adminAuthorizationManager, AuthenticationConverter adminAuthenticationFilter) {
+
+        AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager, adminAuthenticationFilter);
         PathPatternRequestMatcher.Builder mvc = withDefaults();
 
-        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.GET, contextPath + "/admin/login"));
-        authFilter.setSuccessHandler(new SwapOutNoMemberUserAuthenticationSuccessHandler(contextPath + "/admin/index", transactionalUserService));
-        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler(contextPath + "/admin/login?error=true"));
+        authFilter.setRequestMatcher(mvc.matcher(HttpMethod.POST, contextPath + "/generic/login"));
+        authFilter.setSuccessHandler(new SwapOutNoMemberUserAuthenticationSuccessHandler(contextPath + "/generic/index", transactionalUserService));
+        authFilter.setFailureHandler(new SimpleUrlAuthenticationFailureHandler(contextPath + "/generic/login?error=true"));
 
         HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
 
         RequestMatcher publicEndpoints = request -> {
             String req = request.getRequestURI();
-            return req.startsWith(contextPath + "/admin/login") ||
-                    req.startsWith(contextPath + "/admin/logout") ||
+            return req.startsWith(contextPath + "/generic/login") ||
+                    req.startsWith(contextPath + "/generic/logout") ||
                     req.startsWith(contextPath + "/admin/error") ||
                     req.startsWith(contextPath + "/lib/") ||
                     req.startsWith(contextPath + "/images/");
@@ -84,47 +97,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository()).csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .authorizeHttpRequests(authz -> authz.anyRequest().access(compositeAuthManager))
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/admin/login")) // ⬅️ custom!
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/admin/login")) // authenticated but forbidden
+                        .authenticationEntryPoint(new RedirectToLoginEntryPoint("/generic/login")) // ⬅️ custom!
+                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/generic/login")) // authenticated but forbidden
                 )
                 // required to persist the security context between requests
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false)) // ensures context is stored automatically
 
                 // Session management
                 .sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false))
-                .logout(logout -> logout.logoutUrl("/admin/logout").invalidateHttpSession(true).addLogoutHandler(clearSiteData))
+                .logout(logout -> logout.logoutUrl("/generic/logout").invalidateHttpSession(true).addLogoutHandler(clearSiteData))
                 .addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }
-
-    @Bean
-    AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, ex) -> {
-
-            String loginUrl = contextPath + "/admin/login";
-
-            if ("true".equals(request.getHeader("HX-Request"))) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.setHeader("HX-Redirect", loginUrl);
-            } else {
-                response.sendRedirect(loginUrl);
-            }
-        };
-    }
-
-    @Bean
-    AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, authException) -> {
-
-            String loginUrl = contextPath + "/admin/login?error=true";
-
-            if ("true".equals(request.getHeader("HX-Request"))) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setHeader("HX-Redirect", loginUrl);
-            } else {
-                response.sendRedirect(loginUrl);
-            }
-        };
     }
 
     @Bean

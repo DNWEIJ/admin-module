@@ -1,12 +1,15 @@
 package dwe.holding.vmas.controller;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,14 +20,24 @@ public class ControllerUrlScannerTest {
             "RequestMapping", "GetMapping", "PostMapping", "PutMapping", "DeleteMapping", "PatchMapping"
     );
 
+
     @Test
     public void generateHtml() throws IOException {
         Path startDir = Paths.get("C:/workspace/admin");
+
+        String insertStringFunction= "INSERT INTO new_vmas.admin_function (added_by,added_on,last_edited_by, last_edited_on, version, name) \n VALUES('system','%s','system','%s',0,'%s');";
+        String insertStringFunctionRole = "INSERT INTO new_vmas.admin_function_role (added_by, added_on, last_edited_by, last_edited_on, version, member_id, function_id, role_id)" +
+                "\n VALUES('system','%s','system','%s',0,77,%d,1);";
+
+        String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+
         List<Path> controllers = findControllers(startDir);
 
         assertTrue(!controllers.isEmpty(), "No controllers found");
 
         StringBuilder html = new StringBuilder();
+        StringBuilder sqlInsert = new StringBuilder();
 
         html.append("""
                 <html>
@@ -65,13 +78,16 @@ public class ControllerUrlScannerTest {
                 </tr>
                 """);
 
+        Integer counter = 1;
         for (Path file : controllers) {
 
             String controllerName = file.getFileName().toString().replace(".java", "");
             List<String> lines = Files.readAllLines(file);
 
             String classPrefix = "";
-            Map<String, String> lastMapping = null; // {"annotation":"...", "url":"...", "http":"..."}
+            Map<String, String> lastMapping = null;
+
+
 
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i).trim();
@@ -96,9 +112,7 @@ public class ControllerUrlScannerTest {
 
                 // detect method declaration
                 if (lastMapping != null && line.matches(".*\\s+\\w+\\s*\\(.*\\)\\s*\\{?")) {
-                    // method name
                     String methodName = line.replaceAll(".*\\s+(\\w+)\\s*\\(.*", "$1");
-
                     String fullUrl = concat(classPrefix, lastMapping.get("url"));
 
                     html.append("<tr><td>")
@@ -111,12 +125,16 @@ public class ControllerUrlScannerTest {
                             .append(fullUrl)
                             .append("</td></tr>\n");
 
+                    sqlInsert.append(String.format(insertStringFunction, currentDateTime,currentDateTime, lastMapping.get("http").toLowerCase()+"_"+fullUrl.toLowerCase())).append("\n");
+                    sqlInsert.append(String.format(insertStringFunctionRole,currentDateTime,currentDateTime, counter++)).append("\n");
                     lastMapping = null; // reset
                 }
             }
         }
 
-        html.append("</table></body></html>");
+        html.append("</table>" + "<span>" + sqlInsert.toString() + "</span></body></html>");
+
+        System.out.println(sqlInsert);
 
         Path out = Paths.get("urlpaths.html");
         Files.writeString(out, html.toString(),

@@ -3,6 +3,7 @@ package dwe.holding.admin.authorisation.notenant.function;
 import dwe.holding.admin.model.notenant.Function;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,8 @@ public class FunctionController {
     }
 
     @PostMapping("/function")
-    String save(@Valid Function function, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
+    @CacheEvict(value = "functions", allEntries = true)
+    public String save(@Valid Function function, BindingResult bindingResult, Model model, RedirectAttributes redirect) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin-module/function/action";

@@ -1,117 +1,36 @@
 package dwe.holding.vmas.controller;
 
-import dwe.holding.VmasApplication;
-import dwe.holding.customer.client.model.Customer;
-import dwe.holding.customer.client.repository.CustomerRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import dwe.holding.admin.preferences.LocalMemberPreferences;
+import dwe.holding.admin.preferences.Template;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 
-@SpringBootTest(classes = VmasApplication.class, properties = "spring.profiles.active=vmas")
 class IndexControllerTest {
 
-    @Autowired
-    CustomerRepository customerRepository;
-
     @Test
-    void doTest() throws FileNotFoundException {
-        // change address
-        File file = new File("customer_addresses.txt");
-        List<Customer> customers = customerRepository.findAll();
-        try (PrintWriter writer = new PrintWriter(file)) {
-            customers.stream()
-                    .filter(c -> c.getAddress2() != null && !c.getAddress2().isBlank())
-                    .map(c -> new Object() {
-                        final Customer customer = c;
-                        final AddressParts parts = splitAddress(c.getAddress2());
-                    }).forEach(x -> writer.println(
-                                    String.format(
-                                            "%-8s | %-50s | %-30s | %-20s",
-                                            x.customer.getId(),
-                                            x.customer.getAddress2(),
-                                            x.parts.street,
-                                            x.parts.housePart != null ? x.parts.housePart : ""
-                                    )
-                            )
-                    );
-        }
-    }
+    void doTest() {
+        ObjectMapper mapper = JsonMapper.builder()
+                .enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION)
+                .build();
+        String content =
+                """
+                               {"estimatedTime": 15, "insuranceCompany": "Proteq Polisnr:/Petplan Polisnr: ", "paymentMethod": "5", "firstPageMessage": "<div>\\r\\n<div style=\\"color: red; font-family: Verdana; font-size: 25px; text-align: center;\\">!! <u><strong>Aandachtspunt van de week</strong></u>!!</div>\\r\\n\\r\\n<p style=\\"text-align:center\\">&nbsp;</p>\\r\\n\\r\\n<h1 style=\\"text-align:center\\"><span style=\\"color:#008000\\"><span style=\\"font-size:36px\\"><span style=\\"font-family:comic sans ms,cursive\\">Prijzen Consulten zijn aangepast.</span></span></span></h1>\\r\\n\\r\\n<p>&nbsp;</p>\\r\\n\\r\\n<h1 style=\\"text-align:center\\">&nbsp;</h1>\\r\\n\\r\\n<p style=\\"text-align:center\\"><span style=\\"font-family:comic sans ms,cursive\\"><span style=\\"color:#FF0000\\">Niet alles op een dag (4 vaccinaties per dag) en smeer de afspraken uit over de weken!</span></span></p>\\r\\n\\r\\n<p style=\\"text-align:center\\">&nbsp;</p>\\r\\n\\r\\n<p style=\\"text-align:center\\">&nbsp;</p>\\r\\n</div>\\r\\n",
+                                "room1": "Spreekkamer 1", "room2": "O.K.", "room3": "Balie", "room4": "", "roomAgenda": "R", "mandatoryExpireDate": "Y", "mandatoryConsultReason": "Y",
+                                 "consultTextTemplate": "{\\"Templates\\": [{\\"Order\\" :1,\\"Title\\":\\"Ziek dier\\",\\"Text\\":\\"Zorgvraag:\\\\nAN:\\\\nAI: \\\\nAO:\\\\nAvO:\\\\nDdx:\\\\nPlan:\\\\nTx:\\\\nInfo aan eigenaar:\\\\nAfspraken:\\", \\"Selected\\" :true},{\\"Order\\" :2,\\"Title\\":\\"Vaccinatie\\",\\"Text\\":\\"AN: \\\\nVoeding:\\\\nMedicatie: j/n\\\\nVakantieplannen: j/n\\\\nAI:\\\\nAO:\\\\nEntstof:\\\\nOntworming: \\\\nInfo aan eigenaar: \\\\nAdviezen: \\\\nAfspraken: \\", \\"Selected\\" :false},{\\"Order\\" :3,\\"Title\\":\\"OK/Gebit\\",\\"Text\\":\\"Reden OK:\\\\nAN:\\\\nAI:\\\\nAO:\\\\nAvO:\\\\nNarcose / pijnstilling: \\\\nSamenvatting OK:\\\\nTx:\\\\nInfo aan eigenaar:\\\\nAfspraken:\\", \\"Selected\\" :false},{\\"Order\\" :4,\\"Title\\":\\"Ziek dier\\",\\"Text\\":\\"Zorgvraag:\\\\nAN:\\\\nAI: \\\\nAO:\\\\nAvO:\\\\nDdx:\\\\nPlan:\\\\nTx:\\\\nInfo aan eigenaar:\\\\nAfspraken:\\", \\"Selected\\" :false}]}",
+                                  "openingstimes": "", "sendoutAppointmentReminderMail": "N"}
+                        """;
 
-    @Test
-    /**
-     * Ensure to turn off auditaware for the tenant id, it is not needed for this test
-     */
-    void updateRecords() throws FileNotFoundException {
-        final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        final Validator validator = factory.getValidator();
-
-        List<Customer> customers = customerRepository.findAll();
-        List<Customer> updatedCustomers = customers.stream()
-                .filter(c -> c.getAddress2() != null && !c.getAddress2().isBlank())
-                .map(customer -> {
-                    // valid to the regex as much as possible; if not log the info
-                    customer.setZipCode(changeZipCode(customer));
-
-                    Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
-                    if (!violations.isEmpty()) {
-                        System.out.println("Customer ID " + customer.getId() + " has invalid ZIP: " + customer.getZipCode());
-                    }
-                    AddressParts parts = splitAddress(customer.getAddress2());
-                    // Update the record fields
-                    customer.setStreet(parts.street());
-                    customer.setStreetNumber(parts.housePart());
-                    return customer;
-                })
-                .toList();
-        customerRepository.saveAll(updatedCustomers);
-    }
-
-    // upper case and remove spaces
-    private String changeZipCode(Customer customer) {
-        String zipCode = customer.getZipCode();
-        zipCode = zipCode == null ? null : zipCode.trim().replaceAll(" ", "").toUpperCase();
-        // zipcode is null or empty
-        if (zipCode == null || zipCode.isBlank()) {
-            return null;
-        }
-        return zipCode;
-    }
-
-    public record AddressParts(String street, String housePart) {
-    }
-
-    public static AddressParts splitAddress(String address) {
-        if (address == null || address.isBlank()) {
-            return new AddressParts("", "");
-        }
-
-        String[] elements = address.trim().split("\\s+");
-        if (elements.length == 1 && elements[0].chars().allMatch(Character::isDigit)) {
-            return new AddressParts("", elements[0]);
-        }
-
-        for (int i = 1; i < elements.length; i++) {
-            // If the element starts with a number, split here
-            if (elements[i].matches("^\\d.*")) {
-                String street = String.join(" ", Arrays.copyOfRange(elements, 0, i));
-                String housePart = String.join(" ", Arrays.copyOfRange(elements, i, elements.length));
-                return new AddressParts(street, housePart);
-            }
-        }
-
-        // No number found after first element → all is street, housePart empty
-        return new AddressParts(String.join(" ", elements), "");
+        LocalMemberPreferences pref = mapper.readValue(content, LocalMemberPreferences.class);
+        List<Template> a = pref.getConsultTextTemplate(mapper);
+        pref.setConsultTextTemplate(mapper);
+        String json = mapper.writeValueAsString(pref);
+        System.out.println(json);
+        pref = mapper.readValue(json, LocalMemberPreferences.class);
+        a = pref.getConsultTextTemplate(mapper);
     }
 }

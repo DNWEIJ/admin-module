@@ -14,7 +14,7 @@
         </form>
         <footer>
             <div class="grid">
-                <input name="_save" type="submit" form="ipnumber" th:value="#{label.button.save}"/>
+                <button name="submitButton" value="_save" type="submit" form="ipnumber" th:value="#{label.button.save}"/>
                 <input type="button" data-target="ipnumber-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
             </div>
         </footer>

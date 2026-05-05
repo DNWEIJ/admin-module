@@ -15,6 +15,6 @@ public class ListController {
     @GetMapping("/urilist")
     @ResponseBody
     String getList(){
-        return String.join("<br>", tenantAccessDecisionVoter.getList());
+        return String.join("<br>", tenantAccessDecisionVoter.getErrorList());
     }
 }

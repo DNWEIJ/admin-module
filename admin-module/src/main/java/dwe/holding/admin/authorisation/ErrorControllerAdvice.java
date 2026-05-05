@@ -7,12 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.webmvc.error.ErrorController;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,7 +21,7 @@ import java.time.LocalDateTime;
 public class ErrorControllerAdvice implements ErrorController {
 
 
-    // @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)
     public String handleAllExceptions(Exception ex, HttpServletRequest request, HttpSession session, Model model) {
         // TODO remove for production
         ex.printStackTrace();
@@ -57,7 +54,7 @@ public class ErrorControllerAdvice implements ErrorController {
         String message = "Unknown error";
 
         if (statusCode.hashCode() == 401 || statusCode.hashCode() == 403) {
-            response.sendRedirect("/admin/login");
+            response.sendRedirect("/generic/login");
         }
 
         if (exceptionObj instanceof Exception ex) {
@@ -66,16 +63,16 @@ public class ErrorControllerAdvice implements ErrorController {
             message = "Error code: " + statusCode;
         }
 
-            model.addAttribute("message", message)
-                    .addAttribute("messageClass", "alert-error")
-                    .addAttribute("sessionTimeout", session.getMaxInactiveInterval())
-            ;
+        model.addAttribute("message", message)
+                .addAttribute("messageClass", "alert-error")
+                .addAttribute("sessionTimeout", session.getMaxInactiveInterval())
+        ;
 
-            boolean isHxRequest = "true".equals(request.getHeader("HX-Request"));
+        boolean isHxRequest = "true".equals(request.getHeader("HX-Request"));
 
-            if (isHxRequest) {
-                return "admin-module/modal/message::notification";
-            }
-            return "admin-module/error";
+        if (isHxRequest) {
+            return "admin-module/modal/message::notification";
         }
+        return "admin-module/error";
     }
+}

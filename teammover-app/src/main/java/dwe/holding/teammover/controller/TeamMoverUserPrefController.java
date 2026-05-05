@@ -48,7 +48,7 @@ public class TeamMoverUserPrefController {
         form.userPreferences.setNrOfTeamMembers(form.userPreferences.getNames().size());
 
         userService.saveUserSettings(objectMapper.writeValueAsString(form.userPreferences));
-        return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
+        return "redirect:/generic/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 
     record SettingsForm(String id, TeamMoverUserPreferences userPreferences) {

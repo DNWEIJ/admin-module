@@ -29,9 +29,9 @@ import java.util.Set;
 // This is the readonly user for validating the account before being logged in; no memberId available in securty context, so no member available on this domain object
 // ALL FIELDS ARE DUPLICATE, MAINTAIN THE USER AS WELL
 public class UserNoMember extends BaseBO {
-    @NotEmpty
-    @Column(nullable = false)
-    private String account;
+        @NotEmpty
+        @Column(nullable = false)
+        private String account;
 
     @NotEmpty
     @Column(nullable = false)

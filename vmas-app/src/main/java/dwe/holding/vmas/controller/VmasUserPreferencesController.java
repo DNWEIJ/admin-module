@@ -57,7 +57,7 @@ public class VmasUserPreferencesController {
                 form.userPreferences.getSearchCustPet().booleanValue()
         );
 
-        return "redirect:/admin/index"; // required to redirect to the index to finish the flow of settings for initial login
+        return "redirect:/generic/index"; // required to redirect to the index to finish the flow of settings for initial login
     }
 
     @PostMapping("/userpreferences/color")

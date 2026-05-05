@@ -39,7 +39,7 @@
                 <input id="four" name="numberFour" tabindex="0" type="number" min="0" max="255" th:value="${ipNumberParts.getNumberFour()}" placeholder="1" autocomplete="off"
                        required="required">
             </div>
-            <input type="submit" th:value="#{user.ipnumber.save}" id="btn" role="button" onclick="(!validate()); event.preventDefault()"></input>
+            <button type="submit"  name="submitButton" value="_save" th:text="#{user.ipnumber.save}" id="btn" role="button" onclick="(!validate()); event.preventDefault()"></button>
             <script>
                 function validate() {
                     if (document.getElementById('one').value != '' &&

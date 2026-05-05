@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
@@ -42,11 +43,23 @@ public class LocalMemberPreferences {
     private List<Template> template = new ArrayList<>();
 
     public List<Template> getConsultTextTemplate(ObjectMapper objectMapper) {
+        // todo: We are migrating from old to new... maybe just add it into the startup script (database changes)
         if (consultTextTemplate == null || consultTextTemplate.isEmpty() || consultTextTemplate.equals("[]")) {
-            return List.of(new Template(0,"","", true));
+            template = List.of(new Template(0, "", "", true));
+            return template;
         } else {
-            return objectMapper.readValue(getConsultTextTemplate(), new TypeReference<>() {
-            });
+            JsonNode root = objectMapper.readTree(consultTextTemplate);
+            if (!root.isArray()) {
+                template = objectMapper.convertValue(
+                        root.get("Templates"),
+                        new TypeReference<List<Template>>() {
+                        }
+                );
+            } else {
+                template = objectMapper.readValue(getConsultTextTemplate(), new TypeReference<>() {
+                });
+            }
+            return template;
         }
     }
 

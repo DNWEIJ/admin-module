@@ -31,7 +31,7 @@
                                       th:with="onblur='this.value=this.value.toUpperCase().replaceAll(\' \',\'\')', pattern='^[1-9][0-9]{3}\\s?[A-Za-z]{2}$'">
                             </th:block>
                             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber','customer.street.number','','')}"></th:block>
-                            <input name="_save" type="submit" th:value="#{label.button.search}"/>
+                            <button type="submit"  name="submitButton" value="_save" th:text="#{label.button.search}"/>
                         </fieldset>
                     </form>
                     </div>
@@ -44,7 +44,7 @@
                             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchStreet2','customer.street','','')}"></th:block>
                             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchHouseNumber2','customer.street.number','','')}"></th:block>
                             <th:block th:insert="~{fragments/elements/input::inputHtmlLift('searchCity2','customer.city','','')}"></th:block>
-                            <input type="submit" th:value="#{label.button.search}"/>
+                            <button type="submit"  name="submitButton" value="_save" th:text="#{label.button.search}"/>
                         </fieldset>
                     </form>
                     </div>

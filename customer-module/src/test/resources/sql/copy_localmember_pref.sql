@@ -30,7 +30,7 @@ SELECT
             'mandatoryConsultReason', MANDATORY_REASON,
             'consultTextTemplate', CONSULT_TEXT_TEMPLATE,
             'openingstimes', '', #OPENINGSTIMES,
-            'sendoutAppointmentReminderMail', '' # SENDOUT_APPOINTMENT_REMINDER_MAIL
+            'sendoutAppointmentReminderMail', 'N' # SENDOUT_APPOINTMENT_REMINDER_MAIL
     ) AS preferences_json
 FROM vmas.thau_memberlocal where MEMBER_ID = 77;
 

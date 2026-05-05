@@ -3,7 +3,7 @@
     --nav-bg: color-mix(in srgb, var(--pico-primary-background) 15%, white);
     --border-color: #dcdcdc;
     --dropdown-bg: #f9fafb;
-    --dropdown-hover: color-mix(in srgb, var(--pico-primary-background) 15%, white);
+    --dropdown-hover: color-mix(in srgb, var(--pico-primary-background) 25%, white);
     --text-color: #222;
 
     --gap-sm: .2rem;
@@ -98,7 +98,14 @@ div[role="dropdown"] > ul > li {
     width: 100%;
 }
 
-/* Remove all ::after triangles */
+
+.dropdown-trigger:focus,
+.dropdown-trigger:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
 .dropdown-trigger::after {
     content: none;
 }

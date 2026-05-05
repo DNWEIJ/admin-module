@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/generic")
 /**
  *  We do some validation and hop around to be sure all data is validated and/or set
  *  the following pages are hit in order:
- *  /admin/login <- show the page with extra shortcode field
+ *  /generic/login <- show the page with extra shortcode field
  *  /index  <- do stuff for the specific application; pending on if localmember is required
  *    /application/start <- if we do not have any localmember requirment
  *    /application/userpreferences <- if we do have a localmember requirment
@@ -42,7 +42,7 @@ public class LoginController {
     @GetMapping("/index")
     String indexScreen() {
         if (AutorisationUtils.isNewUser()) {
-            return "redirect:/admin/resetpassword";
+            return "redirect:/generic/resetpassword";
         }
 
         if (AutorisationUtils.isLocalMemberRequired() && (AutorisationUtils.getCurrentUserMlid() == 0 || AutorisationUtils.getCurrentUserMlid() == null)) {

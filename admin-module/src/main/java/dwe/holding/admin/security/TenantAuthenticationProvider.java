@@ -1,9 +1,10 @@
 package dwe.holding.admin.security;
 
-import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserNoMemberRepository;
-import dwe.holding.admin.model.notenant.Function;
+import dwe.holding.admin.authorisation.tenant.user.UserRoleRepository;
+import dwe.holding.admin.model.tenant.IPSecurity;
 import dwe.holding.admin.model.tenant.UserNoMember;
+import dwe.holding.admin.model.tenant.UserRole;
 import dwe.holding.admin.transactional.TransactionalUserService;
 import dwe.holding.shared.model.type.YesNoEnum;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +36,7 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
     private final TransactionalUserService transactionalUserService;
     private final UserNoMemberRepository UserNoMemberRepository;
-    private final FunctionRepository functionRepository;
+    private final UserRoleRepository userRoleRepository;
 
 
     enum PasswordState {
@@ -86,7 +88,6 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
         userNoMember = UserNoMemberRepository.save(userNoMember);
         //usrDetails.setUser(user);
         usrDetails.setUserNoMember(userNoMember);
-
     }
 
     @Override
@@ -136,22 +137,15 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
                     messages.getMessage("TenantAuthenticationProvider.login_enabled", "Unfortunately, you have been disabled. Please contact your internal administrator."));
         }
 
-////        //  TODO: check the ipnumbers, if they are set.
-//        if (!(userNoMember.getIpNumbers().isEmpty())) {
-//            IPSecurity[] array = userNoMember.getIpNumbers().toArray(new IPSecurity[userNoMember.getIpNumbers().size()]);
-//            WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
-//            String ipnumber = details.getRemoteAddress();
-//            boolean check_ip = true;
-//            for (int i = 0; i < array.length; i++) {
-//                if (array[i].getIpnumber().equals(ipnumber)) {
-//                    check_ip = false;
-//                }
-//            }
-//            if (check_ip) {
-//                throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipNumber",
-//                        "You are using the application from an unauthorized IpNumber location. Please contact your internal administrator."));
-//            }
-//        }
+        List<IPSecurity> ipnumbers = transactionalUserService.getIpNumbersForUserId(userNoMember.getId());
+        if (!ipnumbers.isEmpty()) {
+            String myIpNumber = ((WebAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+
+            if (ipnumbers.stream().filter(ip -> ip.getIpnumber().equals(myIpNumber)).findFirst().isEmpty()) {
+                throw new BadCredentialsException(messages.getMessage("TenantAuthenticationProvider.ipNumber",
+                        "You are using the application from an unauthorized IpNumber location. Please contact your internal administrator."));
+            }
+        }
 
         // create details
         AdminUserDetails adminUserDetails = new AdminUserDetails(usernameAndShortCode[0], userNoMember.getPassword(),
@@ -162,19 +156,17 @@ public class TenantAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
     Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromRolAndFunction(UserNoMember user) {
 
-        if (user.getUserRoles() != null) {
-            List<Function> functionList = functionRepository.getAllFunctionsForUser(user.getId());
-            GrantedAuthority[] grantedAuthorities = new GrantedAuthority[functionList.size()];
+        List<UserRole> userRoles = userRoleRepository.findByUser_id(user.getId());
+        GrantedAuthority[] grantedAuthorities = new GrantedAuthority[userRoles.size()];
 
-            int grantedAuthorityIndex = 0;
+        int grantedAuthorityIndex = 0;
 
-            for (Function function : functionList) {
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(function.getName().toUpperCase());
-                grantedAuthorities[grantedAuthorityIndex] = grantedAuthority;
-                grantedAuthorityIndex++;
-            }
-            return Arrays.asList(grantedAuthorities);
+        for (UserRole userRole : userRoles) {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userRole.getRole().getId().toString());
+            grantedAuthorities[grantedAuthorityIndex] = grantedAuthority;
+            grantedAuthorityIndex++;
         }
-        return List.of();
+        return Arrays.asList(grantedAuthorities);
+
     }
 }
