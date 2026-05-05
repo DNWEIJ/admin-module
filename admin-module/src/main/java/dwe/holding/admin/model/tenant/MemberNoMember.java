@@ -12,16 +12,13 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Table(name = "ADMIN_MEMBER")
 @Entity
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+// This is the readonly member for validating the account before being logged in; no memberId available in securty context, so no member available on this domain object
 public class MemberNoMember extends BaseBO {
 
     @Column(nullable = false)

@@ -10,8 +10,10 @@ import dwe.holding.shared.model.converter.YesNoEnumConverter;
 import dwe.holding.shared.model.type.YesNoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,19 +24,18 @@ import java.util.Set;
 @Table(name = "ADMIN_USER")
 @Entity
 @Getter
-@Setter
-@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 // This is the readonly user for validating the account before being logged in; no memberId available in securty context, so no member available on this domain object
 // ALL FIELDS ARE DUPLICATE, MAINTAIN THE USER AS WELL
 public class UserNoMember extends BaseBO {
-        @NotEmpty
-        @Column(nullable = false)
-        private String account;
+    @NotEmpty
+    @Column(nullable = false)
+    private String account;
 
     @NotEmpty
     @Column(nullable = false)
+    @Setter
     private String password;
 
     @Column(columnDefinition = "varchar(1)", nullable = false)
@@ -55,21 +56,24 @@ public class UserNoMember extends BaseBO {
     private String email;
     @Column(nullable = false)
 
-    @Builder.Default
+    @Setter
     private boolean changePassword = false;
+    @Setter
     private LocalDate lastVisitDate;
+    @Setter
     private Long numberOfVisits;
 
     @Transient
+    @Setter
     private MemberNoMember member;
 
-    @Builder.Default
+
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<>(0);
-    @Builder.Default
+
     @Transient
     private List<String> roles = new ArrayList<>(0);
-    @Builder.Default
+
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "userId")
     private List<IPSecurity> ipNumbers = new ArrayList<>(0);
 
@@ -78,5 +82,6 @@ public class UserNoMember extends BaseBO {
     private Long memberId;
 
     @Transient
+    @Setter
     boolean newEncryptionPassword;
 }

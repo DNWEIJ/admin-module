@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
-@Table(name = "SUPPLY_SUPPLYLOCAL", uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLY_ID", "MLID"}))
+@Table(name = "SUPPLY_SUPPLYLOCAL", uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLY_ID", "LOCAL_MEMBER_ID"}))
 @Entity
 @SuperBuilder
 @NoArgsConstructor

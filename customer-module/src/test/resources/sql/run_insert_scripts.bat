@@ -17,3 +17,5 @@
 
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_note.sql
 "C:\Program Files\MariaDB 10.5\bin\mysql.exe" -u root -proot new_vmas < .\copy_reminder.sql
+
+"C:\Program Files\MariaDB 10.5\bin\mysqldump.exe" -u root -proot new_vmas  consult_payment_visit > consult_payment_visit.sql

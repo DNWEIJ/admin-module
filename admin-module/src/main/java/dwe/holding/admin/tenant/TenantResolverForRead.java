@@ -14,7 +14,8 @@ public class TenantResolverForRead implements CurrentTenantIdentifierResolver {
         if (AutorisationUtils.isLoggedIn()) {
             return AutorisationUtils.getCurrentUserMid();
         } else {
-           return 0L;
+            // TODO set to: 0L, for the first runs we need it for the functionality running during startup.
+           return 77L;
         }
     }
 

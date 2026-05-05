@@ -22,7 +22,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT COALESCE(SUM(p.amount), 0.0) FROM Payment as p WHERE p.customer.id = :customerId and p.memberId = :memberId")
     BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId, @Param("memberId") Long memberId);
 
-
     @Query("SELECT COALESCE(SUM(p.amount), 0.0) FROM Payment as p WHERE p.customer.id = :customerId")
     BigDecimal getSumAmountOfPayment(@Param("customerId") Long customerId);
 
@@ -74,11 +73,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
                 pay.id,
                 pay.amount,
                 pay.paymentDate,
-                pay.customer.id,
-                pv.id,
-                pv.visit.id)
+                pay.customer.id)
             FROM Payment pay
-            LEFT JOIN pay.paymentVisits pv
             WHERE pay.customer.id IN :customerIds
             ORDER BY pay.customer.id, pay.paymentDate ASC
             """)
@@ -89,9 +85,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
                 pay.id,
                 pay.amount,
                 pay.paymentDate,
-                pay.customer.id,
-                null,
-                null)
+                pay.customer.id)
             FROM Payment pay
             WHERE pay.paymentVisits IS EMPTY
             """)

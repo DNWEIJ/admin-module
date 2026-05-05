@@ -10,6 +10,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+/**
+ * Many queries from htmx are firing multiple times even on the same page, for the same data set.
+ * Since we do not want to receive all these duplicate calls, we return them with a cache header set to 10 secs
+ */
 public class AddCacheToHtmxRequest extends OncePerRequestFilter {
 
     @Override

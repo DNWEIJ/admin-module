@@ -7,9 +7,6 @@ public record PaymentVisitDTO(
         Long paymentId,
         BigDecimal paymentAmount,
         LocalDate paymentDate,
-        Long customerId,
-        Long paymentVisitId,
-        Long visitId
-  //      BigDecimal leftOverAmountOfPayment
+        Long customerId
 ) {
 }

@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -145,71 +144,144 @@ public class PaymentService {
         return ar;
     }
 
-    PaymentListProjection createAR(Customer customer, List<VisitDto> visitsByCustomer, List<PaymentVisitDTO> paymentsByCustomer) {
+    public PaymentListProjection createAR(Customer customer, List<VisitDto> visits, List<PaymentVisitDTO> payments) {
 
-        BigDecimal bucket0_30 = BigDecimal.ZERO;
-        BigDecimal bucket31_60 = BigDecimal.ZERO;
-        BigDecimal bucket61_90 = BigDecimal.ZERO;
-        BigDecimal bucket_greather_90 = BigDecimal.ZERO;
-        LocalDate localDateNow = LocalDate.now();
+        record Event(LocalDate date, BigDecimal amount) {
+        }
 
-        Map<Long, VisitDto> visitsByVisitId = visitsByCustomer.stream().collect(Collectors.toMap(VisitDto::getVisitId, Function.identity()));
-        Map<LocalDate, List<VisitDto>> visitsByDate = visitsByCustomer.stream().collect(Collectors.groupingBy(v -> v.getVisitDateTime().toLocalDate()));
+        LocalDate today = LocalDate.now();
+        List<Event> events = new ArrayList<>();
+        BigDecimal b0_30 = BigDecimal.ZERO, b31_60 = BigDecimal.ZERO, b61_90 = BigDecimal.ZERO, b90p = BigDecimal.ZERO;
 
-        if (!paymentsByCustomer.isEmpty())
-            paymentsByCustomer.sort(
-                    Comparator.comparing(PaymentVisitDTO::paymentVisitId, Comparator.nullsLast(Comparator.reverseOrder())).reversed()
-            );
-        Long paymentId = 0L;
+        for (VisitDto v : visits) events.add(new Event(v.getVisitDateTime().toLocalDate(), v.getTotalAmountIncTax()));
+        for (PaymentVisitDTO p : payments) events.add(new Event(p.paymentDate(), p.paymentAmount().negate()));
 
-        BigDecimal amountPaid = BigDecimal.ZERO;
-        // Nowadays, most payments are added via the actual visit and this is the way it should be.....
-        // however in history, payments have been added without a link to a visit. This needs to be handled desperately. If the paymentVisitId == null it is generic payment on date (possibly)
-        for (PaymentVisitDTO payment : paymentsByCustomer) {
-            if (!paymentId.equals(payment.paymentId())) {
-                paymentId = payment.paymentId();
-                amountPaid = payment.paymentAmount();
-            }
-            // first: it can be that this payment is not connected
-            if (payment.visitId() == null) {
-                // find a visit on this date
-                List<VisitDto> list = visitsByDate.get(payment.paymentDate());
-                if (!list.isEmpty()) {
-                    // TODO
-//                    list.forEach(visit -> {
-//                        if (patment. visit.getTotalAmountIncTax())
-//                    });
-//
-//                    };
+        // sort all events in time
+        events.sort(Comparator.comparing(Event::date));
+
+        // We need invoice aging, so we track open invoices separately
+        List<VisitDto> sortedVisits = new ArrayList<>(visits);
+        sortedVisits.sort(Comparator.comparing(VisitDto::getVisitDateTime));
+
+        BigDecimal[] open = new BigDecimal[sortedVisits.size()];
+        for (int i = 0; i < sortedVisits.size(); i++)
+            open[i] = sortedVisits.get(i).getTotalAmountIncTax();
+
+        int ptr = 0;
+
+        for (PaymentVisitDTO p : payments) {
+
+            BigDecimal pay = p.paymentAmount();
+            while (pay.compareTo(BigDecimal.ZERO) > 0 && ptr < sortedVisits.size()) {
+                BigDecimal cur = open[ptr];
+                if (cur.compareTo(BigDecimal.ZERO) == 0) {
+                    ptr++;
+                    continue;
                 }
-            }
 
-            VisitDto visit = visitsByVisitId.get(payment.visitId());
-            if (amountPaid.compareTo(visit.getTotalAmountIncTax()) >= 0) {
-                amountPaid = amountPaid.subtract(visit.getTotalAmountIncTax());
-            } else {
-                // paid amount doesn't cover the costs...
-                long days = ChronoUnit.DAYS.between(visit.getVisitDateTime().toLocalDate(), localDateNow);
-                if (days <= 30) {
-                    bucket0_30 = bucket0_30.add(visit.getTotalAmountIncTax().subtract(amountPaid));
-                    amountPaid = BigDecimal.ZERO;
-                } else if (days <= 60) {
-                    bucket31_60 = bucket31_60.add(visit.getTotalAmountIncTax().subtract(amountPaid));
-                    amountPaid = BigDecimal.ZERO;
-                } else if (days <= 90) {
-                    bucket61_90 = bucket61_90.add(visit.getTotalAmountIncTax().subtract(amountPaid));
-                    amountPaid = BigDecimal.ZERO;
-                } else {
-                    bucket_greather_90 = bucket_greather_90.add(visit.getTotalAmountIncTax().subtract(amountPaid));
-                    amountPaid = BigDecimal.ZERO;
-                }
+                BigDecimal applied = pay.min(cur);
+                open[ptr] = cur.subtract(applied);
+                pay = pay.subtract(applied);
+
+                if (open[ptr].compareTo(BigDecimal.ZERO) == 0)
+                    ptr++;
             }
         }
 
-        return new PaymentListProjection(null, null, null, null, null, null, null,
-                customer.getId(), customer.getLastName(), customer.getFirstName(), customer.getSurName(), customer.getMiddleInitial(), customer.getBalance(),
-                // ar.firstMonth(), ar.firstMonth(),ar.firstMonth(),ar.firstMonth()
-                bucket0_30, bucket31_60, bucket_greather_90, bucket_greather_90
+        for (int i = 0; i < sortedVisits.size(); i++) {
+
+            BigDecimal openAmt = open[i];
+            if (openAmt.compareTo(BigDecimal.ZERO) == 0) continue;
+
+            long days = ChronoUnit.DAYS.between(
+                    sortedVisits.get(i).getVisitDateTime().toLocalDate(),
+                    today
+            );
+
+            if (days <= 30) b0_30 = b0_30.add(openAmt);
+            else if (days <= 60) b31_60 = b31_60.add(openAmt);
+            else if (days <= 90) b61_90 = b61_90.add(openAmt);
+            else b90p = b90p.add(openAmt);
+        }
+
+        return new PaymentListProjection(
+                null, null, null, null, null, null, null,
+                customer.getId(),
+                customer.getLastName(),
+                customer.getFirstName(),
+                customer.getSurName(),
+                customer.getMiddleInitial(),
+                customer.getBalance(),
+                b0_30, b31_60, b61_90, b90p
         );
     }
+
+
+//    PaymentListProjection createAR(Customer customer, List<VisitDto> visitsByCustomer, List<PaymentVisitDTO> paymentsByCustomer) {
+//
+//        BigDecimal bucket0_30 = BigDecimal.ZERO;
+//        BigDecimal bucket31_60 = BigDecimal.ZERO;
+//        BigDecimal bucket61_90 = BigDecimal.ZERO;
+//        BigDecimal bucket_greather_90 = BigDecimal.ZERO;
+//        LocalDate localDateNow = LocalDate.now();
+//
+//        Map<Long, VisitDto> visitsByVisitId = visitsByCustomer.stream().collect(Collectors.toMap(VisitDto::getVisitId, Function.identity()));
+//        Map<LocalDate, List<VisitDto>> visitsByDate = visitsByCustomer.stream().collect(Collectors.groupingBy(v -> v.getVisitDateTime().toLocalDate()));
+//
+//        if (!paymentsByCustomer.isEmpty())
+//            paymentsByCustomer.sort(
+//                    Comparator.comparing(PaymentVisitDTO::paymentVisitId, Comparator.nullsLast(Comparator.reverseOrder())).reversed()
+//            );
+//        Long paymentId = 0L;
+//
+//        BigDecimal amountPaid = BigDecimal.ZERO;
+//        // Nowadays, most payments are added via the actual visit and this is the way it should be.....
+//        // however in history, payments have been added without a link to a visit. This needs to be handled separately. If the paymentVisitId == null it is generic payment on date (possibly)
+//        for (PaymentVisitDTO payment : paymentsByCustomer) {
+//            if (!paymentId.equals(payment.paymentId())) {
+//                paymentId = payment.paymentId();
+//                amountPaid = payment.paymentAmount();
+//            }
+//            // first: it can be that this payment is not connected
+//            if (payment.visitId() == null) {
+//                // find a visit on this date
+//                List<VisitDto> list = visitsByDate.get(payment.paymentDate());
+//                if (!list.isEmpty()) {
+//                    // TODO
+////                    list.forEach(visit -> {
+////                        if (patment. visit.getTotalAmountIncTax())
+////                    });
+////
+////                    };
+//                }
+//            }
+//
+//            VisitDto visit = visitsByVisitId.get(payment.visitId());
+//            if (amountPaid.compareTo(visit.getTotalAmountIncTax()) >= 0) {
+//                amountPaid = amountPaid.subtract(visit.getTotalAmountIncTax());
+//            } else {
+//                // paid amount doesn't cover the costs...
+//                long days = ChronoUnit.DAYS.between(visit.getVisitDateTime().toLocalDate(), localDateNow);
+//                if (days <= 30) {
+//                    bucket0_30 = bucket0_30.add(visit.getTotalAmountIncTax().subtract(amountPaid));
+//                    amountPaid = BigDecimal.ZERO;
+//                } else if (days <= 60) {
+//                    bucket31_60 = bucket31_60.add(visit.getTotalAmountIncTax().subtract(amountPaid));
+//                    amountPaid = BigDecimal.ZERO;
+//                } else if (days <= 90) {
+//                    bucket61_90 = bucket61_90.add(visit.getTotalAmountIncTax().subtract(amountPaid));
+//                    amountPaid = BigDecimal.ZERO;
+//                } else {
+//                    bucket_greather_90 = bucket_greather_90.add(visit.getTotalAmountIncTax().subtract(amountPaid));
+//                    amountPaid = BigDecimal.ZERO;
+//                }
+//            }
+//        }
+//
+//        return new PaymentListProjection(null, null, null, null, null, null, null,
+//                customer.getId(), customer.getLastName(), customer.getFirstName(), customer.getSurName(), customer.getMiddleInitial(), customer.getBalance(),
+//                // ar.firstMonth(), ar.firstMonth(),ar.firstMonth(),ar.firstMonth()
+//                bucket0_30, bucket31_60, bucket_greather_90, bucket_greather_90
+//        );
+
 }

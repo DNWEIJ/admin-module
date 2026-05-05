@@ -1,10 +1,8 @@
 package dwe.holding.admin.tenant;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
-import jakarta.annotation.PreDestroy;
 import jakarta.persistence.PostRemove;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.TenantId;
@@ -47,7 +45,7 @@ public class TenantEntityListener {
                             ReflectionUtils.setField(field, entity, AutorisationUtils.getCurrentUserMid());
                         } else {
                             log.error("Current user is not logged in. This should never happen");
-                            ReflectionUtils.setField(field, entity, 77L);
+                            ReflectionUtils.setField(field, entity, 0L);
                         }
                     }
                 });

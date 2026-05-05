@@ -2,7 +2,9 @@ package dwe.holding;
 
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.vmas.local.UserLocaleResolver;
+import dwe.holding.vmas.setup.UpdateDatabase;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,9 +36,9 @@ public class VmasApplication implements CommandLineRunner {
 
 //       @Autowired
 //       SetupAdminService setupAdminService;
-//
-//    @Autowired
-//    UpdateDatabase updateDatabase;
+
+    @Autowired
+    UpdateDatabase updateDatabase;
 
     static void main(String[] args) {
         SpringApplication.run(VmasApplication.class, args);
@@ -69,10 +71,10 @@ public class VmasApplication implements CommandLineRunner {
         // step 1
 //        updateDatabase.processAllCustomerBalance();
 //        updateDatabase.reduceTaxRecords();
-//        updateDatabase.processAllVisitsBalance();
+//       updateDatabase.processAllVisitsBalance();
 
         // step 2
-//        updateDatabase.processConnectPaymentToVisitPassOne();
+//        updateDatabase.processConnectPaymentToVisitPass_MatchExactly();
 //        updateDatabase.processConnectPaymentToVisitPassTwo();
 
     }

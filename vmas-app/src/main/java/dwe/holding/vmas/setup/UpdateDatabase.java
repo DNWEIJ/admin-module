@@ -73,10 +73,7 @@ public class UpdateDatabase {
     List<LocalMemberTax> merge(List<LocalMemberTax> input) {
         if (input.isEmpty()) return List.of();
 
-        List<LocalMemberTax> sorted = input.stream()
-                .sorted(Comparator.comparing(LocalMemberTax::getStartDate))
-                .toList();
-
+        List<LocalMemberTax> sorted = input.stream().sorted(Comparator.comparing(LocalMemberTax::getStartDate)).toList();
         List<LocalMemberTax> result = new ArrayList<>();
 
         LocalMemberTax current = sorted.get(0);
@@ -85,7 +82,6 @@ public class UpdateDatabase {
             LocalMemberTax next = sorted.get(i);
 
             boolean sameTax = current.getTaxLow().compareTo(next.getTaxLow()) == 0 && current.getTaxHigh().compareTo(next.getTaxHigh()) == 0;
-
             boolean overlapsOrTouches = !next.getStartDate().isAfter(current.getEndDate().plusDays(1));
 
             if (sameTax && overlapsOrTouches) {
@@ -96,7 +92,6 @@ public class UpdateDatabase {
                 current = next;
             }
         }
-
         result.add(current);
         return result;
     }
@@ -111,16 +106,59 @@ public class UpdateDatabase {
     private record PaymentVisitIds(Long paymentId, Long visitId) {
     }
 
+
+
     @Transactional
-    public void processConnectPaymentToVisitPassOne() {
-        // using two pas system:
+    public void processConnectPaymentToVisitPass_MatchExactly() {
 
-        // probably good to only do this if the balance is zero!!
+        List<PaymentVisitIds> listIds = new ArrayList<>();
 
-        // exact match full payment per visit or full payment for all visits, per appointment.
-        // Second pass: the list should be reduced considerably, and we now need to mach 'more or less' on paid and visits matching
-//        https://localhost:8443/consult/visit/customer/66979/visits
-        // Also see if we find consult with under paid (consult amouont > paid) then see if there is a payment without connection that fills the gap
+        List<PaymentVisitDTO> notConnectedPayments = paymentRepository.findMigrationPaymentsNotLinkedForCustomers();
+        List<VisitDto> notConnectedVisits = visitRepository.findMigrationNotConnectedAndNotZeroAmount();
+
+//        notConnectedPayments.stream().limit(10).forEach(a -> log.info("paymentId: " + a.paymentId() + " " + a.paymentAmount() + " " + a.customerId()));
+
+        Map<Long, List<VisitDto>> visitsByCustomer = notConnectedVisits.stream().collect(Collectors.groupingBy(VisitDto::getCustomerId));
+        Map<Long, List<PaymentVisitDTO>> paymentsByCustomers = notConnectedPayments.stream().collect(Collectors.groupingBy(PaymentVisitDTO::customerId));
+
+        paymentsByCustomers.forEach((customerId, payments) -> {
+            List<VisitDto> visitPerCustomer = visitsByCustomer.get(customerId);
+            if (visitPerCustomer == null || visitPerCustomer.isEmpty()) {
+                log.error("Found no visits for customer: " + customerId + " but found payments #: " + payments.size());
+            } else {
+                Map<LocalDate, List<VisitDto>> groupedVisitOnDate = visitPerCustomer.stream().collect(Collectors.groupingBy(dto -> dto.getVisitDateTime().toLocalDate()));
+                Map<LocalDate, List<PaymentVisitDTO>> groupedPaymentOnDate = payments.stream().collect(Collectors.groupingBy(dto -> dto.paymentDate()));
+
+                for (PaymentVisitDTO payment : payments) {
+                    List<VisitDto> visitOnDate = groupedVisitOnDate.get(payment.paymentDate());
+                    if (visitOnDate == null || visitOnDate.isEmpty()) {
+                        break;
+                    }
+
+                    // if both (visits/payments) have the same sum amount, connect them.
+                    BigDecimal combinedVisitAmount = visitOnDate.stream().map(VisitDto::getTotalAmountIncTax).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal combinedPaymentAmount = payments.stream().map(PaymentVisitDTO::paymentAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    if (combinedPaymentAmount.compareTo(combinedVisitAmount) == 0) {
+                        for (PaymentVisitDTO pymnt : payments) {
+                            visitOnDate.forEach(visit -> {
+                                listIds.add(new PaymentVisitIds(pymnt.paymentId(), visit.getVisitId()));
+                            });
+                        }
+                    }
+                }
+            }
+        });
+        long start = System.currentTimeMillis();
+        bulkInsertPaymnetVisits(listIds);
+        long end = System.currentTimeMillis();
+        log.info("Time taken for save to db: " + (end - start) + " ms (" + (end - start) / 1000.0 + " s)");
+    }
+
+
+
+
+    @Transactional
+    public void processConnectPaymentToVisitPass_Match() {
 
         List<PaymentVisitIds> listIds = new ArrayList<>();
 

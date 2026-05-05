@@ -1,7 +1,6 @@
 package dwe.holding.vmas.controller;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +24,7 @@ public class ControllerUrlScannerTest {
     public void generateHtml() throws IOException {
         Path startDir = Paths.get("C:/workspace/admin");
 
-        String insertStringFunction= "INSERT INTO new_vmas.admin_function (added_by,added_on,last_edited_by, last_edited_on, version, name) \n VALUES('system','%s','system','%s',0,'%s');";
+        String insertStringFunction = "INSERT INTO new_vmas.admin_function (added_by,added_on,last_edited_by, last_edited_on, version, name) \n VALUES('system','%s','system','%s',0,'%s');";
         String insertStringFunctionRole = "INSERT INTO new_vmas.admin_function_role (added_by, added_on, last_edited_by, last_edited_on, version, member_id, function_id, role_id)" +
                 "\n VALUES('system','%s','system','%s',0,77,%d,1);";
 
@@ -88,7 +87,6 @@ public class ControllerUrlScannerTest {
             Map<String, String> lastMapping = null;
 
 
-
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i).trim();
 
@@ -125,21 +123,20 @@ public class ControllerUrlScannerTest {
                             .append(fullUrl)
                             .append("</td></tr>\n");
 
-                    sqlInsert.append(String.format(insertStringFunction, currentDateTime,currentDateTime, lastMapping.get("http").toLowerCase()+"_"+fullUrl.toLowerCase())).append("\n");
-                    sqlInsert.append(String.format(insertStringFunctionRole,currentDateTime,currentDateTime, counter++)).append("\n");
+                    sqlInsert.append(String.format(insertStringFunction, currentDateTime, currentDateTime, lastMapping.get("http").toLowerCase() + "_" + fullUrl.toLowerCase())).append("\n");
+                    sqlInsert.append(String.format(insertStringFunctionRole, currentDateTime, currentDateTime, counter++)).append("\n");
                     lastMapping = null; // reset
                 }
             }
         }
 
-        html.append("</table>" + "<span>" + sqlInsert.toString() + "</span></body></html>");
-
-        System.out.println(sqlInsert);
+        html.append("</table>" + "<span>" + sqlInsert + "</span></body></html>");
 
         Path out = Paths.get("urlpaths.html");
-        Files.writeString(out, html.toString(),
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING);
+        Path sqlout = Paths.get("C:\\workspace\\admin\\vmas-app\\src\\dbchanges\\loadingDataFromVMAS\\sql\\add_function.sql");
+        Files.writeString(out, html.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+        Files.writeString(sqlout, sqlInsert.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
         System.out.println("Written: " + out.toAbsolutePath());
     }
