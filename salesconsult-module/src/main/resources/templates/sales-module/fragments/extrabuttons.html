@@ -7,8 +7,8 @@
     <input th:if="${salesType.isVisit}" type="button" class="secondary" th:value="#{label.otc.sell.note}"
            th:hx-get="'/consult/visit/customer/'+${visit.pet.customer.id}+'/pet/'+ ${visit.pet.id}+ '/note'"
            hx-target="#modal-container" hx-swap="innerHTML"/>
-    <input th:if="${salesType.isVisit}" type="button" class="secondary"     value="TODO: NoteListDialog"
-           th:hx-get="'/consult/visit/customer/'+${visit.pet.customer.id}+'/pet/'+ ${visit.pet.id}+ '/note'"
+    <input th:if="${salesType.isVisit}" type="button" class="secondary" th:value="#{label.otc.sell.listnotes}"
+           th:hx-get="'/consult/visit/customer/'+${visit.pet.customer.id}+'/pet/'+ ${visit.pet.id}+ '/shownotes'"
            hx-target="#modal-container" hx-swap="innerHTML"/>
 </th:block>
 

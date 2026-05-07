@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tools.jackson.databind.ObjectMapper;
 
-import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Map;
 
 @RequestMapping("/agenda")
@@ -45,10 +46,9 @@ public class AgendaController {
 
     @PostMapping("/event/initial")
     public String eventModalScreen(Model model, EventForm eventForm) {
-        model.addAttribute("event", new Event(null, 0, null, null,
-                        eventForm.startDate,
-                        Duration.between(eventForm.startDate, eventForm.endDate).toMinutes()
-                )
+        // we already have a selection of the datetime start/end
+        model.addAttribute("event",
+                new Event(null, 0, null, null, LocalDate.now(), LocalTime.now(), LocalTime.now(), 0L)
         );
         // TODO resource can be null when we are in week view
         return "agenda-module/newevent";
@@ -114,7 +114,7 @@ public class AgendaController {
     public record EventForm(LocalDateTime startDate, LocalDateTime endDate, Long resourceId) {
     }
 
-    public record Event(Long id, long version, String title, String description, LocalDateTime from, long duration) {
+    public record Event(Long id, long version, String title, String description, LocalDate startDate, LocalTime startTime, LocalTime endTime, long duration) {
     }
 }
 

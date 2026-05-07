@@ -89,8 +89,8 @@ public class PetController {
 
 
     @PostMapping("/customer/{customerId}/pet/{petId}")
-    String savePet(@PathVariable Long customerId, @PathVariable Long petId, @Valid Pet petForm,
-                   RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response, Model model) {
+    String savePet(@PathVariable Long customerId, @PathVariable Long petId, @Valid Pet petForm, Model model,
+                   RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response) {
 
         customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         Pet pet = petRepository.findById(petForm.getId()).orElseThrow();
@@ -115,7 +115,7 @@ public class PetController {
         final boolean isHtmx = ControllerHelper.getHtmxAndAddToModel(request, model);
         // not sure why we do this.... we are also called for udpate instead of only for new
         if (petForm.getId() != null) {
-            return savePet(customerId, petForm.getId(), petForm, redirect, request, response, model);
+            return savePet(customerId, petForm.getId(), petForm, model, redirect, request, response );
         }
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         if (customer.getPets().stream()

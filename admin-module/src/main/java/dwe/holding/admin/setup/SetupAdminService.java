@@ -1,7 +1,7 @@
 package dwe.holding.admin.setup;
 
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.function_role.InternalFunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.authorisation.tenant.user.UserNoMemberRepository;
@@ -28,7 +28,7 @@ public class SetupAdminService {
     private final MemberRepository memberRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
-    private final FunctionRoleRepository functionRoleRepository;
+    private final InternalFunctionRoleRepository functionRoleRepository;
     private final UserNoMemberRepository userNoMemberRepository;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;

@@ -1,6 +1,6 @@
 package dwe.holding.salesconsult.setup;
 
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.function_role.InternalFunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.model.notenant.Function;
@@ -19,9 +19,9 @@ public class SetupSalesConsultService {
 
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
-    private final FunctionRoleRepository functionRoleRepository;
+    private final InternalFunctionRoleRepository functionRoleRepository;
 
-    public SetupSalesConsultService( FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository) {
+    public SetupSalesConsultService( FunctionRepository functionRepository, RoleRepository roleRepository, InternalFunctionRoleRepository functionRoleRepository) {
         this.functionRepository = functionRepository;
         this.roleRepository = roleRepository;
         this.functionRoleRepository = functionRoleRepository;

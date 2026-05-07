@@ -413,8 +413,10 @@
     <div role="buttons">
         <ul>
             <li>
-                <button th:onclick="|window.location.href='@{/admin/logout}'|">Logout</button>
-                <button th:onclick="|window.location.href='@{/admin/something}'|">Something</button>
+                <form action="/generic/logout" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit">Logout</button>
+                </form>
             </li>
         </ul>
     </div>

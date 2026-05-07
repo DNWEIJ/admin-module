@@ -29,7 +29,5 @@ public interface FunctionRepository extends JpaRepository<Function, Long> {
     @Query("SELECT new dwe.holding.admin.authorisation.notenant.projection.IdName(f.id, f.name) FROM Function f")
     List<IdName> findAllCachedNames();
 
-
-
     Optional<Function> findByName(String sellRead);
 }

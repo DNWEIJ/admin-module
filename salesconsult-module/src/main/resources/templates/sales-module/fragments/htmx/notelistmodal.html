@@ -1,0 +1,32 @@
+<dialog id="customer-note-modal" open>
+    <article>
+        <header>
+            <div>
+                <span th:text="#{label.create} +' '+ #{label.title.notes}"></span>
+                <span id="notification-message-modal"></span>
+            </div>
+        </header>
+        <p id="customer-note-modal-part">
+        <div class="notification-message text-align-center alert "
+             th:classappend="${messageClass != null} ? ${messageClass} + ' show' : 'alert-success'" role="alert" th:text="${message != null} ? #{${message}} : ''"></div>
+
+        <th:block th:each="note : ${notes}">
+            </p>
+            <th:block th:insert="~{customer-module/notes/noteform}"></th:block>
+            </p>
+        </th:block>
+
+        <footer>
+            <fieldset class="grid">
+                <input type="button" data-target="customer-note-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+            </fieldset>
+        </footer>
+    </article>
+    <script>
+        // called via the header HX-Trigger from backend
+        document.body.addEventListener("closeModal", () => {
+            const modal = document.getElementById("customer-note-modal")
+            closeModal(modal)
+        });
+    </script>
+</dialog>

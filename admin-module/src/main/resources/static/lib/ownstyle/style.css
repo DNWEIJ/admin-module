@@ -308,7 +308,7 @@ a:hover {
 }
 
 /* Make inputs/selects/textarea fill the column */
-.grid-row input,
+.grid-row input:not([type="checkbox"]),
 .grid-row select,
 .grid-row textarea {
     width: 100%;
@@ -340,6 +340,7 @@ a:hover {
 dialog > article {
     width: 95vw;
     max-width: 1000px;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
 }

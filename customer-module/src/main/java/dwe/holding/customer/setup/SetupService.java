@@ -1,6 +1,6 @@
 package dwe.holding.customer.setup;
 
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.function_role.InternalFunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
@@ -37,7 +37,7 @@ public class SetupService {
     private final UserRepository localMemberRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
-    private final FunctionRoleRepository functionRoleRepository;
+    private final InternalFunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
     @Transactional

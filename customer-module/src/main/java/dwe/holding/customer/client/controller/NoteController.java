@@ -35,7 +35,7 @@ public class NoteController {
     private final NotePurposeLookupRepository notePurposeLookupRepository;
 
     @GetMapping("/customer/{customerId}/notes")
-    String list(@PathVariable Long customerId, Model model) {
+    public String list(@PathVariable Long customerId, Model model) {
         Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
         model.addAttribute("notes", noteRepository.findByPet_Customer_IdOrderByNoteDateDesc(customer.getId()));
         setModel(model, customerId);

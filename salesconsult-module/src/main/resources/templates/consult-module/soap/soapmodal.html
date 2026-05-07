@@ -1,4 +1,4 @@
-<dialog id="soap-modal" class="modal-xlg" open>
+<dialog id="soap-modal" open>
     <article>
         <header>
             <div>
@@ -26,6 +26,11 @@
                 background-color: white;
             }
         </style>
+        <div class="grid">
+            <button onclick="document.querySelectorAll('.visit , .note ').forEach(d => d.open = !d.open);">Toggle Open/Close</button>
+            <button data-target="soap-modal" onclick="toggleModal(event)" th:text="#{label.button.close}"></button>
+        </div>
+        <hr/>
         <div th:replace="~{consult-module/soap/fragments/soap::SoapData}"></div>
         <footer>
             <div class="grid">

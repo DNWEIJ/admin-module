@@ -15,22 +15,26 @@
                 </ul>
             </details>
         </li>
-<!--        <li>-->
-<!--            <details class="dropdown">-->
-<!--                <summary>Supplies & Inventory</summary>-->
-<!--                <ul>-->
-<!--                    <li><a href="/supplies/distributor">Distributor</a></li>-->
-<!--                    <li><a href="/supplies/supplies">Supplies</a></li>-->
-<!--                    <li><a href="/supplies/supplies">Inventory</a></li>-->
-<!--                </ul>-->
-<!--            </details>-->
-<!--        </li>-->
+        <!--        <li>-->
+        <!--            <details class="dropdown">-->
+        <!--                <summary>Supplies & Inventory</summary>-->
+        <!--                <ul>-->
+        <!--                    <li><a href="/supplies/distributor">Distributor</a></li>-->
+        <!--                    <li><a href="/supplies/supplies">Supplies</a></li>-->
+        <!--                    <li><a href="/supplies/supplies">Inventory</a></li>-->
+        <!--                </ul>-->
+        <!--            </details>-->
+        <!--        </li>-->
 
         <li>
             <details class="dropdown">
                 <summary>User</summary>
                 <ul>
-                    <li><a href="/logout">Logout</a></li>
+                    <li>
+                        <form action="/generic/logout" method="post">
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
                 </ul>
             </details>
         </li>

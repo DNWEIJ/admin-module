@@ -13,7 +13,7 @@ import java.util.Map;
 @Setter
 public class PermissionMatrixRow {
     private Long functionId;
+    private String functionType;
     private String functionName;
     private Map<Long, Boolean> rolePermissions  = new LinkedHashMap<>();
-    // key = roleId, value = connected
 }

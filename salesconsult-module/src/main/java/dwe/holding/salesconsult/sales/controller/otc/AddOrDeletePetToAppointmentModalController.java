@@ -27,7 +27,7 @@ import static dwe.holding.salesconsult.consult.controller.VisitController.VISIT_
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateReasonsInModel;
 import static dwe.holding.salesconsult.sales.controller.ModelHelper.updateRoomsInModel;
 
-@RequestMapping("/generic")
+@RequestMapping("/sales")
 @Controller
 @AllArgsConstructor
 public class AddOrDeletePetToAppointmentModalController {

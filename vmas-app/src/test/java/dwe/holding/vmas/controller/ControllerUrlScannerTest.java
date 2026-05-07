@@ -9,8 +9,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ControllerUrlScannerTest {
@@ -32,11 +35,11 @@ public class ControllerUrlScannerTest {
 
 
         List<Path> controllers = findControllers(startDir);
-
-        assertTrue(!controllers.isEmpty(), "No controllers found");
+        assertFalse(controllers.isEmpty(), "No controllers found");
 
         StringBuilder html = new StringBuilder();
-        StringBuilder sqlInsert = new StringBuilder();
+        StringBuilder sqlInsertFunctionRole = new StringBuilder();
+        StringBuilder sqlInsertFunction = new StringBuilder();
 
         html.append("""
                 <html>
@@ -78,65 +81,75 @@ public class ControllerUrlScannerTest {
                 """);
 
         Integer counter = 1;
+        // for testing 1 controller
+        // controllers = controllers.stream().filter(p -> p.getFileName().toString().equals("PetController.java")).toList();
         for (Path file : controllers) {
 
             String controllerName = file.getFileName().toString().replace(".java", "");
             List<String> lines = Files.readAllLines(file);
 
             String classPrefix = "";
-            Map<String, String> lastMapping = null;
-
+            List<String> urls = new ArrayList<>();
+            String httpMethod = "";
 
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i).trim();
+                while (line.endsWith(",")) {
+                    line += " " + lines.get(++i).trim();
+                }
+
 
                 // detect class-level RequestMapping
                 if (line.startsWith("@RequestMapping") && classPrefix.isEmpty()) {
-                    classPrefix = extractUrlFromAnnotation(line);
+                    classPrefix = extractUrlFromAnnotation(line).getFirst();
                     continue;
                 }
 
-                // detect mapping annotation
+                // detect mapping annotation like @GetMapping({"a","b"})
                 for (String ann : MAPPING_ANNOTATIONS) {
                     if (line.startsWith("@" + ann)) {
-                        String url = extractUrlFromAnnotation(line);
-                        String http = ann.equals("RequestMapping") ? extractHttpFromRequestMapping(line) : ann.replace("Mapping", "");
-                        lastMapping = new HashMap<>();
-                        lastMapping.put("url", url);
-                        lastMapping.put("http", http.toUpperCase());
+                        urls = extractUrlFromAnnotation(line);
+                        httpMethod = ann.equals("RequestMapping") ? extractHttpFromRequestMapping(line) : ann.replace("Mapping", "").toUpperCase();
                         break;
                     }
                 }
 
                 // detect method declaration
-                if (lastMapping != null && line.matches(".*\\s+\\w+\\s*\\(.*\\)\\s*\\{?")) {
+                if (!urls.isEmpty() && line.matches(".*\\s+\\w+\\s*\\(.*\\)\\s*\\{?")) {
                     String methodName = line.replaceAll(".*\\s+(\\w+)\\s*\\(.*", "$1");
-                    String fullUrl = concat(classPrefix, lastMapping.get("url"));
 
-                    html.append("<tr><td>")
-                            .append(controllerName)
-                            .append("</td><td>")
-                            .append(methodName)
-                            .append("</td><td>")
-                            .append(lastMapping.get("http"))
-                            .append("</td><td>")
-                            .append(fullUrl)
-                            .append("</td></tr>\n");
+                    String fullUrl;
+                    for (String url : urls) {
+                        fullUrl = concat(classPrefix, url);
+                        html.append("<tr><td>")
+                                .append(controllerName)
+                                .append("</td><td>")
+                                .append(methodName)
+                                .append("</td><td>")
+                                .append(httpMethod)
+                                .append("</td><td>")
+                                .append(fullUrl)
+                                .append("</td></tr>\n");
+                        sqlInsertFunctionRole.append(String.format(insertStringFunctionRole, currentDateTime, currentDateTime, counter++)).append("\n");
+                        sqlInsertFunction.append(String.format(insertStringFunction, currentDateTime, currentDateTime, httpMethod.toLowerCase() + "_" + fullUrl.toLowerCase())).append("\n");
 
-                    sqlInsert.append(String.format(insertStringFunction, currentDateTime, currentDateTime, lastMapping.get("http").toLowerCase() + "_" + fullUrl.toLowerCase())).append("\n");
-                    sqlInsert.append(String.format(insertStringFunctionRole, currentDateTime, currentDateTime, counter++)).append("\n");
-                    lastMapping = null; // reset
+                    }
+                    urls = new ArrayList<>();
+                    httpMethod = "";
                 }
             }
         }
 
-        html.append("</table>" + "<span>" + sqlInsert + "</span></body></html>");
+        html.append("</table>" + "<span>" + sqlInsertFunctionRole + "</span></body></html>");
 
         Path out = Paths.get("urlpaths.html");
-        Path sqlout = Paths.get("C:\\workspace\\admin\\vmas-app\\src\\dbchanges\\loadingDataFromVMAS\\sql\\add_function.sql");
         Files.writeString(out, html.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
-        Files.writeString(sqlout, sqlInsert.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        Path sqloutFunction = Paths.get("C:\\workspace\\admin\\vmas-app\\src\\dbchanges\\loadingDataFromVMAS\\sql\\add_function.sql");
+        Files.writeString(sqloutFunction, sqlInsertFunction.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+        Path sqloutFunctionRole = Paths.get("C:\\workspace\\admin\\vmas-app\\src\\dbchanges\\loadingDataFromVMAS\\sql\\initial_add_functionrole.sql");
+        Files.writeString(sqloutFunctionRole, sqlInsertFunctionRole.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
         System.out.println("Written: " + out.toAbsolutePath());
     }
@@ -151,14 +164,19 @@ public class ControllerUrlScannerTest {
         return list;
     }
 
-    private String extractUrlFromAnnotation(String annLine) {
-        // crude extraction: between quotes
-        int start = annLine.indexOf("\"");
-        int end = annLine.lastIndexOf("\"");
-        if (start >= 0 && end > start) {
-            return annLine.substring(start + 1, end);
+    private List<String> extractUrlFromAnnotation(String annLine) {
+        List<String> urls = new ArrayList<>();
+        int index = 0;
+
+        while (index < annLine.length()) {
+            int start = annLine.indexOf("\"", index);
+            if (start == -1) break;
+            int end = annLine.indexOf("\"", start + 1);
+            if (end == -1) break;
+            urls.add(annLine.substring(start + 1, end));
+            index = end + 1;
         }
-        return "";
+        return urls;
     }
 
     private String extractHttpFromRequestMapping(String line) {

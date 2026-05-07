@@ -1,7 +1,7 @@
 package dwe.holding.supplyinventory.setup;
 
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.function_role.InternalFunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.role.RoleRepository;
 import dwe.holding.admin.model.notenant.Function;
@@ -27,7 +27,7 @@ public class SetupSuppliesService {
     private final DistributorRepository distributorRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
-    private final FunctionRoleRepository functionRoleRepository;
+    private final InternalFunctionRoleRepository functionRoleRepository;
 
     @Transactional
     public void init() {

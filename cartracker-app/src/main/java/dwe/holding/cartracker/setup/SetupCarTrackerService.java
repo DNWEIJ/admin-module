@@ -1,6 +1,6 @@
 package dwe.holding.cartracker.setup;
 
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.function_role.InternalFunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
@@ -35,11 +35,11 @@ public class SetupCarTrackerService {
     private final UserRepository userRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
-    private final FunctionRoleRepository functionRoleRepository;
+    private final InternalFunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
     private final LocalMemberRepository localMemberRepository;
 
-    public SetupCarTrackerService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, LocalMemberRepository localMemberRepository) {
+    public SetupCarTrackerService(MemberRepository memberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, InternalFunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository, LocalMemberRepository localMemberRepository) {
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
         this.functionRepository = functionRepository;

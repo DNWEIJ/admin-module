@@ -1,7 +1,11 @@
 package dwe.holding.salesconsult.consult.controller;
 
+import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import dwe.holding.customer.client.controller.NoteController;
+import dwe.holding.customer.client.model.Customer;
 import dwe.holding.customer.client.model.Note;
+import dwe.holding.customer.client.repository.CustomerRepository;
+import dwe.holding.customer.client.repository.NoteRepository;
 import dwe.holding.shared.model.frontend.PresentationElement;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -19,13 +23,25 @@ import java.util.List;
 @Slf4j
 public class HtmxNoteController {
     private final NoteController noteController;
+    private final NoteRepository noteRepository;
+    private final CustomerRepository customerRepository;
+
+    @GetMapping("/visit/customer/{customerId}/pet/{petId}/shownotes")
+    String returnAllNotes(@PathVariable Long customerId, @PathVariable Long petId, Model model) {
+        Customer customer = customerRepository.findByIdAndMemberId(customerId, AutorisationUtils.getCurrentUserMid()).orElseThrow();
+        model.addAttribute("notes", noteRepository.findByPet_Id(
+                // validation of customer to pet
+                customer.getPets().stream().filter(p -> !p.getId().equals(petId)).findFirst().orElseThrow().getId()
+        ));
+        return "sales-module/fragments/htmx/notelistmodal";
+    }
 
     @GetMapping("/visit/customer/{customerId}/pet/{petId}/note")
     String returnNoteModal(@PathVariable Long customerId, @PathVariable Long petId, Model model) {
         noteController.newNote(customerId, model);
 
         List<PresentationElement> pets = (List<PresentationElement>) model.getAttribute("petsList");
-        PresentationElement pet = pets.stream().filter(p -> !p.getId().equals(petId)).findFirst().orElseThrow();
+        pets.stream().filter(p -> !p.getId().equals(petId)).findFirst().orElseThrow();
         Note note = (Note) model.getAttribute("note");
         note.getPet().setId(petId);
         return "sales-module/fragments/htmx/notemodal";

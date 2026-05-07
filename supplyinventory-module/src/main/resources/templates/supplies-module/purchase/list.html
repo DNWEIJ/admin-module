@@ -1,0 +1,176 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout.html}">
+<head>
+    <title th:text="#{label.product}"></title>
+</head>
+<body>
+<section layout:fragment="content">
+    <details open>
+        <summary>
+<!--            <span th:text="#{label.report.product.input.title}"></span>-->
+            <span>Purchase list</span>
+            <a href="" hx-target="#modal-container" hx-swap="innerHTML" hx-get="/info/purchase" th:title="#{label.more.information}" class="emoji-icon">ℹ️</a>
+        </summary>
+    <th:block th:insert="~{fragments/elements/pagetitle::pageTitleList('Product Purchase','/product/purchase')}"></th:block>
+    </details>
+    <table id="productTable" class="table-tight table-striped">
+        <thead>
+        <tr>
+            <th class="no-sorting"></th>
+            <th th:text="#{label.costing.product.invoiceInformation}"></th>
+            <th th:text="#{label.costing.product.category}"></th>
+            <th th:text="#{label.costing.product.code}"></th>
+            <th th:text="#{label.costing.product.barcode}"></th>
+            <th th:text="#{label.costing.product.article}"></th>
+            <th th:text="#{label.costing.product.inventoryUnit}"></th>
+            <th th:text="#{label.costing.product.groupedProduct}"></th>
+            <th th:text="#{label.costing.product.batchRegistered}"></th>
+            <th th:text="#{label.costing.product.spillageAccounted}"></th>
+            <th th:text="#{label.costing.product.inventoryAvailable}"></th>
+        </tr>
+        <tbody>
+    <tr><td colspan="8"> TOD implement overview </td></tr>
+    </tbody>
+        </thead>
+    </table>
+
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Supply Ordering Dashboard</title>
+        <style>
+            .urgent { background-color: #fee; border-left: 4px solid #c00; }
+            .forecast { background-color: #fef6e0; border-left: 4px solid #f90; }
+            .card { margin-bottom: 1rem; }
+        </style>
+    </head>
+    <body>
+    <div class="container mt-4">
+        <h2>Supply Dashboard - <span th:text="${dashboard.locationName}"></span></h2>
+
+        <!-- Urgent Reorders -->
+        <div class="card urgent" th:if="${!dashboard.urgentReorders.isEmpty()}">
+            <div class="card-header">
+                <strong>🔴 Needs Reorder Now</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Current Stock</th>
+                        <th>Min Alert Level</th>
+                        <th>Suggested Order</th>
+                        <th>Supplier</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${dashboard.urgentReorders}">
+                        <td th:text="${item.nomenclature}"></td>
+                        <td th:text="${item.currentStock}"></td>
+                        <td th:text="${item.minAlert}"></td>
+                        <td th:text="${item.suggestedOrderQuantity}"></td>
+                        <td th:text="${item.distributorName}"></td>
+                        <td>
+                            <a th:href="@{/order/quick-add(supplyId=${item.supplyId},qty=${item.suggestedOrderQuantity})}"
+                               class="btn btn-sm btn-danger">Order</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Forecasted Reorders -->
+        <div class="card forecast" th:if="${!dashboard.forecastedReorders.isEmpty()}">
+            <div class="card-header">
+                <strong>🟠 Will Need Reorder Soon</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Current Stock</th>
+                        <th>Days Until Reorder</th>
+                        <th>Suggested Order</th>
+                        <th>Supplier</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${dashboard.forecastedReorders}">
+                        <td th:text="${item.nomenclature}"></td>
+                        <td th:text="${item.currentStock}"></td>
+                        <td th:text="${item.daysUntilReorder} + ' days'"></td>
+                        <td th:text="${item.suggestedOrderQuantity}"></td>
+                        <td th:text="${item.distributorName}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Order Drafts by Supplier -->
+        <div class="card">
+            <div class="card-header">
+                <strong>📦 Suggested Order Drafts</strong>
+            </div>
+            <div class="card-body">
+                <div th:each="entry : ${dashboard.orderDraftsBySupplier}">
+                    <h5 th:text="${entry.key}"></h5>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Item Number</th>
+                            <th>Priority</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${entry.value}">
+                            <td th:text="${item.nomenclature}"></td>
+                            <td th:text="${item.quantity}"></td>
+                            <td th:text="${item.itemNumber}"></td>
+                            <td><span th:text="${item.priority}"
+                                      th:classappend="${item.priority == 'URGENT' ? 'badge bg-danger' : 'badge bg-warning'}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form th:action="@{/order/create-from-draft}" method="post">
+                        <input type="hidden" name="supplier" th:value="${entry.key}">
+                        <button type="submit" class="btn btn-primary">Create Order for <span th:text="${entry.key}"></span></button>
+                    </form>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+
+        <!-- High Consumption Items -->
+        <div class="card">
+            <div class="card-header">
+                <strong>📉 High Consumption Items (Last 30 Days)</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Total Consumed</th>
+                        <th>Avg Daily</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${dashboard.highConsumptionItems}">
+                        <td th:text="${item.nomenclature}"></td>
+                        <td th:text="${item.totalConsumed}"></td>
+                        <td th:text="${item.avgDaily}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+</section>

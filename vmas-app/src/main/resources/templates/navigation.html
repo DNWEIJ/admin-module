@@ -330,8 +330,7 @@
                         <ul class="dropdown-panel">
                             <li><a th:href="@{/supplies/distributors}">Distributor</a></li>
                             <li><a th:href="@{/supplies/distributor/supplies}">Distributor supplies</a></li>
-                            <li><a th:href="@{/supplies/distributor/supplies}">TODO NEW: Create purchase list</a></li>
-                            <li><a th:href="@{/supplies/distributor/supplies}">TOD NEW: Process inventory</a></li>
+                            <li><a th:href="@{/supplies/distributor/receivedgoods}">Order processing</a></li>
                         </ul>
                     </div>
                 </li>
@@ -343,6 +342,7 @@
                             <li><a th:href="@{/product/products}">Products</a></li>
                             <li><a th:href="@{/product/pricing}">Product Pricing</a></li>
                             <li><a th:href="@{/product/inventory}">Product Inventory</a></li>
+                            <li><a th:href="@{/product/purchase}">Product purchase overview</a></li>
                         </ul>
                     </div>
                 </li>
@@ -403,6 +403,7 @@
                             <li><a th:href="@{/admin/members}">Member</a></li>
                             <li><a th:href="@{/admin/functions}">Function</a></li>
                             <li><a th:href="@{/admin/roles}">Role</a></li>
+                            <li><a th:href="@{/admin/roles/mapping}">Role Function mapping</a></li>
                             <li><a th:href="@{/admin/manuals}">NEW Manuals</a></li>
                         </ul>
                     </div>
@@ -412,8 +413,10 @@
         <div role="buttons">
             <ul>
                 <li>
-                    <button th:onclick="|window.location.href='@{/admin/logout}'|">Logout</button>
-                    <button th:onclick="|window.location.href='@{/admin/something}'|">Something</button>
+                    <form action="/generic/logout" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit">Logout</button>
+                    </form>
                 </li>
             </ul>
         </div>

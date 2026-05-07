@@ -76,7 +76,7 @@ public class SecurityConfig {
             String req = request.getRequestURI();
             return req.startsWith(contextPath + "/generic/login") ||
                     req.startsWith(contextPath + "/generic/logout") ||
-                    req.startsWith(contextPath + "/admin/error") ||
+                    req.startsWith(contextPath + "/generic/error") ||
                     req.startsWith(contextPath + "/lib/") ||
                     req.startsWith(contextPath + "/images/");
         };

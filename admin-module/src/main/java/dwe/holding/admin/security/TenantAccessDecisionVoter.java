@@ -1,7 +1,7 @@
 package dwe.holding.admin.security;
 
+import dwe.holding.admin.authorisation.notenant.function.FunctionCacheService;
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.projection.IdName;
 import dwe.holding.admin.sessionstorage.AutorisationUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,16 +18,13 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Component
 @Slf4j
 public class TenantAccessDecisionVoter {
 
-    private final Set<String> errorUriList = new HashSet<>();
     private static final PathPatternParser parser = new PathPatternParser();
 
     static final int ACCESS_GRANTED = 1;
@@ -41,13 +38,9 @@ public class TenantAccessDecisionVoter {
     private static final String LIST = "list";
 
     @Autowired
-    private FunctionRoleRepository functionRoleRepository;
+    private FunctionRepository functionRepository;
     @Autowired
-    FunctionRepository functionRepository;
-
-    public Set<String> getErrorList() {
-        return errorUriList;
-    }
+    FunctionCacheService functionCacheService;
 
     public int vote(Authentication authentication, Object object) {
         // check for no security needed
@@ -95,7 +88,7 @@ public class TenantAccessDecisionVoter {
         if (functionId.equals(0L)) {
             return List.of();
         }
-        return functionRoleRepository.findRolesByFunctionId(functionId);
+        return functionCacheService.findRolesByFunctionId(functionId);
     }
 
     private Long findFuctionId(HttpMethod method, String uri) {
@@ -119,7 +112,7 @@ public class TenantAccessDecisionVoter {
                 }
             }
         }
-        log.info("granting access checkAutorizationAttribute");
+        log.info("ACCESS_DENIED checkAutorizationAttribute");
         return ACCESS_DENIED;
     }
 }

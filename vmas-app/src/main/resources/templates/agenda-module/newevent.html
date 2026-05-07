@@ -7,23 +7,99 @@
             </div>
         </header>
         <form id="eventForm" action="/agenda/event" method="post">
+
             <input id="id" name="id" th:value="${event.id}" type="hidden"/>
             <input id="version" name="version" th:value="${event.version}" type="hidden"/>
+            <!--            <fieldset>-->
+            <!--                <legend>Event</legend>-->
+            <!--                <input id="eventDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01"-->
+            <!--                       th:value="${#temporals.format(event.from, 'yyyy-MM-dd hh:mm')}">-->
+            <!--                <input id="eventDuration" name="duration" required autofocus type="number" autocomplete="off" th:value="${event.duration}">-->
+            <!--    -->
             <fieldset>
-                <legend>Event</legend>
-                <input id="eventDateTimeStart" name="from" required autofocus type="date" autocomplete="off" max="9999-01-01" th:value="${#temporals.format(event.from, 'yyyy-MM-dd hh:mm')}">
-                <input id="eventDuration" name="duration" required autofocus type="number" autocomplete="off" th:value="${event.duration}">
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','event.title','event.title','1')}"></th:block>
+                <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','event.description','event.description','1')}"></th:block>
+                <!-- Date + Time -->
                 <div class="grid">
-                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','event.title','event.title','1')}"></th:block>
-                    <th:block th:insert="~{fragments/elements/input::inputHtmlLift('name','event.decsription','event.description','1')}"></th:block>
+                    <label>
+                        Start date<input type="date" name="startDate" required th:value="${event.startDate}">
+                    </label>
+                    <label>
+                        Start time<input type="time" name="startTime" required th:value="${event.startTime}">
+                    </label>
+                    <label>
+                        End time<input type="time" name="endTime" required th:value="${event.endTime}">
+                    </label>
                 </div>
+
+                <input type="checkbox" id="recurringToggle" name="recurring" onchange="toggleRecurrence(this)">
+                Recurring event?
+                <br/>
+                <!-- Recurrence block (hidden by default) -->
+                <fieldset id="recurrenceBlock" style="display:none; padding: 1rem; border: 1px solid #ddd; border-radius: 8px;">
+                    <!-- Repeat every -->
+                    <div class="grid-row">
+                        <span class="align-center"><label>Repeat number of times: </label></span>
+                        <input type="number" name="repeatEvery" value="1" min="1" class="small">
+                        <span class="align-center"><label>Unit:</label></span>
+                        <select name="repeatUnit" class="small">
+                            <option value="day">days</option>
+                            <option value="week" selected>weeks</option>
+                            <option value="month">months</option>
+                            <option value="year">years</option>
+                        </select>
+                    </div>
+                    <hr/>
+                    <!-- Repeat on (only meaningful for week) -->
+                    <div class="grid-row">
+                        <span class="align-center"><label>Repeat on</label></span>
+                        <label><input type="checkbox" name="days" value="MON"> Monday</label>
+                        <label><input type="checkbox" name="days" value="TUE"> Tuesday</label>
+                        <label><input type="checkbox" name="days" value="WED"> Wednesday</label>
+                        <label><input type="checkbox" name="days" value="THU"> Thursday</label>
+                        <label><input type="checkbox" name="days" value="FRI"> Friday</label>
+                        <label><input type="checkbox" name="days" value="SAT"> Saturday</label>
+                        <label><input type="checkbox" name="days" value="SUN"> Sunday</label>
+                    </div>
+                    <hr/>
+                    <!-- Ends -->
+                    <div>
+                        <label>Ends</label>
+                        <div class="grid">
+                            <div>
+                                <label><input type="radio" name="recurrenceEndType" value="never" checked> Never</label>
+                            </div>
+                            <div>
+                                <label><input type="radio" name="recurrenceEndType" value="on"> On</label>
+                            </div>
+                            <div>
+                                <label><input type="radio" name="recurrenceEndType" value="after"> After</label>
+                            </div>
+                        </div>
+
+                        <div class="grid">
+                            <div></div>
+                            <div>
+                                <input type="date" name="recurrenceEndDate" style="width: 14rem">
+                            </div>
+                            <div>
+                                <input type="number" name="recurrenceCount" min="1" value="10" style="width: 14rem">
+                                <span>occurrences</span>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
             </fieldset>
-        <footer>
-            <div class="grid">
-                <input name="_save" type="submit" form="eventForm" th:value="#{label.button.save}"/>
-                <input type="button" data-target="create-event-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
-            </div>
-        </footer>
+
+
+            <!--            </fieldset>-->
+            <footer>
+                <div class="grid">
+                    <input name="_save" type="submit" form="eventForm" th:value="#{label.button.save}"/>
+                    <input type="button" data-target="create-event-modal" onclick="toggleModal(event)" th:value="#{label.button.close}"/>
+                </div>
+            </footer>
+        </form>
     </article>
     <script>
         // called via the header HX-Trigger from backend
@@ -32,5 +108,16 @@
             closeModal(modal)
             location.reload();
         });
+    </script>
+    <script>
+        function toggleRecurrence(checkbox) {
+            const modal = checkbox.closest("dialog");
+            if (!modal) return;
+
+            const block = modal.querySelector("#recurrenceBlock");
+            if (!block) return;
+
+            block.style.display = checkbox.checked ? "block" : "none";
+        }
     </script>
 </dialog>

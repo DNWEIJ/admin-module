@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.webmvc.error.ErrorController;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,8 +17,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 
-// @ControllerAdvice
-// @Controller
+@ControllerAdvice
+@Controller
 @Slf4j
 public class ErrorControllerAdvice implements ErrorController {
 
@@ -46,7 +48,7 @@ public class ErrorControllerAdvice implements ErrorController {
     }
 
     // --- Handle default error path ---
-    @RequestMapping("/error")
+    @RequestMapping(value={"/error","/generic/error"})
     public String handleError(HttpServletRequest request, Model model, HttpSession session, HttpServletResponse response) throws IOException {
 
         Object statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);

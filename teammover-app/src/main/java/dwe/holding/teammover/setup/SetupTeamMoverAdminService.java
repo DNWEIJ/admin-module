@@ -1,6 +1,6 @@
 package dwe.holding.teammover.setup;
 
-import dwe.holding.admin.authorisation.notenant.function_role.FunctionRoleRepository;
+import dwe.holding.admin.authorisation.notenant.function_role.InternalFunctionRoleRepository;
 import dwe.holding.admin.authorisation.notenant.member.MemberRepository;
 import dwe.holding.admin.authorisation.tenant.localmember.LocalMemberRepository;
 import dwe.holding.admin.authorisation.notenant.function.FunctionRepository;
@@ -37,10 +37,10 @@ public class SetupTeamMoverAdminService {
     private final UserRepository userRepository;
     private final FunctionRepository functionRepository;
     private final RoleRepository roleRepository;
-    private final FunctionRoleRepository functionRoleRepository;
+    private final InternalFunctionRoleRepository functionRoleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public SetupTeamMoverAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, FunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
+    public SetupTeamMoverAdminService(MemberRepository memberRepository, LocalMemberRepository localMemberRepository, UserRepository userRepository, FunctionRepository functionRepository, RoleRepository roleRepository, InternalFunctionRoleRepository functionRoleRepository, UserRoleRepository userRoleRepository) {
         this.memberRepository = memberRepository;
         this.localMemberRepository = localMemberRepository;
         this.userRepository = userRepository;
